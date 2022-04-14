@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 import 'package:bottom_bar/bottom_bar.dart';
 
 bool loggedIn = true; //will use this to evaluate wether
