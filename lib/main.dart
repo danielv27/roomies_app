@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
+import 'package:bottom_bar/bottom_bar.dart';
 
 bool loggedIn = true; //will use this to evaluate wether
 
@@ -53,33 +53,46 @@ class _RoomiesPageState extends State<RoomiesPage> {
           child: const Text('Houses'),
         ),
       ),
-      bottomNavigationBar: SalomonBottomBar(
-        currentIndex: _SelectedTab.values.indexOf(_selectedTab),
-        unselectedItemColor: Colors.grey,
-        onTap: _handleIndexChanged,
-        items: [
-            /// Roomies
-            SalomonBottomBarItem(
-              title: const Text('Roomies'),
-              icon: const Icon(Icons.person, size: 40,),
-              selectedColor: const Color.fromARGB(255, 192, 58, 103),
-            ),
+      bottomNavigationBar: Container(
+        
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Colors.black,
+            
+          ),
+          borderRadius: const BorderRadius.all(Radius.circular(120))
+        ),
+        margin: const EdgeInsets.only(left: 36.0, right: 36.0, bottom: 18),
 
-            /// Matches
-            SalomonBottomBarItem(
-              title: const Text('Matches'),
-              icon: const Icon(Icons.message, size: 40,),
-              selectedColor: const Color.fromARGB(255, 192, 58, 103),
-            ),
+          child: BottomBar(
+            selectedIndex: _SelectedTab.values.indexOf(_selectedTab),
+            // margin: const EdgeInsets.all(10.0),
+            // currentIndex: _SelectedTab.values.indexOf(_selectedTab),
+            // unselectedItemColor: Colors.grey,
+            onTap: _handleIndexChanged,
+            items: <BottomBarItem>[
+                /// Roomies
+                BottomBarItem(
+                  title: const Text('Roomies'),
+                  icon: const Icon(Icons.person, size: 40,),
+                  activeColor: const Color.fromARGB(255, 192, 58, 103),
+                ),
 
-            /// Houses
-            SalomonBottomBarItem(
-              title: const Text('Houses'),
-              icon: const Icon(Icons.house, size: 40,),
-              selectedColor: const Color.fromARGB(255, 192, 58, 103),
-              
-            ),
-        ],
+                /// Matches
+                BottomBarItem(
+                  title: const Text('Matches'),
+                  icon: const Icon(Icons.message, size: 40,),
+                  activeColor: const Color.fromARGB(255, 192, 58, 103),
+                ),
+
+                /// Houses
+                BottomBarItem(
+                  title: const Text('Houses'),
+                  icon: const Icon(Icons.house, size: 40,),
+                  activeColor: const Color.fromARGB(255, 192, 58, 103),
+                ),
+            ],
+          ),
       ),
     );
   }
