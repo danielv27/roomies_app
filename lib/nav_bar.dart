@@ -37,7 +37,7 @@ class _BottomNavBarCurvedFb1State extends State<BottomNavBarCurvedFb1> {
 
     const primaryColor = Colors.orange;
     const secondaryColor = Colors.black54;
-    const accentColor = const Color(0xffffffff);
+    const accentColor =  Color(0xffffffff);
     const backgroundColor = Colors.white;
 
     return BottomAppBar(
