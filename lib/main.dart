@@ -1,6 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:bottom_bar/bottom_bar.dart';
+import 'pages/roomies_page.dart';
+import 'pages/houses_page.dart';
+import 'pages/matches_page.dart';
 
 bool loggedIn = true; //will use this to evaluate wether
 
@@ -20,38 +23,32 @@ class App extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: RoomiesPage(),
+      home: Home(),
     );
   }
 }
 
-class RoomiesPage extends StatefulWidget {
-  
+class Home extends StatefulWidget {
   @override
-  _RoomiesPageState createState() => _RoomiesPageState();
+  ChangePageState createState() => ChangePageState();
 }
-class _RoomiesPageState extends State<RoomiesPage> {
-  var _selectedTab = _SelectedTab.roomies;
+  
+class ChangePageState extends State<Home> {
+    int _currentPage = 0;
+  
+  final pages = [
+    const RoomiesPage(),
+    const MatchesPage(),
+    const HousesPage()
+  ];
 
-  void _handleIndexChanged(int i) {
-    setState(() {
-      _selectedTab = _SelectedTab.values[i];
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
       appBar: AppBar(),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).push(housesPageRoute());
-          },
-          child: const Text('Houses'),
-        ),
-      ),
+      body: pages[_currentPage],
       bottomNavigationBar: Container(
         
         decoration: BoxDecoration(
@@ -63,12 +60,15 @@ class _RoomiesPageState extends State<RoomiesPage> {
         ),
         margin: const EdgeInsets.only(left: 36.0, right: 36.0, bottom: 18),
 
+
           child: BottomBar(
-            selectedIndex: _SelectedTab.values.indexOf(_selectedTab),
-            // margin: const EdgeInsets.all(10.0),
-            // currentIndex: _SelectedTab.values.indexOf(_selectedTab),
-            // unselectedItemColor: Colors.grey,
-            onTap: _handleIndexChanged,
+            selectedIndex: _currentPage,
+            showActiveBackgroundColor: true,
+
+            onTap: (int index) {
+              
+              setState(() => _currentPage = index);
+            },
             items: <BottomBarItem>[
                 /// Roomies
                 BottomBarItem(
@@ -98,32 +98,6 @@ class _RoomiesPageState extends State<RoomiesPage> {
 }
 enum _SelectedTab {roomies, matches, houses}
 
-//before changing navBar
-// class RoomiesPage extends StatelessWidget {
-//   const RoomiesPage({Key? key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(),
-//       body: Center(
-//         child: ElevatedButton(
-//           onPressed: () {
-//             Navigator.of(context).push(housesPageRoute());
-//           },
-//           child: const Text('Houses'),
-//         ),
-//       ),
-//       bottomNavigationBar: ElevatedButton(
-//         child: const Text('Matches'),
-//         onPressed: () {
-//           Navigator.of(context).push(matchesPageRoute());
-//         },
-//       ),
-//     );
-//   }
-// }
-
 
 dynamic nextPageTransition(BuildContext context,Animation animation,Widget child){
 
@@ -141,7 +115,7 @@ dynamic nextPageTransition(BuildContext context,Animation animation,Widget child
 }
 
 
-Route matchesPageRoute() {
+Route nextPageRoute() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => const MatchesPage(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {  
@@ -150,19 +124,18 @@ Route matchesPageRoute() {
   );
 }
 
-class MatchesPage extends StatelessWidget {
-  const MatchesPage({Key? key}) : super(key: key);
+// class MatchesPage extends StatelessWidget {
+//   const MatchesPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
       body: const Center(
         child: Text('Matches'),
       ),
     );
   }
-}
+// }
 
 Route housesPageRoute() {
   return PageRouteBuilder(
@@ -173,16 +146,16 @@ Route housesPageRoute() {
   );
 }
 
-class HousesPage extends StatelessWidget {
-  const HousesPage({Key? key}) : super(key: key);
+// class HousesPage extends StatelessWidget {
+//   const HousesPage({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: const Center(
-        child: Text('Houses'),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(),
+//       body: const Center(
+//         child: Text('Houses'),
+//       ),
+//     );
+//   }
+// }
