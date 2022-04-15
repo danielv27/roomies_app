@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:bottom_bar/bottom_bar.dart';
@@ -34,6 +35,7 @@ class Home extends StatefulWidget {
 }
   
 class ChangePageState extends State<Home> {
+    int _previousPage = 0;
     int _currentPage = 0;
   
   final pages = [
@@ -42,62 +44,63 @@ class ChangePageState extends State<Home> {
     const HousesPage()
   ];
 
-
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: AppBar(),
-      body: pages[_currentPage],
+      body: PageTransitionSwitcher(
+        transitionBuilder: ((child, primaryAnimation, secondaryAnimation) => pageTransition(context,primaryAnimation,child, _currentPage, _previousPage)),
+        child: pages[_currentPage],
+        ),
       bottomNavigationBar: Container(
-        
+        margin: const EdgeInsets.only(left: 36.0, right: 36.0, bottom: 18),
         decoration: BoxDecoration(
-          border: Border.all(
-            color: Colors.black,  
-          ),
+          border: Border.all(color: Colors.black),
           borderRadius: const BorderRadius.all(Radius.circular(120))
         ),
-        margin: const EdgeInsets.only(left: 36.0, right: 36.0, bottom: 18),
+        child: BottomBar(
+          selectedIndex: _currentPage,
+          showActiveBackgroundColor: true,
 
-          child: BottomBar(
-            selectedIndex: _currentPage,
-            showActiveBackgroundColor: true,
+          onTap: (int index) {
+            _previousPage = _currentPage;
+            setState(() => _currentPage = index);
+          },
+          items: <BottomBarItem>[
+              /// Roomies
+              BottomBarItem(
+                title: const Text('Roomies'),
+                icon: const Icon(Icons.person, size: 40,),
+                activeColor: const Color.fromARGB(255, 192, 58, 103),
+              ),
 
-            onTap: (int index) {
-              setState(() => _currentPage = index);
-            },
-            items: <BottomBarItem>[
-                /// Roomies
-                BottomBarItem(
-                  title: const Text('Roomies'),
-                  icon: const Icon(Icons.person, size: 40,),
-                  activeColor: const Color.fromARGB(255, 192, 58, 103),
-                ),
+              /// Matches
+              BottomBarItem(
+                title: const Text('Matches'),
+                icon: const Icon(Icons.message, size: 40,),
+                activeColor: const Color.fromARGB(255, 192, 58, 103),
+              ),
 
-                /// Matches
-                BottomBarItem(
-                  title: const Text('Matches'),
-                  icon: const Icon(Icons.message, size: 40,),
-                  activeColor: const Color.fromARGB(255, 192, 58, 103),
-                ),
-
-                /// Houses
-                BottomBarItem(
-                  title: const Text('Houses'),
-                  icon: const Icon(Icons.house, size: 40,),
-                  activeColor: const Color.fromARGB(255, 192, 58, 103),
-                ),
-            ],
-          ),
+              /// Houses
+              BottomBarItem(
+                title: const Text('Houses'),
+                icon: const Icon(Icons.house, size: 40,),
+                activeColor: const Color.fromARGB(255, 192, 58, 103),
+              ),
+          ],
+        ),
       ),
     );
   }
 }
 
 
-dynamic nextPageTransition(BuildContext context,Animation animation,Widget child){
-
-  const begin = Offset(1.0, 0.0);
+dynamic pageTransition(BuildContext context,Animation animation,Widget child, int _currentPage, int _previousPage){
+  
+  var begin = const Offset(1.0, 0.0);
+  if(_currentPage < _previousPage){
+    begin = const Offset(-1.0, 0.0);
+  }
   const end = Offset.zero;
   const curve = Curves.ease;
 
@@ -111,12 +114,12 @@ dynamic nextPageTransition(BuildContext context,Animation animation,Widget child
 }
 
 
-Route nextPageRoute() {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => const MatchesPage(),
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {  
-      return nextPageTransition(context, animation, child);
-    },
-  );
-}
+// Route nextPageRoute() {
+//   return PageRouteBuilder(
+//     pageBuilder: (context, animation, secondaryAnimation) => const MatchesPage(),
+//     transitionsBuilder: (context, animation, secondaryAnimation, child) {  
+//       return pageTransition(context, animation, child);
+//     },
+//   );
+// }
 
