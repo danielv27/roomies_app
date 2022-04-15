@@ -53,20 +53,17 @@ class ChangePageState extends State<Home> {
         
         decoration: BoxDecoration(
           border: Border.all(
-            color: Colors.black,
-            
+            color: Colors.black,  
           ),
           borderRadius: const BorderRadius.all(Radius.circular(120))
         ),
         margin: const EdgeInsets.only(left: 36.0, right: 36.0, bottom: 18),
-
 
           child: BottomBar(
             selectedIndex: _currentPage,
             showActiveBackgroundColor: true,
 
             onTap: (int index) {
-              
               setState(() => _currentPage = index);
             },
             items: <BottomBarItem>[
@@ -96,7 +93,6 @@ class ChangePageState extends State<Home> {
     );
   }
 }
-enum _SelectedTab {roomies, matches, houses}
 
 
 dynamic nextPageTransition(BuildContext context,Animation animation,Widget child){
@@ -124,38 +120,3 @@ Route nextPageRoute() {
   );
 }
 
-// class MatchesPage extends StatelessWidget {
-//   const MatchesPage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: const Center(
-        child: Text('Matches'),
-      ),
-    );
-  }
-// }
-
-Route housesPageRoute() {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => const HousesPage(),
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {  
-      return nextPageTransition(context, animation, child);
-    },
-  );
-}
-
-// class HousesPage extends StatelessWidget {
-//   const HousesPage({Key? key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(),
-//       body: const Center(
-//         child: Text('Houses'),
-//       ),
-//     );
-//   }
-// }
