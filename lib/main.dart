@@ -1,4 +1,8 @@
+import 'dart:developer';
+
 import 'package:animations/animations.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:bottom_bar/bottom_bar.dart';
 import 'pages/roomies_page.dart';
@@ -7,7 +11,10 @@ import 'pages/matches_page.dart';
 
 bool loggedIn = true; //will use this to evaluate wether
 
-void main() {
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
   runApp(const App());
 }
 
@@ -25,20 +32,104 @@ class App extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: const Home(),
+      home: const MainPage(),
     );
   }
 }
 
+class MainPage extends StatelessWidget {
+  const MainPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    body: StreamBuilder<User?>(
+     stream: FirebaseAuth.instance.authStateChanges(),
+     builder: (context, snapshot) {
+       if(snapshot.connectionState == ConnectionState.waiting) {
+         return Center(child: CircularProgressIndicator(),);
+       }
+       else if(snapshot.hasError){
+         return Center(child: Text('Wrong email or password'),);
+       }
+       else if (snapshot.hasData) {
+         return Home();
+       }
+       else {
+         return Container(child: LoginWidget(), margin: EdgeInsets.only(top: 200));
+       }
+     }
+    ),
+    );
+  }
+
+class LoginWidget extends StatefulWidget {
+  @override
+  LoginWidgetState createState() => LoginWidgetState();
+}
+
+
+class LoginWidgetState extends State<LoginWidget> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(15),
+      child: Column(children: [
+        const SizedBox(height: 20),
+        TextField(
+          controller: emailController,
+          textInputAction: TextInputAction.next,
+          decoration: const InputDecoration(labelText: "Email"),
+        ),
+        const SizedBox(height: 4),
+        TextField(
+          controller: passwordController,
+          textInputAction: TextInputAction.done,
+          decoration: const InputDecoration(labelText: "Password"),
+        ),
+        
+        const SizedBox(height: 10),
+        
+        ElevatedButton.icon(
+          style: ElevatedButton.styleFrom(
+            minimumSize: const Size.fromHeight(50)
+          ),
+          icon: const Icon(Icons.lock_open, size: 32),
+          label: const Text("Log In", style: TextStyle(fontSize: 24)), 
+          
+          onPressed: signIn,
+          ),
+      ]),
+    );
+    
+
+  }
+  Future signIn() async {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text.trim(), 
+        password: passwordController.text.trim(),
+      );
+    } on FirebaseAuthException catch (exc) {
+      print(exc);
+    }
+
+  }
+}
+
+
+
+
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
   @override
   ChangePageState createState() => ChangePageState();
 }
   
 class ChangePageState extends State<Home> {
-    int _previousPage = 0;
-    int _currentPage = 0;
+  int _previousPage = 0;
+  int _currentPage = 0;
   
   final pages = [
     const RoomiesPage(),
@@ -46,9 +137,20 @@ class ChangePageState extends State<Home> {
     const HousesPage()
   ];
 
+  final user = FirebaseAuth.instance.currentUser!;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(user.email!),
+        actions: <Widget>[
+          IconButton(
+            onPressed: () => FirebaseAuth.instance.signOut(),
+            icon: const Icon(Icons.logout, size: 32,),
+          ),
+        ],
+      ),
       body: PageTransitionSwitcher(
         transitionBuilder: (child, primaryAnimation, secondaryAnimation) => pageTransition(context,primaryAnimation,child, _currentPage, _previousPage),
         child: pages[_currentPage],
