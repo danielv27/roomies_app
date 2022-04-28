@@ -7,6 +7,7 @@ class RoomiesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
+      //backgroundColor: Color.fromARGB(255, 192, 58, 103),
       body: Center(
         child: Text('Roomies'),
       ),
