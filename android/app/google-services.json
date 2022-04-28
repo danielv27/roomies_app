@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "492551448329",
+    "firebase_url": "https://roomies-application-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "roomies-application",
+    "storage_bucket": "roomies-application.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:492551448329:android:55cee98d42419e4b65d5d8",
+        "android_client_info": {
+          "package_name": "com.dvstudios.roomies_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "492551448329-ltu0ss64hmsnubkudvv8cs0ol662kvel.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzw-yzPM_VZe_GYLdpRxz3Uxy8rTsUa10"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "492551448329-ltu0ss64hmsnubkudvv8cs0ol662kvel.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "492551448329-3ra7566jh85v2ql6hf6b2cijl0350ibt.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.dvdevelopment.roomies"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
