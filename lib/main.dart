@@ -40,6 +40,7 @@ class MainPage extends StatelessWidget {
   Widget build(BuildContext context) => Scaffold(
     body: StreamBuilder<User?>(
      stream: FirebaseAuth.instance.authStateChanges(),
+     
      builder: (context, snapshot) {
        if(snapshot.connectionState == ConnectionState.waiting) {
          return const Center(child: CircularProgressIndicator());
@@ -52,8 +53,8 @@ class MainPage extends StatelessWidget {
        }
      }
     ),
-    );
-  }
+  );
+}
 
 class LoginWidget extends StatefulWidget {
   @override
@@ -88,6 +89,7 @@ class LoginWidgetState extends State<LoginWidget> {
         TextField(
           controller: passwordController,
           textInputAction: TextInputAction.done,
+          obscureText: true,
           decoration: InputDecoration(
             icon: const Icon(Icons.lock,size: 20),
             labelText: "Password",
@@ -109,9 +111,8 @@ class LoginWidgetState extends State<LoginWidget> {
           ),
       ]),
     );
-    
-
   }
+  
   Future signIn() async {
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -127,6 +128,7 @@ class LoginWidgetState extends State<LoginWidget> {
         if (exc.toString().contains('password')){
           invalidPassword = true;
         }
+        // ignore: avoid_print
         print(exc.toString());
       });
 
