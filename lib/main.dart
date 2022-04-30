@@ -1,13 +1,16 @@
 import 'package:animations/animations.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:bottom_bar/bottom_bar.dart';
 import 'pages/roomies_page.dart';
 import 'pages/houses_page.dart';
 import 'pages/matches_page.dart';
 
-bool loggedIn = true; //will use this to evaluate wether
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
 
-void main() {
   runApp(const App());
 }
 
@@ -25,20 +28,126 @@ class App extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: const Home(),
+      home: const MainPage(),
     );
   }
 }
 
+class MainPage extends StatelessWidget {
+  const MainPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    body: StreamBuilder<User?>(
+     stream: FirebaseAuth.instance.authStateChanges(),
+     
+     builder: (context, snapshot) {
+       if(snapshot.connectionState == ConnectionState.waiting) {
+         return const Center(child: CircularProgressIndicator());
+       }
+       else if (snapshot.hasData) {
+         return Home();
+       }
+       else {
+         return Container(child: LoginWidget(), margin: const EdgeInsets.only(top: 200));
+       }
+     }
+    ),
+  );
+}
+
+class LoginWidget extends StatefulWidget {
+  @override
+  LoginWidgetState createState() => LoginWidgetState();
+}
+
+
+class LoginWidgetState extends State<LoginWidget> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  bool invalidUserName = false;
+  bool invalidPassword = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(15),
+      child: Column(children: [
+        const SizedBox(height: 20),
+        TextField(
+          controller: emailController,
+          textInputAction: TextInputAction.next,
+          decoration: InputDecoration(
+            icon: const Icon(Icons.email,size: 20),
+            
+            labelText: "Email",
+            errorText: invalidUserName ? "Invalid Email" : null
+            ),
+        ),
+        const SizedBox(height: 4),
+        TextField(
+          controller: passwordController,
+          textInputAction: TextInputAction.done,
+          obscureText: true,
+          decoration: InputDecoration(
+            icon: const Icon(Icons.lock,size: 20),
+            labelText: "Password",
+            errorText: invalidPassword ? "Invalid Password" : null
+            ),
+        ),
+        
+        const SizedBox(height: 20),
+        
+        ElevatedButton.icon(
+          style: ElevatedButton.styleFrom(
+            primary: Colors.redAccent[400],
+            minimumSize: const Size.fromHeight(50)
+            
+          ),
+          icon: const Icon(Icons.lock_open, size: 32),
+          label: const Text("Log In", style: TextStyle(fontSize: 24)), 
+          onPressed: signIn,
+          ),
+      ]),
+    );
+  }
+  
+  Future signIn() async {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text.trim(), 
+        password: passwordController.text.trim(),
+      );
+
+    } on FirebaseAuthException catch (exc) {
+      setState(() {
+        if (exc.toString().contains('email') || exc.toString().contains('user')){
+          invalidUserName = true;
+        }
+        if (exc.toString().contains('password')){
+          invalidPassword = true;
+        }
+        // ignore: avoid_print
+        print(exc.toString());
+      });
+
+    }
+
+  }
+}
+
+
+
+
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
   @override
   ChangePageState createState() => ChangePageState();
 }
   
 class ChangePageState extends State<Home> {
-    int _previousPage = 0;
-    int _currentPage = 0;
+  int _previousPage = 0;
+  int _currentPage = 0;
   
   final pages = [
     const RoomiesPage(),
@@ -46,9 +155,20 @@ class ChangePageState extends State<Home> {
     const HousesPage()
   ];
 
+  final user = FirebaseAuth.instance.currentUser!;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(user.email!),
+        actions: <Widget>[
+          IconButton(
+            onPressed: () => FirebaseAuth.instance.signOut(),
+            icon: const Icon(Icons.logout, size: 32,),
+          ),
+        ],
+      ),
       body: PageTransitionSwitcher(
         transitionBuilder: (child, primaryAnimation, secondaryAnimation) => pageTransition(context,primaryAnimation,child, _currentPage, _previousPage),
         child: pages[_currentPage],
