@@ -1,11 +1,7 @@
-import 'package:animations/animations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:bottom_bar/bottom_bar.dart';
-import 'pages/roomies_page.dart';
-import 'pages/houses_page.dart';
-import 'pages/matches_page.dart';
+import 'pages/home_page.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,7 +42,7 @@ class MainPage extends StatelessWidget {
          return const Center(child: CircularProgressIndicator());
        }
        else if (snapshot.hasData) {
-         return Home();
+         return HomePage();
        }
        else {
          return Container(child: LoginWidget(), margin: const EdgeInsets.only(top: 200));
@@ -140,112 +136,5 @@ class LoginWidgetState extends State<LoginWidget> {
 
 
 
-class Home extends StatefulWidget {
-  @override
-  ChangePageState createState() => ChangePageState();
-}
-  
-class ChangePageState extends State<Home> {
-  int _previousPage = 0;
-  int _currentPage = 0;
-  
-  final pages = [
-    const RoomiesPage(),
-    const MatchesPage(),
-    const HousesPage()
-  ];
 
-  final user = FirebaseAuth.instance.currentUser!;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(user.email!),
-        actions: <Widget>[
-          IconButton(
-            onPressed: () => FirebaseAuth.instance.signOut(),
-            icon: const Icon(Icons.logout, size: 32,),
-          ),
-        ],
-      ),
-      body: PageTransitionSwitcher(
-        transitionBuilder: (child, primaryAnimation, secondaryAnimation) => pageTransition(context,primaryAnimation,child, _currentPage, _previousPage),
-        child: pages[_currentPage],
-        ),
-      extendBody: true,
-      bottomNavigationBar: Container(
-        
-        margin: const EdgeInsets.only(left: 35.0, right: 35.0, bottom: 18),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: Colors.black),
-          borderRadius: const BorderRadius.all(Radius.circular(120))
-        ),
-        child: BottomBar(
-          selectedIndex: _currentPage,
-          showActiveBackgroundColor: true,
-
-          onTap: (int index) {
-            _previousPage = _currentPage;
-            setState(() => _currentPage = index);
-          },
-          
-          items: <BottomBarItem>[
-              /// Roomies
-              BottomBarItem(
-                title: const Text('Roomies'),
-                icon: const Icon(Icons.person, size: 36,),
-                activeColor: const Color.fromARGB(255, 192, 58, 103),
-              ),
-
-              /// Matches
-              BottomBarItem(
-                title: const Text('Matches'),
-                icon: const Icon(Icons.message, size: 36,),
-                activeColor: const Color.fromARGB(255, 192, 58, 103),
-              ),
-
-              /// Houses
-              BottomBarItem(
-                title: const Text('Houses'),
-                icon: const Icon(Icons.house, size: 36,),
-                activeColor: const Color.fromARGB(255, 192, 58, 103),
-                
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-
-dynamic pageTransition(BuildContext context,Animation animation,Widget child, int _currentPage, int _previousPage){
-  
-  var begin = const Offset(1.0, 0.0);
-  if(_currentPage < _previousPage){
-    begin = const Offset(-1.0, 0.0);
-  }
-  const end = Offset.zero;
-  const curve = Curves.easeOutCubic;
-
-  final tween = Tween(begin: begin,end: end).chain(CurveTween(curve: curve));
-  final offsetAnimation = animation.drive(tween);
-
-  return SlideTransition(
-    position: offsetAnimation,
-    child: child,
-  );
-}
-
-
-// Route nextPageRoute() {
-//   return PageRouteBuilder(
-//     pageBuilder: (context, animation, secondaryAnimation) => const MatchesPage(),
-//     transitionsBuilder: (context, animation, secondaryAnimation, child) {  
-//       return pageTransition(context, animation, child);
-//     },
-//   );
-// }
 
