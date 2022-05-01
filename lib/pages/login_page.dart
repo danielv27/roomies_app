@@ -6,17 +6,17 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomInset: false,
       body: Column(
         children:[
-          const SizedBox(height: 110,),
-          const Image(image: AssetImage('assets/images/demo-house.png'),height: 120,),
+          const Spacer(),
+          const Image(image: AssetImage('assets/images/demo-house.png'),height: 100,),
           const Text(
             'Roomies',
-            style: TextStyle(fontFamily: 'BebasNeue', fontSize: 32)
+            style: TextStyle(fontFamily: 'Shink', fontSize: 50)
           ),
-          const SizedBox(height: 22,),
-          LoginWidget()
+          LoginWidget(),
+          const Spacer()
         ],
       )
     );
@@ -38,10 +38,9 @@ class LoginWidgetState extends State<LoginWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return Container(
       padding: const EdgeInsets.all(15),
       child: Column(children: [
-        const SizedBox(height: 16),
         TextField(
           controller: emailController,
           textInputAction: TextInputAction.next,
@@ -64,18 +63,25 @@ class LoginWidgetState extends State<LoginWidget> {
             ),
         ),
         
-        const SizedBox(height: 15),
+        const SizedBox(height: 20),
         
-        ElevatedButton.icon(
-          style: ElevatedButton.styleFrom(
-            primary: Colors.redAccent[400],
-            minimumSize: const Size.fromHeight(42)
-            
-          ),
-          icon: const Icon(Icons.lock_open, size: 32),
-          label: const Text("Log In", style: TextStyle(fontSize: 24)), 
-          onPressed: signIn,
-          ),
+        SizedBox(
+          width: 200,
+          child: ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+              shadowColor: Colors.red,
+              elevation: 5,
+              primary: Color.fromARGB(234, 209, 76, 67),
+              minimumSize: const Size.fromHeight(42)
+              
+              
+            ),
+            icon: const Icon(Icons.lock_open, size: 24),
+            label: const Text("Log In", style: TextStyle(fontSize: 20)), 
+            onPressed: signIn,
+            ),
+        ),
       ]),
     );
   }
