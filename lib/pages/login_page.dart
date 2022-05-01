@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 
 class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Column(
         children:[
           const SizedBox(height: 110,),
           const Image(image: AssetImage('assets/images/demo-house.png'),height: 120,),
-          Text(
+          const Text(
             'Roomies',
             style: TextStyle(fontFamily: 'BebasNeue', fontSize: 32)
           ),
