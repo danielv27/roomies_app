@@ -7,17 +7,19 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Column(
-        children:[
-          const SizedBox(height: 110,),
-          const Image(image: AssetImage('assets/images/demo-house.png'),height: 120,),
-          const Text(
-            'Roomies',
-            style: TextStyle(fontFamily: 'BebasNeue', fontSize: 32)
-          ),
-          const SizedBox(height: 22,),
-          LoginWidget()
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          children:[
+            const SizedBox(height: 110,),
+            const Image(image: AssetImage('assets/images/demo-house.png'),height: 120,),
+            const Text(
+              'Roomies',
+              style: TextStyle(fontFamily: 'BebasNeue', fontSize: 32)
+            ),
+            const SizedBox(height: 22,),
+            LoginWidget()
+          ],
+        ),
       )
     );
   }
