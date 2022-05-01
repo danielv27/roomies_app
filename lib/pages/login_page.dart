@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 
+// ignore: use_key_in_widget_constructors
 class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.red,
       resizeToAvoidBottomInset: false,
       body: Column(
         children:[
@@ -13,7 +15,7 @@ class LoginPage extends StatelessWidget {
           const Image(image: AssetImage('assets/images/demo-house.png'),height: 100,),
           const Text(
             'Roomies',
-            style: TextStyle(fontFamily: 'Shink', fontSize: 50)
+            style: TextStyle(fontFamily: 'Shink', fontSize: 50,color: Colors.white)
           ),
           LoginWidget(),
           const Spacer()
@@ -23,6 +25,7 @@ class LoginPage extends StatelessWidget {
   }
 }
 
+// ignore: use_key_in_widget_constructors
 class LoginWidget extends StatefulWidget {
   @override
   LoginWidgetState createState() => LoginWidgetState();
@@ -43,29 +46,40 @@ class LoginWidgetState extends State<LoginWidget> {
       child: Column(children: [
         TextField(
           controller: emailController,
+          style: TextStyle(color: Colors.white),
+          cursorColor: Colors.white,
           textInputAction: TextInputAction.next,
           decoration: InputDecoration(
-            icon: const Icon(Icons.email,size: 20),
-            
+            icon: const Icon(Icons.email,size: 20,color: Colors.white,),
+            iconColor: Colors.white,
+            fillColor: Colors.white,
             labelText: "Email",
+            labelStyle: const TextStyle(color: Colors.white),
             errorText: invalidUserName ? "Invalid Email" : null
             ),
         ),
         const SizedBox(height: 4),
         TextField(
           controller: passwordController,
+          style: TextStyle(color: Colors.white),
+          cursorColor: Colors.white,
           textInputAction: TextInputAction.done,
           obscureText: true,
           decoration: InputDecoration(
-            icon: const Icon(Icons.lock,size: 20),
+            //the lines below change the color of the underline of the text field
+            // enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black)),
+            //focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+            icon: const Icon(Icons.lock,size: 20, color: Colors.white,),
             labelText: "Password",
+            labelStyle: const TextStyle(color: Colors.white),
             errorText: invalidPassword ? "Invalid Password" : null
+            
             ),
         ),
         
         const SizedBox(height: 20),
         
-        SizedBox(
+        Container(
           width: 200,
           child: ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
@@ -104,8 +118,6 @@ class LoginWidgetState extends State<LoginWidget> {
         // ignore: avoid_print
         print(exc.toString());
       });
-
     }
-
   }
 }
