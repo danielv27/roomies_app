@@ -7,19 +7,17 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      body: SingleChildScrollView(
-        child: Column(
-          children:[
-            const SizedBox(height: 110,),
-            const Image(image: AssetImage('assets/images/demo-house.png'),height: 120,),
-            const Text(
-              'Roomies',
-              style: TextStyle(fontFamily: 'BebasNeue', fontSize: 32)
-            ),
-            const SizedBox(height: 22,),
-            LoginWidget()
-          ],
-        ),
+      body: Column(
+        children:[
+          const SizedBox(height: 110,),
+          const Image(image: AssetImage('assets/images/demo-house.png'),height: 120,),
+          const Text(
+            'Roomies',
+            style: TextStyle(fontFamily: 'BebasNeue', fontSize: 32)
+          ),
+          const SizedBox(height: 22,),
+          LoginWidget()
+        ],
       )
     );
   }
@@ -43,7 +41,7 @@ class LoginWidgetState extends State<LoginWidget> {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(15),
       child: Column(children: [
-        const SizedBox(height: 20),
+        const SizedBox(height: 16),
         TextField(
           controller: emailController,
           textInputAction: TextInputAction.next,
@@ -66,12 +64,12 @@ class LoginWidgetState extends State<LoginWidget> {
             ),
         ),
         
-        const SizedBox(height: 20),
+        const SizedBox(height: 15),
         
         ElevatedButton.icon(
           style: ElevatedButton.styleFrom(
             primary: Colors.redAccent[400],
-            minimumSize: const Size.fromHeight(50)
+            minimumSize: const Size.fromHeight(42)
             
           ),
           icon: const Icon(Icons.lock_open, size: 32),
