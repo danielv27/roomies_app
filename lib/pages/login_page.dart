@@ -9,17 +9,32 @@ class LoginPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.red,
       resizeToAvoidBottomInset: false,
-      body: Column(
-        children:[
-          const Spacer(),
-          const Image(image: AssetImage('assets/images/demo-house.png'),height: 100,),
-          const Text(
-            'Roomies',
-            style: TextStyle(fontFamily: 'Shink', fontSize: 50,color: Colors.white)
-          ),
-          LoginWidget(),
-          const Spacer()
-        ],
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color.fromRGBO(239, 85, 100, 1),
+              Color.fromRGBO(195, 46, 66, 1),
+              Color.fromRGBO(190, 40, 62, 1),
+              Color.fromRGBO(210, 66, 78, 1),
+              Color.fromRGBO(244, 130, 114, 1),
+            ]
+          )
+        ),
+        child: Column(
+          children:[
+            const Spacer(),
+            const Image(image: AssetImage('assets/images/houseiconwhite.png'),height: 35,),
+            const Text(
+              'Roomies',
+              style: TextStyle(fontFamily: 'Shink', fontSize: 50,color: Colors.white)
+            ),
+            LoginWidget(),
+            const Spacer()
+          ],
+        ),
       )
     );
   }
@@ -50,6 +65,7 @@ class LoginWidgetState extends State<LoginWidget> {
           cursorColor: Colors.white,
           textInputAction: TextInputAction.next,
           decoration: InputDecoration(
+            focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)),
             icon: const Icon(Icons.email,size: 20,color: Colors.white,),
             iconColor: Colors.white,
             fillColor: Colors.white,
@@ -68,7 +84,7 @@ class LoginWidgetState extends State<LoginWidget> {
           decoration: InputDecoration(
             //the lines below change the color of the underline of the text field
             // enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black)),
-            //focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+            focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)),
             icon: const Icon(Icons.lock,size: 20, color: Colors.white,),
             labelText: "Password",
             labelStyle: const TextStyle(color: Colors.white),
@@ -84,21 +100,22 @@ class LoginWidgetState extends State<LoginWidget> {
           child: ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-              shadowColor: Colors.red,
+              shadowColor: Colors.red[900],
               elevation: 5,
-              primary: Color.fromARGB(234, 209, 76, 67),
+              primary: Colors.white,
               minimumSize: const Size.fromHeight(42)
               
               
             ),
-            icon: const Icon(Icons.lock_open, size: 24),
-            label: const Text("Log In", style: TextStyle(fontSize: 20)), 
+            icon: const Icon(Icons.lock_open, size: 24,color: Colors.red,),
+            label: const Text("Log In", style: TextStyle(fontSize: 20, color: Colors.red)), 
             onPressed: signIn,
             ),
         ),
       ]),
     );
   }
+
   
   Future signIn() async {
     try {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 import 'package:bottom_bar/bottom_bar.dart';
+import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'roomies_page.dart';
 import 'houses_page.dart';
 import 'matches_page.dart';
@@ -19,22 +20,42 @@ class ChangePageState extends State<HomePage> {
   final pages = [
     const RoomiesPage(),
     const MatchesPage(),
-    const HousesPage()
+    const HousesPage(),
   ];
-
+  
   final user = FirebaseAuth.instance.currentUser!;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(user.email!),
-        actions: <Widget>[
-          IconButton(
-            onPressed: () => FirebaseAuth.instance.signOut(),
-            icon: const Icon(Icons.logout, size: 32,),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(180),
+        child: Container(
+          decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color.fromRGBO(239, 85, 100, 1),
+              Color.fromRGBO(195, 46, 66, 1),
+              Color.fromRGBO(190, 40, 62, 1),
+              Color.fromRGBO(210, 66, 78, 1),
+              Color.fromRGBO(244, 130, 114, 1),
+              ]
+            )
           ),
-        ],
+          child: AppBar(
+            backgroundColor: Colors.transparent,
+            shadowColor: Colors.transparent,
+            toolbarHeight: 400,
+            title: Text(user.email!),
+            actions: <Widget>[
+              IconButton(
+                onPressed: () => FirebaseAuth.instance.signOut(),
+                icon: const Icon(Icons.settings_applications_sharp, size: 32,),
+              ),
+            ],
+          ),
+        ),
       ),
       body: PageTransitionSwitcher(
         transitionBuilder: (child, primaryAnimation, secondaryAnimation) => pageTransition(context,primaryAnimation,child, _currentPage, _previousPage),
@@ -43,27 +64,31 @@ class ChangePageState extends State<HomePage> {
       extendBody: true,
       bottomNavigationBar: Container(
         
-        margin: const EdgeInsets.only(left: 35.0, right: 35.0, bottom: 18),
+        margin: const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 30),
         decoration: BoxDecoration(
+          boxShadow: [BoxShadow(color: Colors.black,)],
           color: Colors.white,
           border: Border.all(color: Colors.black),
           borderRadius: const BorderRadius.all(Radius.circular(120))
         ),
         child: BottomBar(
           selectedIndex: _currentPage,
-          showActiveBackgroundColor: true,
+          //showActiveBackgroundColor: true,
 
           onTap: (int index) {
             _previousPage = _currentPage;
             setState(() => _currentPage = index);
           },
           
+          //activeColor is a mandatory fiend but doesnt do anything as the bottom bar library was modified.
           items: <BottomBarItem>[
               /// Roomies
               BottomBarItem(
-                title: const Text('Roomies'),
-                icon: const Icon(Icons.person, size: 36,),
-                activeColor: const Color.fromARGB(255, 192, 58, 103),
+                title: const Text('Roomies', style: TextStyle(color: Colors.white),),
+                icon: const Icon(Icons.person, size: 36,color: Colors.white,),
+                activeColor: Colors.white,
+                inactiveIcon: const Icon(Icons.person, size: 36,color: Colors.grey),
+                inactiveColor: Colors.grey
               ),
 
               /// Matches
@@ -71,6 +96,7 @@ class ChangePageState extends State<HomePage> {
                 title: const Text('Matches'),
                 icon: const Icon(Icons.message, size: 36,),
                 activeColor: const Color.fromARGB(255, 192, 58, 103),
+                inactiveColor: Colors.grey
               ),
 
               /// Houses
@@ -78,8 +104,18 @@ class ChangePageState extends State<HomePage> {
                 title: const Text('Houses'),
                 icon: const Icon(Icons.house, size: 36,),
                 activeColor: const Color.fromARGB(255, 192, 58, 103),
+                inactiveColor: Colors.grey
+
+              
                 
               ),
+              
+              // BottomBarItem(
+              //   title: const Text('Settings'),
+              //   icon: const Icon(Icons.settings, size: 36,),
+              //   activeColor: const Color.fromARGB(255, 192, 58, 103),
+              // ),
+                
           ],
         ),
       ),
