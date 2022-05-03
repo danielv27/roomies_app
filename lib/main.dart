@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'pages/home_page.dart';
-import 'pages/login_page.dart';
+import 'pages/auth_page.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -51,7 +51,7 @@ class MainPage extends StatelessWidget {
          return HomePage();
        }
        else {
-         return LoginPage();
+         return AuthPage();
        }
      }
     ),

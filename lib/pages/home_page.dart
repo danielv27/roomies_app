@@ -66,9 +66,9 @@ class ChangePageState extends State<HomePage> {
         
         margin: const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 30),
         decoration: BoxDecoration(
-          boxShadow: [BoxShadow(color: Colors.black,)],
+          //boxShadow: [BoxShadow(color: Colors.black,)],
           color: Colors.white,
-          border: Border.all(color: Colors.black),
+          border: Border.all(color: Colors.grey),
           borderRadius: const BorderRadius.all(Radius.circular(120))
         ),
         child: BottomBar(
@@ -85,16 +85,16 @@ class ChangePageState extends State<HomePage> {
               /// Roomies
               BottomBarItem(
                 title: const Text('Roomies', style: TextStyle(color: Colors.white),),
-                icon: const Icon(Icons.person, size: 36,color: Colors.white,),
+                icon: Image.asset('assets/icons/Profile-selected.png',height: 30,),
                 activeColor: Colors.white,
-                inactiveIcon: const Icon(Icons.person, size: 36,color: Colors.grey),
+                inactiveIcon: Image.asset('assets/icons/Profile.png',height: 35,),
                 inactiveColor: Colors.grey
               ),
 
               /// Matches
               BottomBarItem(
                 title: const Text('Matches'),
-                icon: const Icon(Icons.message, size: 36,),
+                icon: Image.asset('assets/icons/Chat.png', height: 30,),
                 activeColor: const Color.fromARGB(255, 192, 58, 103),
                 inactiveColor: Colors.grey
               ),
@@ -102,9 +102,11 @@ class ChangePageState extends State<HomePage> {
               /// Houses
               BottomBarItem(
                 title: const Text('Houses'),
-                icon: const Icon(Icons.house, size: 36,),
+                icon: Image.asset('assets/icons/Home-selected.png', height: 30,),
                 activeColor: const Color.fromARGB(255, 192, 58, 103),
-                inactiveColor: Colors.grey
+                inactiveColor: Colors.grey,
+                inactiveIcon: Image.asset('assets/icons/Home.png', height: 30,),
+
 
               
                 

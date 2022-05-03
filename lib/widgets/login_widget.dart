@@ -1,47 +1,14 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-
-// ignore: use_key_in_widget_constructors
-class LoginPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.red,
-      resizeToAvoidBottomInset: false,
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color.fromRGBO(239, 85, 100, 1),
-              Color.fromRGBO(195, 46, 66, 1),
-              Color.fromRGBO(190, 40, 62, 1),
-              Color.fromRGBO(210, 66, 78, 1),
-              Color.fromRGBO(244, 130, 114, 1),
-            ]
-          )
-        ),
-        child: Column(
-          children:[
-            const Spacer(),
-            const Image(image: AssetImage('assets/images/houseiconwhite.png'),height: 35,),
-            const Text(
-              'Roomies',
-              style: TextStyle(fontFamily: 'Shink', fontSize: 50,color: Colors.white)
-            ),
-            LoginWidget(),
-            const Spacer()
-          ],
-        ),
-      )
-    );
-  }
-}
-
-// ignore: use_key_in_widget_constructors
 class LoginWidget extends StatefulWidget {
+  final VoidCallback onClickedSignUp;
+  const LoginWidget({
+    Key? key,
+    required this.onClickedSignUp,
+  }) : super(key: key);
+
   @override
   LoginWidgetState createState() => LoginWidgetState();
 }
@@ -50,6 +17,14 @@ class LoginWidget extends StatefulWidget {
 class LoginWidgetState extends State<LoginWidget> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+
+    super.dispose(); 
+  }
 
   bool invalidUserName = false;
   bool invalidPassword = false;
@@ -97,6 +72,7 @@ class LoginWidgetState extends State<LoginWidget> {
         
         Container(
           width: 200,
+          margin: EdgeInsets.only(bottom: 10),
           child: ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
@@ -104,13 +80,28 @@ class LoginWidgetState extends State<LoginWidget> {
               elevation: 5,
               primary: Colors.white,
               minimumSize: const Size.fromHeight(42)
-              
-              
             ),
             icon: const Icon(Icons.lock_open, size: 24,color: Colors.red,),
             label: const Text("Log In", style: TextStyle(fontSize: 20, color: Colors.red)), 
             onPressed: signIn,
             ),
+        ),
+        RichText(
+          text: TextSpan(
+            text: 'Not registered yet? ',
+            children: [
+              TextSpan(
+                recognizer: TapGestureRecognizer()
+                  ..onTap = widget.onClickedSignUp, 
+                style: const TextStyle(
+                  decoration: TextDecoration.underline,
+                  color: Colors.blue,
+                  backgroundColor: Colors.white
+                ),
+                text: 'Sign Up'
+              )
+            ],
+          )
         ),
       ]),
     );
