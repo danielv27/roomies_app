@@ -11,7 +11,7 @@ class AuthPage extends StatefulWidget{
 
 // ignore: use_key_in_widget_constructors
 class AuthPageState extends State<AuthPage> {
-  bool isLogin = false;
+  bool isLogin = true;
   
   @override
   Widget build(BuildContext context) {
