@@ -1,9 +1,8 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:roomies_app/widgets/login_widget.dart';
 import 'package:roomies_app/widgets/signup_widget.dart';
 
-class AuthPage extends StatefulWidget{
+class AuthPage extends StatefulWidget {
   @override
   AuthPageState createState() => AuthPageState();
 }
@@ -13,8 +12,15 @@ class AuthPageState extends State<AuthPage> {
   bool isLogin = true;
 
   @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(seconds: 1)).then((_) {
+      showBottom(context);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    void toggle() => setState(() => isLogin = !isLogin);
     return Scaffold(
       backgroundColor: Colors.red,
       resizeToAvoidBottomInset: false,
@@ -30,50 +36,62 @@ class AuthPageState extends State<AuthPage> {
               Color.fromRGBO(210, 66, 78, 1),
               Color.fromRGBO(244, 130, 114, 1),
             ],
-          )
+          ),
         ),
         child: Column(
-          children:[
+          children: [
             const Spacer(),
-            const Image(image: AssetImage('assets/images/app-icon.png'),height: 100,),
-            const Text('Roomies', style: TextStyle(fontFamily: 'Shink', fontSize: 50,color: Colors.white)),
+            const Image(
+              image: AssetImage('assets/images/app-icon.png'),
+              height: 100,
+            ),
+            const Text(
+              'Roomies',
+              style: TextStyle(fontFamily: 'Shink', fontSize: 50, color: Colors.white)
+            ),
             Container(padding: const EdgeInsets.all(30)),
             const Spacer(),
             ElevatedButton(
-              child: const Text('Press Here'),
+              child: const Text("Continue"),
               style: ElevatedButton.styleFrom(primary: Colors.white),
               onPressed: () {
-                showModalBottomSheet<void>(
-                  barrierColor: Colors.transparent,
-                  isScrollControlled: true,
-                  context: context,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30.0),
-                        topRight: Radius.circular(30.0)),
-                  ),
-                  builder: (BuildContext context) {
-                    return SingleChildScrollView(
-                      padding: MediaQuery.of(context).viewInsets,
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            isLogin ? LoginWidget(onClickedSignUp: toggle) : SignUpWidget(onClickedSignIn: toggle),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                );
+                showBottom(context);
               },
             ),
             const Spacer(),
           ],
         ),
-      )
+      ),
+    );
+  }
+
+  void showBottom(BuildContext context) {
+    void toggle() => setState(() => isLogin = !isLogin);
+
+    showModalBottomSheet<void>(
+      barrierColor: Colors.transparent,
+      isScrollControlled: true,
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30.0), 
+          topRight: Radius.circular(30.0)
+        ),
+      ),
+      builder: (BuildContext context) {
+        return SingleChildScrollView(
+          padding: MediaQuery.of(context).viewInsets,
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                isLogin ? LoginWidget(onClickedSignUp: toggle): SignUpWidget(onClickedSignIn: toggle),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
-
