@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class SignupPage extends StatefulWidget {
@@ -114,22 +116,32 @@ class _SignupPageState extends State<SignupPage> {
 
   Future signUp() async {
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      UserCredential result = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
-
+      User? user = result.user;
+      await FirebaseFirestore.instance.collection('users')
+        .doc(user?.uid)
+        .set({ 
+          'firstName': firstNameController.text,
+          'lastName': lastNameController.text,
+          'email': emailController.text,
+        });
     } on FirebaseAuthException catch (exc) {
       setState(() {
-        if (exc.toString().contains('email') || exc.toString().contains('user')){
+        if (exc.toString().contains('email') ||
+            exc.toString().contains('user')) {
           invalidUserName = true;
         }
-        if (exc.toString().contains('password')){
+        if (exc.toString().contains('password')) {
           invalidPassword = true;
         }
-        // ignore: avoid_print
-        print(exc.toString());
+        if (kDebugMode) {
+          print(exc.toString());
+        }
       });
     }
   }
+
 }
