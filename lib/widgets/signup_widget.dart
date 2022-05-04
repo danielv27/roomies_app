@@ -121,7 +121,6 @@ class SignUpWidgetState extends State<SignUpWidget> {
         email: emailController.text.trim(), 
         password: passwordController.text.trim(),
       );
-
     } on FirebaseAuthException catch (exc) {
       setState(() {
         if (exc.toString().contains('email') || exc.toString().contains('user')){

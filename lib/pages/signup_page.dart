@@ -79,7 +79,6 @@ class _SignupPageState extends State<SignupPage> {
           child: ElevatedButton(
             onPressed: () {
               signUp();
-              FirebaseAuth.instance.signOut();
               Navigator.of(context).pop();
             },
             child: const Text(
