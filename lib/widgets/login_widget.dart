@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginWidget extends StatefulWidget {
   final VoidCallback onClickedSignUp;
@@ -17,13 +18,12 @@ class LoginWidget extends StatefulWidget {
 class LoginWidgetState extends State<LoginWidget> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  bool _isChecked = false;
 
   @override
-  void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
-
-    super.dispose(); 
+  void initState() {
+    _loadUserEmailPassword();
+    super.initState();
   }
 
   bool invalidUserName = false;
@@ -32,44 +32,69 @@ class LoginWidgetState extends State<LoginWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.all(30),
       child: Column(children: [
+        const Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+                "Welcome!",
+                style: TextStyle(fontWeight: FontWeight.bold ,fontSize: 26),
+            ),
+          ),
         TextField(
           controller: emailController,
-          style: TextStyle(color: Colors.white),
-          cursorColor: Colors.white,
+          style: TextStyle(color: Colors.grey),
+          cursorColor: Colors.grey,
           textInputAction: TextInputAction.next,
           decoration: InputDecoration(
-            focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)),
-            icon: const Icon(Icons.email,size: 20,color: Colors.white,),
-            iconColor: Colors.white,
-            fillColor: Colors.white,
+            focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+            icon: const Icon(Icons.email,size: 20,color: Colors.grey,),
+            iconColor: Colors.grey,
+            fillColor: Colors.grey,
             labelText: "Email",
-            labelStyle: const TextStyle(color: Colors.white),
+            labelStyle: const TextStyle(color: Colors.grey),
             errorText: invalidUserName ? "Invalid Email" : null
             ),
         ),
         const SizedBox(height: 4),
         TextField(
           controller: passwordController,
-          style: TextStyle(color: Colors.white),
-          cursorColor: Colors.white,
+          style: TextStyle(color: Colors.grey),
+          cursorColor: Colors.red,
           textInputAction: TextInputAction.done,
           obscureText: true,
           decoration: InputDecoration(
             //the lines below change the color of the underline of the text field
             // enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black)),
-            focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)),
-            icon: const Icon(Icons.lock,size: 20, color: Colors.white,),
+            focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+            icon: const Icon(Icons.lock,size: 20, color: Colors.grey,),
             labelText: "Password",
-            labelStyle: const TextStyle(color: Colors.white),
+            labelStyle: const TextStyle(color: Colors.grey),
             errorText: invalidPassword ? "Invalid Password" : null
             
             ),
         ),
-        
+        Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+          SizedBox(
+              height: 24.0,
+              width: 24.0,
+              child: Theme(
+                data: ThemeData(
+                    unselectedWidgetColor: Color(0xff00C8E8) // Your color
+                ),
+                child: Checkbox(
+                    activeColor: Color(0xff00C8E8),
+                    value: _isChecked,
+                    onChanged: _handleRemember),
+              )),
+          const SizedBox(width: 10.0),
+          const Text("Remember Me",
+              style: TextStyle(
+                  color: Color(0xff646464),
+                  fontSize: 12,
+                  fontFamily: 'Rubic'))
+        ]),
         const SizedBox(height: 20),
-        
         Container(
           width: 200,
           margin: EdgeInsets.only(bottom: 10),
@@ -88,7 +113,9 @@ class LoginWidgetState extends State<LoginWidget> {
         ),
         RichText(
           text: TextSpan(
-            text: 'Not registered yet? ',
+            text: 'Don\'t have account? ', style: const TextStyle(
+              color: Colors.grey,
+            ),
             children: [
               TextSpan(
                 recognizer: TapGestureRecognizer()

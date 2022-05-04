@@ -36,13 +36,41 @@ class AuthPageState extends State<AuthPage> {
         child: Column(
           children:[
             const Spacer(),
-            const Image(image: AssetImage('assets/images/app-icon.png'),height: 75,),
-            const Text(
-              'Roomies',
-              style: TextStyle(fontFamily: 'Shink', fontSize: 50,color: Colors.white)
+            const Image(image: AssetImage('assets/images/app-icon.png'),height: 100,),
+            // const Text('Roomies', style: TextStyle(fontFamily: 'Shink', fontSize: 50,color: Colors.white)),
+            Container(padding: const EdgeInsets.all(30)),
+            const Spacer(),
+            ElevatedButton(
+              child: const Text('Press Here'),
+              style: ElevatedButton.styleFrom(primary: Colors.white),
+              onPressed: () {
+                showModalBottomSheet<void>(
+                  barrierColor: Colors.transparent,
+                  isScrollControlled: true,
+                  context: context,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(30.0),
+                        topRight: Radius.circular(30.0)),
+                  ),
+                  builder: (BuildContext context) {
+                    return SingleChildScrollView(
+                      padding: MediaQuery.of(context).viewInsets,
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            isLogin ? LoginWidget(onClickedSignUp: toggle, ) : SignUpWidget(onClickedSignIn: toggle),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
             ),
-            isLogin ? LoginWidget(onClickedSignUp: toggle) : SignUpWidget(onClickedSignIn: toggle),
-            const Spacer()
+            const Spacer(),
           ],
         ),
       )

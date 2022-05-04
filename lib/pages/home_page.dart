@@ -18,7 +18,7 @@ class ChangePageState extends State<HomePage> {
   int _currentPage = 0;
   
   final pages = [
-    const RoomiesPage(),
+    RoomiesPage(),
     const MatchesPage(),
     const HousesPage(),
   ];
