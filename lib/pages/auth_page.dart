@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:roomies_app/pages/singup_page.dart';
 
 import 'package:roomies_app/widgets/login_widget.dart';
 import 'package:roomies_app/widgets/signup_widget.dart';
@@ -37,7 +38,7 @@ class AuthPageState extends State<AuthPage> {
           children:[
             const Spacer(),
             const Image(image: AssetImage('assets/images/app-icon.png'),height: 100,),
-            // const Text('Roomies', style: TextStyle(fontFamily: 'Shink', fontSize: 50,color: Colors.white)),
+            const Text('Roomies', style: TextStyle(fontFamily: 'Shink', fontSize: 50,color: Colors.white)),
             Container(padding: const EdgeInsets.all(30)),
             const Spacer(),
             ElevatedButton(
@@ -61,7 +62,7 @@ class AuthPageState extends State<AuthPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
-                            isLogin ? LoginWidget(onClickedSignUp: toggle, ) : SignUpWidget(onClickedSignIn: toggle),
+                            isLogin ? LoginWidget(onClickedSignUp: toggle, ) : SignupPage(),
                           ],
                         ),
                       ),

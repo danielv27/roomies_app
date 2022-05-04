@@ -119,7 +119,8 @@ class LoginWidgetState extends State<LoginWidget> {
             children: [
               TextSpan(
                 recognizer: TapGestureRecognizer()
-                  ..onTap = widget.onClickedSignUp, 
+                  ..onTap = widget.onClickedSignUp,
+                  
                 style: const TextStyle(
                   decoration: TextDecoration.underline,
                   color: Colors.blue,
