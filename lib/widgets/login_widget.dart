@@ -134,11 +134,10 @@ class LoginWidgetState extends State<LoginWidget> {
     );
   }
 
-  
   Future signIn() async {
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text.trim(), 
+        email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
 
@@ -155,4 +154,43 @@ class LoginWidgetState extends State<LoginWidget> {
       });
     }
   }
+
+  void _handleRemember(bool? checkboxState) {
+    print("Handle Remember Me");
+    _isChecked = checkboxState!;
+    SharedPreferences.getInstance().then(
+          (prefs) {
+        prefs.setBool("remember_me", checkboxState);
+        prefs.setString('email', emailController.text);
+        prefs.setString('password', passwordController.text);
+      },
+    );
+    setState(() {
+      _isChecked = checkboxState;
+    });
+  }
+
+  void _loadUserEmailPassword() async {
+    print("Load Email");
+    try {
+      SharedPreferences _prefs = await SharedPreferences.getInstance();
+      var _email = _prefs.getString("email") ?? "";
+      var _password = _prefs.getString("password") ?? "";
+      var _rememberMe = _prefs.getBool("remember_me") ?? false;
+
+      print(_rememberMe);
+      print(_email);
+      print(_password);
+      if (_rememberMe) {
+        setState(() {
+          _isChecked = true;
+        });
+        emailController.text = _email;
+        passwordController.text = _password;
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 }
+
