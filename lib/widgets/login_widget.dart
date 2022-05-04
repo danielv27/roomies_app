@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../pages/signup_page.dart';
+
 class LoginWidget extends StatefulWidget {
   final VoidCallback onClickedSignUp;
   const LoginWidget({
@@ -24,6 +26,14 @@ class LoginWidgetState extends State<LoginWidget> {
   void initState() {
     _loadUserEmailPassword();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+
+    super.dispose();
   }
 
   bool invalidUserName = false;
@@ -118,10 +128,12 @@ class LoginWidgetState extends State<LoginWidget> {
             ),
             children: [
               TextSpan(
-                recognizer: TapGestureRecognizer()
-                  ..onTap = widget.onClickedSignUp,
-                  
-                style: const TextStyle(
+              recognizer: TapGestureRecognizer()..onTap = () =>
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => SignupPage()),
+                  ),
+              style: const TextStyle(
                   decoration: TextDecoration.underline,
                   color: Colors.blue,
                   backgroundColor: Colors.white

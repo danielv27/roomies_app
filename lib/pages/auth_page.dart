@@ -1,7 +1,5 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:roomies_app/pages/singup_page.dart';
-
 import 'package:roomies_app/widgets/login_widget.dart';
 import 'package:roomies_app/widgets/signup_widget.dart';
 
@@ -13,7 +11,7 @@ class AuthPage extends StatefulWidget{
 // ignore: use_key_in_widget_constructors
 class AuthPageState extends State<AuthPage> {
   bool isLogin = true;
-  
+
   @override
   Widget build(BuildContext context) {
     void toggle() => setState(() => isLogin = !isLogin);
@@ -62,7 +60,7 @@ class AuthPageState extends State<AuthPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
-                            isLogin ? LoginWidget(onClickedSignUp: toggle, ) : SignupPage(),
+                            isLogin ? LoginWidget(onClickedSignUp: toggle) : SignUpWidget(onClickedSignIn: toggle),
                           ],
                         ),
                       ),

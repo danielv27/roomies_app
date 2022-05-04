@@ -23,7 +23,7 @@ class SignUpWidgetState extends State<SignUpWidget> {
     emailController.dispose();
     passwordController.dispose();
 
-    super.dispose(); 
+    super.dispose();
   }
 
   bool invalidUserName = false;
@@ -34,20 +34,27 @@ class SignUpWidgetState extends State<SignUpWidget> {
     return Container(
       padding: const EdgeInsets.all(15),
       child: Column(children: [
+        const Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            "Welcome!",
+            style: TextStyle(fontWeight: FontWeight.bold ,fontSize: 26),
+          ),
+        ),
         TextField(
           controller: emailController,
-          style: TextStyle(color: Colors.white),
-          cursorColor: Colors.white,
+          style: TextStyle(color: Colors.grey),
+          cursorColor: Colors.grey,
           textInputAction: TextInputAction.next,
           decoration: InputDecoration(
-            focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)),
-            icon: const Icon(Icons.email,size: 20,color: Colors.white,),
-            iconColor: Colors.white,
-            fillColor: Colors.white,
-            labelText: "Email",
-            labelStyle: const TextStyle(color: Colors.white),
-            errorText: invalidUserName ? "Invalid Email" : null
-            ),
+              focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+              icon: const Icon(Icons.email,size: 20,color: Colors.grey,),
+              iconColor: Colors.grey,
+              fillColor: Colors.grey,
+              labelText: "Email",
+              labelStyle: const TextStyle(color: Colors.grey),
+              errorText: invalidUserName ? "Invalid Email" : null
+          ),
         ),
         const SizedBox(height: 4),
         TextField(
