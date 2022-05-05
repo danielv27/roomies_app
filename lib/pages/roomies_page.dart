@@ -13,7 +13,6 @@ class RoomiesPage extends StatelessWidget {
   RoomiesPage({Key? key}) : super(key: key);
 
   final user = FirebaseAuth.instance.currentUser!;
-  String? firstName;
   List dataList = [];
 
   @override
@@ -58,10 +57,8 @@ class RoomiesPage extends StatelessWidget {
             ),
           ],
         ),
-        
       ),
     ),
-
     body: Column(
       children: [
         imageRoomiesInfo(context),
@@ -107,13 +104,15 @@ class RoomiesPage extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Container(
-          
           width: 56,
           height: 56,
-          child: const ImageIcon(
-            AssetImage("assets/icons/Vector.png"),
-            color: Colors.red,
-            size: 26,
+          child: GestureDetector(
+            onTap: () => print("pressed dislike"),
+            child: const ImageIcon(
+              AssetImage("assets/icons/Vector.png"),
+              color: Colors.red,
+              size: 26,
+            ),
           ),
           decoration: BoxDecoration(
             boxShadow: [
@@ -131,10 +130,13 @@ class RoomiesPage extends StatelessWidget {
         Container(
           width: 74,
           height: 74,
-          child: const ImageIcon(
-            AssetImage("assets/icons/Heart.png"),
-            color: Colors.white,
-            size: 26,
+          child: GestureDetector(
+            onTap: () => print("pressed like"),
+            child: const ImageIcon(
+              AssetImage("assets/icons/Heart.png"),
+              color: Colors.white,
+              size: 26,
+            ),
           ),
           decoration: BoxDecoration(
             boxShadow: [
@@ -145,17 +147,30 @@ class RoomiesPage extends StatelessWidget {
               ),
             ],
             shape: BoxShape.circle,
-            color: Colors.red,
+            gradient: const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color.fromRGBO(239, 85, 100, 1),
+                Color.fromRGBO(195, 46, 66, 1),
+                Color.fromRGBO(190, 40, 62, 1),
+                Color.fromRGBO(210, 66, 78, 1),
+                Color.fromRGBO(244, 130, 114, 1),
+              ]
+            ),
           ),
         ),
         const SizedBox(width: 30),
         Container(
           width: 56,
           height: 56,
-          child: const ImageIcon(
-            AssetImage("assets/icons/info-icon.png"),
-            color: Color.fromARGB(255, 116, 201, 175),
-            size: 26,
+          child: GestureDetector(
+            onTap: () => print("user information"),
+            child: const ImageIcon(
+              AssetImage("assets/icons/info-icon.png"),
+              color: Color.fromARGB(255, 116, 201, 175),
+              size: 26,
+            ),
           ),
           decoration: BoxDecoration(
             boxShadow: [
