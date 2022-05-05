@@ -13,56 +13,58 @@ class RoomiesPage extends StatelessWidget {
   List dataList = [];
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(75),
-          child: Container(
-            decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                  Color.fromRGBO(239, 85, 100, 1),
-                  Color.fromRGBO(195, 46, 66, 1),
-                  Color.fromRGBO(190, 40, 62, 1),
-                  Color.fromRGBO(210, 66, 78, 1),
-                  Color.fromRGBO(244, 130, 114, 1),
-                ])),
-            child: AppBar(
-              systemOverlayStyle: const SystemUiOverlayStyle(
-                  statusBarColor: Colors.transparent),
-              backgroundColor: Colors.transparent,
-              shadowColor: Colors.transparent,
-              toolbarHeight: 75,
-              title: Text(
-                "Find roommates",
-                style: GoogleFonts.lato(
-                  textStyle: const TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                  ),
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(75),
+        child: Container(
+          decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                Color.fromRGBO(239, 85, 100, 1),
+                Color.fromRGBO(195, 46, 66, 1),
+                Color.fromRGBO(190, 40, 62, 1),
+                Color.fromRGBO(210, 66, 78, 1),
+                Color.fromRGBO(244, 130, 114, 1),
+              ])),
+          child: AppBar(
+            automaticallyImplyLeading: false,
+            systemOverlayStyle: const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+            backgroundColor: Colors.transparent,
+            shadowColor: Colors.transparent,
+            toolbarHeight: 75,
+            title: Text(
+              "Find roommates",
+              style: GoogleFonts.lato(
+                textStyle: const TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              actions: <Widget>[
-                IconButton(
-                  onPressed: () => FirebaseAuth.instance.signOut(),
-                  icon: const Icon(
-                    Icons.settings_applications_sharp,
-                    size: 32,
-                  ),
-                ),
-              ],
             ),
+            actions: <Widget>[
+              IconButton(
+                onPressed: () => FirebaseAuth.instance.signOut(),
+                icon: const Icon(
+                  Icons.settings_applications_sharp,
+                  size: 32,
+                ),
+              ),
+            ],
           ),
         ),
-        body: Column(
+      ),
+      body: Column(
           children: [
             imageRoomiesInfo(context),
             const SizedBox(height: 15),
             likeDislikeBar(context),
           ],
         ),
-      );
+  );
+  }
 
   SizedBox imageRoomiesInfo(BuildContext context) {
     return SizedBox(
