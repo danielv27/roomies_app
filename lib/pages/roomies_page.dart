@@ -59,7 +59,7 @@ class RoomiesPage extends StatelessWidget {
           children: [
             imageRoomiesInfo(context),
             const SizedBox(height: 15),
-            likeDislikeBar(),
+            likeDislikeBar(context),
           ],
         ),
       );
@@ -95,7 +95,7 @@ class RoomiesPage extends StatelessWidget {
     );
   }
 
-  Row likeDislikeBar() {
+  Row likeDislikeBar(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -158,6 +158,7 @@ class RoomiesPage extends StatelessWidget {
                 splashColor: Colors.red[50],
                 onTap: () {
                   print("Info button pressed");
+                  showUserInfo(context);
                 },
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -174,6 +175,73 @@ class RoomiesPage extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  void showUserInfo(BuildContext context) {
+    showModalBottomSheet<void>(
+      barrierColor: Colors.transparent,
+      isScrollControlled: true,
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(30.0), 
+          topRight: Radius.circular(30.0)
+        ),
+      ),
+      builder: (BuildContext context) {
+        return SingleChildScrollView(
+          padding: MediaQuery.of(context).viewInsets,
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Container(
+                  padding: const EdgeInsets.all(15),
+                  child: Column(
+                    children: [
+                      const Text("Daniel Volpin"),
+                      const Divider(
+                        color: Color.fromARGB(255, 163, 163, 163),
+                      ),
+                      const Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "About",
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
+                        ),
+                      ),
+                      const Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.. Readmore"),
+                      const SizedBox(height: 12,),
+                      const Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Work",
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
+                        ),
+                      ),
+                      const Text("Wonen op een prachtige locatie in de Pijp! Dit ruim appartement is onderdeel van een goed..."),
+                      const SizedBox(height: 12,),
+                      const Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Study",
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
+                        ),
+                      ),
+                      const Text("Wonen op een prachtige locatie in de Pijp! Dit ruim appartement is onderdeel van .."),
+                      const SizedBox(height: 20),
+                      Row(),
+                      const SizedBox(height: 200),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
