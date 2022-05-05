@@ -29,21 +29,24 @@ class ChangePageState extends State<HomePage> {
       body: PageTransitionSwitcher(
         transitionBuilder: (child, primaryAnimation, secondaryAnimation) => pageTransition(context,primaryAnimation,child, _currentPage, _previousPage),
         child: pages[_currentPage],
-        ),
+      ),
       extendBody: true,
       bottomNavigationBar: Container(
-        
         margin: const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 30),
         decoration: BoxDecoration(
-          //boxShadow: [BoxShadow(color: Colors.black,)],
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              blurRadius: 5,
+              offset: const Offset(0, 2), 
+            ),
+          ],
           color: Colors.white,
-          border: Border.all(color: Colors.grey),
           borderRadius: const BorderRadius.all(Radius.circular(120))
         ),
         child: BottomBar(
           selectedIndex: _currentPage,
           //showActiveBackgroundColor: true,
-
           onTap: (int index) {
             _previousPage = _currentPage;
             setState(() => _currentPage = index);
@@ -55,7 +58,7 @@ class ChangePageState extends State<HomePage> {
               BottomBarItem(
                 title: const Text('Roomies', style: TextStyle(color: Colors.white),),
                 icon: Image.asset('assets/icons/Profile-selected.png',height: 30,),
-                activeColor: Colors.white,
+                activeColor: const Color.fromARGB(255, 192, 58, 103),
                 inactiveIcon: Image.asset('assets/icons/Profile.png',height: 35,),
                 inactiveColor: Colors.grey
               ),
@@ -75,10 +78,6 @@ class ChangePageState extends State<HomePage> {
                 activeColor: const Color.fromARGB(255, 192, 58, 103),
                 inactiveColor: Colors.grey,
                 inactiveIcon: Image.asset('assets/icons/Home.png', height: 30,),
-
-
-              
-                
               ),
               
               // BottomBarItem(

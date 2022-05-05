@@ -58,10 +58,21 @@ class RoomiesPage extends StatelessWidget {
             ),
           ],
         ),
+        
       ),
     ),
 
-    body: SizedBox(
+    body: Column(
+      children: [
+        imageRoomiesInfo(context),
+        const SizedBox(height: 15),
+        likeDislikeBar(),
+      ],
+    ),
+  );
+
+  SizedBox imageRoomiesInfo(BuildContext context) {
+    return SizedBox(
       height: MediaQuery.of(context).size.height * 0.60,
       width: double.infinity,
       child: Stack(
@@ -88,8 +99,79 @@ class RoomiesPage extends StatelessWidget {
           ),
         ],
       ),
-    ),
-  );
+    );
+  }
+
+  Row likeDislikeBar() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Container(
+          
+          width: 56,
+          height: 56,
+          child: const ImageIcon(
+            AssetImage("assets/icons/Vector.png"),
+            color: Colors.red,
+            size: 26,
+          ),
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                blurRadius: 5,
+                offset: const Offset(0, 2), 
+              ),
+            ],
+            shape: BoxShape.circle,
+            color: Colors.white,
+          ),
+        ),
+        const SizedBox(width: 30),
+        Container(
+          width: 74,
+          height: 74,
+          child: const ImageIcon(
+            AssetImage("assets/icons/Heart.png"),
+            color: Colors.white,
+            size: 26,
+          ),
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                blurRadius: 5,
+                offset: const Offset(0, 2), 
+              ),
+            ],
+            shape: BoxShape.circle,
+            color: Colors.red,
+          ),
+        ),
+        const SizedBox(width: 30),
+        Container(
+          width: 56,
+          height: 56,
+          child: const ImageIcon(
+            AssetImage("assets/icons/info-icon.png"),
+            color: Color.fromARGB(255, 116, 201, 175),
+            size: 26,
+          ),
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                blurRadius: 5,
+                offset: const Offset(0, 2), 
+              ),
+            ],
+            shape: BoxShape.circle,
+            color: Colors.white,
+          ),
+        ),
+      ],
+    );
+  }
 
   Widget buildUsers(dataList) {
     return ListView.separated(
@@ -106,13 +188,12 @@ class RoomiesPage extends StatelessWidget {
             Row(
               children: <Widget>[
                 Text(
-                  (dataList[index]["firstName"] + " " + dataList[index]["lastName"] + ", " + dataList[index]["age"]),
+                  (dataList[index]["firstName"] + " " + dataList[index]["lastName"] + ", "),
                   style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 28),
                 ),
-                const ImageIcon(
-                    AssetImage("assets/icons/info-icon.png"),
-                    color: Colors.white,
-                    size: 24,
+                Text(
+                  (dataList[index]["age"]),
+                  style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 28),
                 ),
               ]
             ),
