@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:roomies_app/widgets/card_provider.dart';
 import 'package:roomies_app/widgets/tinder_card.dart';
@@ -11,7 +13,7 @@ class RoomiesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: PreferredSize(
-      preferredSize: const Size.fromHeight(100),
+      preferredSize: const Size.fromHeight(75),
       child: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -27,10 +29,19 @@ class RoomiesPage extends StatelessWidget {
           )
         ),
         child: AppBar(
+          systemOverlayStyle: const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
-          toolbarHeight: 200,
-          title: Text(user.email!),
+          toolbarHeight: 75,
+          title: Text(
+            "Find roommates",
+            style: GoogleFonts.lato(
+              textStyle: const TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
           actions: <Widget>[
             IconButton(
               onPressed: () => FirebaseAuth.instance.signOut(),
@@ -44,7 +55,8 @@ class RoomiesPage extends StatelessWidget {
       ),
     ),
     body: SizedBox(
-      height: MediaQuery.of(context).size.height * 0.70,
+      height: MediaQuery.of(context).size.height * 0.75,
+      width: double.infinity,
       child: const SafeArea(
         child: TinderCard(
           urlImage: "assets/images/profile_pic.png",
