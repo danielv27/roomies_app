@@ -43,11 +43,11 @@ class SignUpWidgetState extends State<SignUpWidget> {
         ),
         TextField(
           controller: emailController,
-          style: TextStyle(color: Colors.grey),
+          style: const TextStyle(color: Colors.grey),
           cursorColor: Colors.grey,
           textInputAction: TextInputAction.next,
           decoration: InputDecoration(
-              focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+              focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
               icon: const Icon(Icons.email,size: 20,color: Colors.grey,),
               iconColor: Colors.grey,
               fillColor: Colors.grey,
@@ -59,14 +59,14 @@ class SignUpWidgetState extends State<SignUpWidget> {
         const SizedBox(height: 4),
         TextField(
           controller: passwordController,
-          style: TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.white),
           cursorColor: Colors.white,
           textInputAction: TextInputAction.done,
           obscureText: true,
           decoration: InputDecoration(
             //the lines below change the color of the underline of the text field
             // enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black)),
-            focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+            focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)),
             icon: const Icon(Icons.lock,size: 20, color: Colors.white,),
             labelText: "Password",
             labelStyle: const TextStyle(color: Colors.white),
@@ -79,7 +79,7 @@ class SignUpWidgetState extends State<SignUpWidget> {
         
         Container(
           width: 200,
-          margin: EdgeInsets.only(bottom: 10),
+          margin: const EdgeInsets.only(bottom: 10),
           child: ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),

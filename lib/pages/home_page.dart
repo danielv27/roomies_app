@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 import 'package:bottom_bar/bottom_bar.dart';
-import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'roomies_page.dart';
 import 'houses_page.dart';
 import 'matches_page.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 //this is the underlying page for all states of the homepage ()
 class HomePage extends StatefulWidget {

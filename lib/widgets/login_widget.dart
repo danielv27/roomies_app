@@ -1,17 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../pages/signup_page.dart';
 
 class LoginWidget extends StatefulWidget {
   final VoidCallback onClickedSignUp;
-  const LoginWidget({
-    Key? key,
-    required this.onClickedSignUp,
-  }) : super(key: key);
+  const LoginWidget({Key? key, required this.onClickedSignUp,}) : super(key: key);
 
   @override
   LoginWidgetState createState() => LoginWidgetState();
@@ -20,6 +16,7 @@ class LoginWidget extends StatefulWidget {
 class LoginWidgetState extends State<LoginWidget> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+
   bool _isChecked = false;
   bool _isHiddrenPassword = true;
 
@@ -44,23 +41,23 @@ class LoginWidgetState extends State<LoginWidget> {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(30),
-      child: Column(children: [
-        const Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            "Welcome!",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
+      child: Column(
+        children: [
+          const Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "Welcome!",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
+            ),
           ),
-        ),
-        const SizedBox(height: 10),
-        TextField(
-          controller: emailController,
-          style: TextStyle(color: Colors.grey),
-          cursorColor: Colors.grey,
-          textInputAction: TextInputAction.next,
-          decoration: InputDecoration(
-              focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey)),
+          const SizedBox(height: 10),
+          TextField(
+            controller: emailController,
+            style: const TextStyle(color: Colors.grey),
+            cursorColor: Colors.grey,
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
               icon: const Icon(
                 Icons.email,
                 size: 20,
@@ -70,103 +67,106 @@ class LoginWidgetState extends State<LoginWidget> {
               fillColor: Colors.grey,
               labelText: "Email",
               labelStyle: const TextStyle(color: Colors.grey),
-              errorText: invalidUserName ? "Invalid Email" : null),
-        ),
-        const SizedBox(height: 6),
-        TextField(
-          controller: passwordController,
-          style: TextStyle(color: Colors.grey),
-          cursorColor: Colors.red,
-          textInputAction: TextInputAction.done,
-          obscureText: _isHiddrenPassword,
-          decoration: InputDecoration(
-            //the lines below change the color of the underline of the text field
-            // enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black)),
-            focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey)),
-            icon: const Icon(
-              Icons.lock,
-              size: 20,
-              color: Colors.grey,
+              errorText: invalidUserName ? "Invalid Email" : null
             ),
-            labelText: "Password",
-            labelStyle: const TextStyle(color: Colors.grey),
-            errorText: invalidPassword ? "Invalid Password" : null,
-            suffixIcon: InkWell(
-              onTap: _togglePasswordView,
-              child: const Icon(
-                Icons.visibility,
+          ),
+          const SizedBox(height: 6),
+          TextField(
+            controller: passwordController,
+            style: const TextStyle(color: Colors.grey),
+            cursorColor: Colors.red,
+            textInputAction: TextInputAction.done,
+            obscureText: _isHiddrenPassword,
+            decoration: InputDecoration(
+              //the lines below change the color of the underline of the text field
+              // enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black)),
+              focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+              icon: const Icon(
+                Icons.lock,
+                size: 20,
+                color: Colors.grey,
+              ),
+              labelText: "Password",
+              labelStyle: const TextStyle(color: Colors.grey),
+              errorText: invalidPassword ? "Invalid Password" : null,
+              suffixIcon: InkWell(
+                onTap: _togglePasswordView,
+                child: const Icon(
+                  Icons.visibility,
+                ),
               ),
             ),
           ),
-        ),
-        Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-          SizedBox(
-            height: 24.0,
-            width: 24.0,
-            child: Theme(
-              data: ThemeData(unselectedWidgetColor: (Colors.grey)),
-              child: Checkbox(
-                activeColor: Colors.red,
-                value: _isChecked,
-                onChanged: _handleRemember),
-            ),
-          ),
-          const SizedBox(width: 10.0),
-          const Text(
-            "Remember Me",
-            style: TextStyle(color: Color(0xff646464), fontSize: 12, fontFamily: 'Rubic'),
-          ),
-        ]),
-        const SizedBox(height: 20),
-        Container(
-          width: 200,
-          margin: EdgeInsets.only(bottom: 10),
-          child: ElevatedButton.icon(
-            style: ElevatedButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30.0)),
-              shadowColor: Colors.red[900],
-              elevation: 5,
-              primary: Colors.white,
-              minimumSize: const Size.fromHeight(42),
-            ),
-            icon: const Icon(
-              Icons.lock_open,
-              size: 24,
-              color: Colors.red,
-            ),
-            label: const Text("Log In",
-              style: TextStyle(fontSize: 20, color: Colors.red)),
-            onPressed: signIn,
-          ),
-        ),
-        RichText(
-          text: TextSpan(
-            text: 'Don\'t have account? ',
-            style: const TextStyle(
-              color: Colors.grey,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start, 
             children: [
-              TextSpan(
-                recognizer: TapGestureRecognizer()
+              SizedBox(
+                height: 24.0,
+                width: 24.0,
+                child: Theme(
+                  data: ThemeData(unselectedWidgetColor: (Colors.grey)),
+                  child: Checkbox(
+                    activeColor: Colors.red,
+                    value: _isChecked,
+                    onChanged: _handleRemember),
+                ),
+              ),
+              const SizedBox(width: 10.0),
+              const Text(
+                "Remember Me",
+                style: TextStyle(color: Color(0xff646464), fontSize: 12, fontFamily: 'Rubic'),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Container(
+            width: 200,
+            margin: const EdgeInsets.only(bottom: 10),
+            child: ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+                shadowColor: Colors.red[900],
+                elevation: 5,
+                primary: Colors.white,
+                minimumSize: const Size.fromHeight(42),
+              ),
+              icon: const Icon(
+                Icons.lock_open,
+                size: 24,
+                color: Colors.red,
+              ),
+              label: const Text("Log In",
+                style: TextStyle(fontSize: 20, color: Colors.red)),
+              onPressed: signIn,
+            ),
+          ),
+          RichText(
+            text: TextSpan(
+              text: 'Don\'t have account? ',
+              style: const TextStyle(
+                color: Colors.grey,
+              ),
+              children: [
+                TextSpan(
+                  recognizer: TapGestureRecognizer()
                   ..onTap = () {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => SignupPage()),
                     );
                   },
-                style: const TextStyle(
-                  decoration: TextDecoration.underline,
-                  color: Colors.blue,
-                  backgroundColor: Colors.white
+                  style: const TextStyle(
+                    decoration: TextDecoration.underline,
+                    color: Colors.blue,
+                    backgroundColor: Colors.white
+                  ),
+                  text: 'Sign Up'
                 ),
-                text: 'Sign Up'
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ]),
+        ],
+      ),
     );
   }
 
@@ -235,5 +235,5 @@ class LoginWidgetState extends State<LoginWidget> {
       _isHiddrenPassword = !_isHiddrenPassword;
     });
   }
-  
+
 }
