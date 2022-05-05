@@ -40,21 +40,23 @@ class _SignupPageState extends State<SignupPage> {
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
-              TextFormField(
-                style: const TextStyle(color: Colors.white),
-                decoration: inputDecoration("First Name"),
+              TextField(
                 controller: firstNameController,
+                style: const TextStyle(color: Colors.white),
+                cursorColor: Colors.white,
+                textInputAction: TextInputAction.next,
+                decoration: inputDecoration("First Name"),
               ),
               const SizedBox(height: 20),
-              TextFormField(
-                style: const TextStyle(color: Colors.white),
-                decoration: inputDecoration("Last Name"),
+              TextField(
                 controller: lastNameController,
+                style: const TextStyle(color: Colors.white),
+                cursorColor: Colors.white,
+                textInputAction: TextInputAction.next,
+                decoration: inputDecoration("Last Name")
               ),
               const SizedBox(height: 20),
               TextFormField(
-                style: const TextStyle(color: Colors.white),
-                decoration: inputDecoration("Email"),
                 controller: emailController,
                 validator: (emailController) {
                   if (emailController == null || emailController.isEmpty) {
@@ -62,12 +64,18 @@ class _SignupPageState extends State<SignupPage> {
                   }
                   return null;
                 },
+                style: const TextStyle(color: Colors.white),
+                cursorColor: Colors.white,
+                textInputAction: TextInputAction.next,
+                decoration: inputDecoration("Email")
               ),
               const SizedBox(height: 20),
               TextFormField(
-                style: const TextStyle(color: Colors.white),
-                decoration: inputDecoration("Password"),
                 controller: passwordController,
+                style: const TextStyle(color: Colors.white),
+                cursorColor: Colors.white,
+                textInputAction: TextInputAction.next,
+                decoration: inputDecoration("Password"),
               ),
             ],
           ),

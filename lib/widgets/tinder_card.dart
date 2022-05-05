@@ -41,14 +41,22 @@ class _TinderCardState extends State<TinderCard> {
       );
 
   Widget buildCard() => Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height * 0.25,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(widget.urlImage),
-            fit: BoxFit.cover,
-            alignment: const Alignment(-0.3, 0),
-          ),
+    width: MediaQuery.of(context).size.width,
+    height: MediaQuery.of(context).size.height * 0.25,
+    decoration: BoxDecoration(
+      image: DecorationImage(
+        image: AssetImage(widget.urlImage),
+        fit: BoxFit.cover,
+        alignment: const Alignment(-0.3, 0),
+      ),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey.withOpacity(0.5),
+          spreadRadius: 5,
+          blurRadius: 7,
+          offset: Offset(0, 3), // changes position of shadow
         ),
-      );
+      ],
+    ),
+  );
 }

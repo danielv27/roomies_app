@@ -44,7 +44,7 @@ class RoomiesPage extends StatelessWidget {
       ),
     ),
     body: SizedBox(
-      height: MediaQuery.of(context).size.height * 0.75,
+      height: MediaQuery.of(context).size.height * 0.70,
       child: const SafeArea(
         child: TinderCard(
           urlImage: "assets/images/profile_pic.png",

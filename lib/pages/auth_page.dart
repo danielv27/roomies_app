@@ -14,9 +14,10 @@ class AuthPageState extends State<AuthPage> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 1)).then((_) {
-      showBottom(context);
-    });
+    WidgetsBinding.instance?.addPostFrameCallback((_) async {
+       showBottom(context);
+      }
+    );
   }
 
   @override
