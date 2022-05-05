@@ -62,40 +62,39 @@ class RoomiesPage extends StatelessWidget {
     ),
 
     body: SizedBox(
-      height: MediaQuery.of(context).size.height * 0.75,
+      height: MediaQuery.of(context).size.height * 0.60,
       width: double.infinity,
-      child: SafeArea(
-        child: Stack(
-          children: <Widget>[
-            const TinderCard(
-              urlImage: "assets/images/profile_pic.png",
+      child: Stack(
+        children: <Widget>[
+          const TinderCard(
+            urlImage: "assets/images/profile_pic.png",
+          ),
+          SizedBox(
+            child: FutureBuilder(
+              future: FireStoreDataBase().getData(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return const Text(
+                    "Something went wrong",
+                  );
+                }
+                if (snapshot.connectionState == ConnectionState.done) {
+                  dataList = snapshot.data as List;
+                  return buildUsers(dataList);
+                }
+                return const Center(child: CircularProgressIndicator());
+              },
             ),
-            SizedBox(
-              child: FutureBuilder(
-                future: FireStoreDataBase().getData(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return const Text(
-                      "Something went wrong",
-                    );
-                  }
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    dataList = snapshot.data as List;
-                    return buildUsers(dataList);
-                  }
-                  return const Center(child: CircularProgressIndicator());
-                },
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     ),
   );
 
   Widget buildUsers(dataList) {
     return ListView.separated(
-      padding: const EdgeInsets.all(8),
+      reverse: true, //makes a column start from the bottom
+      padding: const EdgeInsets.all(28),
       itemCount: dataList.length,
       separatorBuilder: (BuildContext context, int index) => const Divider(),
       itemBuilder: (BuildContext context, int index) {
@@ -104,9 +103,18 @@ class RoomiesPage extends StatelessWidget {
           verticalDirection: VerticalDirection.down,
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
-            Text(
-              (dataList[index]["firstName"] + " " + dataList[index]["lastName"] + ", " + dataList[index]["age"]),
-              style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 28),
+            Row(
+              children: <Widget>[
+                Text(
+                  (dataList[index]["firstName"] + " " + dataList[index]["lastName"] + ", " + dataList[index]["age"]),
+                  style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 28),
+                ),
+                const ImageIcon(
+                    AssetImage("assets/icons/info-icon.png"),
+                    color: Colors.white,
+                    size: 24,
+                ),
+              ]
             ),
             Text(
               dataList[index]["email"],
