@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
@@ -6,10 +7,15 @@ import 'package:provider/provider.dart';
 import 'package:roomies_app/widgets/card_provider.dart';
 import 'package:roomies_app/widgets/tinder_card.dart';
 
+import '../backend/database.dart';
+
 class RoomiesPage extends StatelessWidget {
   RoomiesPage({Key? key}) : super(key: key);
 
   final user = FirebaseAuth.instance.currentUser!;
+  String? firstName;
+  List dataList = [];
+
   @override
   Widget build(BuildContext context) => Scaffold(
     appBar: PreferredSize(
@@ -54,15 +60,63 @@ class RoomiesPage extends StatelessWidget {
         ),
       ),
     ),
+
     body: SizedBox(
       height: MediaQuery.of(context).size.height * 0.75,
       width: double.infinity,
-      child: const SafeArea(
-        child: TinderCard(
-          urlImage: "assets/images/profile_pic.png",
+      child: SafeArea(
+        child: Stack(
+          children: <Widget>[
+            const TinderCard(
+              urlImage: "assets/images/profile_pic.png",
+            ),
+            SizedBox(
+              child: FutureBuilder(
+                future: FireStoreDataBase().getData(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return const Text(
+                      "Something went wrong",
+                    );
+                  }
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    dataList = snapshot.data as List;
+                    return buildUsers(dataList);
+                  }
+                  return const Center(child: CircularProgressIndicator());
+                },
+              ),
+            ),
+          ],
         ),
       ),
     ),
   );
+
+  Widget buildUsers(dataList) {
+    return ListView.separated(
+      padding: const EdgeInsets.all(8),
+      itemCount: dataList.length,
+      separatorBuilder: (BuildContext context, int index) => const Divider(),
+      itemBuilder: (BuildContext context, int index) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          verticalDirection: VerticalDirection.down,
+          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            Text(
+              (dataList[index]["firstName"] + " " + dataList[index]["lastName"]),
+              style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 28),
+            ),
+            Text(
+              dataList[index]["email"],
+              style: const TextStyle(color: Colors.white, fontSize: 16),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 }
 

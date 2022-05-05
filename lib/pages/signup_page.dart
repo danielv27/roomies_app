@@ -13,6 +13,7 @@ class SignupPage extends StatefulWidget {
 class _SignupPageState extends State<SignupPage> {
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
+  TextEditingController ageController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
@@ -68,6 +69,14 @@ class _SignupPageState extends State<SignupPage> {
                 cursorColor: Colors.white,
                 textInputAction: TextInputAction.next,
                 decoration: inputDecoration("Email")
+              ),
+              const SizedBox(height: 20),
+              TextFormField(
+                controller: ageController,
+                style: const TextStyle(color: Colors.white),
+                cursorColor: Colors.white,
+                textInputAction: TextInputAction.next,
+                decoration: inputDecoration("Age"),
               ),
               const SizedBox(height: 20),
               TextFormField(
@@ -134,6 +143,7 @@ class _SignupPageState extends State<SignupPage> {
         .set({ 
           'firstName': firstNameController.text,
           'lastName': lastNameController.text,
+          'age': ageController.text,
           'email': emailController.text,
         });
     } on FirebaseAuthException catch (exc) {
