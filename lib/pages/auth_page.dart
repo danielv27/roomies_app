@@ -9,7 +9,6 @@ class AuthPage extends StatefulWidget {
 
 // ignore: use_key_in_widget_constructors
 class AuthPageState extends State<AuthPage> {
-  bool isLogin = true;
 
   @override
   void initState() {
@@ -46,19 +45,8 @@ class AuthPageState extends State<AuthPage> {
               image: AssetImage('assets/images/app-icon.png'),
               height: 100,
             ),
-            const Text(
-              'Roomies',
-              style: TextStyle(fontFamily: 'Shink', fontSize: 50, color: Colors.white)
-            ),
             Container(padding: const EdgeInsets.all(30)),
             const Spacer(),
-            ElevatedButton(
-              child: const Text("Continue"),
-              style: ElevatedButton.styleFrom(primary: Colors.white),
-              onPressed: () {
-                showBottom(context);
-              },
-            ),
             const Spacer(),
           ],
         ),
@@ -67,11 +55,7 @@ class AuthPageState extends State<AuthPage> {
   }
 
   void showBottom(BuildContext context) {
-    void toggle() => setState(() => isLogin = !isLogin);
-
-    showModalBottomSheet<void>(
-      barrierColor: Colors.transparent,
-      isScrollControlled: true,
+    showBottomSheet<void>(
       context: context,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
@@ -81,13 +65,12 @@ class AuthPageState extends State<AuthPage> {
       ),
       builder: (BuildContext context) {
         return SingleChildScrollView(
-          padding: MediaQuery.of(context).viewInsets,
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                isLogin ? LoginWidget(onClickedSignUp: toggle): SignUpWidget(onClickedSignIn: toggle),
+                LoginWidget(),
               ],
             ),
           ),

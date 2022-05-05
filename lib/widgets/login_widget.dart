@@ -6,8 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../pages/signup_page.dart';
 
 class LoginWidget extends StatefulWidget {
-  final VoidCallback onClickedSignUp;
-  const LoginWidget({Key? key, required this.onClickedSignUp,}) : super(key: key);
 
   @override
   LoginWidgetState createState() => LoginWidgetState();
@@ -20,11 +18,11 @@ class LoginWidgetState extends State<LoginWidget> {
   bool _isChecked = false;
   bool _isHiddrenPassword = true;
 
-  @override
-  void initState() {
-    _loadUserEmailPassword();
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   _loadUserEmailPassword();
+  //   super.initState();
+  // }
 
   @override
   void dispose() {
@@ -171,6 +169,7 @@ class LoginWidgetState extends State<LoginWidget> {
   }
 
   Future signIn() async {
+    Navigator.pop(context);
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text.trim(),
