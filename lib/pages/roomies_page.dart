@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:roomies_app/widgets/tinder_card.dart';
+import 'package:roomies_app/widgets/image_card.dart';
 
 import '../backend/database.dart';
 
@@ -14,64 +14,63 @@ class RoomiesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: PreferredSize(
-      preferredSize: const Size.fromHeight(75),
-      child: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color.fromRGBO(239, 85, 100, 1),
-              Color.fromRGBO(195, 46, 66, 1),
-              Color.fromRGBO(190, 40, 62, 1),
-              Color.fromRGBO(210, 66, 78, 1),
-              Color.fromRGBO(244, 130, 114, 1),
-            ]
-          )
-        ),
-        child: AppBar(
-          systemOverlayStyle: const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
-          backgroundColor: Colors.transparent,
-          shadowColor: Colors.transparent,
-          toolbarHeight: 75,
-          title: Text(
-            "Find roommates",
-            style: GoogleFonts.lato(
-              textStyle: const TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(75),
+          child: Container(
+            decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                  Color.fromRGBO(239, 85, 100, 1),
+                  Color.fromRGBO(195, 46, 66, 1),
+                  Color.fromRGBO(190, 40, 62, 1),
+                  Color.fromRGBO(210, 66, 78, 1),
+                  Color.fromRGBO(244, 130, 114, 1),
+                ])),
+            child: AppBar(
+              systemOverlayStyle: const SystemUiOverlayStyle(
+                  statusBarColor: Colors.transparent),
+              backgroundColor: Colors.transparent,
+              shadowColor: Colors.transparent,
+              toolbarHeight: 75,
+              title: Text(
+                "Find roommates",
+                style: GoogleFonts.lato(
+                  textStyle: const TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
+              actions: <Widget>[
+                IconButton(
+                  onPressed: () => FirebaseAuth.instance.signOut(),
+                  icon: const Icon(
+                    Icons.settings_applications_sharp,
+                    size: 32,
+                  ),
+                ),
+              ],
             ),
           ),
-          actions: <Widget>[
-            IconButton(
-              onPressed: () => FirebaseAuth.instance.signOut(),
-              icon: const Icon(
-                Icons.settings_applications_sharp,
-                size: 32,
-              ),
-            ),
+        ),
+        body: Column(
+          children: [
+            imageRoomiesInfo(context),
+            const SizedBox(height: 15),
+            likeDislikeBar(),
           ],
         ),
-      ),
-    ),
-    body: Column(
-      children: [
-        imageRoomiesInfo(context),
-        const SizedBox(height: 15),
-        likeDislikeBar(),
-      ],
-    ),
-  );
+      );
 
   SizedBox imageRoomiesInfo(BuildContext context) {
     return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.60,
+      height: MediaQuery.of(context).size.height * 0.575,
       width: double.infinity,
       child: Stack(
         children: <Widget>[
-          const TinderCard(
+          const ImageCard(
             urlImage: "assets/images/profile_pic.png",
           ),
           SizedBox(
@@ -100,85 +99,78 @@ class RoomiesPage extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Container(
-          width: 56,
-          height: 56,
-          child: GestureDetector(
-            onTap: () => print("pressed dislike"),
-            child: const ImageIcon(
-              AssetImage("assets/icons/Vector.png"),
-              color: Colors.red,
-              size: 26,
-            ),
-          ),
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.2),
-                blurRadius: 5,
-                offset: const Offset(0, 2), 
-              ),
-            ],
-            shape: BoxShape.circle,
-            color: Colors.white,
-          ),
-        ),
-        const SizedBox(width: 30),
-        Container(
-          width: 74,
-          height: 74,
-          child: GestureDetector(
-            onTap: () => print("pressed like"),
-            child: const ImageIcon(
-              AssetImage("assets/icons/Heart.png"),
+        SizedBox.fromSize(
+          size: const Size(56, 56),
+          child: ClipOval(
+            child: Material(
               color: Colors.white,
-              size: 26,
+              child: InkWell(
+                splashColor: Colors.red[50],
+                onTap: () {
+                  print("Dislike button pressed");
+                },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const <Widget>[
+                    ImageIcon(
+                      AssetImage("assets/icons/Close.png"),
+                      color: Colors.red,
+                      size: 26,
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.2),
-                blurRadius: 5,
-                offset: const Offset(0, 2), 
+        ),
+        const SizedBox(width: 30),    
+        SizedBox.fromSize(
+          size: const Size(70, 70),
+          child: ClipOval(
+            child: Material(
+              color: Colors.red,
+              child: InkWell(
+                splashColor: Colors.red[50],
+                onTap: () {
+                  print("Like Button pressed");
+                },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const <Widget>[
+                    ImageIcon(
+                      AssetImage("assets/icons/Heart.png"),
+                      color: Colors.white,
+                      size: 30,
+                    ),
+                  ],
+                ),
               ),
-            ],
-            shape: BoxShape.circle,
-            gradient: const LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Color.fromRGBO(239, 85, 100, 1),
-                Color.fromRGBO(195, 46, 66, 1),
-                Color.fromRGBO(190, 40, 62, 1),
-                Color.fromRGBO(210, 66, 78, 1),
-                Color.fromRGBO(244, 130, 114, 1),
-              ]
             ),
           ),
         ),
         const SizedBox(width: 30),
-        Container(
-          width: 56,
-          height: 56,
-          child: GestureDetector(
-            onTap: () => print("user information"),
-            child: const ImageIcon(
-              AssetImage("assets/icons/info-icon.png"),
-              color: Color.fromARGB(255, 116, 201, 175),
-              size: 26,
-            ),
-          ),
-          decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.2),
-                blurRadius: 5,
-                offset: const Offset(0, 2), 
+        SizedBox.fromSize(
+          size: const Size(56, 56),
+          child: ClipOval(
+            child: Material(
+              color: Colors.white,
+              child: InkWell(
+                splashColor: Colors.red[50],
+                onTap: () {
+                  print("Info button pressed");
+                },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const <Widget>[
+                    ImageIcon(
+                      AssetImage("assets/icons/Info.png"),
+                      color: Color.fromARGB(255, 116, 201, 175),
+                      size: 30,
+                    ),
+                  ],
+                ),
               ),
-            ],
-            shape: BoxShape.circle,
-            color: Colors.white,
+            ),
           ),
         ),
       ],
@@ -197,18 +189,25 @@ class RoomiesPage extends StatelessWidget {
           verticalDirection: VerticalDirection.down,
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
-            Row(
-              children: <Widget>[
-                Text(
-                  (dataList[index]["firstName"] + " " + dataList[index]["lastName"] + ", "),
-                  style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 28),
-                ),
-                Text(
-                  (dataList[index]["age"]),
-                  style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 28),
-                ),
-              ]
-            ),
+            Row(children: <Widget>[
+              Text(
+                (dataList[index]["firstName"] +
+                    " " +
+                    dataList[index]["lastName"] +
+                    ", "),
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    fontSize: 28),
+              ),
+              Text(
+                (dataList[index]["age"]),
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    fontSize: 28),
+              ),
+            ]),
             Text(
               dataList[index]["email"],
               style: const TextStyle(color: Colors.white, fontSize: 16),
@@ -218,6 +217,4 @@ class RoomiesPage extends StatelessWidget {
       },
     );
   }
-
 }
-

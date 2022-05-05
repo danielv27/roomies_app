@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:roomies_app/widgets/card_provider.dart';
 
-class TinderCard extends StatefulWidget {
-  const TinderCard({Key? key, required this.urlImage}) : super(key: key);
+class ImageCard extends StatefulWidget {
+  const ImageCard({Key? key, required this.urlImage}) : super(key: key);
 
   final String urlImage;
 
   @override
-  State<TinderCard> createState() => _TinderCardState();
+  State<ImageCard> createState() => _ImageCardState();
 }
 
-class _TinderCardState extends State<TinderCard> {
+class _ImageCardState extends State<ImageCard> {
   @override
   Widget build(BuildContext context) => SizedBox.expand(
         child: buildFrontCard(),
