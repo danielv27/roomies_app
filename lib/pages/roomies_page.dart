@@ -105,7 +105,7 @@ class RoomiesPage extends StatelessWidget {
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
             Text(
-              (dataList[index]["firstName"] + " " + dataList[index]["lastName"]),
+              (dataList[index]["firstName"] + " " + dataList[index]["lastName"] + ", " + dataList[index]["age"]),
               style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 28),
             ),
             Text(
