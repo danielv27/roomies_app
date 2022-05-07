@@ -148,7 +148,7 @@ class LoginWidgetState extends State<LoginWidget> {
                 TextSpan(
                   recognizer: TapGestureRecognizer()
                   ..onTap = () {
-                    Navigator.pushReplacement(
+                    Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => SignupPage()),
                     );

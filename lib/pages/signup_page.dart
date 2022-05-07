@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class SignupPage extends StatefulWidget {
-  const SignupPage({Key? key}) : super(key: key);
+  SignupPage({Key? key,}) : super(key: key);
 
   @override
   State<SignupPage> createState() => _SignupPageState();
@@ -33,6 +33,7 @@ class _SignupPageState extends State<SignupPage> {
     return Scaffold(
       backgroundColor: Colors.red[200],
       appBar: AppBar(
+        leading: IconButton(icon: Icon(Icons.arrow_back),onPressed:() => Navigator.of(context)..pop()),
         backgroundColor: Colors.red[700],
         title: const Text("Signup"),
       ),

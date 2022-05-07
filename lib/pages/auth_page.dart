@@ -46,13 +46,12 @@ class AuthPageState extends State<AuthPage> {
               image: AssetImage('assets/images/app-icon.png'),
               height: 100,
             ),
-            Container(padding: const EdgeInsets.all(30)),
+            Container(padding: const EdgeInsets.all(20)),
             const Spacer(),
-            const Spacer(),
+            BottomSheetWidget(),
           ],
         ),
       ),
-      bottomSheet: BottomSheetWidget(),
     );
   }
 
