@@ -169,7 +169,7 @@ class LoginWidgetState extends State<LoginWidget> {
   }
 
   Future signIn() async {
-    Navigator.pop(context);
+    // Navigator.pop(context);
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text.trim(),

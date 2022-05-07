@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:roomies_app/widgets/bottom_sheet_widget.dart';
 import 'package:roomies_app/widgets/login_widget.dart';
 import 'package:roomies_app/widgets/signup_widget.dart';
 
@@ -10,14 +11,14 @@ class AuthPage extends StatefulWidget {
 // ignore: use_key_in_widget_constructors
 class AuthPageState extends State<AuthPage> {
 
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((_) async {
-       showBottom(context);
-      }
-    );
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   WidgetsBinding.instance?.addPostFrameCallback((_) async {
+  //      showBottom(context);
+  //     }
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -51,31 +52,8 @@ class AuthPageState extends State<AuthPage> {
           ],
         ),
       ),
+      bottomSheet: BottomSheetWidget(),
     );
   }
 
-  void showBottom(BuildContext context) {
-    showBottomSheet<void>(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(30.0), 
-          topRight: Radius.circular(30.0)
-        ),
-      ),
-      builder: (BuildContext context) {
-        return SingleChildScrollView(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                LoginWidget(),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
 }
