@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:roomies_app/widgets/bottom_sheet_widget.dart';
 import 'package:roomies_app/widgets/login_widget.dart';
 import 'package:roomies_app/widgets/signup_widget.dart';
 
@@ -9,16 +10,15 @@ class AuthPage extends StatefulWidget {
 
 // ignore: use_key_in_widget_constructors
 class AuthPageState extends State<AuthPage> {
-  bool isLogin = true;
 
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((_) async {
-       showBottom(context);
-      }
-    );
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   WidgetsBinding.instance?.addPostFrameCallback((_) async {
+  //      showBottom(context);
+  //     }
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -46,53 +46,13 @@ class AuthPageState extends State<AuthPage> {
               image: AssetImage('assets/images/app-icon.png'),
               height: 100,
             ),
-            const Text(
-              'Roomies',
-              style: TextStyle(fontFamily: 'Shink', fontSize: 50, color: Colors.white)
-            ),
-            Container(padding: const EdgeInsets.all(30)),
+            Container(padding: const EdgeInsets.all(20)),
             const Spacer(),
-            ElevatedButton(
-              child: const Text("Continue"),
-              style: ElevatedButton.styleFrom(primary: Colors.white),
-              onPressed: () {
-                showBottom(context);
-              },
-            ),
-            const Spacer(),
+            BottomSheetWidget(),
           ],
         ),
       ),
     );
   }
 
-  void showBottom(BuildContext context) {
-    void toggle() => setState(() => isLogin = !isLogin);
-
-    showModalBottomSheet<void>(
-      barrierColor: Colors.transparent,
-      isScrollControlled: true,
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(30.0), 
-          topRight: Radius.circular(30.0)
-        ),
-      ),
-      builder: (BuildContext context) {
-        return SingleChildScrollView(
-          padding: MediaQuery.of(context).viewInsets,
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                isLogin ? LoginWidget(onClickedSignUp: toggle): SignUpWidget(onClickedSignIn: toggle),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
 }
