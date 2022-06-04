@@ -4,8 +4,11 @@ import 'package:swipable_stack/swipable_stack.dart';
 
 const _images = [
   'assets/images/profile_pic.png',
-  'assets/images/profile_pic.png',
-  'assets/images/profile_pic.png',
+  'assets/images/profile_pic2.jpg',
+  'assets/images/profile_pic3.jpg',
+  'assets/images/profile_pic4.jpg',
+  'assets/images/profile_pic5.jpg',
+
 ];
 
 class SwipableCards extends StatefulWidget {
