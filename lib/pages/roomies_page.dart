@@ -2,9 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart'; //breaks ios add font manually
-import 'package:roomies_app/widgets/image_card.dart';
-
 import '../backend/database.dart';
+import '../widgets/swipable_cards.dart';
+
+//user for swipable cards testing. should be removed once images are added to database users
+const _images = [
+  'assets/images/profile_pic.png',
+  'assets/images/profile_pic.png',
+  'assets/images/profile_pic.png',
+];
 
 class RoomiesPage extends StatelessWidget {
   RoomiesPage({Key? key}) : super(key: key);
@@ -65,35 +71,39 @@ class RoomiesPage extends StatelessWidget {
         ),
   );
   }
+  
 
   SizedBox imageRoomiesInfo(BuildContext context) {
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.575,
-      width: double.infinity,
-      child: Stack(
-        children: <Widget>[
-          const ImageCard(
-            urlImage: "assets/images/profile_pic.png",
-          ),
-          SizedBox(
-            child: FutureBuilder(
-              future: FireStoreDataBase().getData(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return const Text(
-                    "Something went wrong",
-                  );
-                }
-                if (snapshot.connectionState == ConnectionState.done) {
-                  dataList = snapshot.data as List;
-                  return Container(); //return buildUsers(dataList);
-                }
-                return const Center(child: CircularProgressIndicator());
-              },
-            ),
-          ),
-        ],
-      ),
+      width: MediaQuery.of(context).size.width * 0.92,
+      child: SwipableCards(),
+
+
+
+      // child: Stack(
+      //   children: <Widget>[
+      //     Container(color: Colors.red,
+      //     ),
+      //     SizedBox(
+      //       child: FutureBuilder(
+      //         future: FireStoreDataBase().getData(),
+      //         builder: (context, snapshot) {
+      //           if (snapshot.hasError) {
+      //             return const Text(
+      //               "Something went wrong",
+      //             );
+      //           }
+      //           if (snapshot.connectionState == ConnectionState.done) {
+      //             dataList = snapshot.data as List;
+      //             return Container(); //return buildUsers(dataList);
+      //           }
+      //           return const Center(child: CircularProgressIndicator(color: Colors.red));
+      //         },
+      //       ),
+      //     ),
+      //   ],
+      // ),
     );
   }
 
