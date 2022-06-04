@@ -86,7 +86,7 @@ class RoomiesPage extends StatelessWidget {
                 }
                 if (snapshot.connectionState == ConnectionState.done) {
                   dataList = snapshot.data as List;
-                  return buildUsers(dataList);
+                  return Container(); //return buildUsers(dataList);
                 }
                 return const Center(child: CircularProgressIndicator());
               },
@@ -247,44 +247,32 @@ class RoomiesPage extends StatelessWidget {
     );
   }
 
-  Widget buildUsers(dataList) {
-    return ListView.separated(
-      reverse: true, //makes a column start from the bottom
-      padding: const EdgeInsets.all(28),
-      itemCount: dataList.length,
-      separatorBuilder: (BuildContext context, int index) => const Divider(),
-      itemBuilder: (BuildContext context, int index) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          verticalDirection: VerticalDirection.down,
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            Row(children: <Widget>[
-              Text(
-                (dataList[index]["firstName"] +
-                    " " +
-                    dataList[index]["lastName"] +
-                    ", "),
-                style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: 28),
-              ),
-              Text(
-                (dataList[index]["age"]),
-                style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: 28),
-              ),
-            ]),
-            Text(
-              dataList[index]["email"],
-              style: const TextStyle(color: Colors.white, fontSize: 16),
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // Widget buildUsers(dataList) {
+  //   return SizedBox(
+  //     height: 300,
+  //     child: ListView.builder(
+  //       reverse: true, //makes a column start from the bottom
+  //       padding: const EdgeInsets.all(24),
+  //       itemCount: dataList.length,
+  //       itemBuilder: (BuildContext context, int index) {
+  //         return (dataList[index] != null)? Row(
+  //           children: <Widget>[
+  //             Text(
+                
+  //               (dataList[index]["firstName"] +
+  //                   " " +
+  //                   dataList[index]["lastName"] +
+  //                   ", "),
+  //               style: const TextStyle(
+  //                   fontWeight: FontWeight.bold,
+  //                   color: Colors.white,
+  //                   fontSize: 28
+  //               ),
+  //             ),
+  //           ],
+  //         ): Container();
+  //       },
+  //     ),
+  //   );
+  // }
 }
