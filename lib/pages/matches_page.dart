@@ -22,7 +22,7 @@ class MatchesPage extends StatelessWidget {
       body: Center(
         child: Container(
           margin: const EdgeInsets.only(bottom: 5),
-          child: const ChatPage(
+          child: Container(//const ChatPage(
             
           ),
         ),
