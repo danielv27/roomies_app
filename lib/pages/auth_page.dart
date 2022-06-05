@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,6 +13,7 @@ class AuthPage extends StatefulWidget {
 // ignore: use_key_in_widget_constructors
 class AuthPageState extends State<AuthPage> {
   final emailController = TextEditingController();
+  final confirmEmailController = TextEditingController();
   final passwordController = TextEditingController();
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
@@ -250,7 +253,7 @@ class AuthPageState extends State<AuthPage> {
                         ),
                         const SizedBox(height: 6),
                         TextField(
-                          controller: firstNameController,
+                          controller: lastNameController,
                           style: const TextStyle(color: Colors.grey),
                           cursorColor: Colors.grey,
                           textInputAction: TextInputAction.next,
@@ -289,7 +292,7 @@ class AuthPageState extends State<AuthPage> {
                         ),
                         const SizedBox(height: 6),
                         TextField(
-                          controller: emailController,
+                          controller: confirmEmailController,
                           style: const TextStyle(color: Colors.grey),
                           cursorColor: Colors.grey,
                           textInputAction: TextInputAction.next,
@@ -372,7 +375,7 @@ class AuthPageState extends State<AuthPage> {
                             ),
                             label: const Text("Create account",
                               style: TextStyle(fontSize: 20, color: Colors.red)),
-                            onPressed: signIn,
+                            onPressed: signUp,
                           ),
                         ),
                         RichText(
@@ -400,27 +403,36 @@ class AuthPageState extends State<AuthPage> {
                   );
   }
 
-  
-  InputDecoration inputDecoration(String labelText) {
-    return InputDecoration(
-      focusColor: Colors.white,
-      labelStyle: const TextStyle(color: Colors.white),
-      labelText: labelText,
-      fillColor: Colors.white,
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(25.0),
-        borderSide: const BorderSide(color: Colors.white),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(25.0),
-        borderSide: const BorderSide(
-          color: Colors.black,
-          width: 2.0,
-        ),
-      ),
-    );
-  }
 
+  Future signUp() async {
+    try {
+      UserCredential result = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+      User? user = result.user;
+      await FirebaseFirestore.instance.collection('users')
+        .doc(user?.uid)
+        .set({ 
+          'firstName': firstNameController.text,
+          'lastName': lastNameController.text,
+          'email': emailController.text,
+        });
+    } on FirebaseAuthException catch (exc) {
+      setState(() {
+        if (exc.toString().contains('email') ||
+            exc.toString().contains('user')) {
+          invalidUserName = true;
+        }
+        if (exc.toString().contains('password')) {
+          invalidPassword = true;
+        }
+        if (kDebugMode) {
+          print(exc.toString());
+        }
+      });
+    }
+  }
 
   Future signIn() async {
     // Navigator.pop(context);
