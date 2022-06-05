@@ -98,309 +98,366 @@ class AuthPageState extends State<AuthPage> {
 
   Container showLogin() {
     return Container(
-                    padding: const EdgeInsets.all(30),
-                    child: Column(
-                      children: [
-                        const Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Welcome!",
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        TextField(
-                          controller: emailController,
-                          style: const TextStyle(color: Colors.grey),
-                          cursorColor: Colors.grey,
-                          textInputAction: TextInputAction.next,
-                          decoration: InputDecoration(
-                            focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-                            icon: const Icon(
-                              Icons.email,
-                              size: 20,
-                              color: Colors.grey,
-                            ),
-                            iconColor: Colors.grey,
-                            fillColor: Colors.grey,
-                            labelText: "Email",
-                            labelStyle: const TextStyle(color: Colors.grey),
-                            errorText: invalidUserName ? "Invalid Email" : null
-                          ),
-                        ),
-                        const SizedBox(height: 6),
-                        TextField(
-                          controller: passwordController,
-                          style: const TextStyle(color: Colors.grey),
-                          cursorColor: Colors.red,
-                          textInputAction: TextInputAction.done,
-                          obscureText: _isHiddrenPassword,
-                          decoration: InputDecoration(
-                            focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-                            icon: const Icon(
-                              Icons.lock,
-                              size: 20,
-                              color: Colors.grey,
-                            ),
-                            labelText: "Password",
-                            labelStyle: const TextStyle(color: Colors.grey),
-                            errorText: invalidPassword ? "Invalid Password" : null,
-                            suffixIcon: InkWell(
-                              onTap: _togglePasswordView,
-                              child: const Icon(
-                                Icons.visibility,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start, 
-                          children: [
-                            SizedBox(
-                              height: 24.0,
-                              width: 24.0,
-                              child: Theme(
-                                data: ThemeData(unselectedWidgetColor: (Colors.grey)),
-                                child: Checkbox(
-                                  activeColor: Colors.red,
-                                  value: _isChecked,
-                                  onChanged: _handleRemember),
-                              ),
-                            ),
-                            const SizedBox(width: 10.0),
-                            const Text(
-                              "Remember Me",
-                              style: TextStyle(color: Color(0xff646464), fontSize: 12, fontFamily: 'Rubic'),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        Container(
-                          width: 200,
-                          margin: const EdgeInsets.only(bottom: 10),
-                          child: ElevatedButton.icon(
-                            style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-                              shadowColor: Colors.red[900],
-                              elevation: 5,
-                              primary: Colors.white,
-                              minimumSize: const Size.fromHeight(42),
-                            ),
-                            icon: const Icon(
-                              Icons.lock_open,
-                              size: 24,
-                              color: Colors.red,
-                            ),
-                            label: const Text("Login", style: TextStyle(fontSize: 20, color: Colors.red)),
-                            onPressed: signIn,
-                          ),
-                        ),
-                        RichText(
-                          text: TextSpan(
-                            text: 'Don\'t have account? ',
-                            style: const TextStyle(
-                              color: Colors.grey,
-                            ),
-                            children: [  
-                              TextSpan(
-                                recognizer: TapGestureRecognizer()
-                                ..onTap = _toggleSignup,
-                                style: const TextStyle(
-                                  decoration: TextDecoration.underline,
-                                  color: Colors.blue,
-                                  backgroundColor: Colors.white
-                                ),
-                                text: 'Create account'
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
+      padding: const EdgeInsets.all(30),
+      child: Column(
+        children: [
+          const Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "Welcome!",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
+            ),
+          ),
+          const SizedBox(height: 10),
+          TextFormField(
+            controller: emailController,
+            style: const TextStyle(color: Colors.grey),
+            cursorColor: Colors.grey,
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: const Color.fromRGBO(245, 247, 251, 1),
+              border: OutlineInputBorder(
+                borderSide: const BorderSide(
+                  width: 0,
+                  style: BorderStyle.none,
+                ),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+              prefixIcon: const Icon(
+                Icons.email,
+                size: 20,
+                color: Colors.grey,
+              ),
+              labelText: "Email",
+              labelStyle: const TextStyle(color: Colors.grey),
+              errorText: invalidUserName ? "Invalid Email" : null,
+            ),
+          ),
+          const SizedBox(height: 20),
+          TextFormField(
+            controller: passwordController,
+            style: const TextStyle(color: Colors.grey),
+            cursorColor: Colors.red,
+            textInputAction: TextInputAction.done,
+            obscureText: _isHiddrenPassword,
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: const Color.fromRGBO(245, 247, 251, 1),
+              border: OutlineInputBorder(
+                borderSide: const BorderSide(
+                  width: 0,
+                  style: BorderStyle.none,
+                ),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+              prefixIcon: const Icon(
+                Icons.lock,
+                size: 20,
+                color: Colors.grey,
+              ),
+              labelText: "Password",
+              labelStyle: const TextStyle(color: Colors.grey),
+              errorText: invalidPassword ? "Invalid Password" : null,
+              suffixIcon: InkWell(
+                onTap: _togglePasswordView,
+                child: const Icon(
+                  Icons.visibility,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start, 
+            children: [
+              SizedBox(
+                height: 24.0,
+                width: 24.0,
+                child: Theme(
+                  data: ThemeData(unselectedWidgetColor: (Colors.grey)),
+                  child: Checkbox(
+                    activeColor: Colors.red,
+                    value: _isChecked,
+                    onChanged: _handleRemember),
+                ),
+              ),
+              const SizedBox(width: 10.0),
+              const Text(
+                "Remember Me",
+                style: TextStyle(color: Color(0xff646464), fontSize: 12, fontFamily: 'Rubic'),
+              ),
+            ],
+          ),
+          const SizedBox(height: 40),
+          Container(
+            decoration: applyBlueGradient(),
+            height: 50,
+            margin: const EdgeInsets.only(bottom: 10),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                elevation: 5,
+                primary: Colors.transparent,
+                shadowColor: Colors.transparent,
+                onSurface: Colors.transparent,
+                minimumSize: const Size.fromHeight(42),
+              ),
+              onPressed: signIn, 
+              child: const Text(
+                "Login",
+                style: TextStyle(fontSize: 20, color:Colors.white)
+              ),
+            ),
+          ),
+          RichText(
+            text: TextSpan(
+              text: 'Don\'t have account? ',
+              style: const TextStyle(
+                color: Colors.grey,
+              ),
+              children: [  
+                TextSpan(
+                  recognizer: TapGestureRecognizer()
+                  ..onTap = _toggleSignup,
+                  style: const TextStyle(
+                    color: Colors.blue,
+                    backgroundColor: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  text: 'Create account'
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  BoxDecoration applyBlueGradient() {
+    return BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            gradient: const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Color.fromRGBO(0, 53, 190, 1), Color.fromRGBO(57, 103, 224, 1), Color.fromRGBO(117, 154, 255, 1)]
+            )
+          );
   }
 
   Container showSignup() {
     return Container(
-                    padding: const EdgeInsets.all(30),
-                    child: Column(
-                      children: [
-                        const Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Create account",
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        TextField(
-                          controller: firstNameController,
-                          style: const TextStyle(color: Colors.grey),
-                          cursorColor: Colors.grey,
-                          textInputAction: TextInputAction.next,
-                          decoration: const InputDecoration(
-                            focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-                            icon: Icon(
-                              Icons.email,
-                              size: 20,
-                              color: Colors.grey,
-                            ),
-                            iconColor: Colors.grey,
-                            fillColor: Colors.grey,
-                            labelText: "First name",
-                            labelStyle: TextStyle(color: Colors.grey),
-                          ),
-                        ),
-                        const SizedBox(height: 6),
-                        TextField(
-                          controller: lastNameController,
-                          style: const TextStyle(color: Colors.grey),
-                          cursorColor: Colors.grey,
-                          textInputAction: TextInputAction.next,
-                          decoration: const InputDecoration(
-                            focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-                            icon: Icon(
-                              Icons.email,
-                              size: 20,
-                              color: Colors.grey,
-                            ),
-                            iconColor: Colors.grey,
-                            fillColor: Colors.grey,
-                            labelText: "Last name",
-                            labelStyle: TextStyle(color: Colors.grey),
-                          ),
-                        ),
-                        const SizedBox(height: 6),
-                        TextField(
-                          controller: emailController,
-                          style: const TextStyle(color: Colors.grey),
-                          cursorColor: Colors.grey,
-                          textInputAction: TextInputAction.next,
-                          decoration: InputDecoration(
-                            focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-                            icon: const Icon(
-                              Icons.email,
-                              size: 20,
-                              color: Colors.grey,
-                            ),
-                            iconColor: Colors.grey,
-                            fillColor: Colors.grey,
-                            labelText: "Email",
-                            labelStyle: const TextStyle(color: Colors.grey),
-                            errorText: invalidUserName ? "Invalid Email" : null
-                          ),
-                        ),
-                        const SizedBox(height: 6),
-                        TextField(
-                          controller: confirmEmailController,
-                          style: const TextStyle(color: Colors.grey),
-                          cursorColor: Colors.grey,
-                          textInputAction: TextInputAction.next,
-                          decoration: InputDecoration(
-                            focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-                            icon: const Icon(
-                              Icons.email,
-                              size: 20,
-                              color: Colors.grey,
-                            ),
-                            iconColor: Colors.grey,
-                            fillColor: Colors.grey,
-                            labelText: "Confirm email",
-                            labelStyle: const TextStyle(color: Colors.grey),
-                            errorText: invalidUserName ? "Invalid Email" : null
-                          ),
-                        ),
-                        const SizedBox(height: 6),
-                        TextField(
-                          controller: passwordController,
-                          style: const TextStyle(color: Colors.grey),
-                          cursorColor: Colors.red,
-                          textInputAction: TextInputAction.done,
-                          obscureText: _isHiddrenPassword,
-                          decoration: InputDecoration(
-                            focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-                            icon: const Icon(
-                              Icons.lock,
-                              size: 20,
-                              color: Colors.grey,
-                            ),
-                            labelText: "Password",
-                            labelStyle: const TextStyle(color: Colors.grey),
-                            errorText: invalidPassword ? "Invalid Password" : null,
-                            suffixIcon: InkWell(
-                              onTap: _togglePasswordView,
-                              child: const Icon(
-                                Icons.visibility,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start, 
-                          children: [
-                            SizedBox(
-                              height: 24.0,
-                              width: 24.0,
-                              child: Theme(
-                                data: ThemeData(unselectedWidgetColor: (Colors.grey)),
-                                child: Checkbox(
-                                  activeColor: Colors.red,
-                                  value: _isChecked,
-                                  onChanged: _handleRemember),
-                              ),
-                            ),
-                            const SizedBox(width: 10.0),
-                            const Text(
-                              "Remember Me",
-                              style: TextStyle(color: Color(0xff646464), fontSize: 12, fontFamily: 'Rubic'),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        Container(
-                          width: 200,
-                          margin: const EdgeInsets.only(bottom: 10),
-                          child: ElevatedButton.icon(
-                            style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
-                              shadowColor: Colors.red[900],
-                              elevation: 5,
-                              primary: Colors.white,
-                              minimumSize: const Size.fromHeight(42),
-                            ),
-                            icon: const Icon(
-                              Icons.lock_open,
-                              size: 24,
-                              color: Colors.red,
-                            ),
-                            label: const Text("Create account",
-                              style: TextStyle(fontSize: 20, color: Colors.red)),
-                            onPressed: signUp,
-                          ),
-                        ),
-                        RichText(
-                          text: TextSpan(
-                            text: 'Already have an account? ',
-                            style: const TextStyle(
-                              color: Colors.grey,
-                            ),
-                            children: [
-                              TextSpan(
-                                recognizer: TapGestureRecognizer()
-                                ..onTap = _toggleSignup,
-                                style: const TextStyle(
-                                  decoration: TextDecoration.underline,
-                                  color: Colors.blue,
-                                  backgroundColor: Colors.white
-                                ),
-                                text: 'Login'
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
+      padding: const EdgeInsets.all(30),
+      child: Column(
+        children: [
+          const Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              "Create account",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
+            ),
+          ),
+          const SizedBox(height: 10),
+          TextFormField(
+            controller: firstNameController,
+            style: const TextStyle(color: Colors.grey),
+            cursorColor: Colors.grey,
+            textInputAction: TextInputAction.next,
+            decoration: applyInputDecoration("First Name", Icons.person_rounded),
+          ),
+          const SizedBox(height: 6),
+          TextFormField(
+            controller: lastNameController,
+            style: const TextStyle(color: Colors.grey),
+            cursorColor: Colors.grey,
+            textInputAction: TextInputAction.next,
+            decoration: applyInputDecoration("Last Name", Icons.person_rounded)
+          ),
+          const SizedBox(height: 6),
+          TextFormField(
+            controller: emailController,
+            style: const TextStyle(color: Colors.grey),
+            cursorColor: Colors.grey,
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: const Color.fromRGBO(245, 247, 251, 1),
+              border: OutlineInputBorder(
+                borderSide: const BorderSide(
+                  width: 0,
+                  style: BorderStyle.none,
+                ),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+              prefixIcon: const Icon(
+                Icons.email_outlined,
+                size: 20,
+                color: Colors.grey,
+              ),
+              iconColor: Colors.grey,
+              labelText: "Email",
+              labelStyle: const TextStyle(color: Colors.grey),
+              errorText: invalidUserName ? "Invalid Email" : null
+            ),
+          ),
+          const SizedBox(height: 6),
+          TextFormField(
+            controller: confirmEmailController,
+            validator: (emailController) {
+              if (emailController == null || emailController.isEmpty) {
+                return 'Please enter some text';
+              }
+              return null;
+            },
+            style: const TextStyle(color: Colors.grey),
+            cursorColor: Colors.grey,
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: const Color.fromRGBO(245, 247, 251, 1),
+              border: OutlineInputBorder(
+                borderSide: const BorderSide(
+                  width: 0,
+                  style: BorderStyle.none,
+                ),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+              prefixIcon: const Icon(
+                Icons.email_outlined,
+                size: 20,
+                color: Colors.grey,
+              ),
+              iconColor: Colors.grey,
+              labelText: "Confirm email",
+              labelStyle: const TextStyle(color: Colors.grey),
+              errorText: invalidUserName ? "Invalid Email" : null
+            ),
+          ),
+          const SizedBox(height: 6),
+          TextFormField(
+            controller: passwordController,
+            style: const TextStyle(color: Colors.grey),
+            cursorColor: Colors.red,
+            textInputAction: TextInputAction.done,
+            obscureText: _isHiddrenPassword,
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: const Color.fromRGBO(245, 247, 251, 1),
+              border: OutlineInputBorder(
+                borderSide: const BorderSide(
+                  width: 0,
+                  style: BorderStyle.none,
+                ),
+                borderRadius: BorderRadius.circular(15),
+              ),
+              focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),                            
+              prefixIcon: const Icon(
+                Icons.lock,
+                size: 20,
+                color: Colors.grey,
+              ),
+              labelText: "Password",
+              labelStyle: const TextStyle(color: Colors.grey),
+              errorText: invalidPassword ? "Invalid Password" : null,
+              suffixIcon: InkWell(
+                onTap: _togglePasswordView,
+                child: const Icon(
+                  Icons.visibility,
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start, 
+            children: [
+              SizedBox(
+                height: 24.0,
+                width: 24.0,
+                child: Theme(
+                  data: ThemeData(unselectedWidgetColor: (Colors.grey)),
+                  child: Checkbox(
+                    activeColor: Colors.red,
+                    value: _isChecked,
+                    onChanged: _handleRemember),
+                ),
+              ),
+              const SizedBox(width: 10.0),
+              const Text(
+                "Remember Me",
+                style: TextStyle(color: Color(0xff646464), fontSize: 12, fontFamily: 'Rubic'),
+              ),
+            ],
+          ),
+          const SizedBox(height: 40),
+          Container(
+            decoration: applyBlueGradient(),
+            height: 50,
+            margin: const EdgeInsets.only(bottom: 10),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                elevation: 5,
+                primary: Colors.transparent,
+                shadowColor: Colors.transparent,
+                onSurface: Colors.transparent,
+                minimumSize: const Size.fromHeight(42),
+              ),
+              onPressed: signUp, 
+              child: const Text(
+                "Create account",
+                style: TextStyle(fontSize: 20, color:Colors.white)
+              ),
+            ),
+          ),
+          RichText(
+            text: TextSpan(
+              text: 'Already have an account? ',
+              style: const TextStyle(
+                color: Colors.grey,
+              ),
+              children: [
+                TextSpan(
+                  recognizer: TapGestureRecognizer()
+                  ..onTap = _toggleSignup,
+                  style: const TextStyle(
+                    color: Colors.blue,
+                    backgroundColor: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  text: 'Login'
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  InputDecoration applyInputDecoration(String labelName, IconData icon) {
+    return InputDecoration(
+      filled: true,
+      fillColor: const Color.fromRGBO(245, 247, 251, 1),
+      border: OutlineInputBorder(
+        borderSide: const BorderSide(
+          width: 0,
+          style: BorderStyle.none,
+        ),
+        borderRadius: BorderRadius.circular(15),
+      ),
+      focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+      labelText: labelName,
+      labelStyle: const TextStyle(color: Colors.grey),
+      prefixIcon: Icon(
+        icon,
+        size: 20,
+        color: Colors.grey,
+      ),
+    );
   }
 
 
