@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:swipable_stack/swipable_stack.dart';
 
-Widget likeDislikeBar(BuildContext context) {
+Widget likeDislikeBar(BuildContext context, SwipableStackController controller) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 23.0),
       child: Row(
@@ -15,6 +16,7 @@ Widget likeDislikeBar(BuildContext context) {
                   splashColor: Colors.red[50],
                   onTap: () {
                     print("Dislike button pressed");
+                    controller.next(swipeDirection: SwipeDirection.left);
                   },
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -40,6 +42,7 @@ Widget likeDislikeBar(BuildContext context) {
                   splashColor: Colors.red[50],
                   onTap: () {
                     print("Like Button pressed");
+                    controller.next(swipeDirection: SwipeDirection.right);
                   },
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,

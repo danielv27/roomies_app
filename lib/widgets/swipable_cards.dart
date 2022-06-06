@@ -41,10 +41,13 @@ class SwipableCardsState extends State<SwipableCards> {
       [
         SwipableStack(
           controller: _controller,
+          onSwipeCompleted: (index, direction) {
+            //this is where a swipe is handled
+            print("current index: $index,\ndirection: $direction\n");
+          },
           builder: (context, properties) {
             final itemIndex = properties.index % _images.length;
             return Stack(
-            
               children: [
                 SizedBox(
                   width: MediaQuery.of(context).size.width,
@@ -67,10 +70,28 @@ class SwipableCardsState extends State<SwipableCards> {
               ],
             );
           },
+          // will be used for adding a label to the swipable cards later on          
+          // overlayBuilder: (context, properties) {
+          //   //final opacity = min(properties.swipeProgress, 1.0);
+          //   final isRight = properties.direction == SwipeDirection.right;
+          //   return Opacity(
+          //     opacity: isRight ? 1 : 0,
+          //     child: Text("OLAOLAOAOALAOO"),
+          //   );
+          // },
+          //add this line to remove the ability to move the image around
+          //allowVerticalSwipe: false,
+          onWillMoveNext: (index, direction) {
+            final allowedActions = [
+            SwipeDirection.right,
+            SwipeDirection.left,
+            ];
+            return allowedActions.contains(direction);
+          },
         ),
         Align(
           alignment: Alignment.bottomCenter,
-          child: likeDislikeBar(context),
+          child: likeDislikeBar(context, _controller),
           
         ),
       ]
