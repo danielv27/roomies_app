@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:roomies_app/pages/list_house_page.dart';
 
 class SetupHouseProfile extends StatefulWidget {
   const SetupHouseProfile({Key? key}) : super(key: key);
@@ -107,7 +108,12 @@ class _SetupHouseProfileState extends State<SetupHouseProfile> {
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.8,
               child: ElevatedButton (
-                onPressed: () {  },
+                onPressed: () { 
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const ListHousePage()),
+                  );
+                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children:const [
