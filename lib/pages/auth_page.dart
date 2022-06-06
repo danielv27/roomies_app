@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:roomies_app/pages/setup_house_profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthPage extends StatefulWidget {
@@ -406,7 +407,12 @@ class AuthPageState extends State<AuthPage> {
                 onSurface: Colors.transparent,
                 minimumSize: const Size.fromHeight(42),
               ),
-              onPressed: signUp, 
+              onPressed: () {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const SetupHouseProfile()),
+                );
+                signUp;
+                },
               child: const Text(
                 "Create account",
                 style: TextStyle(fontSize: 20, color:Colors.white)
