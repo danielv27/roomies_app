@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:roomies_app/widgets/setup/address_question_page.dart';
+import 'package:roomies_app/widgets/setup/check_info_page.dart';
+import 'package:roomies_app/widgets/setup/property_question_page.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class ListHousePage extends StatefulWidget {
   const ListHousePage({Key? key}) : super(key: key);
@@ -9,10 +11,18 @@ class ListHousePage extends StatefulWidget {
   State<ListHousePage> createState() => _ListHousePageState();
 }
 
-class _ListHousePageState extends State<ListHousePage> {
-    final postalCodeController = TextEditingController();
-    final apartmentNumberController = TextEditingController();
-    final houseNumberController = TextEditingController();
+class _ListHousePageState extends State<ListHousePage> with SingleTickerProviderStateMixin {
+  final postalCodeController = TextEditingController();
+  final apartmentNumberController = TextEditingController();
+  final houseNumberController = TextEditingController();
+
+  final pageController = PageController();
+
+  @override
+  void dispose() {
+    pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,144 +33,65 @@ class _ListHousePageState extends State<ListHousePage> {
         leading: const BackButton(
           color: Colors.black,
         ),
+        title: Center(
+          child: SmoothPageIndicator(
+            controller: pageController,
+            count: 3,
+            effect: const WormEffect(
+              spacing: 16,
+              dotColor: Colors.grey,
+              activeDotColor: Colors.pink,
+            ),
+            onDotClicked: (index) => pageController.animateToPage(
+              index, 
+              duration: const Duration(milliseconds: 500), 
+              curve: Curves.easeIn)
+          ),
+        ),
       ),
-      body: Column(
-        children: <Widget> [
-          Container(
-            padding: const EdgeInsets.only(left: 30.0, right: 30, top: 5),
-            alignment: Alignment.centerLeft,
-            child: const Text(
-              "List house", 
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                color: Colors.grey,
+      body: Container(
+        padding: const EdgeInsets.only(bottom: 80),
+        child: PageView(
+          controller: pageController,
+          children: <Widget> [
+            AddressQuestionPage(postalCodeController: postalCodeController, houseNumberController: houseNumberController, apartmentNumberController: apartmentNumberController),
+            PropertyQuestionPage(),
+            CheckInfoPage(postalCodeController: postalCodeController),
+          ],
+        ),
+      ),
+      bottomSheet: SizedBox(
+        height: 80,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              decoration: applyBlueGradient(),
+              height: 50,
+              width: MediaQuery.of(context).size.width * 0.75,
+              margin: const EdgeInsets.only(bottom: 10),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  elevation: 5,
+                  primary: Colors.transparent,
+                  shadowColor: Colors.transparent,
+                  onSurface: Colors.transparent,
+                ),
+                onPressed: () { 
+                  pageController.nextPage(
+                    duration: const Duration(milliseconds: 500), 
+                    curve: Curves.easeInOut,
+                  );
+                }, 
+                child: const Text(
+                  "Next",
+                  style: TextStyle(fontSize: 20, color:Colors.white)
+                ),
               ),
             ),
-          ),
-          Container(
-            padding: const EdgeInsets.only(left: 30.0, right: 30, top: 5),
-            alignment: Alignment.centerLeft,
-            child: const Text(
-              "What is your address?", 
-              style: TextStyle(
-                fontWeight: FontWeight.w900,
-                fontSize: 24,
-              ),
-            ),
-          ),
-          const SizedBox(height: 10),
-          Container(
-            padding: const EdgeInsets.only(left: 30.0, right: 30, top: 20),
-            child: TextFormField(
-              controller: postalCodeController,
-              style: const TextStyle(color: Colors.grey),
-              cursorColor: Colors.grey,
-              textInputAction: TextInputAction.next,
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: const Color.fromRGBO(245, 247, 251, 1),
-                border: OutlineInputBorder(
-                  borderSide: const BorderSide(
-                    width: 0,
-                    style: BorderStyle.none,
-                  ),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-                prefixIcon: const Icon(
-                  Icons.person,
-                  size: 20,
-                  color: Colors.grey,
-                ),
-                labelText: "Postal code",
-                labelStyle: const TextStyle(color: Colors.grey),
-              ),
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.only(left: 30.0, right: 30, top: 20),
-            child: TextFormField(
-              controller: houseNumberController,
-              style: const TextStyle(color: Colors.grey),
-              cursorColor: Colors.grey,
-              textInputAction: TextInputAction.next,
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: const Color.fromRGBO(245, 247, 251, 1),
-                border: OutlineInputBorder(
-                  borderSide: const BorderSide(
-                    width: 0,
-                    style: BorderStyle.none,
-                  ),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-                prefixIcon: const Icon(
-                  Icons.person,
-                  size: 20,
-                  color: Colors.grey,
-                ),
-                labelText: "House number",
-                labelStyle: const TextStyle(color: Colors.grey),
-              ),
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.only(left: 30.0, right: 30, top: 20),
-            child: TextFormField(
-              controller: apartmentNumberController,
-              style: const TextStyle(color: Colors.grey),
-              cursorColor: Colors.grey,
-              textInputAction: TextInputAction.next,
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: const Color.fromRGBO(245, 247, 251, 1),
-                border: OutlineInputBorder(
-                  borderSide: const BorderSide(
-                    width: 0,
-                    style: BorderStyle.none,
-                  ),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-                prefixIcon: const Icon(
-                  Icons.person,
-                  size: 20,
-                  color: Colors.grey,
-                ),
-                labelText: "Apartment number",
-                labelStyle: const TextStyle(color: Colors.grey),
-              ),
-            ),
-          ),
-          const Spacer(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                decoration: applyBlueGradient(),
-                height: 50,
-                width: MediaQuery.of(context).size.width * 0.75,
-                margin: const EdgeInsets.only(bottom: 10),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    elevation: 5,
-                    primary: Colors.transparent,
-                    shadowColor: Colors.transparent,
-                    onSurface: Colors.transparent,
-                  ),
-                  onPressed: () {}, 
-                  child: const Text(
-                    "Next",
-                    style: TextStyle(fontSize: 20, color:Colors.white)
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 30),
-        ],
+          ],
+        ),
       ),
     );
   }
