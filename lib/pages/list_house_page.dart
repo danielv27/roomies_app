@@ -29,24 +29,25 @@ class _ListHousePageState extends State<ListHousePage> with SingleTickerProvider
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
+        centerTitle: true,
         backgroundColor: Colors.transparent,
         leading: const BackButton(
           color: Colors.black,
         ),
-        title: Center(
-          child: SmoothPageIndicator(
-            controller: pageController,
-            count: 3,
-            effect: const WormEffect(
-              spacing: 16,
-              dotColor: Colors.grey,
-              activeDotColor: Colors.pink,
-            ),
-            onDotClicked: (index) => pageController.animateToPage(
-              index, 
-              duration: const Duration(milliseconds: 500), 
-              curve: Curves.easeIn)
+        title: SmoothPageIndicator(
+          controller: pageController,
+          count: 3,
+          effect: const WormEffect(
+            spacing: 16,
+            dotHeight: 10,
+            dotWidth: 10,
+            dotColor: Colors.grey,
+            activeDotColor: Colors.pink,
           ),
+          onDotClicked: (index) => pageController.animateToPage(
+            index, 
+            duration: const Duration(milliseconds: 500), 
+            curve: Curves.easeIn)
         ),
       ),
       body: Container(
