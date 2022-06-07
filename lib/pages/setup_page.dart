@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:roomies_app/pages/list_house_page.dart';
+import 'package:roomies_app/pages/setup_house_page.dart';
+import 'package:roomies_app/pages/setup_profile_page.dart';
 
 class SetupHouseProfile extends StatefulWidget {
   const SetupHouseProfile({Key? key}) : super(key: key);
@@ -40,8 +41,8 @@ class _SetupHouseProfileState extends State<SetupHouseProfile> {
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 42,
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w900,
+                  // fontFamily: 'Inter',
+                  fontWeight: FontWeight.bold,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -58,8 +59,8 @@ class _SetupHouseProfileState extends State<SetupHouseProfile> {
               child: const Text(
                 "Are you looking for a roommate or a house, or do you want to rent/list your houses?",
                 style: TextStyle(
-                  fontFamily: 'Inter',
-                  fontWeight: FontWeight.w400,
+                  // fontFamily: 'Inter',
+                  // fontWeight: FontWeight.w400,
                   color: Colors.white,
                   fontSize: 16,
                 ),
@@ -76,15 +77,20 @@ class _SetupHouseProfileState extends State<SetupHouseProfile> {
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.8,
               child: ElevatedButton (
-                onPressed: () {  },
+                onPressed: () { 
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const SetupProfilePage()),
+                  );
+                },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children:const [
                     Text(
                       "Set up personal profile",
                       style: TextStyle(
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.w600,
+                        // fontFamily: 'Inter',
+                        // fontWeight: FontWeight.w600,
                         fontSize: 16,
                       ),
                     ),
@@ -111,7 +117,7 @@ class _SetupHouseProfileState extends State<SetupHouseProfile> {
                 onPressed: () { 
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const ListHousePage()),
+                    MaterialPageRoute(builder: (context) => const SetupHousePage()),
                   );
                  },
                 child: Row(
@@ -121,8 +127,8 @@ class _SetupHouseProfileState extends State<SetupHouseProfile> {
                       "List houses",
                       style: TextStyle(
                         fontSize: 16,
-                        fontFamily: 'Inter',
-                        fontWeight: FontWeight.w600,
+                        // fontFamily: 'Inter',
+                        // fontWeight: FontWeight.w600,
                         color: Colors.white,
                       ),
                     ),

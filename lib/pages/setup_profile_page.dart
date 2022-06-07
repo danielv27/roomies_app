@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:roomies_app/widgets/setup/address_question_page.dart';
-import 'package:roomies_app/widgets/setup/check_info_page.dart';
-import 'package:roomies_app/widgets/setup/property_question_page.dart';
+import 'package:roomies_app/widgets/profile_setup/complete_profile_widget.dart';
+import 'package:roomies_app/widgets/profile_setup/profile_question_widget.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-class ListHousePage extends StatefulWidget {
-  const ListHousePage({Key? key}) : super(key: key);
+class SetupProfilePage extends StatefulWidget {
+  const SetupProfilePage({Key? key}) : super(key: key);
 
   @override
-  State<ListHousePage> createState() => _ListHousePageState();
+  State<SetupProfilePage> createState() => _SetupProfilePageState();
 }
 
-class _ListHousePageState extends State<ListHousePage> with SingleTickerProviderStateMixin {
+class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerProviderStateMixin {
   final postalCodeController = TextEditingController();
   final apartmentNumberController = TextEditingController();
   final houseNumberController = TextEditingController();
@@ -55,9 +54,8 @@ class _ListHousePageState extends State<ListHousePage> with SingleTickerProvider
         child: PageView(
           controller: pageController,
           children: <Widget> [
-            AddressQuestionPage(postalCodeController: postalCodeController, houseNumberController: houseNumberController, apartmentNumberController: apartmentNumberController),
-            PropertyQuestionPage(),
-            CheckInfoPage(postalCodeController: postalCodeController),
+            ProfileQuestionPage(postalCodeController: postalCodeController, houseNumberController: houseNumberController, apartmentNumberController: apartmentNumberController),
+            CompleteProfilePage(postalCodeController: postalCodeController),
           ],
         ),
       ),
