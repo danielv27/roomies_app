@@ -237,17 +237,6 @@ class AuthPageState extends State<AuthPage> {
     );
   }
 
-  BoxDecoration applyBlueGradient() {
-    return BoxDecoration(
-      borderRadius: BorderRadius.circular(10),
-      gradient: const LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [Color.fromRGBO(0, 53, 190, 1), Color.fromRGBO(57, 103, 224, 1), Color.fromRGBO(117, 154, 255, 1)]
-      )
-    );
-  }
-
   Container showSignup() {
     return Container(
       padding: const EdgeInsets.all(30),
@@ -466,6 +455,16 @@ class AuthPageState extends State<AuthPage> {
     );
   }
 
+  BoxDecoration applyBlueGradient() {
+    return BoxDecoration(
+      borderRadius: BorderRadius.circular(10),
+      gradient: const LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [Color.fromRGBO(0, 53, 190, 1), Color.fromRGBO(57, 103, 224, 1), Color.fromRGBO(117, 154, 255, 1)]
+      )
+    );
+  }
 
   Future signUp() async {
     try {
