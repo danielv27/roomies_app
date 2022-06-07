@@ -17,6 +17,8 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
   final houseNumberController = TextEditingController();
   final pageController = PageController();
 
+  final ConstructionYearController = TextEditingController();
+
   bool isLastPage = false;
 
   @override
@@ -48,10 +50,15 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
             dotColor: Colors.grey,
             activeDotColor: Colors.pink,
           ),
-          onDotClicked: (index) => pageController.animateToPage(
-            index, 
-            duration: const Duration(milliseconds: 500), 
-            curve: Curves.easeIn)
+          onDotClicked: (index) {
+            if (checkControllers()) {
+              pageController.animateToPage(
+                index, 
+                duration: const Duration(milliseconds: 500), 
+                curve: Curves.easeIn,
+              );
+            }
+          },
         ),
       ),
       body: Container(
@@ -63,7 +70,7 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
           },
           children: <Widget> [
             ProfileQuestionPage(postalCodeController: postalCodeController, houseNumberController: houseNumberController, apartmentNumberController: apartmentNumberController),
-            CompleteProfilePage(postalCodeController: postalCodeController),
+            CompleteProfilePage(constructionYearController: ConstructionYearController),
           ],
         ),
       ),
@@ -87,6 +94,7 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
                     onSurface: Colors.transparent,
                   ),
                   onPressed: () async {
+                    registerProfile();
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(builder: ((context) => AuthPage()))
                     );
@@ -120,10 +128,12 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
                     onSurface: Colors.transparent,
                   ),
                   onPressed: () { 
-                    pageController.nextPage(
-                      duration: const Duration(milliseconds: 500), 
-                      curve: Curves.easeInOut,
-                    );
+                    if (checkControllers()) {
+                      pageController.nextPage(
+                        duration: const Duration(milliseconds: 500), 
+                        curve: Curves.easeInOut,
+                      );
+                    }
                   }, 
                   child: const Text(
                     "Next",
@@ -135,6 +145,13 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
           ),
         ),
     );
+  }
+
+  bool checkControllers() {
+    if (postalCodeController.text.isNotEmpty || houseNumberController.text.isNotEmpty || apartmentNumberController.text.isNotEmpty) {
+      return true;
+    }
+    return false;
   }
 
   BoxDecoration applyBlueGradient() {
@@ -149,4 +166,11 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
   }
 
 
+}
+
+/*
+  implement register function to save all the filled text fields and associate it with the user
+*/
+void registerProfile() {
+  print("user registered");
 }
