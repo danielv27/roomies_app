@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class ProfileQuestionPage extends StatelessWidget {
-  const ProfileQuestionPage({
+  ProfileQuestionPage({
     Key? key,
     required this.postalCodeController,
     required this.houseNumberController,
@@ -11,6 +14,12 @@ class ProfileQuestionPage extends StatelessWidget {
   final TextEditingController postalCodeController;
   final TextEditingController houseNumberController;
   final TextEditingController apartmentNumberController;
+
+  final test = "1018 LG";
+  final postCodeRegex = RegExp(r"^([0-9]{4} ?[A-Z]{2})$");
+  final houseNumberRegex = RegExp(r'^[a-zA-Z0-9\- ]*$');
+
+  final String apiKey = "8d09db9c-0ecc-463e-a020-035728fb3f75";
 
   @override
   Widget build(BuildContext context) {
@@ -43,12 +52,6 @@ class ProfileQuestionPage extends StatelessWidget {
           padding: const EdgeInsets.only(left: 30.0, right: 30, top: 20),
           child: TextFormField(
             controller: postalCodeController,
-            validator: (text) {
-              if (text == null || text.isEmpty) {
-                return 'Text is empty';
-              }
-              return null;
-            },
             style: const TextStyle(color: Colors.grey),
             cursorColor: Colors.grey,
             textInputAction: TextInputAction.next,
@@ -71,6 +74,13 @@ class ProfileQuestionPage extends StatelessWidget {
               labelText: "Postal code",
               labelStyle: const TextStyle(color: Colors.grey),
             ),
+            validator: (value) {
+              if (value!.isEmpty || !postCodeRegex.hasMatch(value)) {
+                return "Enter correct post code, example 1234 AB or 1234AB";
+              } else {
+                return null;
+              }
+            },
           ),
         ),
         Container(
@@ -99,6 +109,13 @@ class ProfileQuestionPage extends StatelessWidget {
               labelText: "House number",
               labelStyle: const TextStyle(color: Colors.grey),
             ),
+            validator: (value) {
+              if (value!.isEmpty || !houseNumberRegex.hasMatch(value)) {
+                return "Enter only numbers or alphabet letters";
+              } else {
+                return null;
+              }
+            },
           ),
         ),
         Container(
@@ -124,7 +141,7 @@ class ProfileQuestionPage extends StatelessWidget {
                 size: 20,
                 color: Colors.grey,
               ),
-              labelText: "Apartment number",
+              labelText: "Addition (optional)",
               labelStyle: const TextStyle(color: Colors.grey),
             ),
           ),
@@ -132,4 +149,19 @@ class ProfileQuestionPage extends StatelessWidget {
       ],
     );
   }
+
+  Future<bool> validateAddress() async {
+    var postCode = postalCodeController.text;
+    var houseNum = houseNumberController.text;
+    final response = await http.get(
+      Uri.parse('https://json.api-postcode.nl?postcode=' + postCode + '&number=' + houseNum), 
+      headers: {'token': apiKey},
+    );
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
 }

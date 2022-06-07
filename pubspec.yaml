@@ -50,6 +50,7 @@ dependencies:
   flutter_launcher_icons: ^0.9.2
   google_fonts: ^2.3.2
   smooth_page_indicator: ^1.0.0+2
+  http: ^0.13.4
 
 dev_dependencies:
   flutter_test:

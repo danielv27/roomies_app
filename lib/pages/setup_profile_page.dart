@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:roomies_app/pages/auth_page.dart';
 import 'package:roomies_app/widgets/profile_setup/complete_profile_widget.dart';
 import 'package:roomies_app/widgets/profile_setup/profile_question_widget.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:http/http.dart' as http;
 
 class SetupProfilePage extends StatefulWidget {
   const SetupProfilePage({Key? key}) : super(key: key);
@@ -17,9 +20,12 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
   final houseNumberController = TextEditingController();
   final pageController = PageController();
 
-  final ConstructionYearController = TextEditingController();
+  final constructionYearController = TextEditingController();
 
   bool isLastPage = false;
+
+  final String apiKey = "8d09db9c-0ecc-463e-a020-035728fb3f75";
+  bool addressValidated = false;
 
   @override
   void dispose() {
@@ -29,6 +35,8 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
     houseNumberController.dispose();
     super.dispose();
   }
+
+  final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -63,15 +71,18 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
       ),
       body: Container(
         padding: const EdgeInsets.only(bottom: 80),
-        child: PageView(
-          controller: pageController,
-          onPageChanged: (index) {
-            setState(() => isLastPage = index == 1);
-          },
-          children: <Widget> [
-            ProfileQuestionPage(postalCodeController: postalCodeController, houseNumberController: houseNumberController, apartmentNumberController: apartmentNumberController),
-            CompleteProfilePage(constructionYearController: ConstructionYearController),
-          ],
+        child: Form(
+          key: formKey,
+          child: PageView(
+            controller: pageController,
+            onPageChanged: (index) {
+              setState(() => isLastPage = index == 1);
+            },
+            children: <Widget> [
+              ProfileQuestionPage(postalCodeController: postalCodeController, houseNumberController: houseNumberController, apartmentNumberController: apartmentNumberController),
+              CompleteProfilePage(constructionYearController: constructionYearController),
+            ],
+          ),
         ),
       ),
       bottomSheet: isLastPage ?
@@ -128,11 +139,27 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
                     onSurface: Colors.transparent,
                   ),
                   onPressed: () { 
-                    if (checkControllers()) {
-                      pageController.nextPage(
-                        duration: const Duration(milliseconds: 500), 
-                        curve: Curves.easeInOut,
-                      );
+                    if (checkControllers() && formKey.currentState!.validate()) {
+                      validateAddress(postalCodeController, houseNumberController, apiKey);
+                      setState(() {
+                        addressValidated = false;
+                      });
+                      if (addressValidated) {
+                        pageController.nextPage(
+                          duration: const Duration(milliseconds: 500), 
+                          curve: Curves.easeInOut,
+                        );
+                      } else {
+                        showDialog(
+                          builder: (BuildContext context) { 
+                             return const AlertDialog(
+                               title: Text('Wrong Address'), 
+                               content: Text('Either post code or house number wrong'),
+                             );
+                           }, 
+                          context: context
+                        );
+                      }
                     }
                   }, 
                   child: const Text(
@@ -165,6 +192,23 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
     );
   }
 
+  validateAddress(TextEditingController postalCodeController, TextEditingController houseNumberController, String apiKey) async {
+    var postCode = postalCodeController.text;
+    var houseNum = houseNumberController.text;
+      
+    final response = await http.get(
+      Uri.parse('https://json.api-postcode.nl?postcode=' + postCode + '&number=' + houseNum), 
+      headers: {'token': apiKey},
+    );
+    if (response.statusCode == 200) {
+      print("Successfully checked address");
+      setState(() {
+        addressValidated = true;
+      });
+    } else {
+      print("Incorrect address");
+    }
+  }
 
 }
 
@@ -174,3 +218,4 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
 void registerProfile() {
   print("user registered");
 }
+
