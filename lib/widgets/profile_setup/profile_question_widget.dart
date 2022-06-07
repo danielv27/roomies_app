@@ -43,6 +43,12 @@ class ProfileQuestionPage extends StatelessWidget {
           padding: const EdgeInsets.only(left: 30.0, right: 30, top: 20),
           child: TextFormField(
             controller: postalCodeController,
+            validator: (text) {
+              if (text == null || text.isEmpty) {
+                return 'Text is empty';
+              }
+              return null;
+            },
             style: const TextStyle(color: Colors.grey),
             cursorColor: Colors.grey,
             textInputAction: TextInputAction.next,

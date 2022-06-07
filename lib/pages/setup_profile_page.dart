@@ -15,13 +15,16 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
   final postalCodeController = TextEditingController();
   final apartmentNumberController = TextEditingController();
   final houseNumberController = TextEditingController();
-
   final pageController = PageController();
+
   bool isLastPage = false;
 
   @override
   void dispose() {
     pageController.dispose();
+    postalCodeController.dispose();
+    apartmentNumberController.dispose();
+    houseNumberController.dispose();
     super.dispose();
   }
 
