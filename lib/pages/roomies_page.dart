@@ -24,40 +24,66 @@ class RoomiesPage extends StatelessWidget {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(75),
         child: Container(
+          
           decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
                 Color.fromRGBO(239, 85, 100, 1),
                 Color.fromRGBO(195, 46, 66, 1),
                 Color.fromRGBO(190, 40, 62, 1),
                 Color.fromRGBO(210, 66, 78, 1),
                 Color.fromRGBO(244, 130, 114, 1),
-              ])),
+              ]
+            )
+          ),
           child: AppBar(
+            
+            centerTitle: false,
             automaticallyImplyLeading: false,
             systemOverlayStyle: const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
             backgroundColor: Colors.transparent,
             shadowColor: Colors.transparent,
             toolbarHeight: 75,
-            title: Text(
-              "Find roommates",
-              style: GoogleFonts.lato(
-                textStyle: const TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
+            title: Padding(
+              padding: const EdgeInsets.only(left: 10,bottom: 8),
+              child: Text(
+                "Find roommates",
+                style: GoogleFonts.lato(
+                  textStyle: const TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    
+                  ),
                 ),
               ),
             ),
             actions: <Widget>[
-              IconButton(
-                onPressed: () => FirebaseAuth.instance.signOut(),
-                icon: const Icon(
-                  Icons.settings_applications_sharp,
-                  size: 32,
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(right:35.0, bottom: 10),
+                  child: Container(
+                    width: 50,
+                    height: 50,
+                    child: TextButton(
+                      style: ButtonStyle(
+                        shape: MaterialStateProperty.all(
+                          const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(9.0)), 
+                          ),
+                        ), 
+
+                        backgroundColor: MaterialStateProperty.all(Colors.white.withOpacity(0.2)) 
+                      ),
+                      onPressed: () => FirebaseAuth.instance.signOut(),
+                      child: Image.asset('assets/icons/nextroom_icon_white.png',width: 28),
+                      
+                    ),
+                  ),
                 ),
               ),
+              
             ],
           ),
         ),

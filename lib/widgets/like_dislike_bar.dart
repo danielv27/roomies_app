@@ -11,7 +11,7 @@ Widget likeDislikeBar(BuildContext context, SwipableStackController controller) 
             size: const Size(56, 56),
             child: ClipOval(
               child: Material(
-                color: Colors.white,
+                color: Colors.white.withOpacity(0.4),
                 child: InkWell(
                   splashColor: Colors.red[50],
                   onTap: () {
@@ -24,7 +24,7 @@ Widget likeDislikeBar(BuildContext context, SwipableStackController controller) 
                       ImageIcon(
                         AssetImage("assets/icons/Close.png"),
                         color: Colors.red,
-                        size: 26,
+                        size: 18,
                       ),
                     ],
                   ),
@@ -36,23 +36,38 @@ Widget likeDislikeBar(BuildContext context, SwipableStackController controller) 
           SizedBox.fromSize(
             size: const Size(70, 70),
             child: ClipOval(
-              child: Material(
-                color: Colors.red,
-                child: InkWell(
-                  splashColor: Colors.red[50],
-                  onTap: () {
-                    print("Like Button pressed");
-                    controller.next(swipeDirection: SwipeDirection.right);
-                  },
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const <Widget>[
-                      ImageIcon(
-                        AssetImage("assets/icons/Heart.png"),
-                        color: Colors.white,
-                        size: 30,
-                      ),
-                    ],
+              child: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color.fromRGBO(239, 85, 100, 1),
+                      Color.fromRGBO(195, 46, 66, 1),
+                      Color.fromRGBO(190, 40, 62, 1),
+                      Color.fromRGBO(210, 66, 78, 1),
+                      Color.fromRGBO(244, 130, 114, 1),
+                    ]
+                  )
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    splashColor: Colors.red[50],
+                    onTap: () {
+                      print("Like Button pressed");
+                      controller.next(swipeDirection: SwipeDirection.right);
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const <Widget>[
+                        ImageIcon(
+                          AssetImage("assets/icons/Heart.png"),
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -63,7 +78,7 @@ Widget likeDislikeBar(BuildContext context, SwipableStackController controller) 
             size: const Size(56, 56),
             child: ClipOval(
               child: Material(
-                color: Colors.white,
+                color: Colors.white.withOpacity(0.4),
                 child: InkWell(
                   splashColor: Colors.red[50],
                   onTap: () {
@@ -74,9 +89,10 @@ Widget likeDislikeBar(BuildContext context, SwipableStackController controller) 
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: const <Widget>[
                       ImageIcon(
-                        AssetImage("assets/icons/Info.png"),
-                        color: Color.fromARGB(255, 116, 201, 175),
-                        size: 30,
+                        AssetImage("assets/icons/Info_circle.png"),
+                        color: Colors.white,
+                        
+                        size: 28,
                       ),
                     ],
                   ),
