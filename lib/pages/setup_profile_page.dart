@@ -25,7 +25,7 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
   bool isLastPage = false;
 
   final String apiKey = "8d09db9c-0ecc-463e-a020-035728fb3f75";
-  bool addressValidated = false;
+  bool addressValidated = true; // change to false
 
   @override
   void dispose() {
@@ -140,10 +140,14 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
                   ),
                   onPressed: () { 
                     if (checkControllers() && formKey.currentState!.validate()) {
-                      validateAddress(postalCodeController, houseNumberController, apiKey);
-                      setState(() {
-                        addressValidated = false;
-                      });
+                      pageController.nextPage(
+                        duration: const Duration(milliseconds: 500), 
+                        curve: Curves.easeInOut,
+                      );
+                      // setState(() {
+                      //   addressValidated = false;
+                      // });
+                      // validateAddress(postalCodeController, houseNumberController, apiKey);
                       if (addressValidated) {
                         pageController.nextPage(
                           duration: const Duration(milliseconds: 500), 
@@ -192,23 +196,26 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
     );
   }
 
-  validateAddress(TextEditingController postalCodeController, TextEditingController houseNumberController, String apiKey) async {
-    var postCode = postalCodeController.text;
-    var houseNum = houseNumberController.text;
+  // validateAddress(TextEditingController postalCodeController, TextEditingController houseNumberController, String apiKey) async {
+  //   var postCode = postalCodeController.text;
+  //   var houseNum = houseNumberController.text;
       
-    final response = await http.get(
-      Uri.parse('https://json.api-postcode.nl?postcode=' + postCode + '&number=' + houseNum), 
-      headers: {'token': apiKey},
-    );
-    if (response.statusCode == 200) {
-      print("Successfully checked address");
-      setState(() {
-        addressValidated = true;
-      });
-    } else {
-      print("Incorrect address");
-    }
-  }
+  //   final response = await http.get(
+  //     Uri.parse('https://json.api-postcode.nl?postcode=' + postCode + '&number=' + houseNum), 
+  //     headers: {'token': apiKey},
+  //   );
+  //   if (response.statusCode == 200) {
+  //     print("Successfully checked address");
+  //     setState(() {
+  //       addressValidated = true;
+  //     });
+  //   } else {
+  //     print("Incorrect address");
+  //     setState(() {
+  //       addressValidated = false;
+  //     });
+  //   }
+  // }
 
 }
 

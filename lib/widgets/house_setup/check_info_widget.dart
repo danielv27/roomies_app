@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 class CheckInfoPage extends StatelessWidget {
   const CheckInfoPage({
     Key? key,
-    required this.postalCodeController,
+    required this.constructionYearController,
   }) : super(key: key);
 
-  final TextEditingController postalCodeController;
+  final TextEditingController constructionYearController;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ class CheckInfoPage extends StatelessWidget {
         Container(
           padding: const EdgeInsets.only(left: 30.0, right: 30, top: 20),
           child: TextFormField(
-            controller: postalCodeController,
+            controller: constructionYearController,
             style: const TextStyle(color: Colors.grey),
             cursorColor: Colors.grey,
             textInputAction: TextInputAction.next,

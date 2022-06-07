@@ -16,15 +16,25 @@ class _SetupHousePageState extends State<SetupHousePage> with SingleTickerProvid
   final postalCodeController = TextEditingController();
   final apartmentNumberController = TextEditingController();
   final houseNumberController = TextEditingController();
-
   final pageController = PageController();
+
+  final constructionYearController = TextEditingController();
+
   bool isLastPage = false;
+
+  final String apiKey = "8d09db9c-0ecc-463e-a020-035728fb3f75";
+  bool addressValidated = true; // change to false
 
   @override
   void dispose() {
     pageController.dispose();
+    postalCodeController.dispose();
+    apartmentNumberController.dispose();
+    houseNumberController.dispose();
     super.dispose();
   }
+
+  final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -46,24 +56,33 @@ class _SetupHousePageState extends State<SetupHousePage> with SingleTickerProvid
             dotColor: Colors.grey,
             activeDotColor: Colors.pink,
           ),
-          onDotClicked: (index) => pageController.animateToPage(
-            index, 
-            duration: const Duration(milliseconds: 500), 
-            curve: Curves.easeIn)
+          onDotClicked: (index) {
+            if (checkControllers()) {
+              pageController.animateToPage(
+                index, 
+                duration: const Duration(milliseconds: 500), 
+                curve: Curves.easeIn,
+              );
+            }
+          },
         ),
       ),
       body: Container(
         padding: const EdgeInsets.only(bottom: 80),
-        child: PageView(
-          controller: pageController,
-          onPageChanged: (index) {
-            setState(() => isLastPage = index == 2);
-          },
-          children: <Widget> [
-            AddressQuestionPage(postalCodeController: postalCodeController, houseNumberController: houseNumberController, apartmentNumberController: apartmentNumberController),
-            PropertyQuestionPage(),
-            CheckInfoPage(postalCodeController: postalCodeController),
-          ],
+        child: Form(
+          key: formKey,
+          child: PageView(
+            physics: const NeverScrollableScrollPhysics(),
+            controller: pageController,
+            onPageChanged: (index) {
+              setState(() => isLastPage = index == 2);
+            },
+            children: <Widget> [
+              AddressQuestionPage(postalCodeController: postalCodeController, houseNumberController: houseNumberController, apartmentNumberController: apartmentNumberController),
+              PropertyQuestionPage(),
+              CheckInfoPage(constructionYearController: constructionYearController),
+            ],
+          ),
         ),
       ),
       bottomSheet: isLastPage ?
@@ -86,6 +105,7 @@ class _SetupHousePageState extends State<SetupHousePage> with SingleTickerProvid
                     onSurface: Colors.transparent,
                   ),
                   onPressed: () async {
+                    registerHouse();
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(builder: ((context) => AuthPage()))
                     );
@@ -119,11 +139,33 @@ class _SetupHousePageState extends State<SetupHousePage> with SingleTickerProvid
                     onSurface: Colors.transparent,
                   ),
                   onPressed: () { 
-                    pageController.nextPage(
-                      duration: const Duration(milliseconds: 500), 
-                      curve: Curves.easeInOut,
-                    );
-                  }, 
+                    if (checkControllers() && formKey.currentState!.validate()) {
+                      pageController.nextPage(
+                        duration: const Duration(milliseconds: 500), 
+                        curve: Curves.easeInOut,
+                      );
+                      // setState(() {
+                      //   addressValidated = false;
+                      // });
+                      // validateAddress(postalCodeController, houseNumberController, apiKey);
+                      if (addressValidated) {
+                        pageController.nextPage(
+                          duration: const Duration(milliseconds: 500), 
+                          curve: Curves.easeInOut,
+                        );
+                      } else {
+                        showDialog(
+                          builder: (BuildContext context) { 
+                             return const AlertDialog(
+                               title: Text('Wrong Address'), 
+                               content: Text('Either post code or house number wrong'),
+                             );
+                           }, 
+                          context: context
+                        );
+                      }
+                    }
+                  },
                   child: const Text(
                     "Next",
                     style: TextStyle(fontSize: 20, color:Colors.white)
@@ -134,6 +176,13 @@ class _SetupHousePageState extends State<SetupHousePage> with SingleTickerProvid
           ),
         ),
     );
+  }
+
+  bool checkControllers() {
+    if (postalCodeController.text.isNotEmpty || houseNumberController.text.isNotEmpty || apartmentNumberController.text.isNotEmpty) {
+      return true;
+    }
+    return false;
   }
 
   BoxDecoration applyBlueGradient() {
@@ -148,4 +197,11 @@ class _SetupHousePageState extends State<SetupHousePage> with SingleTickerProvid
   }
 
 
+}
+
+/*
+  implement register function to save all the filled text fields and associate it with the house
+*/
+void registerHouse() {
+  print("house registered");
 }
