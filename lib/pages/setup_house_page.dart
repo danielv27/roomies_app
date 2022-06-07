@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:roomies_app/pages/auth_page.dart';
 import 'package:roomies_app/widgets/house_setup/address_question_widget.dart';
 import 'package:roomies_app/widgets/house_setup/check_info_widget.dart';
 import 'package:roomies_app/widgets/house_setup/property_question_widget.dart';
@@ -17,6 +18,7 @@ class _SetupHousePageState extends State<SetupHousePage> with SingleTickerProvid
   final houseNumberController = TextEditingController();
 
   final pageController = PageController();
+  bool isLastPage = false;
 
   @override
   void dispose() {
@@ -54,6 +56,9 @@ class _SetupHousePageState extends State<SetupHousePage> with SingleTickerProvid
         padding: const EdgeInsets.only(bottom: 80),
         child: PageView(
           controller: pageController,
+          onPageChanged: (index) {
+            setState(() => isLastPage = index == 2);
+          },
           children: <Widget> [
             AddressQuestionPage(postalCodeController: postalCodeController, houseNumberController: houseNumberController, apartmentNumberController: apartmentNumberController),
             PropertyQuestionPage(),
@@ -61,39 +66,73 @@ class _SetupHousePageState extends State<SetupHousePage> with SingleTickerProvid
           ],
         ),
       ),
-      bottomSheet: SizedBox(
-        height: 80,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              decoration: applyBlueGradient(),
-              height: 50,
-              width: MediaQuery.of(context).size.width * 0.75,
-              margin: const EdgeInsets.only(bottom: 10),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  elevation: 5,
-                  primary: Colors.transparent,
-                  shadowColor: Colors.transparent,
-                  onSurface: Colors.transparent,
-                ),
-                onPressed: () { 
-                  pageController.nextPage(
-                    duration: const Duration(milliseconds: 500), 
-                    curve: Curves.easeInOut,
-                  );
-                }, 
-                child: const Text(
-                  "Next",
-                  style: TextStyle(fontSize: 20, color:Colors.white)
+      bottomSheet: isLastPage ?
+        SizedBox(
+          height: 80,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                decoration: applyBlueGradient(),
+                height: 50,
+                width: MediaQuery.of(context).size.width * 0.75,
+                margin: const EdgeInsets.only(bottom: 10),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    elevation: 5,
+                    primary: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    onSurface: Colors.transparent,
+                  ),
+                  onPressed: () async {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: ((context) => AuthPage()))
+                    );
+                  }, 
+                  child: const Text(
+                    "Complete house",
+                    style: TextStyle(fontSize: 20, color:Colors.white)
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
+        )
+        :
+        SizedBox(
+          height: 80,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                decoration: applyBlueGradient(),
+                height: 50,
+                width: MediaQuery.of(context).size.width * 0.75,
+                margin: const EdgeInsets.only(bottom: 10),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    elevation: 5,
+                    primary: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    onSurface: Colors.transparent,
+                  ),
+                  onPressed: () { 
+                    pageController.nextPage(
+                      duration: const Duration(milliseconds: 500), 
+                      curve: Curves.easeInOut,
+                    );
+                  }, 
+                  child: const Text(
+                    "Next",
+                    style: TextStyle(fontSize: 20, color:Colors.white)
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
     );
   }
 

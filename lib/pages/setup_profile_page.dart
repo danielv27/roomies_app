@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:roomies_app/pages/auth_page.dart';
 import 'package:roomies_app/widgets/profile_setup/complete_profile_widget.dart';
 import 'package:roomies_app/widgets/profile_setup/profile_question_widget.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -16,6 +17,7 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
   final houseNumberController = TextEditingController();
 
   final pageController = PageController();
+  bool isLastPage = false;
 
   @override
   void dispose() {
@@ -35,7 +37,7 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
         ),
         title: SmoothPageIndicator(
           controller: pageController,
-          count: 3,
+          count: 2,
           effect: const WormEffect(
             spacing: 16,
             dotHeight: 10,
@@ -53,45 +55,82 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
         padding: const EdgeInsets.only(bottom: 80),
         child: PageView(
           controller: pageController,
+          onPageChanged: (index) {
+            setState(() => isLastPage = index == 1);
+          },
           children: <Widget> [
             ProfileQuestionPage(postalCodeController: postalCodeController, houseNumberController: houseNumberController, apartmentNumberController: apartmentNumberController),
             CompleteProfilePage(postalCodeController: postalCodeController),
           ],
         ),
       ),
-      bottomSheet: SizedBox(
-        height: 80,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              decoration: applyBlueGradient(),
-              height: 50,
-              width: MediaQuery.of(context).size.width * 0.75,
-              margin: const EdgeInsets.only(bottom: 10),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  elevation: 5,
-                  primary: Colors.transparent,
-                  shadowColor: Colors.transparent,
-                  onSurface: Colors.transparent,
-                ),
-                onPressed: () { 
-                  pageController.nextPage(
-                    duration: const Duration(milliseconds: 500), 
-                    curve: Curves.easeInOut,
-                  );
-                }, 
-                child: const Text(
-                  "Next",
-                  style: TextStyle(fontSize: 20, color:Colors.white)
+      bottomSheet: isLastPage ?
+        SizedBox(
+          height: 80,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                decoration: applyBlueGradient(),
+                height: 50,
+                width: MediaQuery.of(context).size.width * 0.75,
+                margin: const EdgeInsets.only(bottom: 10),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    elevation: 5,
+                    primary: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    onSurface: Colors.transparent,
+                  ),
+                  onPressed: () async {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: ((context) => AuthPage()))
+                    );
+                  }, 
+                  child: const Text(
+                    "Complete profile",
+                    style: TextStyle(fontSize: 20, color:Colors.white)
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
+        )
+        : 
+        SizedBox(
+          height: 80,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                decoration: applyBlueGradient(),
+                height: 50,
+                width: MediaQuery.of(context).size.width * 0.75,
+                margin: const EdgeInsets.only(bottom: 10),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    elevation: 5,
+                    primary: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    onSurface: Colors.transparent,
+                  ),
+                  onPressed: () { 
+                    pageController.nextPage(
+                      duration: const Duration(milliseconds: 500), 
+                      curve: Curves.easeInOut,
+                    );
+                  }, 
+                  child: const Text(
+                    "Next",
+                    style: TextStyle(fontSize: 20, color:Colors.white)
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
     );
   }
 
