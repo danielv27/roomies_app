@@ -400,8 +400,8 @@ class AuthPageState extends State<AuthPage> {
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (context) => const SetupHouseProfile()),
                 );
-                signUp;
-                },
+                // signUp;
+              },
               child: const Text(
                 "Create account",
                 style: TextStyle(fontSize: 20, color:Colors.white)
