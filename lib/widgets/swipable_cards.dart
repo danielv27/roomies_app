@@ -25,13 +25,7 @@ const userImageArray = [
     'assets/images/profile_pic5.jpg',
   ]
 ];
-
-const _images = [
-  'assets/images/profile_pic2.jpg',
-  'assets/images/profile_pic3.jpg',
-  'assets/images/profile_pic4.jpg',
-  'assets/images/profile_pic5.jpg',
-];
+//late final imageController = PageController(initialPage: 1);
 
 class SwipableCards extends StatefulWidget {
   @override
@@ -40,7 +34,7 @@ class SwipableCards extends StatefulWidget {
 
 class SwipableCardsState extends State<SwipableCards> {
   late final SwipableStackController swipeController; // = SwipableStackController()..addListener(_listenController);
-  late final imageController = PageController(viewportFraction: 1,keepPage: true);
+
   
 
   void _listenController() => setState(() {});
@@ -54,7 +48,7 @@ class SwipableCardsState extends State<SwipableCards> {
   @override
   void dispose() {
     super.dispose();
-    
+    //imageController.dispose();
     swipeController
       ..removeListener(_listenController)
       ..dispose();
@@ -80,7 +74,10 @@ class SwipableCardsState extends State<SwipableCards> {
             print("current index: $index,\ndirection: $direction\n");
           },
           builder: (context, properties) {
-            final currentUserIndex = properties.index % _images.length;
+            final currentUserIndex = properties.index % userImageArray.length;
+            final currenUserImages = userImageArray[currentUserIndex];
+            final imgController = PageController(initialPage: 0);
+
             return Stack(
               children: [
                 SizedBox(
@@ -88,40 +85,54 @@ class SwipableCardsState extends State<SwipableCards> {
                   height: MediaQuery.of(context).size.height * 0.72,
                   //child: Image.asset(_images[currentUserIndex],fit: BoxFit.fitHeight),
                   child: PageView.builder(
+                    
+                    itemCount: currenUserImages.length,
+                    scrollDirection: Axis.horizontal,
                     physics: const NeverScrollableScrollPhysics(),
-                    controller: imageController,
+                    controller: imgController,
                     itemBuilder: (context, index){
                       return GestureDetector(
-                        child: Image.asset(userImageArray[currentUserIndex][index],fit: BoxFit.fitHeight),
-                        onTapDown:(TapDownDetails details) {
+                        child: Image.asset(currenUserImages[index],fit: BoxFit.fitHeight),
+                        onTapUp:(details) {
                           var deviceWidth = MediaQuery.of(context).size.width;
                           var xPos = details.globalPosition.dx;
                           print(MediaQuery.of(context).size.width);
                           print("tap on " + xPos.toString());
                           if(xPos > deviceWidth * 0.65){
-                            imageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-                            //index++;
-                            print(index);
-
+                              imgController.nextPage(duration: Duration(milliseconds: 200),curve: Curves.easeIn);
+                              print("current index: $index");
+                            
                           }
+                          if(xPos < deviceWidth * 0.35){
+                           
+                              imgController.previousPage(duration: Duration(milliseconds: 200),curve: Curves.easeIn);
+                              print("current index: $index");
+                            
+                          }
+                          
                         },                        
                       ); // return Image.asset(_images[index],fit: BoxFit.fitHeight);
                     },
                   ),
                 ),
                 Align(
-                alignment: Alignment.topCenter,
-                child: SmoothPageIndicator(
-                controller: imageController,
-                count: userImageArray[currentUserIndex].length,
-                effect: const ScrollingDotsEffect(
-                  dotHeight: 12,
-                  dotWidth: 30,
-                  
-                  activeDotColor: Colors.white,
-                  activeDotScale: 1.1
-                ),
-              ),
+                  alignment: Alignment.topCenter,
+                  child: SmoothPageIndicator(
+                    controller: imgController,
+                    // onDotClicked: ((index) {
+                    //   imageController.jumpToPage(index);
+                      
+                    // }),
+                    
+                    count: userImageArray[currentUserIndex].length,
+                    effect: const ScrollingDotsEffect(
+                      dotHeight: 12,
+                      dotWidth: 30,
+                      
+                      activeDotColor: Colors.white,
+                      activeDotScale: 1.1
+                    ),
+                  ),
                 ),
 
                 const Align(
