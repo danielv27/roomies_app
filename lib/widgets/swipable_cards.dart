@@ -76,7 +76,7 @@ class SwipableCardsState extends State<SwipableCards> {
           builder: (context, properties) {
             final currentUserIndex = properties.index % userImageArray.length;
             final currenUserImages = userImageArray[currentUserIndex];
-            final imgController = PageController(initialPage: 0);
+            final imgController = PageController();
 
             return Stack(
               children: [
@@ -84,26 +84,26 @@ class SwipableCardsState extends State<SwipableCards> {
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height * 0.72,
                   //child: Image.asset(_images[currentUserIndex],fit: BoxFit.fitHeight),
-                  child: PageView.builder(
-                    
+                  child: ListView.builder(
+                    addRepaintBoundaries: true,
                     itemCount: currenUserImages.length,
                     scrollDirection: Axis.horizontal,
                     physics: const NeverScrollableScrollPhysics(),
                     controller: imgController,
                     itemBuilder: (context, index){
                       return GestureDetector(
-                        child: Image.asset(currenUserImages[index],fit: BoxFit.fitHeight),
+                        child: Image.asset(currenUserImages[index],fit: BoxFit.fitWidth),
                         onTapUp:(details) {
                           var deviceWidth = MediaQuery.of(context).size.width;
                           var xPos = details.globalPosition.dx;
                           print(MediaQuery.of(context).size.width);
                           print("tap on " + xPos.toString());
-                          if(xPos > deviceWidth * 0.65){
+                          if(index < currenUserImages.length - 1 && xPos > deviceWidth * 0.65){
                               imgController.nextPage(duration: Duration(milliseconds: 200),curve: Curves.easeIn);
                               print("current index: $index");
                             
                           }
-                          if(xPos < deviceWidth * 0.35){
+                          if(index >= 1 && xPos < deviceWidth * 0.35){
                            
                               imgController.previousPage(duration: Duration(milliseconds: 200),curve: Curves.easeIn);
                               print("current index: $index");
@@ -119,10 +119,10 @@ class SwipableCardsState extends State<SwipableCards> {
                   alignment: Alignment.topCenter,
                   child: SmoothPageIndicator(
                     controller: imgController,
-                    // onDotClicked: ((index) {
-                    //   imageController.jumpToPage(index);
+                    onDotClicked: ((index) {
+                      imgController.jumpToPage(index);
                       
-                    // }),
+                    }),
                     
                     count: userImageArray[currentUserIndex].length,
                     effect: const ScrollingDotsEffect(
