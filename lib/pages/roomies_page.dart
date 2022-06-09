@@ -2,9 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart'; //breaks ios add font manually
-import 'package:roomies_app/widgets/image_card.dart';
-
 import '../backend/database.dart';
+import '../widgets/swipable_cards.dart';
+
+//user for swipable cards testing. should be removed once images are added to database users
+const _images = [
+  'assets/images/profile_pic.png',
+  'assets/images/profile_pic.png',
+  'assets/images/profile_pic.png',
+];
 
 class RoomiesPage extends StatelessWidget {
   RoomiesPage({Key? key}) : super(key: key);
@@ -18,40 +24,66 @@ class RoomiesPage extends StatelessWidget {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(75),
         child: Container(
+          
           decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
                 Color.fromRGBO(239, 85, 100, 1),
                 Color.fromRGBO(195, 46, 66, 1),
                 Color.fromRGBO(190, 40, 62, 1),
                 Color.fromRGBO(210, 66, 78, 1),
                 Color.fromRGBO(244, 130, 114, 1),
-              ])),
+              ]
+            )
+          ),
           child: AppBar(
+            
+            centerTitle: false,
             automaticallyImplyLeading: false,
             systemOverlayStyle: const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
             backgroundColor: Colors.transparent,
             shadowColor: Colors.transparent,
             toolbarHeight: 75,
-            title: Text(
-              "Find roommates",
-              style: GoogleFonts.lato(
-                textStyle: const TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
+            title: Padding(
+              padding: const EdgeInsets.only(left: 10,bottom: 8),
+              child: Text(
+                "Find roommates",
+                style: GoogleFonts.lato(
+                  textStyle: const TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    
+                  ),
                 ),
               ),
             ),
             actions: <Widget>[
-              IconButton(
-                onPressed: () => FirebaseAuth.instance.signOut(),
-                icon: const Icon(
-                  Icons.settings_applications_sharp,
-                  size: 32,
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(right:35.0, bottom: 10),
+                  child: Container(
+                    width: 50,
+                    height: 50,
+                    child: TextButton(
+                      style: ButtonStyle(
+                        shape: MaterialStateProperty.all(
+                          const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(9.0)), 
+                          ),
+                        ), 
+
+                        backgroundColor: MaterialStateProperty.all(Colors.white.withOpacity(0.2)) 
+                      ),
+                      onPressed: () => FirebaseAuth.instance.signOut(),
+                      child: Image.asset('assets/icons/nextroom_icon_white.png',width: 28),
+                      
+                    ),
+                  ),
                 ),
               ),
+              
             ],
           ),
         ),
@@ -59,193 +91,193 @@ class RoomiesPage extends StatelessWidget {
       body: Column(
           children: [
             imageRoomiesInfo(context),
-            const SizedBox(height: 15),
-            likeDislikeBar(context),
+            //likeDislikeBar(context),
           ],
         ),
   );
   }
+  
 
   SizedBox imageRoomiesInfo(BuildContext context) {
     return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.575,
-      width: double.infinity,
-      child: Stack(
-        children: <Widget>[
-          const ImageCard(
-            urlImage: "assets/images/profile_pic.png",
-          ),
-          SizedBox(
-            child: FutureBuilder(
-              future: FireStoreDataBase().getData(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return const Text(
-                    "Something went wrong",
-                  );
-                }
-                if (snapshot.connectionState == ConnectionState.done) {
-                  dataList = snapshot.data as List;
-                  return Container(); //return buildUsers(dataList);
-                }
-                return const Center(child: CircularProgressIndicator());
-              },
-            ),
-          ),
-        ],
-      ),
+      height: MediaQuery.of(context).size.height * 0.72,
+      child: SwipableCards(),
+
+      // child: Stack(
+      //   children: <Widget>[
+      //     Container(color: Colors.red,
+      //     ),
+      //     SizedBox(
+      //       child: FutureBuilder(
+      //         future: FireStoreDataBase().getData(),
+      //         builder: (context, snapshot) {
+      //           if (snapshot.hasError) {
+      //             return const Text(
+      //               "Something went wrong",
+      //             );
+      //           }
+      //           if (snapshot.connectionState == ConnectionState.done) {
+      //             dataList = snapshot.data as List;
+      //             return Container(); //return buildUsers(dataList);
+      //           }
+      //           return const Center(child: CircularProgressIndicator(color: Colors.red));
+      //         },
+      //       ),
+      //     ),
+      //   ],
+      // ),
     );
   }
 
-  Row likeDislikeBar(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        SizedBox.fromSize(
-          size: const Size(56, 56),
-          child: ClipOval(
-            child: Material(
-              color: Colors.white,
-              child: InkWell(
-                splashColor: Colors.red[50],
-                onTap: () {
-                  print("Dislike button pressed");
-                },
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const <Widget>[
-                    ImageIcon(
-                      AssetImage("assets/icons/Close.png"),
-                      color: Colors.red,
-                      size: 26,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(width: 30),    
-        SizedBox.fromSize(
-          size: const Size(70, 70),
-          child: ClipOval(
-            child: Material(
-              color: Colors.red,
-              child: InkWell(
-                splashColor: Colors.red[50],
-                onTap: () {
-                  print("Like Button pressed");
-                },
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const <Widget>[
-                    ImageIcon(
-                      AssetImage("assets/icons/Heart.png"),
-                      color: Colors.white,
-                      size: 30,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(width: 30),
-        SizedBox.fromSize(
-          size: const Size(56, 56),
-          child: ClipOval(
-            child: Material(
-              color: Colors.white,
-              child: InkWell(
-                splashColor: Colors.red[50],
-                onTap: () {
-                  print("Info button pressed");
-                  showUserInfo(context);
-                },
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const <Widget>[
-                    ImageIcon(
-                      AssetImage("assets/icons/Info.png"),
-                      color: Color.fromARGB(255, 116, 201, 175),
-                      size: 30,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+  // Row likeDislikeBar(BuildContext context) {
+  //   return Row(
+  //     mainAxisAlignment: MainAxisAlignment.center,
+  //     children: <Widget>[
+  //       SizedBox.fromSize(
+  //         size: const Size(56, 56),
+  //         child: ClipOval(
+  //           child: Material(
+  //             color: Colors.white,
+  //             child: InkWell(
+  //               splashColor: Colors.red[50],
+  //               onTap: () {
+  //                 print("Dislike button pressed");
+  //               },
+  //               child: Column(
+  //                 mainAxisAlignment: MainAxisAlignment.center,
+  //                 children: const <Widget>[
+  //                   ImageIcon(
+  //                     AssetImage("assets/icons/Close.png"),
+  //                     color: Colors.red,
+  //                     size: 26,
+  //                   ),
+  //                 ],
+  //               ),
+  //             ),
+  //           ),
+  //         ),
+  //       ),
+  //       const SizedBox(width: 30),    
+  //       SizedBox.fromSize(
+  //         size: const Size(70, 70),
+  //         child: ClipOval(
+  //           child: Material(
+  //             color: Colors.red,
+  //             child: InkWell(
+  //               splashColor: Colors.red[50],
+  //               onTap: () {
+  //                 print("Like Button pressed");
+  //               },
+  //               child: Column(
+  //                 mainAxisAlignment: MainAxisAlignment.center,
+  //                 children: const <Widget>[
+  //                   ImageIcon(
+  //                     AssetImage("assets/icons/Heart.png"),
+  //                     color: Colors.white,
+  //                     size: 30,
+  //                   ),
+  //                 ],
+  //               ),
+  //             ),
+  //           ),
+  //         ),
+  //       ),
+  //       const SizedBox(width: 30),
+  //       SizedBox.fromSize(
+  //         size: const Size(56, 56),
+  //         child: ClipOval(
+  //           child: Material(
+  //             color: Colors.white,
+  //             child: InkWell(
+  //               splashColor: Colors.red[50],
+  //               onTap: () {
+  //                 print("Info button pressed");
+  //                 showUserInfo(context);
+  //               },
+  //               child: Column(
+  //                 mainAxisAlignment: MainAxisAlignment.center,
+  //                 children: const <Widget>[
+  //                   ImageIcon(
+  //                     AssetImage("assets/icons/Info.png"),
+  //                     color: Color.fromARGB(255, 116, 201, 175),
+  //                     size: 30,
+  //                   ),
+  //                 ],
+  //               ),
+  //             ),
+  //           ),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 
-  void showUserInfo(BuildContext context) {
-    showModalBottomSheet<void>(
-      barrierColor: Colors.transparent,
-      isScrollControlled: true,
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(30.0), 
-          topRight: Radius.circular(30.0)
-        ),
-      ),
-      builder: (BuildContext context) {
-        return SingleChildScrollView(
-          padding: MediaQuery.of(context).viewInsets,
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Container(
-                  padding: const EdgeInsets.all(15),
-                  child: Column(
-                    children: [
-                      const Text("Daniel Volpin"),
-                      const Divider(
-                        color: Color.fromARGB(255, 163, 163, 163),
-                      ),
-                      const Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "About",
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
-                        ),
-                      ),
-                      const Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.. Readmore"),
-                      const SizedBox(height: 12,),
-                      const Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Work",
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
-                        ),
-                      ),
-                      const Text("Wonen op een prachtige locatie in de Pijp! Dit ruim appartement is onderdeel van een goed..."),
-                      const SizedBox(height: 12,),
-                      const Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Study",
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
-                        ),
-                      ),
-                      const Text("Wonen op een prachtige locatie in de Pijp! Dit ruim appartement is onderdeel van .."),
-                      const SizedBox(height: 20),
-                      Row(),
-                      const SizedBox(height: 200),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
+  // void showUserInfo(BuildContext context) {
+  //   showModalBottomSheet<void>(
+  //     barrierColor: Colors.transparent,
+  //     isScrollControlled: true,
+  //     context: context,
+  //     shape: const RoundedRectangleBorder(
+  //       borderRadius: BorderRadius.only(
+  //         topLeft: Radius.circular(30.0), 
+  //         topRight: Radius.circular(30.0)
+  //       ),
+  //     ),
+  //     builder: (BuildContext context) {
+  //       return SingleChildScrollView(
+  //         padding: MediaQuery.of(context).viewInsets,
+  //         child: Center(
+  //           child: Column(
+  //             mainAxisAlignment: MainAxisAlignment.center,
+  //             mainAxisSize: MainAxisSize.min,
+  //             children: <Widget>[
+  //               Container(
+  //                 padding: const EdgeInsets.all(15),
+  //                 child: Column(
+  //                   children: [
+  //                     const Text("Daniel Volpin"),
+  //                     const Divider(
+  //                       color: Color.fromARGB(255, 163, 163, 163),
+  //                     ),
+  //                     const Align(
+  //                       alignment: Alignment.centerLeft,
+  //                       child: Text(
+  //                         "About",
+  //                         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
+  //                       ),
+  //                     ),
+  //                     const Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.. Readmore"),
+  //                     const SizedBox(height: 12,),
+  //                     const Align(
+  //                       alignment: Alignment.centerLeft,
+  //                       child: Text(
+  //                         "Work",
+  //                         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
+  //                       ),
+  //                     ),
+  //                     const Text("Wonen op een prachtige locatie in de Pijp! Dit ruim appartement is onderdeel van een goed..."),
+  //                     const SizedBox(height: 12,),
+  //                     const Align(
+  //                       alignment: Alignment.centerLeft,
+  //                       child: Text(
+  //                         "Study",
+  //                         style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
+  //                       ),
+  //                     ),
+  //                     const Text("Wonen op een prachtige locatie in de Pijp! Dit ruim appartement is onderdeel van .."),
+  //                     const SizedBox(height: 20),
+  //                     Row(),
+  //                     const SizedBox(height: 200),
+  //                   ],
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
   // Widget buildUsers(dataList) {
   //   return SizedBox(
