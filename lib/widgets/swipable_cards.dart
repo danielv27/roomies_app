@@ -8,7 +8,7 @@ const userImageArray = [
   [
     'assets/images/profile_pic2.jpg',
     'assets/images/profile_pic3.jpg',
-    'assets/images/profile_pic4.jpg',
+    'assets/images/profile_pic2.jpg',
     'assets/images/profile_pic5.jpg',
   ],
   [
@@ -25,7 +25,6 @@ const userImageArray = [
     'assets/images/profile_pic5.jpg',
   ]
 ];
-//late final imageController = PageController(initialPage: 1);
 
 class SwipableCards extends StatefulWidget {
   @override
@@ -76,61 +75,60 @@ class SwipableCardsState extends State<SwipableCards> {
           builder: (context, properties) {
             final currentUserIndex = properties.index % userImageArray.length;
             final currenUserImages = userImageArray[currentUserIndex];
-            final imgController = PageController();
-
+            final imgController = PageController(viewportFraction: 1.03,keepPage: true);
+            final images = List.generate(
+              currenUserImages.length,
+              (index) =>  Image.asset(currenUserImages[index],fit: BoxFit.fill,)
+            );
             return Stack(
               children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.72,
-                  //child: Image.asset(_images[currentUserIndex],fit: BoxFit.fitHeight),
-                  child: ListView.builder(
-                    addRepaintBoundaries: true,
-                    itemCount: currenUserImages.length,
-                    scrollDirection: Axis.horizontal,
-                    physics: const NeverScrollableScrollPhysics(),
-                    controller: imgController,
-                    itemBuilder: (context, index){
-                      return GestureDetector(
-                        child: Image.asset(currenUserImages[index],fit: BoxFit.fitWidth),
-                        onTapUp:(details) {
-                          var deviceWidth = MediaQuery.of(context).size.width;
-                          var xPos = details.globalPosition.dx;
-                          print(MediaQuery.of(context).size.width);
-                          print("tap on " + xPos.toString());
-                          if(index < currenUserImages.length - 1 && xPos > deviceWidth * 0.65){
-                              imgController.nextPage(duration: Duration(milliseconds: 200),curve: Curves.easeIn);
-                              print("current index: $index");
-                            
-                          }
-                          if(index >= 1 && xPos < deviceWidth * 0.35){
-                           
-                              imgController.previousPage(duration: Duration(milliseconds: 200),curve: Curves.easeIn);
-                              print("current index: $index");
-                            
-                          }
+                PageView.builder(
+                  
+                  allowImplicitScrolling: true,
+                  itemCount: currenUserImages.length,
+                  scrollDirection: Axis.horizontal,
+                  physics: const NeverScrollableScrollPhysics(),
+                  controller: imgController,
+                  itemBuilder: (context, index){
+                    return GestureDetector(
+                      child: images[index],//Image.asset(currenUserImages[index],width: MediaQuery.of(context).size.width),
+                      onTapUp:(details) {
+                        var deviceWidth = MediaQuery.of(context).size.width;
+                        var xPos = details.globalPosition.dx;
+                        print("tap on " + xPos.toString());
+                        if(index < currenUserImages.length - 1 && xPos > deviceWidth * 0.65){
+                            imgController.nextPage(duration: Duration(milliseconds: 200),curve: Curves.easeInOut);
+                            print("current index: $index");
                           
-                        },                        
-                      ); // return Image.asset(_images[index],fit: BoxFit.fitHeight);
-                    },
-                  ),
+                        }
+                        if(index >= 1 && xPos < deviceWidth * 0.35){
+                            imgController.previousPage(duration: Duration(milliseconds: 200),curve: Curves.easeInOut);
+                            print("current index: $index");
+                          
+                        }
+                        
+                      },                        
+                    ); // return Image.asset(_images[index],fit: BoxFit.fitHeight);
+                  },
                 ),
                 Align(
                   alignment: Alignment.topCenter,
-                  child: SmoothPageIndicator(
-                    controller: imgController,
-                    onDotClicked: ((index) {
-                      imgController.jumpToPage(index);
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 11.0),
+                    child: SmoothPageIndicator(
+                      controller: imgController,
+                      onDotClicked: ((index) {
+                        imgController.jumpToPage(index);
+                      }),
                       
-                    }),
-                    
-                    count: userImageArray[currentUserIndex].length,
-                    effect: const ScrollingDotsEffect(
-                      dotHeight: 12,
-                      dotWidth: 30,
-                      
-                      activeDotColor: Colors.white,
-                      activeDotScale: 1.1
+                      count: userImageArray[currentUserIndex].length,
+                      effect: const ScrollingDotsEffect(
+                        dotHeight: 3,
+                        dotWidth: 72,
+                        spacing: 4.5,
+                        activeDotColor: Colors.white,
+                        activeDotScale: 1
+                      ),
                     ),
                   ),
                 ),
