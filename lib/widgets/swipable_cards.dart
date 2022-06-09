@@ -33,8 +33,6 @@ class SwipableCards extends StatefulWidget {
 class SwipableCardsState extends State<SwipableCards> {
   late final SwipableStackController swipeController; // = SwipableStackController()..addListener(_listenController);
 
-  
-
   void _listenController() => setState(() {});
 
   @override
@@ -46,7 +44,6 @@ class SwipableCardsState extends State<SwipableCards> {
   @override
   void dispose() {
     super.dispose();
-    //imageController.dispose();
     swipeController
       ..removeListener(_listenController)
       ..dispose();
@@ -62,7 +59,6 @@ class SwipableCardsState extends State<SwipableCards> {
             final allowedActions = [
             SwipeDirection.right,
             SwipeDirection.left,
-            
             ];
             return allowedActions.contains(direction);
           },
@@ -70,11 +66,13 @@ class SwipableCardsState extends State<SwipableCards> {
           onSwipeCompleted: (index, direction) {
             //this is where a swipe is handled
             print("current index: $index,\ndirection: $direction\n");
+            
           },
           builder: (context, properties) {
             final currentUserIndex = properties.index % userImageArray.length;
             final currenUserImages = userImageArray[currentUserIndex];
             final imgController = PageController(viewportFraction: 1.03,keepPage: true);
+            
             final images = List.generate(
               currenUserImages.length,
               (index) =>  Image.asset(currenUserImages[index],fit: BoxFit.fill,)
@@ -82,7 +80,6 @@ class SwipableCardsState extends State<SwipableCards> {
             return Stack(
               children: [
                 PageView.builder(
-                  
                   allowImplicitScrolling: true,
                   itemCount: currenUserImages.length,
                   scrollDirection: Axis.horizontal,
