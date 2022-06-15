@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 
 class FireStoreDataBase {
@@ -18,4 +19,46 @@ class FireStoreDataBase {
       return null;
     }
   }
+
+  Future signinUser(TextEditingController emailController, TextEditingController passwordController) async {
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: emailController.text.trim(),
+      password: passwordController.text.trim(),
+    );
+  }  
+
+  Future createUser(TextEditingController emailController, TextEditingController passwordController, TextEditingController firstNameController, TextEditingController lastNameController) async {
+    UserCredential result = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: emailController.text.trim(),
+      password: passwordController.text.trim(),
+    );
+    User? newUser = result.user;
+    await FirebaseFirestore.instance.collection('users')
+      .doc(newUser?.uid)
+      .set({
+        'firstName': firstNameController.text,
+        'lastName': lastNameController.text,
+        'email': emailController.text,
+      });
+    print("user created");
+  }
+
+
+  Future createPersonalProfile(User ?currentUser) async {
+    await FirebaseFirestore.instance.collection('users')
+      .doc(currentUser?.uid)
+      .update({ 
+        'isHouseOwner': false,
+      });
+      
+  }
+
+  Future createHouseProfile(User ?currentUser) async {
+    await FirebaseFirestore.instance.collection('users')
+      .doc(currentUser?.uid)
+      .update({ 
+        'isHouseOwner': true,
+      });
+  }
 }
+

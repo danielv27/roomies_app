@@ -26,6 +26,10 @@ const userImageArray = [
 ];
 
 class SwipableCards extends StatefulWidget {
+  
+  const SwipableCards({Key? key, }) : super(key: key);
+
+  
   @override
   SwipableCardsState createState() => SwipableCardsState();
 }
@@ -46,7 +50,6 @@ class SwipableCardsState extends State<SwipableCards> {
   @override
   void dispose() {
     super.dispose();
-    //imageController.dispose();
     swipeController
       ..removeListener(_listenController)
       ..dispose();
@@ -69,7 +72,7 @@ class SwipableCardsState extends State<SwipableCards> {
           controller: swipeController,
           onSwipeCompleted: (index, direction) {
             //this is where a swipe is handled
-            print("current index: $index,\ndirection: $direction\n");
+            print("swipped user: $index,\ndirection: $direction\n");
           },
           builder: (context, properties) {
             final currentUserIndex = properties.index % userImageArray.length;
@@ -94,20 +97,18 @@ class SwipableCardsState extends State<SwipableCards> {
                       onTapUp:(details) {
                         var deviceWidth = MediaQuery.of(context).size.width;
                         var xPos = details.globalPosition.dx;
-                        print("tap on " + xPos.toString());
+                        
                         if(index < currenUserImages.length - 1 && xPos > deviceWidth * 0.65){
                             imgController.nextPage(duration: Duration(milliseconds: 200),curve: Curves.easeInOut);
-                            print("current index: $index");
+                            print("current image index: ${index + 1}");
                           
                         }
                         if(index >= 1 && xPos < deviceWidth * 0.35){
                             imgController.previousPage(duration: Duration(milliseconds: 200),curve: Curves.easeInOut);
-                            print("current index: $index");
-                          
+                            print("current image index: ${index - 1}");
                         }
-                        
                       },                        
-                    ); // return Image.asset(_images[index],fit: BoxFit.fitHeight);
+                    ); 
                   },
                 ),
                 Align(

@@ -6,10 +6,27 @@ import '../backend/database.dart';
 import '../widgets/swipable_cards.dart';
 
 //user for swipable cards testing. should be removed once images are added to database users
-const _images = [
-  'assets/images/profile_pic.png',
-  'assets/images/profile_pic.png',
-  'assets/images/profile_pic.png',
+
+const userImageArray = [
+  [
+    'assets/images/profile_pic2.jpg',
+    'assets/images/profile_pic3.jpg',
+    'assets/images/profile_pic2.jpg',
+    'assets/images/profile_pic5.jpg',
+  ],
+  [
+    'assets/images/profile_pic3.jpg',
+    'assets/images/profile_pic2.jpg',
+    'assets/images/profile_pic4.jpg',
+    'assets/images/profile_pic5.jpg',
+  ],
+  [
+    'assets/images/profile_pic4.jpg',
+    'assets/images/profile_pic5.jpg',
+  ],
+  [
+    'assets/images/profile_pic5.jpg',
+  ]
 ];
 
 class RoomiesPage extends StatelessWidget {
@@ -24,22 +41,18 @@ class RoomiesPage extends StatelessWidget {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(75),
         child: Container(
-          
           decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
+              gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
                 Color.fromRGBO(239, 85, 100, 1),
                 Color.fromRGBO(195, 46, 66, 1),
                 Color.fromRGBO(190, 40, 62, 1),
                 Color.fromRGBO(210, 66, 78, 1),
                 Color.fromRGBO(244, 130, 114, 1),
-              ]
-            )
-          ),
+              ])),
           child: AppBar(
-            
             centerTitle: false,
             automaticallyImplyLeading: false,
             systemOverlayStyle: const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
@@ -47,14 +60,13 @@ class RoomiesPage extends StatelessWidget {
             shadowColor: Colors.transparent,
             toolbarHeight: 75,
             title: Padding(
-              padding: const EdgeInsets.only(left: 10,bottom: 8),
+              padding: const EdgeInsets.only(left: 10, bottom: 8),
               child: Text(
                 "Find roommates",
                 style: GoogleFonts.lato(
                   textStyle: const TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
-                    
                   ),
                 ),
               ),
@@ -62,46 +74,44 @@ class RoomiesPage extends StatelessWidget {
             actions: <Widget>[
               Center(
                 child: Padding(
-                  padding: const EdgeInsets.only(right:35.0, bottom: 10),
+                  padding: const EdgeInsets.only(right: 35.0, bottom: 10),
                   child: Container(
                     width: 50,
                     height: 50,
                     child: TextButton(
                       style: ButtonStyle(
-                        shape: MaterialStateProperty.all(
-                          const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(9.0)), 
+                          shape: MaterialStateProperty.all(
+                            const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(9.0)),
+                            ),
                           ),
-                        ), 
-
-                        backgroundColor: MaterialStateProperty.all(Colors.white.withOpacity(0.2)) 
-                      ),
+                          backgroundColor: MaterialStateProperty.all(
+                              Colors.white.withOpacity(0.2))),
                       onPressed: () => FirebaseAuth.instance.signOut(),
-                      child: Image.asset('assets/icons/nextroom_icon_white.png',width: 28),
-                      
+                      child: Image.asset('assets/icons/nextroom_icon_white.png',
+                          width: 28),
                     ),
                   ),
                 ),
               ),
-              
             ],
           ),
         ),
       ),
       body: Column(
-          children: [
-            imageRoomiesInfo(context),
-            //likeDislikeBar(context),
-          ],
-        ),
-  );
+        children: [
+          imageRoomiesInfo(context),
+          //likeDislikeBar(context),
+        ],
+      ),
+    );
   }
-  
 
   SizedBox imageRoomiesInfo(BuildContext context) {
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.72,
-      child: SwipableCards(),
+      child: const SwipableCards(),
 
       // child: Stack(
       //   children: <Widget>[
@@ -157,7 +167,7 @@ class RoomiesPage extends StatelessWidget {
   //           ),
   //         ),
   //       ),
-  //       const SizedBox(width: 30),    
+  //       const SizedBox(width: 30),
   //       SizedBox.fromSize(
   //         size: const Size(70, 70),
   //         child: ClipOval(
@@ -219,7 +229,7 @@ class RoomiesPage extends StatelessWidget {
   //     context: context,
   //     shape: const RoundedRectangleBorder(
   //       borderRadius: BorderRadius.only(
-  //         topLeft: Radius.circular(30.0), 
+  //         topLeft: Radius.circular(30.0),
   //         topRight: Radius.circular(30.0)
   //       ),
   //     ),
@@ -290,7 +300,7 @@ class RoomiesPage extends StatelessWidget {
   //         return (dataList[index] != null)? Row(
   //           children: <Widget>[
   //             Text(
-                
+
   //               (dataList[index]["firstName"] +
   //                   " " +
   //                   dataList[index]["lastName"] +
