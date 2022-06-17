@@ -1,16 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import '../models/user_types.dart';
+
 
 class FireStoreDataBase {
-  List userList = [];
-  final CollectionReference collectionRef = FirebaseFirestore.instance.collection("users");
 
-  Future getData() async {
+  Future getUsers() async {
     try {
-      await collectionRef.get().then((querySnapshot) {
-        for (var result in querySnapshot.docs) {
-          userList.add(result.data());
+      List<UserModel> userList = [];
+      await FirebaseFirestore.instance.collection("users").get().then((querySnapshot) {
+        for (var userDoc in querySnapshot.docs) {
+          var data = userDoc.data();
+          UserModel newUser = UserModel(
+            email: userDoc['email'],
+            firstName: userDoc['firstName'],
+            lastName: userDoc['lastName'],
+            );
+          userList.add(newUser);
         }
       });
       return userList;
@@ -33,6 +40,7 @@ class FireStoreDataBase {
       password: passwordController.text.trim(),
     );
     User? newUser = result.user;
+    
     await FirebaseFirestore.instance.collection('users')
       .doc(newUser?.uid)
       .set({
@@ -42,7 +50,6 @@ class FireStoreDataBase {
       });
     print("user created");
   }
-
 
   Future createPersonalProfile(User ?currentUser) async {
     await FirebaseFirestore.instance.collection('users')
@@ -54,11 +61,15 @@ class FireStoreDataBase {
   }
 
   Future createHouseProfile(User ?currentUser) async {
+
+
     await FirebaseFirestore.instance.collection('users')
       .doc(currentUser?.uid)
       .update({ 
         'isHouseOwner': true,
       });
   }
+
+
 }
 

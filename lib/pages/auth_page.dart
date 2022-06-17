@@ -205,7 +205,11 @@ class AuthPageState extends State<AuthPage> {
                 onSurface: Colors.transparent,
                 minimumSize: const Size.fromHeight(42),
               ),
-              onPressed: signIn, 
+              onPressed: () {
+                
+                signIn();
+                FireStoreDataBase().getUsers();
+              }, 
               child: const Text(
                 "Login",
                 style: TextStyle(fontSize: 20, color:Colors.white)

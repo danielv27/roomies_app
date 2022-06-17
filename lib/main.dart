@@ -41,19 +41,19 @@ class MainPage extends StatelessWidget {
   Widget build(BuildContext context) => Scaffold(
     //resizeToAvoidBottomInset: false, //this prevents keyboard from pushing app up
     body: StreamBuilder<User?>(
-     stream: FirebaseAuth.instance.authStateChanges(),
+      stream: FirebaseAuth.instance.authStateChanges(),
      
-     builder: (context, snapshot) {
-       if(snapshot.connectionState == ConnectionState.waiting) {
-         return const Center(child: CircularProgressIndicator());
-       }
-       else if (snapshot.hasData) {
-         return HomePage();
-       }
-       else {
-         return AuthPage();
-       }
-     }
+      builder: (context, snapshot) {
+        if(snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        else if (snapshot.hasData) {
+          return HomePage();
+        }
+        else {
+          return AuthPage();
+        }
+      }
     ),
   );
 }
