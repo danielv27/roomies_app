@@ -1,8 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:roomies_app/backend/database.dart';
 import 'package:roomies_app/pages/setup_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -97,7 +97,7 @@ class AuthPageState extends State<AuthPage> {
     );
   }
 
-  Container showLogin() {
+  Widget showLogin() {
     return Container(
       padding: const EdgeInsets.all(30),
       child: Column(
@@ -205,7 +205,10 @@ class AuthPageState extends State<AuthPage> {
                 onSurface: Colors.transparent,
                 minimumSize: const Size.fromHeight(42),
               ),
-              onPressed: signIn, 
+              onPressed: () {
+                signIn();
+                FireStoreDataBase().getUsers();
+              }, 
               child: const Text(
                 "Login",
                 style: TextStyle(fontSize: 20, color:Colors.white)
@@ -237,7 +240,7 @@ class AuthPageState extends State<AuthPage> {
     );
   }
 
-  Container showSignup() {
+  Widget showSignup() {
     return Container(
       padding: const EdgeInsets.all(30),
       child: Column(
@@ -397,10 +400,10 @@ class AuthPageState extends State<AuthPage> {
                 minimumSize: const Size.fromHeight(42),
               ),
               onPressed: () {
+                signUp();
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (context) => const SetupHouseProfile()),
                 );
-                // signUp;
               },
               child: const Text(
                 "Create account",
@@ -468,19 +471,9 @@ class AuthPageState extends State<AuthPage> {
 
   Future signUp() async {
     try {
-      UserCredential result = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      );
-      User? user = result.user;
-      await FirebaseFirestore.instance.collection('users')
-        .doc(user?.uid)
-        .set({ 
-          'firstName': firstNameController.text,
-          'lastName': lastNameController.text,
-          'email': emailController.text,
-        });
+      FireStoreDataBase().createUser(emailController, passwordController, firstNameController, lastNameController);
     } on FirebaseAuthException catch (exc) {
+      print(exc);
       setState(() {
         if (exc.toString().contains('email') ||
             exc.toString().contains('user')) {
@@ -497,12 +490,8 @@ class AuthPageState extends State<AuthPage> {
   }
 
   Future signIn() async {
-    // Navigator.pop(context);
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      );
+      FireStoreDataBase().signinUser(emailController, passwordController);
     } on FirebaseAuthException catch (exc) {
       setState(() {
         if (exc.toString().contains('email') ||
