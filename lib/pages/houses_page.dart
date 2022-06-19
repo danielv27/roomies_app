@@ -8,38 +8,35 @@ class HousesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<UserModel> userList = [];
     return Scaffold(
       //backgroundColor: Colors.green,
-      body: Center(
-        child: SizedBox(
-          child: FutureBuilder(
+      body: FutureBuilder(
             future: FireStoreDataBase().getUsers(),
             builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                List<UserModel> userList = snapshot.data as List<UserModel>;
+                return Center(
+                  child: ListView.builder(
+                    itemCount: userList.length,
+                    itemBuilder: (context, index) {
+                      var user = userList[index];
+                      return Column(
+                        children: [
+                          Text("first name: ${user.firstName}"),
+                        ],
+                      );
+                    },
+                  ),
+                );
+              }
               if (snapshot.hasError) {
                 return const Text(
                   "Something went wrong",
                 );
               }
-              if (snapshot.connectionState == ConnectionState.done) {
-                userList = snapshot.data as List<UserModel>;
-                return ListView.builder(
-                  itemCount: userList.length,
-                  itemBuilder: (context, index) {
-                    var user = userList[index];
-                    return Column(
-                      children: [
-                        Text("first name: ${user.email}"),
-                      ],
-                    );
-                  },
-                );
-              }
               return const Center(child: CircularProgressIndicator(color: Colors.red));
             },
           ),
-        ),
-      ),
     );
   }
 }

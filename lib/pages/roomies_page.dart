@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart'; //breaks ios add font manually
 import '../backend/database.dart';
-import '../widgets/swipable_cards.dart';
+import '../widgets/roomies_page/swipable_cards.dart';
 
 //user for swipable cards testing. should be removed once images are added to database users
 

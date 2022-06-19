@@ -7,6 +7,12 @@ class UserModel {
   final String lastName;
   // final DateTime dateOfBirth;
   final bool isHouseOwner;
+  /*
+  this would most likely just be the first image 
+  the user places in their profile and for a 
+  house owner the same logic applies but with a house image
+  */
+  final String firstImgUrl; 
 
   UserModel({
     this.id = '',
@@ -14,7 +20,8 @@ class UserModel {
     required this.firstName,
     required this.lastName,
     // required this.dateOfBirth,
-    this.isHouseOwner = false
+    this.isHouseOwner = false,
+    this.firstImgUrl = 'http://www.classicaloasis.com/wp-content/uploads/2014/03/profile-square.jpg'
   });
 }
 
