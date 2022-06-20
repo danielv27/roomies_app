@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:roomies_app/pages/setup_house_page.dart';
 import 'package:roomies_app/pages/setup_profile_page.dart';
 
-class SetupHouseProfile extends StatefulWidget {
-  const SetupHouseProfile({Key? key}) : super(key: key);
+class SetupPage extends StatefulWidget {
+  const SetupPage({Key? key}) : super(key: key);
 
   @override
-  State<SetupHouseProfile> createState() => _SetupHouseProfileState();
+  State<SetupPage> createState() => _SetupPageState();
 }
 
-class _SetupHouseProfileState extends State<SetupHouseProfile> {
+class _SetupPageState extends State<SetupPage> {
 
   
   @override
