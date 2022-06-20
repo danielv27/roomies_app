@@ -52,6 +52,7 @@ dependencies:
   http: ^0.13.4
   swipable_stack: ^2.0.0
   smooth_page_indicator: ^1.0.0+2
+  dob_input_field: ^1.0.0
 
 dev_dependencies:
   flutter_test:
@@ -84,6 +85,7 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
+    - assets/icons/coin.png
     
   # To add assets to your application, add an assets section, like this:
   # assets:

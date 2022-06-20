@@ -1,148 +1,138 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
-class ProfileQuestionPage extends StatelessWidget {
-  ProfileQuestionPage({
+class ProfileQuestionPage extends StatefulWidget {
+  const ProfileQuestionPage({
     Key? key,
-    required this.postalCodeController,
-    required this.houseNumberController,
-    required this.apartmentNumberController,
+    required this.minBudgetController,
+    required this.maxBudgetController,
   }) : super(key: key);
 
-  final TextEditingController postalCodeController;
-  final TextEditingController houseNumberController;
-  final TextEditingController apartmentNumberController;
+  final TextEditingController minBudgetController;
+  final TextEditingController maxBudgetController;
 
-  final test = "1018 LG";
-  final postCodeRegex = RegExp(r"^([0-9]{4} ?[A-Z]{2})$");
-  final houseNumberRegex = RegExp(r'^[a-zA-Z0-9\- ]*$');
+  @override
+  State<ProfileQuestionPage> createState() => _ProfileQuestionPageState();
+}
 
-  final String apiKey = "8d09db9c-0ecc-463e-a020-035728fb3f75";
+class _ProfileQuestionPageState extends State<ProfileQuestionPage> {
+  final priceRegex = RegExp(r'^[a-zA-Z0-9\- ]*$');
+
+  Color buttonColor1 = const Color.fromRGBO(245, 247, 251, 1);
+  Color buttonColor2 = const Color.fromRGBO(190, 212, 255, 1);
+  bool isActive = false;
+  bool isSelected = false;
+
+  List radiusDistnace = [1, 2, 3, 4, 5, 10];
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget> [
-        Container(
-          padding: const EdgeInsets.only(left: 30.0, right: 30, top: 5),
-          alignment: Alignment.centerLeft,
-          child: const Text(
-            "Personal profile", 
-            style: TextStyle(
-              fontWeight: FontWeight.w600,
-              color: Colors.grey,
-            ),
-          ),
-        ),
-        Container(
-          padding: const EdgeInsets.only(left: 30.0, right: 30, top: 5),
-          alignment: Alignment.centerLeft,
-          child: const Text(
-            "Where do you want to live?", 
-            style: TextStyle(
-              fontWeight: FontWeight.w900,
-              fontSize: 24,
-            ),
-          ),
-        ),
-        const SizedBox(height: 10),
-        Container(
-          padding: const EdgeInsets.only(left: 30.0, right: 30, top: 20),
-          child: TextFormField(
-            controller: postalCodeController,
-            style: const TextStyle(color: Colors.grey),
-            cursorColor: Colors.grey,
-            textInputAction: TextInputAction.next,
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: const Color.fromRGBO(245, 247, 251, 1),
-              border: OutlineInputBorder(
-                borderSide: const BorderSide(
-                  width: 0,
-                  style: BorderStyle.none,
+    return SingleChildScrollView(
+      child: Container(
+        padding: const EdgeInsets.only(left: 30.0, right: 30, top: 5),
+        child: Column(
+          children: <Widget> [
+            Container(
+              alignment: Alignment.centerLeft,
+              child: const Text(
+                "Personal profile", 
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: Colors.grey,
                 ),
-                borderRadius: BorderRadius.circular(15),
               ),
-              focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-              prefixIcon: const Icon(
-                Icons.person,
-                size: 20,
-                color: Colors.grey,
-              ),
-              labelText: "Postal code",
-              labelStyle: const TextStyle(color: Colors.grey),
             ),
-            validator: (value) {
-              if (value!.isEmpty || !postCodeRegex.hasMatch(value)) {
-                return "Enter correct post code, example 1234 AB or 1234AB";
-              } else {
-                return null;
-              }
-            },
+            Container(
+              alignment: Alignment.centerLeft,
+              child: const Text(
+                "Where do you want to live?", 
+                style: TextStyle(
+                  fontWeight: FontWeight.w900,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            const SizedBox(height: 30,),
+            textLabel("Radius in KM (optional)"),
+            const SizedBox(height: 10,),
+            Row(
+              children: <Widget>[
+                radiusCard(radiusDistnace[0].toString()),
+                radiusCard(radiusDistnace[1].toString()),
+                radiusCard(radiusDistnace[2].toString()),
+                radiusCard(radiusDistnace[3].toString()),
+                radiusCard(radiusDistnace[4].toString()),
+                radiusCard(radiusDistnace[5].toString()),
+              ],
+            ),
+            const SizedBox(height: 30,),
+            textLabel("Minimum Budget"),
+            const SizedBox(height: 10,),
+            TextFormField(
+              controller: widget.minBudgetController,
+              style: const TextStyle(color: Colors.grey),
+              cursorColor: Colors.grey,
+              textInputAction: TextInputAction.next,
+              decoration: applyInputDecoration(),
+            ),
+            const SizedBox(height: 30,),
+            textLabel("Maximum Budget"),
+            const SizedBox(height: 10,),
+            TextFormField(
+              controller: widget.maxBudgetController,
+              style: const TextStyle(color: Colors.grey),
+              cursorColor: Colors.grey,
+              textInputAction: TextInputAction.next,
+              decoration: applyInputDecoration()
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget radiusCard(String radius) {
+    return Card(
+      shape: RoundedRectangleBorder(
+        side: const BorderSide(
+          color: Color.fromRGBO(0, 0, 0, 0.2),
+        ),
+        borderRadius: BorderRadius.circular(14.0),
+      ),
+      color: isSelected ? buttonColor2 : buttonColor1,
+      child: InkWell(
+        child: SizedBox(
+          width: 44.0,
+          height: 44.0,
+          child: Text(
+            "+"+radius,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              leadingDistribution: TextLeadingDistribution.even
+            ),
           ),
         ),
-        Container(
-          padding: const EdgeInsets.only(left: 30.0, right: 30, top: 20),
-          child: TextFormField(
-            controller: houseNumberController,
-            style: const TextStyle(color: Colors.grey),
-            cursorColor: Colors.grey,
-            textInputAction: TextInputAction.next,
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: const Color.fromRGBO(245, 247, 251, 1),
-              border: OutlineInputBorder(
-                borderSide: const BorderSide(
-                  width: 0,
-                  style: BorderStyle.none,
-                ),
-                borderRadius: BorderRadius.circular(15),
-              ),
-              focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-              prefixIcon: const Icon(
-                Icons.person,
-                size: 20,
-                color: Colors.grey,
-              ),
-              labelText: "House number",
-              labelStyle: const TextStyle(color: Colors.grey),
-            ),
-            validator: (value) {
-              if (value!.isEmpty || !houseNumberRegex.hasMatch(value)) {
-                return "Enter only numbers or alphabet letters";
-              } else {
-                return null;
-              }
-            },
-          ),
-        ),
-        Container(
-          padding: const EdgeInsets.only(left: 30.0, right: 30, top: 20),
-          child: TextFormField(
-            controller: apartmentNumberController,
-            style: const TextStyle(color: Colors.grey),
-            cursorColor: Colors.grey,
-            textInputAction: TextInputAction.next,
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: const Color.fromRGBO(245, 247, 251, 1),
-              border: OutlineInputBorder(
-                borderSide: const BorderSide(
-                  width: 0,
-                  style: BorderStyle.none,
-                ),
-                borderRadius: BorderRadius.circular(15),
-              ),
-              focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-              prefixIcon: const Icon(
-                Icons.person,
-                size: 20,
-                color: Colors.grey,
-              ),
-              labelText: "Addition (optional)",
-              labelStyle: const TextStyle(color: Colors.grey),
+        onTap: () {
+          print(" Distance $radius clicked");
+          setState(() {
+            isSelected = !isSelected;
+          });
+        },
+      ),
+    );
+  }
+
+  Widget textLabel(String textLabel) {
+    return Row(
+      children: <Widget>[
+        Image.asset('assets/icons/GradientBlueEllipse.png', width: 11, height: 11,),
+        const SizedBox(width: 5,),
+        Expanded(
+          child: Text(
+            textLabel,
+            style: const TextStyle(
+              fontWeight: FontWeight.w700, 
+              fontSize: 14,
+              color: Color.fromRGBO(101, 101, 107, 1),
             ),
           ),
         ),
@@ -150,18 +140,30 @@ class ProfileQuestionPage extends StatelessWidget {
     );
   }
 
-  Future<bool> validateAddress() async {
-    var postCode = postalCodeController.text;
-    var houseNum = houseNumberController.text;
-    final response = await http.get(
-      Uri.parse('https://json.api-postcode.nl?postcode=' + postCode + '&number=' + houseNum), 
-      headers: {'token': apiKey},
+  InputDecoration applyInputDecoration() {
+    return InputDecoration(
+      filled: true,
+      fillColor: const Color.fromRGBO(245, 247, 251, 1),
+      border: OutlineInputBorder(
+        borderSide: const BorderSide(
+          width: 0,
+          style: BorderStyle.none,
+        ),
+        borderRadius: BorderRadius.circular(15),
+      ),
+      focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+      prefixIcon: const Align(
+        widthFactor: 2.0,
+        heightFactor: 2.0,
+        child: Image(
+          image: AssetImage('assets/icons/coin.png'),
+          height: 18,
+          width: 18,
+        ),
+      ),
+      hintText: "0",
+      hintStyle: const TextStyle(color: Colors.grey, fontSize: 18, fontWeight: FontWeight.w300),
     );
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      return false;
-    }
   }
 
 }

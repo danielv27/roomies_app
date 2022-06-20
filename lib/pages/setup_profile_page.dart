@@ -15,12 +15,16 @@ class SetupProfilePage extends StatefulWidget {
 }
 
 class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerProviderStateMixin {
-  final postalCodeController = TextEditingController();
-  final apartmentNumberController = TextEditingController();
-  final houseNumberController = TextEditingController();
-  final pageController = PageController();
+  final minBudgetController = TextEditingController();
+  final maxBudgetController = TextEditingController();
 
-  final constructionYearController = TextEditingController();
+  final aboutMeController = TextEditingController();
+  final workController = TextEditingController();
+  final studyController = TextEditingController();
+  final roomMateController = TextEditingController();
+  final birthDateController = TextEditingController();
+
+  final pageController = PageController();
 
   bool isLastPage = false;
 
@@ -30,9 +34,6 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
   @override
   void dispose() {
     pageController.dispose();
-    postalCodeController.dispose();
-    apartmentNumberController.dispose();
-    houseNumberController.dispose();
     super.dispose();
   }
 
@@ -79,8 +80,13 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
               setState(() => isLastPage = index == 1);
             },
             children: <Widget> [
-              ProfileQuestionPage(postalCodeController: postalCodeController, houseNumberController: houseNumberController, apartmentNumberController: apartmentNumberController),
-              CompleteProfilePage(constructionYearController: constructionYearController),
+              ProfileQuestionPage(minBudgetController: minBudgetController, 
+                                  maxBudgetController: maxBudgetController),
+              CompleteProfilePage(aboutMeController: aboutMeController, 
+                                  workController: workController, 
+                                  studyController: studyController,
+                                  roomMateController: roomMateController,
+                                  birthDateController: birthDateController),
             ],
           ),
         ),
@@ -144,10 +150,6 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
                         duration: const Duration(milliseconds: 500), 
                         curve: Curves.easeInOut,
                       );
-                      // setState(() {
-                      //   addressValidated = false;
-                      // });
-                      // validateAddress(postalCodeController, houseNumberController, apiKey);
                       if (addressValidated) {
                         pageController.nextPage(
                           duration: const Duration(milliseconds: 500), 
@@ -179,7 +181,7 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
   }
 
   bool checkControllers() {
-    if (postalCodeController.text.isNotEmpty || houseNumberController.text.isNotEmpty || apartmentNumberController.text.isNotEmpty) {
+    if (minBudgetController.text.isNotEmpty || maxBudgetController.text.isNotEmpty) {
       return true;
     }
     return false;
@@ -195,27 +197,6 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
       )
     );
   }
-
-  // validateAddress(TextEditingController postalCodeController, TextEditingController houseNumberController, String apiKey) async {
-  //   var postCode = postalCodeController.text;
-  //   var houseNum = houseNumberController.text;
-      
-  //   final response = await http.get(
-  //     Uri.parse('https://json.api-postcode.nl?postcode=' + postCode + '&number=' + houseNum), 
-  //     headers: {'token': apiKey},
-  //   );
-  //   if (response.statusCode == 200) {
-  //     print("Successfully checked address");
-  //     setState(() {
-  //       addressValidated = true;
-  //     });
-  //   } else {
-  //     print("Incorrect address");
-  //     setState(() {
-  //       addressValidated = false;
-  //     });
-  //   }
-  // }
 
 }
 

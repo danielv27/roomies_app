@@ -196,6 +196,26 @@ class _SetupHousePageState extends State<SetupHousePage> with SingleTickerProvid
     );
   }
 
+  // validateAddress(TextEditingController postalCodeController, TextEditingController houseNumberController, String apiKey) async {
+  //   var postCode = postalCodeController.text;
+  //   var houseNum = houseNumberController.text;
+      
+  //   final response = await http.get(
+  //     Uri.parse('https://json.api-postcode.nl?postcode=' + postCode + '&number=' + houseNum), 
+  //     headers: {'token': apiKey},
+  //   );
+  //   if (response.statusCode == 200) {
+  //     print("Successfully checked address");
+  //     setState(() {
+  //       addressValidated = true;
+  //     });
+  //   } else {
+  //     print("Incorrect address");
+  //     setState(() {
+  //       addressValidated = false;
+  //     });
+  //   }
+  // }
 
 }
 

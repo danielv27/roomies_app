@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AddressQuestionPage extends StatelessWidget {
-  const AddressQuestionPage({
+  AddressQuestionPage({
     Key? key,
     required this.postalCodeController,
     required this.houseNumberController,
@@ -11,6 +11,12 @@ class AddressQuestionPage extends StatelessWidget {
   final TextEditingController postalCodeController;
   final TextEditingController houseNumberController;
   final TextEditingController apartmentNumberController;
+
+  final test = "1018 LG";
+  final postCodeRegex = RegExp(r"^([0-9]{4} ?[A-Z]{2})$");
+  final houseNumberRegex = RegExp(r'^[a-zA-Z0-9\- ]*$');
+
+  // final String apiKey = "8d09db9c-0ecc-463e-a020-035728fb3f75";
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +71,13 @@ class AddressQuestionPage extends StatelessWidget {
               labelText: "Postal code",
               labelStyle: const TextStyle(color: Colors.grey),
             ),
+            validator: (value) {
+              if (value!.isEmpty || !postCodeRegex.hasMatch(value)) {
+                return "example 1234 AB or 1234AB";
+              } else {
+                return null;
+              }
+            },
           ),
         ),
         Container(
@@ -93,6 +106,13 @@ class AddressQuestionPage extends StatelessWidget {
               labelText: "House number",
               labelStyle: const TextStyle(color: Colors.grey),
             ),
+            validator: (value) {
+              if (value!.isEmpty || !houseNumberRegex.hasMatch(value)) {
+                return "Enter only numbers or alphabet letters";
+              } else {
+                return null;
+              }
+            },
           ),
         ),
         Container(
@@ -126,4 +146,19 @@ class AddressQuestionPage extends StatelessWidget {
       ],
     );
   }
+
+  // Future<bool> validateAddress() async {
+  //   var postCode = postalCodeController.text;
+  //   var houseNum = houseNumberController.text;
+  //   final response = await http.get(
+  //     Uri.parse('https://json.api-postcode.nl?postcode=' + postCode + '&number=' + houseNum), 
+  //     headers: {'token': apiKey},
+  //   );
+  //   if (response.statusCode == 200) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // }
+
 }
