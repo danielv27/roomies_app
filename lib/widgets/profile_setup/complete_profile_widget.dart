@@ -1,4 +1,9 @@
+import 'dart:io';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class CompleteProfilePage extends StatefulWidget {
   const CompleteProfilePage({
@@ -27,6 +32,15 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
   String roomMateDescription = "Tell what features you are looking in a room mate...";
   String birthDateDescription = "dd/mm/yyyy";
 
+  final ImagePicker _picker = ImagePicker();
+  final List<XFile> selectedProfileImages = [];
+  final FirebaseStorage storageRef = FirebaseStorage.instance;
+  final List<String> arrImageUrls = [];
+  int uploadItem = 0;
+  bool isUploading = false;
+
+  final FirebaseAuth auth = FirebaseAuth.instance;
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -53,6 +67,50 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                   fontSize: 24,
                 ),
               ),
+            ),
+            isUploading ? showLoading() : Column(
+              children: [
+                OutlinedButton(
+                  onPressed: (){
+                    selectProfileImage();
+                  }, 
+                  child: const Text("select files"),
+                ),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    if (selectedProfileImages.isNotEmpty) {
+                      uploadFunction(selectedProfileImages);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("please select profile images"))
+                      );
+                    }
+                  }, 
+                  icon: const Icon(Icons.file_upload), 
+                  label: const Text("Upload"),
+                ),
+                selectedProfileImages.isEmpty 
+                    ? const Text("No Images Selected") 
+                    : SizedBox(
+                      height: 200,
+                      child: GridView.builder(
+                        shrinkWrap: true,
+                        itemCount: selectedProfileImages.length,
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                        ), 
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: Image.file(
+                              File(selectedProfileImages[index].path), 
+                              fit: BoxFit.cover
+                            ),
+                          );
+                        }
+                      ),
+                    ),
+              ],
             ),
             const SizedBox(height: 30,),
             textLabel("ABOUT ME"),
@@ -164,4 +222,60 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
       hintStyle: const TextStyle(color: Colors.grey, fontSize: 15, fontWeight: FontWeight.w300),
     );
   }
+
+  Widget showLoading() {
+    return Center(
+      child: Column(
+        children: const [
+          CircularProgressIndicator(),
+        ],
+      ),
+    );
+  }
+
+  void uploadFunction(List<XFile> _images) {
+    setState(() {
+      isUploading = true;
+    });
+    for (int i = 0; i < _images.length; i++) {
+      var imageUrl = uploadFile(_images[i]);
+      arrImageUrls.add(imageUrl.toString());
+    }
+  }
+
+  Future<String> uploadFile(XFile _image) async {
+    Reference reference = storageRef.ref().child("profile_images").child(auth.currentUser!.uid.toString()).child(_image.name);
+    UploadTask uploadTask = reference.putFile(File(_image.path));
+    await uploadTask.whenComplete(() {
+      setState(() {
+        uploadItem++;
+        if (uploadItem == selectedProfileImages.length) {
+          isUploading = false;
+          uploadItem = 0;
+        }    
+      });
+
+    });
+
+    return await reference.getDownloadURL();
+  }
+
+  Future<void> selectProfileImage() async {
+    if (selectedProfileImages.isNotEmpty) {
+      selectedProfileImages.clear();
+    }
+    try {
+      final List<XFile>? profileImage = await _picker.pickMultiImage();
+      if (profileImage!.isNotEmpty) {
+        selectedProfileImages.addAll(profileImage);
+      }
+      print("List of Select images : ${profileImage.length.toString()}");
+    } catch (e) {
+      print("error" + e.toString());
+    }
+    setState(() {
+      
+    });
+  }
+
 }

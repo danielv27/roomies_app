@@ -400,7 +400,7 @@ class AuthPageState extends State<AuthPage> {
                 minimumSize: const Size.fromHeight(42),
               ),
               onPressed: () {
-                // signUp(); // User signup with firebase authentication
+                signUp(); // User signup with firebase authentication
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (context) => const SetupPage()),
                 );
