@@ -15,7 +15,7 @@ class UserModel {
   final String firstImgUrl; 
 
   UserModel({
-    this.id = '',
+    required this.id,
     required this.email,
     required this.firstName,
     required this.lastName,

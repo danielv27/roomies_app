@@ -39,7 +39,7 @@ Widget searchBar(List<UserModel> users){
         radius: 32,
         backgroundImage: NetworkImage(users[1].firstImgUrl),
       ),
-      const Padding(padding: EdgeInsets.only(right: 20))
+      const Padding(padding: EdgeInsets.only(right: 16))
 
     ],
     title: Column(
@@ -72,18 +72,18 @@ Widget searchBar(List<UserModel> users){
 
 Widget circularUserList(BuildContext context, List<UserModel> users){
   return SizedBox(
-    height: MediaQuery.of(context).size.height *0.2,
+    height: MediaQuery.of(context).size.height *0.13,
     child: ListView.builder(
       scrollDirection: Axis.horizontal,
       itemCount: users.length,
       itemBuilder: (context, index){
         return Padding(
-          padding: const EdgeInsets.only(right:11.0,top: 11),
+          padding: const EdgeInsets.only(top: 11,left: 15,right: 4),
           child: Column(
             children: [
               CircleAvatar(
-                backgroundColor: Colors.red,
-                radius: 32,
+                backgroundColor: Colors.red[700],
+                radius: 28,
                 backgroundImage: NetworkImage(users[index].firstImgUrl),
               ),
               Text(users[index].firstName, style: TextStyle(color: Colors.white),)
