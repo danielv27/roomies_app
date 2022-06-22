@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:swipable_stack/swipable_stack.dart';
-import '../widgets/like_dislike_bar.dart';
+import 'like_dislike_bar.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 const userImageArray = [

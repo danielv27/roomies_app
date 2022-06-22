@@ -44,46 +44,36 @@ class ChangePageState extends State<HomePage> {
         ),
         child: BottomBar(
           selectedIndex: _currentPage,
-          //showActiveBackgroundColor: true,
           onTap: (int index) {
             _previousPage = _currentPage;
             setState(() => _currentPage = index);
           },
-          
           //activeColor is a mandatory fiend but doesnt do anything as the bottom bar library was modified.
           items: <BottomBarItem>[
-              /// Roomies
-              BottomBarItem(
-                title: const Text('Roomies', style: TextStyle(color: Colors.white),),
-                icon: Image.asset('assets/icons/Profile-selected.png',height: 30,),
-                activeColor: const Color.fromARGB(255, 192, 58, 103),
-                inactiveIcon: Image.asset('assets/icons/Profile.png',height: 35,),
-                inactiveColor: Colors.grey
-              ),
-
-              /// Matches
-              BottomBarItem(
-                title: const Text('Matches'),
-                icon: Image.asset('assets/icons/Chat.png', height: 30,),
-                activeColor: const Color.fromARGB(255, 192, 58, 103),
-                inactiveColor: Colors.grey
-              ),
-
-              /// Houses
-              BottomBarItem(
-                title: const Text('Houses'),
-                icon: Image.asset('assets/icons/Home-selected.png', height: 30,),
-                activeColor: const Color.fromARGB(255, 192, 58, 103),
-                inactiveColor: Colors.grey,
-                inactiveIcon: Image.asset('assets/icons/Home.png', height: 30,),
-              ),
+            /// Roomies
+            BottomBarItem(
+              title: const Text('Roomies', style: TextStyle(color: Colors.white),),
+              icon: Image.asset('assets/icons/Profile-selected.png',height: 30,),
+              activeColor: const Color.fromARGB(255, 192, 58, 103),
+              inactiveIcon: Image.asset('assets/icons/Profile.png',height: 35,),
+              inactiveColor: Colors.grey
+            ),
+            /// Matches
+            BottomBarItem(
+              title: const Text('Matches'),
+              icon: Image.asset('assets/icons/Chat.png', height: 30,),
+              activeColor: const Color.fromARGB(255, 192, 58, 103),
+              inactiveColor: Colors.grey
+            ),
+            /// Houses
+            BottomBarItem(
+              title: const Text('Houses'),
+              icon: Image.asset('assets/icons/Home-selected.png', height: 30,),
+              activeColor: const Color.fromARGB(255, 192, 58, 103),
+              inactiveColor: Colors.grey,
+              inactiveIcon: Image.asset('assets/icons/Home.png', height: 30,),
+            ),
               
-              // BottomBarItem(
-              //   title: const Text('Settings'),
-              //   icon: const Icon(Icons.settings, size: 36,),
-              //   activeColor: const Color.fromARGB(255, 192, 58, 103),
-              // ),
-                
           ],
         ),
       ),

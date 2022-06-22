@@ -1,220 +1,52 @@
-import 'dart:convert';
-
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
-import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
-import 'package:flutter_chat_ui/flutter_chat_ui.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:mime/mime.dart';
-import 'package:open_file/open_file.dart';
-import 'package:uuid/uuid.dart';
+import 'package:roomies_app/backend/database.dart';
+import '../models/user_types.dart';
+import '../widgets/matches_page/matches_body.dart';
+import '../widgets/matches_page/matches_header.dart';
+
+import 'chat_page.dart'; //for later when using navigator.push for a specific chat
 
 class MatchesPage extends StatelessWidget {
   const MatchesPage({Key? key}) : super(key: key);
 
-
-
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-      backgroundColor: const Color.fromARGB(255, 192, 58, 103),
-      body: Center(
-        child: Container(
-          margin: const EdgeInsets.only(bottom: 5),
-          child: Container(//const ChatPage(
-            
+    return Scaffold(
+      body: Container(
+          decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+            Color.fromRGBO(239, 85, 100, 1),
+            Color.fromRGBO(195, 46, 66, 1),
+            Color.fromRGBO(190, 40, 62, 1),
+            Color.fromRGBO(210, 66, 78, 1),
+            Color.fromRGBO(244, 130, 114, 1),
+          ])),
+          child: FutureBuilder(
+            future: FireStoreDataBase().getUsers(),
+            builder: (context, snapshot) {
+              if(snapshot.connectionState == ConnectionState.done){
+                List<UserModel> userList = snapshot.data as List<UserModel>;
+                return Column(
+                  children: [
+                    MatchesHeaderWidget(users: userList),
+                    MatchesBodyWidget(users: userList)
+                  ] 
+                );             
+              }
+              if (snapshot.hasError) {
+                return const Text("Something went wrong");
+              }
+              return const Center(child: CircularProgressIndicator(color: Colors.red));
+        
+            },
           ),
         ),
-      ),
+      
     );
   }
 }
 
 
-// class ChatPage extends StatefulWidget {
-//   const ChatPage({Key? key}) : super(key: key);
-
-//   @override
-//   _ChatPageState createState() => _ChatPageState();
-// }
-
-// class _ChatPageState extends State<ChatPage> {
-//   List<types.Message> _messages = [];
-//   final _user = const types.User(id: '06c33e8b-e835-4736-80f4-63f44b66666c');
-  
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     _loadMessages();
-//   }
-
-//   void _addMessage(types.Message message) {
-//     setState(() {
-//       _messages.insert(0, message);
-//     });
-//   }
-
-//   void _handleAtachmentPressed() {
-//     showModalBottomSheet<void>(
-//       context: context,
-//       builder: (BuildContext context) {
-//         return SafeArea(
-//           child: SizedBox(
-//             height: 144,
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.stretch,
-//               children: <Widget>[
-//                 TextButton(
-//                   onPressed: () {
-//                     Navigator.pop(context);
-//                     _handleImageSelection();
-//                   },
-//                   child: const Align(
-//                     alignment: AlignmentDirectional.centerStart,
-//                     child: Text('Picture'),
-//                   ),
-//                 ),
-//                 TextButton(
-//                   onPressed: () {
-//                     Navigator.pop(context);
-//                     _handleFileSelection();
-//                   },
-//                   child: const Align(
-//                     alignment: AlignmentDirectional.centerStart,
-//                     child: Text('File'),
-//                   ),
-//                 ),
-//                 TextButton(
-//                   onPressed: () => Navigator.pop(context),
-//                   child: const Align(
-//                     alignment: AlignmentDirectional.centerStart,
-//                     child: Text('Cancel'),
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-//         );
-//       },
-//     );
-//   }
-
-//   void _handleFileSelection() async {
-//     final result = await FilePicker.platform.pickFiles(
-//       type: FileType.any,
-//     );
-
-//     if (result != null && result.files.single.path != null) {
-//       final message = types.FileMessage(
-//         author: _user,
-//         createdAt: DateTime.now().millisecondsSinceEpoch,
-//         id: const Uuid().v4(),
-//         mimeType: lookupMimeType(result.files.single.path!),
-//         name: result.files.single.name,
-//         size: result.files.single.size,
-//         uri: result.files.single.path!,
-//       );
-
-//       _addMessage(message);
-//     }
-//   }
-
-//   void _handleImageSelection() async {
-//     final result = await ImagePicker().pickImage(
-//       imageQuality: 70,
-//       maxWidth: 1440,
-//       source: ImageSource.gallery,
-//     );
-
-//     if (result != null) {
-//       final bytes = await result.readAsBytes();
-//       final image = await decodeImageFromList(bytes);
-
-//       final message = types.ImageMessage(
-//         author: _user,
-//         createdAt: DateTime.now().millisecondsSinceEpoch,
-//         height: image.height.toDouble(),
-//         id: const Uuid().v4(),
-//         name: result.name,
-//         size: bytes.length,
-//         uri: result.path,
-//         width: image.width.toDouble(),
-//       );
-
-//       _addMessage(message);
-//     }
-//   }
-
-//   void _handleMessageTap(BuildContext context, types.Message message) async {
-//     if (message is types.FileMessage) {
-//       await OpenFile.open(message.uri);
-//     }
-//   }
-
-//   void _handlePreviewDataFetched(
-//     types.TextMessage message,
-//     types.PreviewData previewData,
-//   ) {
-//     final index = _messages.indexWhere((element) => element.id == message.id);
-//     final updatedMessage = _messages[index].copyWith(previewData: previewData);
-
-//     WidgetsBinding.instance.addPostFrameCallback((_) {
-//       setState(() {
-//         _messages[index] = updatedMessage;
-//       });
-//     });
-//   }
-
-//   void _handleSendPressed(types.PartialText message) {
-//     final textMessage = types.TextMessage(
-//       author: _user,
-//       createdAt: DateTime.now().millisecondsSinceEpoch,
-//       id: const Uuid().v4(),
-//       text: message.text,
-//     );
-
-//     _addMessage(textMessage);
-//   }
-
-//   void _loadMessages() async {
-//     final response = await rootBundle.loadString('assets/messages.json');
-//     final messages = (jsonDecode(response) as List)
-//         .map((e) => types.Message.fromJson(e as Map<String, dynamic>))
-//         .toList();
-
-//     setState(() {
-//       _messages = messages;
-//     });
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-      
-//       body: SafeArea(
-        
-//         bottom: false,
-//         child: Chat(
-          
-//           theme: DefaultChatTheme(
-//             primaryColor: Color.fromARGB(255, 192, 58, 103),
-//             secondaryColor: Colors.grey,
-//             inputBackgroundColor: Color.fromARGB(255, 192, 58, 103),
-//             inputTextColor: Colors.white,
-//             inputTextCursorColor: Colors.pink[900]
-            
-//           ),
-//           messages: _messages,
-//           onAttachmentPressed: _handleAtachmentPressed,
-//           onMessageTap: _handleMessageTap,
-//           onPreviewDataFetched: _handlePreviewDataFetched,
-//           onSendPressed: _handleSendPressed,
-//           user: _user,
-//         ),
-//       ),
-//       extendBody: true,
-//     );
-//   }
-// }
