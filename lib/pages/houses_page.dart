@@ -22,7 +22,7 @@ class HousesPage extends StatelessWidget {
                       var user = userList[index];
                       return Column(
                         children: [
-                          Text("first name: ${user.firstName}"),
+                          Text("first name: ${user.id}"),
                         ],
                       );
                     },

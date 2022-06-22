@@ -13,6 +13,7 @@ class FireStoreDataBase {
         for (var userDoc in querySnapshot.docs) {
           var data = userDoc.data();
           UserModel newUser = UserModel(
+            id: userDoc.id,
             email: userDoc['email'],
             firstName: userDoc['firstName'],
             lastName: userDoc['lastName'],
