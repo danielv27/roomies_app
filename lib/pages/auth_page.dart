@@ -43,33 +43,23 @@ class AuthPageState extends State<AuthPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.red,
-      resizeToAvoidBottomInset: true,
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color.fromRGBO(239, 85, 100, 1),
-              Color.fromRGBO(195, 46, 66, 1),
-              Color.fromRGBO(190, 40, 62, 1),
-              Color.fromRGBO(210, 66, 78, 1),
-              Color.fromRGBO(244, 130, 114, 1),
-            ],
+    return Container(
+      decoration: applyRedGradient(),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        resizeToAvoidBottomInset: true,
+        body: const Center(
+          child: Image(
+            image: AssetImage('assets/images/app-icon.png'),
+            height: 100,
           ),
         ),
-        child: Column(
-          children: [
-            const Spacer(),
-            const Image(
-              image: AssetImage('assets/images/app-icon.png'),
-              height: 100,
-            ),
-            Container(padding: const EdgeInsets.all(20)),
-            const Spacer(),
-            BottomSheet(
+        bottomNavigationBar: Container(
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(20))
+          ),
+          child: SingleChildScrollView(
+            child: BottomSheet(
               onClosing: () { },
               enableDrag: false,
               shape: const RoundedRectangleBorder(
@@ -92,10 +82,26 @@ class AuthPageState extends State<AuthPage> {
                 );
               },
             ),
-          ],
+          ),
         ),
       ),
     );
+  }
+
+  BoxDecoration applyRedGradient() {
+    return const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color.fromRGBO(239, 85, 100, 1),
+              Color.fromRGBO(195, 46, 66, 1),
+              Color.fromRGBO(190, 40, 62, 1),
+              Color.fromRGBO(210, 66, 78, 1),
+              Color.fromRGBO(244, 130, 114, 1),
+            ],
+          ),
+        );
   }
 
   Widget showLogin() {
