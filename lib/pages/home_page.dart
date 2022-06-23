@@ -55,7 +55,7 @@ class ChangePageState extends State<HomePage> {
               title: const Text('Roomies', style: TextStyle(color: Colors.white),),
               icon: Image.asset('assets/icons/Profile-selected.png',height: 30,),
               activeColor: const Color.fromARGB(255, 192, 58, 103),
-              inactiveIcon: Image.asset('assets/icons/Profile.png',height: 35,),
+              inactiveIcon: Image.asset('assets/icons/Profile.png',height: 30,),
               inactiveColor: Colors.grey
             ),
             /// Matches

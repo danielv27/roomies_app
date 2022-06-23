@@ -39,7 +39,6 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    //resizeToAvoidBottomInset: false, //this prevents keyboard from pushing app up
     body: StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),
      
