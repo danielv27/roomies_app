@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:roomies_app/backend/database.dart';
-import '../models/user_types.dart';
+import '../models/user_model.dart';
 import '../widgets/matches_page/matches_body.dart';
 import '../widgets/matches_page/matches_header.dart';
 

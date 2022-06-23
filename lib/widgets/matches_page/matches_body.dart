@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../models/user_types.dart';
+import '../../models/user_model.dart';
 
 class MatchesBodyWidget extends StatelessWidget {
   final List<UserModel> users;

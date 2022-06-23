@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import '../models/user_types.dart';
+import '../models/user_model.dart';
 
 
 class FireStoreDataBase {
@@ -17,6 +17,7 @@ class FireStoreDataBase {
             email: userDoc['email'],
             firstName: userDoc['firstName'],
             lastName: userDoc['lastName'],
+            //isHouseOwner: userDoc['isHouseOwner'] //Tell volpin to add this attribute to the different registration forms as otherwise it will break
             );
           userList.add(newUser);
         }

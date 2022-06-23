@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:roomies_app/models/user_types.dart';
+import 'package:roomies_app/models/user_model.dart';
 
 import '../backend/database.dart';
 
@@ -9,7 +9,6 @@ class HousesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //backgroundColor: Colors.green,
       body: FutureBuilder(
             future: FireStoreDataBase().getUsers(),
             builder: (context, snapshot) {
@@ -17,12 +16,17 @@ class HousesPage extends StatelessWidget {
                 List<UserModel> userList = snapshot.data as List<UserModel>;
                 return Center(
                   child: ListView.builder(
+                    padding: EdgeInsets.only(top: 70,left: 70, bottom: 115),
                     itemCount: userList.length,
                     itemBuilder: (context, index) {
                       var user = userList[index];
                       return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("first name: ${user.id}"),
+                          Text("first name: ${user.firstName}"),
+                          Text("last name: ${user.lastName}"),
+                          Text("UID: ${user.id}"),
+                          SizedBox(height: 10,)
                         ],
                       );
                     },
