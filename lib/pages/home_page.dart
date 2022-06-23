@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
-import 'package:roomies_app/widgets/bottom_bar_custom.dart';
-// import 'package:bottom_bar/bottom_bar.dart';
+import 'package:roomies_app/widgets/bottom_bar.dart';
 import 'roomies_page.dart';
 import 'houses_page.dart';
 import 'matches_page.dart';
