@@ -1,11 +1,13 @@
-import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:roomies_app/pages/auth_page.dart';
+import 'package:roomies_app/pages/home_page.dart';
 import 'package:roomies_app/widgets/profile_setup/complete_profile_widget.dart';
 import 'package:roomies_app/widgets/profile_setup/profile_question_widget.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:http/http.dart' as http;
+
+import '../backend/database.dart';
+
 
 class SetupProfilePage extends StatefulWidget {
   const SetupProfilePage({Key? key}) : super(key: key);
@@ -30,6 +32,8 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
 
   final String apiKey = "8d09db9c-0ecc-463e-a020-035728fb3f75";
   bool addressValidated = true; // change to false
+
+  final FirebaseAuth auth = FirebaseAuth.instance;
 
   @override
   void dispose() {
@@ -111,10 +115,11 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
                     onSurface: Colors.transparent,
                   ),
                   onPressed: () async {
+                    User? currentUser = auth.currentUser;
                     registerProfile();
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: ((context) => AuthPage()))
-                    );
+                    FireStoreDataBase().createPersonalProfile(currentUser);
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
                   }, 
                   child: const Text(
                     "Complete profile",

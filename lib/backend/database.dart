@@ -6,6 +6,7 @@ import '../models/user_model.dart';
 
 class FireStoreDataBase {
 
+
   Future getUsers() async {
     try {
       List<UserModel> userList = [];
@@ -17,7 +18,7 @@ class FireStoreDataBase {
             email: userDoc['email'],
             firstName: userDoc['firstName'],
             lastName: userDoc['lastName'],
-            //isHouseOwner: userDoc['isHouseOwner'] //Tell volpin to add this attribute to the different registration forms as otherwise it will break
+            isHouseOwner: userDoc['isHouseOwner'] //Tell volpin to add this attribute to the different registration forms as otherwise it will break
             );
           userList.add(newUser);
         }

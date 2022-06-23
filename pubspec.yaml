@@ -53,6 +53,7 @@ dependencies:
   swipable_stack: ^2.0.0
   smooth_page_indicator: ^1.0.0+2
   dob_input_field: ^1.0.0
+  page_transition: ^2.0.9
 
 dev_dependencies:
   flutter_test:

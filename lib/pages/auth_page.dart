@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:roomies_app/backend/database.dart';
 import 'package:roomies_app/pages/setup_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -401,9 +402,7 @@ class AuthPageState extends State<AuthPage> {
               ),
               onPressed: () {
                 signUp(); // User signup with firebase authentication
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (context) => const SetupPage()),
-                );
+                Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: const SetupPage()));
               },
               child: const Text(
                 "Create account",

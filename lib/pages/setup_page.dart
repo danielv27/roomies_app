@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:roomies_app/pages/setup_house_page.dart';
 import 'package:roomies_app/pages/setup_profile_page.dart';
 
@@ -78,10 +79,7 @@ class _SetupPageState extends State<SetupPage> {
               width: MediaQuery.of(context).size.width * 0.8,
               child: ElevatedButton (
                 onPressed: () { 
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const SetupProfilePage()),
-                  );
+                  Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: const SetupProfilePage()));
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
