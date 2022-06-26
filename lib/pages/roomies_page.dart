@@ -75,7 +75,7 @@ class RoomiesPage extends StatelessWidget {
               Center(
                 child: Padding(
                   padding: const EdgeInsets.only(right: 35.0, bottom: 10),
-                  child: Container(
+                  child: SizedBox(
                     width: 50,
                     height: 50,
                     child: TextButton(

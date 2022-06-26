@@ -20,36 +20,40 @@ class MatchesBodyWidget extends StatelessWidget {
             topRight: Radius.circular(20)
           ),
         ),
-        child: ListView.builder(
-          padding: EdgeInsets.only(top: 18,bottom: 105),
-          itemCount: users.length,
-          itemBuilder: (context,index){
-            return Padding(
-              padding: const EdgeInsets.only(left:18.0,bottom: 23),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundColor: Colors.red[700],
-                    backgroundImage: NetworkImage(users[index].firstImgUrl),
-                  ),
-                  SizedBox(width: MediaQuery.of(context).size.width*0.04,),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children:[
-                      Text(
-                        "${users[index].firstName} ${users[index].lastName}",
-                        textAlign: TextAlign.left,
-                      ),
-                      Text("last message sent",textAlign: TextAlign.left,)
-                    ]
-                  )
-                ],
-              ),
-            );
-          },
-        ),
+        child: userTileList(users),
       )
     );
   }
+}
+
+Widget userTileList(List<UserModel> users){
+  return ListView.builder(
+    padding: EdgeInsets.only(top: 18,bottom: 105),
+    itemCount: users.length,
+    itemBuilder: (context,index){
+      return Padding(
+        padding: const EdgeInsets.only(left:18.0,bottom: 23),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 30,
+              backgroundColor: Colors.red[700],
+              backgroundImage: NetworkImage(users[index].firstImgUrl),
+            ),
+            SizedBox(width: MediaQuery.of(context).size.width*0.04,),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children:[
+                Text(
+                  "${users[index].firstName} ${users[index].lastName}",
+                  textAlign: TextAlign.left,
+                ),
+                Text("last message sent",textAlign: TextAlign.left,)
+              ]
+            )
+          ],
+        ),
+      );
+    },
+  );
 }

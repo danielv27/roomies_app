@@ -1,189 +1,154 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+import 'package:flutter_chat_bubble/bubble_type.dart';
+import 'package:flutter_chat_bubble/chat_bubble.dart';
+import 'package:flutter_chat_bubble/clippers/chat_bubble_clipper_1.dart';
+import 'package:flutter_chat_bubble/clippers/chat_bubble_clipper_10.dart';
+import 'package:flutter_chat_bubble/clippers/chat_bubble_clipper_2.dart';
+import 'package:flutter_chat_bubble/clippers/chat_bubble_clipper_3.dart';
+import 'package:flutter_chat_bubble/clippers/chat_bubble_clipper_4.dart';
+import 'package:flutter_chat_bubble/clippers/chat_bubble_clipper_5.dart';
+import 'package:flutter_chat_bubble/clippers/chat_bubble_clipper_6.dart';
+import 'package:flutter_chat_bubble/clippers/chat_bubble_clipper_7.dart';
+import 'package:flutter_chat_bubble/clippers/chat_bubble_clipper_8.dart';
+import 'package:flutter_chat_bubble/clippers/chat_bubble_clipper_9.dart';
+import 'package:roomies_app/models/user_model.dart';
 
 
 
-// class ChatPage extends StatefulWidget {
-//   const ChatPage({Key? key}) : super(key: key);
 
-//   @override
-//   _ChatPageState createState() => _ChatPageState();
-// }
-
-// class _ChatPageState extends State<ChatPage> {
-//   List<types.Message> _messages = [];
-//   final _user = const types.User(id: '06c33e8b-e835-4736-80f4-63f44b66666c');
+class ChatPage extends StatelessWidget {
   
+  
+  const ChatPage({Key? key}) : super(key: key);
 
-//   @override
-//   void initState() {
-//     super.initState();
-//     _loadMessages();
-//   }
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
+      child: ListView(
+        children: <Widget>[
+          getTitleText("Example 1"),
+          getSenderView(
+              ChatBubbleClipper1(type: BubbleType.sendBubble), context),
+          getReceiverView(
+              ChatBubbleClipper1(type: BubbleType.receiverBubble), context),
+          SizedBox(
+            height: 30,
+          ),
+          getTitleText("Example 2"),
+          getSenderView(
+              ChatBubbleClipper2(type: BubbleType.sendBubble), context),
+          getReceiverView(
+              ChatBubbleClipper2(type: BubbleType.receiverBubble), context),
+          SizedBox(
+            height: 30,
+          ),
+          getTitleText("Example 3"),
+          getSenderView(
+              ChatBubbleClipper3(type: BubbleType.sendBubble), context),
+          getReceiverView(
+              ChatBubbleClipper3(type: BubbleType.receiverBubble), context),
+          SizedBox(
+            height: 30,
+          ),
+          getTitleText("Example 4"),
+          getSenderView(
+              ChatBubbleClipper4(type: BubbleType.sendBubble), context),
+          getReceiverView(
+              ChatBubbleClipper4(type: BubbleType.receiverBubble), context),
+          SizedBox(
+            height: 30,
+          ),
+          getTitleText("Example 5"),
+          getSenderView(
+              ChatBubbleClipper5(type: BubbleType.sendBubble), context),
+          getReceiverView(
+              ChatBubbleClipper5(type: BubbleType.receiverBubble), context),
+          SizedBox(
+            height: 30,
+          ),
+          getTitleText("Example 6"),
+          getSenderView(
+              ChatBubbleClipper6(type: BubbleType.sendBubble), context),
+          getReceiverView(
+              ChatBubbleClipper6(type: BubbleType.receiverBubble), context),
+          SizedBox(
+            height: 30,
+          ),
+          getTitleText("Example 7"),
+          getSenderView(
+              ChatBubbleClipper7(type: BubbleType.sendBubble), context),
+          getReceiverView(
+              ChatBubbleClipper7(type: BubbleType.receiverBubble), context),
+          SizedBox(
+            height: 30,
+          ),
+          getTitleText("Example 8"),
+          getSenderView(
+              ChatBubbleClipper8(type: BubbleType.sendBubble), context),
+          getReceiverView(
+              ChatBubbleClipper8(type: BubbleType.receiverBubble), context),
+          SizedBox(
+            height: 30,
+          ),
+          getTitleText("Example 9"),
+          getSenderView(
+              ChatBubbleClipper9(type: BubbleType.sendBubble), context),
+          getReceiverView(
+              ChatBubbleClipper9(type: BubbleType.receiverBubble), context),
+          SizedBox(
+            height: 30,
+          ),
+          getTitleText("Example 10"),
+          getSenderView(
+              ChatBubbleClipper10(type: BubbleType.sendBubble), context),
+          Padding(
+            padding: EdgeInsets.only(bottom: 10),
+            child: getReceiverView(
+                ChatBubbleClipper10(type: BubbleType.receiverBubble), context),
+          )
+        ],
+      ),
+    );
+  }
 
-//   void _addMessage(types.Message message) {
-//     setState(() {
-//       _messages.insert(0, message);
-//     });
-//   }
+  getTitleText(String title) => Text(
+        title,
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 20,
+        ),
+      );
 
-//   void _handleAtachmentPressed() {
-//     showModalBottomSheet<void>(
-//       context: context,
-//       builder: (BuildContext context) {
-//         return SafeArea(
-//           child: SizedBox(
-//             height: 144,
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.stretch,
-//               children: <Widget>[
-//                 TextButton(
-//                   onPressed: () {
-//                     Navigator.pop(context);
-//                     _handleImageSelection();
-//                   },
-//                   child: const Align(
-//                     alignment: AlignmentDirectional.centerStart,
-//                     child: Text('Picture'),
-//                   ),
-//                 ),
-//                 TextButton(
-//                   onPressed: () {
-//                     Navigator.pop(context);
-//                     _handleFileSelection();
-//                   },
-//                   child: const Align(
-//                     alignment: AlignmentDirectional.centerStart,
-//                     child: Text('File'),
-//                   ),
-//                 ),
-//                 TextButton(
-//                   onPressed: () => Navigator.pop(context),
-//                   child: const Align(
-//                     alignment: AlignmentDirectional.centerStart,
-//                     child: Text('Cancel'),
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-//         );
-//       },
-//     );
-//   }
+  getSenderView(CustomClipper clipper, BuildContext context) => ChatBubble(
+        clipper: clipper,
+        alignment: Alignment.topRight,
+        margin: EdgeInsets.only(top: 20),
+        backGroundColor: Colors.blue,
+        child: Container(
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width * 0.7,
+          ),
+          child: Text(
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+      );
 
-//   void _handleFileSelection() async {
-//     final result = await FilePicker.platform.pickFiles(
-//       type: FileType.any,
-//     );
-
-//     if (result != null && result.files.single.path != null) {
-//       final message = types.FileMessage(
-//         author: _user,
-//         createdAt: DateTime.now().millisecondsSinceEpoch,
-//         id: const Uuid().v4(),
-//         mimeType: lookupMimeType(result.files.single.path!),
-//         name: result.files.single.name,
-//         size: result.files.single.size,
-//         uri: result.files.single.path!,
-//       );
-
-//       _addMessage(message);
-//     }
-//   }
-
-//   void _handleImageSelection() async {
-//     final result = await ImagePicker().pickImage(
-//       imageQuality: 70,
-//       maxWidth: 1440,
-//       source: ImageSource.gallery,
-//     );
-
-//     if (result != null) {
-//       final bytes = await result.readAsBytes();
-//       final image = await decodeImageFromList(bytes);
-
-//       final message = types.ImageMessage(
-//         author: _user,
-//         createdAt: DateTime.now().millisecondsSinceEpoch,
-//         height: image.height.toDouble(),
-//         id: const Uuid().v4(),
-//         name: result.name,
-//         size: bytes.length,
-//         uri: result.path,
-//         width: image.width.toDouble(),
-//       );
-
-//       _addMessage(message);
-//     }
-//   }
-
-//   void _handleMessageTap(BuildContext context, types.Message message) async {
-//     if (message is types.FileMessage) {
-//       await OpenFile.open(message.uri);
-//     }
-//   }
-
-//   void _handlePreviewDataFetched(
-//     types.TextMessage message,
-//     types.PreviewData previewData,
-//   ) {
-//     final index = _messages.indexWhere((element) => element.id == message.id);
-//     final updatedMessage = _messages[index].copyWith(previewData: previewData);
-
-//     WidgetsBinding.instance.addPostFrameCallback((_) {
-//       setState(() {
-//         _messages[index] = updatedMessage;
-//       });
-//     });
-//   }
-
-//   void _handleSendPressed(types.PartialText message) {
-//     final textMessage = types.TextMessage(
-//       author: _user,
-//       createdAt: DateTime.now().millisecondsSinceEpoch,
-//       id: const Uuid().v4(),
-//       text: message.text,
-//     );
-
-//     _addMessage(textMessage);
-//   }
-
-//   void _loadMessages() async {
-//     final response = await rootBundle.loadString('assets/messages.json');
-//     final messages = (jsonDecode(response) as List)
-//         .map((e) => types.Message.fromJson(e as Map<String, dynamic>))
-//         .toList();
-
-//     setState(() {
-//       _messages = messages;
-//     });
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-      
-//       body: SafeArea(
-        
-//         bottom: false,
-//         child: Chat(
-          
-//           theme: DefaultChatTheme(
-//             primaryColor: Color.fromARGB(255, 192, 58, 103),
-//             secondaryColor: Colors.grey,
-//             inputBackgroundColor: Color.fromARGB(255, 192, 58, 103),
-//             inputTextColor: Colors.white,
-//             inputTextCursorColor: Colors.pink[900]
-            
-//           ),
-//           messages: _messages,
-//           onAttachmentPressed: _handleAtachmentPressed,
-//           onMessageTap: _handleMessageTap,
-//           onPreviewDataFetched: _handlePreviewDataFetched,
-//           onSendPressed: _handleSendPressed,
-//           user: _user,
-//         ),
-//       ),
-//       extendBody: true,
-//     );
-//   }
-// }
+  getReceiverView(CustomClipper clipper, BuildContext context) => ChatBubble(
+        clipper: clipper,
+        backGroundColor: Color(0xffE7E7ED),
+        margin: EdgeInsets.only(top: 20),
+        child: Container(
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width * 0.7,
+          ),
+          child: Text(
+            "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat",
+            style: TextStyle(color: Colors.black),
+          ),
+        ),
+      );
+}

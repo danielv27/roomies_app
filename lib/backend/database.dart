@@ -7,20 +7,21 @@ import '../models/user_model.dart';
 class FireStoreDataBase {
 
 
-  Future getUsers() async {
+  Future<List<UserModel>?> getUsers() async {
     try {
       List<UserModel> userList = [];
       await FirebaseFirestore.instance.collection("users").get().then((querySnapshot) {
         for (var userDoc in querySnapshot.docs) {
-          var data = userDoc.data();
-          UserModel newUser = UserModel(
-            id: userDoc.id,
-            email: userDoc['email'],
-            firstName: userDoc['firstName'],
-            lastName: userDoc['lastName'],
-            isHouseOwner: userDoc['isHouseOwner'] //Tell volpin to add this attribute to the different registration forms as otherwise it will break
-            );
-          userList.add(newUser);
+          if(userDoc.id != FirebaseAuth.instance.currentUser?.uid){
+            UserModel newUser = UserModel(
+              id: userDoc.id,
+              email: userDoc['email'],
+              firstName: userDoc['firstName'],
+              lastName: userDoc['lastName'],
+              isHouseOwner: userDoc['isHouseOwner']
+              );
+            userList.add(newUser);
+          }
         }
       });
       return userList;
@@ -28,7 +29,52 @@ class FireStoreDataBase {
       debugPrint("Error - $e");
       return null;
     }
+    
   }
+  Future<UserModel?> getUserByID(String? userID) async {
+    try {
+      UserModel? newUser;
+      await FirebaseFirestore.instance.collection("users")
+      .doc(userID)
+      .get()
+      .then((userDoc) {
+        newUser = UserModel(
+          id: userDoc.id,
+          email: userDoc['email'],
+          firstName: userDoc['firstName'],
+          lastName: userDoc['lastName'],
+          isHouseOwner: userDoc['isHouseOwner']
+          );
+      });
+      return newUser;
+    } catch (e) {
+      debugPrint("Error - $e");
+      return null;
+    }
+  }
+
+  Future<UserModel?> getCurrentUser() async {
+    try {
+      UserModel? newUser;
+      await FirebaseFirestore.instance.collection("users")
+      .doc(FirebaseAuth.instance.currentUser?.uid)
+      .get()
+      .then((userDoc) {
+        newUser = UserModel(
+          id: userDoc.id,
+          email: userDoc['email'],
+          firstName: userDoc['firstName'],
+          lastName: userDoc['lastName'],
+          isHouseOwner: userDoc['isHouseOwner']
+          );
+      });
+      return newUser;
+    } catch (e) {
+      debugPrint("Error - $e");
+      return null;
+    }
+  }
+
 
   Future signinUser(TextEditingController emailController, TextEditingController passwordController) async {
     await FirebaseAuth.instance.signInWithEmailAndPassword(
