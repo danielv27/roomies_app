@@ -110,8 +110,6 @@ class FireStoreDataBase {
   }
 
   Future createHouseProfile(User ?currentUser) async {
-
-
     await FirebaseFirestore.instance.collection('users')
       .doc(currentUser?.uid)
       .update({ 
@@ -119,6 +117,30 @@ class FireStoreDataBase {
       });
   }
 
+  Future uploadMessage(String message, String? fromID, String? toID) async {
+    final fromRef = FirebaseFirestore.instance.collection('users/$fromID/messages');
+    final toRef = FirebaseFirestore.instance.collection('users/$toID/messages');
+    try{
+      await fromRef.add({
+        'message': message,
+        'otherUserID': toID,
+        'sentByCurrent': true,
+        'timeStamp': DateTime.now()
+      });
+
+      await toRef.add({
+        'message': message,
+        'otherUserID': fromID,
+        'sentByCurrent': false,
+        'timeStamp': DateTime.now()
+      });
+      print('message sent to firebase\n');
+    } catch (e) {
+      debugPrint("Error - $e");
+      return null;
+    }
+
+  } 
 
 }
 

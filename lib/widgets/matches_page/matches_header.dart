@@ -169,19 +169,23 @@ class MatchesSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    print("query: $query\n");
-    return Container();
+    List<UserModel> results = users.where((user){
+      final fullName = user.firstName.toLowerCase() + " " + user.lastName.toLowerCase();
+      final input = query.toLowerCase();
+      return fullName.contains(input);
+    }).toList();
+    return GestureDetector( //this is for now might remove
+      onTap:() => close(context, null),
+      child: userTileList(results));
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
     List<UserModel> suggestions = users.where((user){
       final fullName = user.firstName.toLowerCase() + " " + user.lastName.toLowerCase();
-      final input = query;
+      final input = query.toLowerCase();
       return fullName.contains(input);
     }).toList();
-    return GestureDetector(
-      onTap:() => close(context, null),
-      child: userTileList(suggestions));
+    return userTileList(suggestions);
   }
 }

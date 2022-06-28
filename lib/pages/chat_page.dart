@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_chat_bubble/bubble_type.dart';
@@ -12,105 +13,116 @@ import 'package:flutter_chat_bubble/clippers/chat_bubble_clipper_6.dart';
 import 'package:flutter_chat_bubble/clippers/chat_bubble_clipper_7.dart';
 import 'package:flutter_chat_bubble/clippers/chat_bubble_clipper_8.dart';
 import 'package:flutter_chat_bubble/clippers/chat_bubble_clipper_9.dart';
+import 'package:roomies_app/backend/database.dart';
 import 'package:roomies_app/models/user_model.dart';
+import 'package:roomies_app/widgets/chat_page/chat_header.dart';
+
+import '../widgets/chat_page/new_message_widget.dart';
 
 
 
 
 class ChatPage extends StatelessWidget {
+  final UserModel otherUser;
   
-  
-  const ChatPage({Key? key}) : super(key: key);
+  const ChatPage({
+      Key? key,
+      required this.otherUser
+    }) : super(key: key);  
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20),
-      child: ListView(
-        children: <Widget>[
-          getTitleText("Example 1"),
-          getSenderView(
-              ChatBubbleClipper1(type: BubbleType.sendBubble), context),
-          getReceiverView(
-              ChatBubbleClipper1(type: BubbleType.receiverBubble), context),
-          SizedBox(
-            height: 30,
-          ),
-          getTitleText("Example 2"),
-          getSenderView(
-              ChatBubbleClipper2(type: BubbleType.sendBubble), context),
-          getReceiverView(
-              ChatBubbleClipper2(type: BubbleType.receiverBubble), context),
-          SizedBox(
-            height: 30,
-          ),
-          getTitleText("Example 3"),
-          getSenderView(
-              ChatBubbleClipper3(type: BubbleType.sendBubble), context),
-          getReceiverView(
-              ChatBubbleClipper3(type: BubbleType.receiverBubble), context),
-          SizedBox(
-            height: 30,
-          ),
-          getTitleText("Example 4"),
-          getSenderView(
-              ChatBubbleClipper4(type: BubbleType.sendBubble), context),
-          getReceiverView(
-              ChatBubbleClipper4(type: BubbleType.receiverBubble), context),
-          SizedBox(
-            height: 30,
-          ),
-          getTitleText("Example 5"),
-          getSenderView(
-              ChatBubbleClipper5(type: BubbleType.sendBubble), context),
-          getReceiverView(
-              ChatBubbleClipper5(type: BubbleType.receiverBubble), context),
-          SizedBox(
-            height: 30,
-          ),
-          getTitleText("Example 6"),
-          getSenderView(
-              ChatBubbleClipper6(type: BubbleType.sendBubble), context),
-          getReceiverView(
-              ChatBubbleClipper6(type: BubbleType.receiverBubble), context),
-          SizedBox(
-            height: 30,
-          ),
-          getTitleText("Example 7"),
-          getSenderView(
-              ChatBubbleClipper7(type: BubbleType.sendBubble), context),
-          getReceiverView(
-              ChatBubbleClipper7(type: BubbleType.receiverBubble), context),
-          SizedBox(
-            height: 30,
-          ),
-          getTitleText("Example 8"),
-          getSenderView(
-              ChatBubbleClipper8(type: BubbleType.sendBubble), context),
-          getReceiverView(
-              ChatBubbleClipper8(type: BubbleType.receiverBubble), context),
-          SizedBox(
-            height: 30,
-          ),
-          getTitleText("Example 9"),
-          getSenderView(
-              ChatBubbleClipper9(type: BubbleType.sendBubble), context),
-          getReceiverView(
-              ChatBubbleClipper9(type: BubbleType.receiverBubble), context),
-          SizedBox(
-            height: 30,
-          ),
-          getTitleText("Example 10"),
-          getSenderView(
-              ChatBubbleClipper10(type: BubbleType.sendBubble), context),
-          Padding(
-            padding: EdgeInsets.only(bottom: 10),
-            child: getReceiverView(
-                ChatBubbleClipper10(type: BubbleType.receiverBubble), context),
-          )
-        ],
-      ),
-    );
+    return Scaffold(
+      resizeToAvoidBottomInset: true ,
+      bottomSheet: NewMessageWidget(otherUser: otherUser),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(70),
+        child: ChatHeader(otherUser: otherUser)),
+      body: ListView(
+          children: <Widget>[
+            getTitleText("Example 1"),
+            getSenderView(
+                ChatBubbleClipper1(type: BubbleType.sendBubble), context),
+            getReceiverView(
+                ChatBubbleClipper1(type: BubbleType.receiverBubble), context),
+            SizedBox(
+              height: 30,
+            ),
+            getTitleText("Example 2"),
+            getSenderView(
+                ChatBubbleClipper2(type: BubbleType.sendBubble), context),
+            getReceiverView(
+                ChatBubbleClipper2(type: BubbleType.receiverBubble), context),
+            SizedBox(
+              height: 30,
+            ),
+            getTitleText("Example 3"),
+            getSenderView(
+                ChatBubbleClipper3(type: BubbleType.sendBubble), context),
+            getReceiverView(
+                ChatBubbleClipper3(type: BubbleType.receiverBubble), context),
+            SizedBox(
+              height: 30,
+            ),
+            getTitleText("Example 4"),
+            getSenderView(
+                ChatBubbleClipper4(type: BubbleType.sendBubble), context),
+            getReceiverView(
+                ChatBubbleClipper4(type: BubbleType.receiverBubble), context),
+            SizedBox(
+              height: 30,
+            ),
+            getTitleText("Example 5"),
+            getSenderView(
+                ChatBubbleClipper5(type: BubbleType.sendBubble), context),
+            getReceiverView(
+                ChatBubbleClipper5(type: BubbleType.receiverBubble), context),
+            SizedBox(
+              height: 30,
+            ),
+            getTitleText("Example 6"),
+            getSenderView(
+                ChatBubbleClipper6(type: BubbleType.sendBubble), context),
+            getReceiverView(
+                ChatBubbleClipper6(type: BubbleType.receiverBubble), context),
+            SizedBox(
+              height: 30,
+            ),
+            getTitleText("Example 7"),
+            getSenderView(
+                ChatBubbleClipper7(type: BubbleType.sendBubble), context),
+            getReceiverView(
+                ChatBubbleClipper7(type: BubbleType.receiverBubble), context),
+            SizedBox(
+              height: 30,
+            ),
+            getTitleText("Example 8"),
+            getSenderView(
+                ChatBubbleClipper8(type: BubbleType.sendBubble), context),
+            getReceiverView(
+                ChatBubbleClipper8(type: BubbleType.receiverBubble), context),
+            SizedBox(
+              height: 30,
+            ),
+            getTitleText("Example 9"),
+            getSenderView(
+                ChatBubbleClipper9(type: BubbleType.sendBubble), context),
+            getReceiverView(
+                ChatBubbleClipper9(type: BubbleType.receiverBubble), context),
+            SizedBox(
+              height: 30,
+            ),
+            getTitleText("Example 10"),
+            getSenderView(
+                ChatBubbleClipper10(type: BubbleType.sendBubble), context),
+            Padding(
+              padding: EdgeInsets.only(bottom: 10),
+              child: getReceiverView(
+                  ChatBubbleClipper10(type: BubbleType.receiverBubble), context),
+            )
+          ],
+        ),
+      );
   }
 
   getTitleText(String title) => Text(
@@ -151,4 +163,6 @@ class ChatPage extends StatelessWidget {
           ),
         ),
       );
+      
+
 }
