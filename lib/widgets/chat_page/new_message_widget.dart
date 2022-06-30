@@ -26,6 +26,9 @@ import '../../backend/database.dart';
     void sendMessage() async {
       FocusScope.of(context).unfocus();
       await FireStoreDataBase().uploadMessage(message, FirebaseAuth.instance.currentUser?.uid, widget.otherUser.id);
+      setState(() {
+        
+      });
       message = '';
       controller.clear();
     }

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import '../models/message.dart';
 import '../models/user_model.dart';
 
 
@@ -140,7 +141,38 @@ class FireStoreDataBase {
       return null;
     }
 
-  } 
+  }
+
+  Future<List<Message>?> getMessages(String? currentUserID, String? otherUserID) async {
+    try {
+      List<Message>? messages = [];
+      await FirebaseFirestore.instance.collection('users/$currentUserID/messages')
+      .where('otherUserID', isEqualTo: otherUserID)
+      .get()
+      .then((querySnapshot) {
+        for (var messageDoc in querySnapshot.docs) {
+          Message currentMessage = Message(
+            message: messageDoc['message'],
+            otherUserID: messageDoc['otherUserID'],
+            sentByCurrent: messageDoc['sentByCurrent'],
+            timeStamp: messageDoc['timeStamp'].toDate()
+            // id: userDoc.id,
+            // email: userDoc['email'],
+            // firstName: userDoc['firstName'],
+            // lastName: userDoc['lastName'],
+            // isHouseOwner: userDoc['isHouseOwner']
+            );
+          messages.add(currentMessage);
+        }
+      });
+      return messages;
+    } catch (e) {
+      debugPrint("Error - $e");
+      return null;  
+    }
+
+  }
+
 
 }
 

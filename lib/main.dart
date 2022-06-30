@@ -2,8 +2,13 @@ import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:roomies_app/backend/database.dart';
 import 'pages/home_page.dart';
 import 'pages/auth_page.dart';
+
+void goOnline() async {
+  // FireStoreDataBase().goOnline(FirebaseAuth.instance.currentUser?.uid); //can be implemented later on to check for online users
+}
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -11,6 +16,7 @@ Future main() async {
       [DeviceOrientation.portraitUp]
   );
   await Firebase.initializeApp();
+  goOnline();
 
   runApp(const App());
 }
