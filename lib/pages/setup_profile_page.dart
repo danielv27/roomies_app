@@ -123,8 +123,8 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
                       aboutMeController,
                       workController,
                       studyController,
-                      roommateController,
-                      birthdateController,
+                      roomMateController,
+                      birthDateController,
                     );
                     Navigator.of(context).pop();
                     Navigator.of(context).pop();
