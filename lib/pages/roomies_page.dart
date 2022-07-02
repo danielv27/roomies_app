@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart'; //breaks ios add font manually
+import 'package:roomies_app/pages/setup_profile_page.dart';
 import '../backend/database.dart';
 import '../widgets/roomies_page/swipable_cards.dart';
 
@@ -88,7 +89,15 @@ class RoomiesPage extends StatelessWidget {
                           ),
                           backgroundColor: MaterialStateProperty.all(
                               Colors.white.withOpacity(0.2))),
-                      onPressed: () => FirebaseAuth.instance.signOut(),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute<void>(
+                            builder: (BuildContext context) => const SetupProfilePage(),
+                          ),
+                        );
+                        // FirebaseAuth.instance.signOut();
+                      },
                       child: Image.asset('assets/icons/nextroom_icon_white.png',
                           width: 28),
                     ),

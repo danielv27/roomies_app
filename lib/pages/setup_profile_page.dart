@@ -1,7 +1,6 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:roomies_app/pages/home_page.dart';
 import 'package:roomies_app/widgets/profile_setup/complete_profile_widget.dart';
 import 'package:roomies_app/widgets/profile_setup/profile_question_widget.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';

@@ -32,7 +32,6 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
   String roomMateDescription = "Tell what features you are looking in a room mate...";
   String birthDateDescription = "dd/mm/yyyy";
 
-  final ImagePicker _picker = ImagePicker();
   final List<XFile> selectedProfileImages = [];
   final FirebaseStorage storageRef = FirebaseStorage.instance;
   final List<String> arrImageUrls = [];
@@ -40,6 +39,8 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
   bool isUploading = false;
 
   final FirebaseAuth auth = FirebaseAuth.instance;
+
+  final List<Map> myProfileImage = List.generate(6, (index) => {"profile_image_": index, "name": "ProfileImage $index"}).toList();
 
   @override
   Widget build(BuildContext context) {
@@ -68,49 +69,61 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                 ),
               ),
             ),
-            isUploading ? showLoading() : Column(
-              children: [
-                OutlinedButton(
-                  onPressed: (){
-                    selectProfileImage();
-                  }, 
-                  child: const Text("select files"),
-                ),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    if (selectedProfileImages.isNotEmpty) {
-                      uploadFunction(selectedProfileImages);
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("please select profile images"))
-                      );
-                    }
-                  }, 
-                  icon: const Icon(Icons.file_upload), 
-                  label: const Text("Upload"),
-                ),
-                selectedProfileImages.isEmpty 
-                    ? const Text("No Images Selected") 
-                    : SizedBox(
-                      height: 200,
-                      child: GridView.builder(
-                        shrinkWrap: true,
-                        itemCount: selectedProfileImages.length,
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                        ), 
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.all(2.0),
-                            child: Image.file(
-                              File(selectedProfileImages[index].path), 
-                              fit: BoxFit.cover
+            GridView.builder(
+              shrinkWrap: true,
+              itemCount: selectedProfileImages.length + 1,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                childAspectRatio: MediaQuery.of(context).size.width / (MediaQuery.of(context).size.height / 1.5),
+              ), 
+              itemBuilder: (context, index) {
+                return index == selectedProfileImages.length 
+                ? GridTile(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: const Color.fromRGBO(245, 247, 251, 1),
+                    ),
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          right: 0,
+                          bottom: 0,
+                          child: Container(
+                            decoration: applyBlueGradient(),
+                            child: IconButton(
+                              color: Colors.white,
+                              icon: const Icon(Icons.add),
+                              onPressed: () {
+                                selectProfileImage();
+                                uploadFunction(selectedProfileImages);
+                              },
                             ),
-                          );
-                        }
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+                : GridTile(
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      side: BorderSide(
+                        color: Colors.grey.withOpacity(0.2),
+                        width: 1,
                       ),
                     ),
-              ],
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: Image.file(
+                        File(selectedProfileImages[index].path), 
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                );
+              }
             ),
             const SizedBox(height: 30,),
             textLabel("ABOUT ME"),
@@ -158,7 +171,8 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
               textInputAction: TextInputAction.newline,
               keyboardType: TextInputType.multiline,
               minLines: 1,
-              maxLines: 10,              controller: widget.roomMateController,
+              maxLines: 10,              
+              controller: widget.roomMateController,
               style: const TextStyle(color: Colors.grey),
               cursorColor: Colors.grey,
               decoration: applyInputDecoration(roomMateDescription)
@@ -223,6 +237,17 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
     );
   }
 
+  BoxDecoration applyBlueGradient() {
+    return const BoxDecoration(
+      shape: BoxShape.circle,
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [Color.fromRGBO(0, 53, 190, 1), Color.fromRGBO(57, 103, 224, 1), Color.fromRGBO(117, 154, 255, 1)]
+      )
+    );
+  }
+
   Widget showLoading() {
     return Center(
       child: Column(
@@ -261,14 +286,12 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
   }
 
   Future<void> selectProfileImage() async {
-    if (selectedProfileImages.isNotEmpty) {
-      selectedProfileImages.clear();
-    }
     try {
-      final List<XFile>? profileImage = await _picker.pickMultiImage();
-      if (profileImage!.isNotEmpty) {
-        selectedProfileImages.addAll(profileImage);
-      }
+      final XFile? profileImage = await ImagePicker().pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 85,
+      );
+      selectedProfileImages.add(profileImage!);
       print("List of Select images : ${profileImage.length.toString()}");
     } catch (e) {
       print("error" + e.toString());
