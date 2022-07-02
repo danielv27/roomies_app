@@ -479,6 +479,15 @@ class AuthPageState extends State<AuthPage> {
       FireStoreDataBase().createUser(emailController, passwordController, firstNameController, lastNameController);
     } on FirebaseAuthException catch (exc) {
       print(exc);
+      if (exc.code == "auth/email-already-in-use") {
+          print("The email address is already in use");
+      } else if (exc.code == "auth/invalid-email") {
+          print("The email address is not valid.");
+      } else if (exc.code == "auth/operation-not-allowed") {
+          print("Operation not allowed.");
+      } else if (exc.code == "auth/weak-password") {
+          print("The password is too weak.");
+      }
       setState(() {
         if (exc.toString().contains('email') ||
             exc.toString().contains('user')) {

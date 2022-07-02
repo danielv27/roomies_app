@@ -116,7 +116,16 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
                   onPressed: () async {
                     User? currentUser = auth.currentUser;
                     registerProfile();
-                    FireStoreDataBase().createPersonalProfile(currentUser);
+                    FireStoreDataBase().createPersonalProfile(
+                      currentUser,
+                      minBudgetController,
+                      maxBudgetController,
+                      aboutMeController,
+                      workController,
+                      studyController,
+                      roommateController,
+                      birthdateController,
+                    );
                     Navigator.of(context).pop();
                     Navigator.of(context).pop();
                   }, 

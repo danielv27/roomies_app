@@ -54,18 +54,22 @@ class FireStoreDataBase {
     print("user created");
   }
 
-  Future createPersonalProfile(User ?currentUser) async {
+  Future createPersonalProfile(User ?currentUser, TextEditingController minBudget, TextEditingController maxBudget, TextEditingController about, TextEditingController work, TextEditingController study, TextEditingController roommate, TextEditingController birthdate) async {
     await FirebaseFirestore.instance.collection('users')
       .doc(currentUser?.uid)
       .update({ 
         'isHouseOwner': false,
+        'minimumBudget': minBudget,
+        'maximumBudget': maxBudget,
+        'about': about,
+        'work': work,
+        'roommate': roommate,
+        'birtdate': birthdate
       });
       
   }
 
   Future createHouseProfile(User ?currentUser) async {
-
-
     await FirebaseFirestore.instance.collection('users')
       .doc(currentUser?.uid)
       .update({ 
