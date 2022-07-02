@@ -57,10 +57,15 @@ class _ProfileQuestionPageState extends State<ProfileQuestionPage> {
             Row(
               children: <Widget>[
                 radiusCard(radiusDistnace[0].toString()),
+                const Spacer(),
                 radiusCard(radiusDistnace[1].toString()),
+                const Spacer(),
                 radiusCard(radiusDistnace[2].toString()),
+                const Spacer(),
                 radiusCard(radiusDistnace[3].toString()),
+                const Spacer(),
                 radiusCard(radiusDistnace[4].toString()),
+                const Spacer(),
                 radiusCard(radiusDistnace[5].toString()),
               ],
             ),
@@ -91,32 +96,37 @@ class _ProfileQuestionPageState extends State<ProfileQuestionPage> {
   }
 
   Widget radiusCard(String radius) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        side: const BorderSide(
-          color: Color.fromRGBO(0, 0, 0, 0.2),
-        ),
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: const Color.fromRGBO(0, 0, 0, 0.2)),
         borderRadius: BorderRadius.circular(14.0),
+        color: const Color.fromRGBO(245, 247, 251, 1),
       ),
-      color: isSelected ? buttonColor2 : buttonColor1,
-      child: InkWell(
-        child: SizedBox(
-          width: 44.0,
-          height: 44.0,
-          child: Text(
-            "+"+radius,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              leadingDistribution: TextLeadingDistribution.even
+      child: Stack(
+        children: [
+          InkWell(
+            child: SizedBox(
+              width: 40.0,  
+              height: 40.0,
+              child: Center(
+                child: Text(
+                  "+"+radius,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Color.fromRGBO(101, 101, 107, 1),
+                    leadingDistribution: TextLeadingDistribution.even
+                  ),
+                ),
+              ),
             ),
+            onTap: () {
+              print(" Distance $radius clicked");
+              setState(() {
+                isSelected = !isSelected;
+              });
+            },
           ),
-        ),
-        onTap: () {
-          print(" Distance $radius clicked");
-          setState(() {
-            isSelected = !isSelected;
-          });
-        },
+        ],
       ),
     );
   }
