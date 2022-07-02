@@ -17,12 +17,10 @@ class ProfileQuestionPage extends StatefulWidget {
 class _ProfileQuestionPageState extends State<ProfileQuestionPage> {
   final priceRegex = RegExp(r'^[a-zA-Z0-9\- ]*$');
 
-  Color buttonColor1 = const Color.fromRGBO(245, 247, 251, 1);
-  Color buttonColor2 = const Color.fromRGBO(190, 212, 255, 1);
-  bool isActive = false;
-  bool isSelected = false;
-  String currentRadius = '0';
+  var radiusWidth = 40;
+  var radiusExpandedWidth = 65;
 
+  String currentRadius = '0';
   List radiusDistnace = [1, 2, 3, 4, 5, 10];
 
   @override
@@ -31,11 +29,11 @@ class _ProfileQuestionPageState extends State<ProfileQuestionPage> {
       child: Container(
         padding: const EdgeInsets.only(left: 30.0, right: 30, top: 5),
         child: Column(
-          children: <Widget> [
+          children: <Widget>[
             Container(
               alignment: Alignment.centerLeft,
               child: const Text(
-                "Personal profile", 
+                "Personal profile",
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
                   color: Colors.grey,
@@ -45,16 +43,20 @@ class _ProfileQuestionPageState extends State<ProfileQuestionPage> {
             Container(
               alignment: Alignment.centerLeft,
               child: const Text(
-                "Where do you want to live?", 
+                "Where do you want to live?",
                 style: TextStyle(
                   fontWeight: FontWeight.w900,
                   fontSize: 24,
                 ),
               ),
             ),
-            const SizedBox(height: 30,),
+            const SizedBox(
+              height: 30,
+            ),
             textLabel("Radius in KM (optional)"),
-            const SizedBox(height: 10,),
+            const SizedBox(
+              height: 10,
+            ),
             Row(
               children: <Widget>[
                 radiusCard(radiusDistnace[0].toString()),
@@ -70,9 +72,13 @@ class _ProfileQuestionPageState extends State<ProfileQuestionPage> {
                 radiusCard(radiusDistnace[5].toString()),
               ],
             ),
-            const SizedBox(height: 30,),
+            const SizedBox(
+              height: 30,
+            ),
             textLabel("Minimum Budget"),
-            const SizedBox(height: 10,),
+            const SizedBox(
+              height: 10,
+            ),
             TextFormField(
               controller: widget.minBudgetController,
               style: const TextStyle(color: Colors.grey),
@@ -80,16 +86,19 @@ class _ProfileQuestionPageState extends State<ProfileQuestionPage> {
               textInputAction: TextInputAction.next,
               decoration: applyInputDecoration(),
             ),
-            const SizedBox(height: 30,),
-            textLabel("Maximum Budget"),
-            const SizedBox(height: 10,),
-            TextFormField(
-              controller: widget.maxBudgetController,
-              style: const TextStyle(color: Colors.grey),
-              cursorColor: Colors.grey,
-              textInputAction: TextInputAction.next,
-              decoration: applyInputDecoration()
+            const SizedBox(
+              height: 30,
             ),
+            textLabel("Maximum Budget"),
+            const SizedBox(
+              height: 10,
+            ),
+            TextFormField(
+                controller: widget.maxBudgetController,
+                style: const TextStyle(color: Colors.grey),
+                cursorColor: Colors.grey,
+                textInputAction: TextInputAction.next,
+                decoration: applyInputDecoration()),
           ],
         ),
       ),
@@ -101,33 +110,41 @@ class _ProfileQuestionPageState extends State<ProfileQuestionPage> {
       decoration: BoxDecoration(
         border: Border.all(color: const Color.fromRGBO(0, 0, 0, 0.2)),
         borderRadius: BorderRadius.circular(14.0),
-        color: (currentRadius != radius) ? const Color.fromRGBO(245, 247, 251, 1) : const Color.fromRGBO(190, 212, 255, 1),
+        color: (currentRadius != radius)
+            ? const Color.fromRGBO(245, 247, 251, 1)
+            : const Color.fromRGBO(190, 212, 255, 1),
       ),
       child: Stack(
         children: [
-          GestureDetector(
+          AnimatedSize(
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.fastOutSlowIn,
             child: SizedBox(
-              width: 40.0,  
-              height: 40.0,
-              child: Center(
-                child: Text(
-                  "+$radius",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    leadingDistribution: TextLeadingDistribution.even,
-                    foreground: (currentRadius != radius) 
-                    ? (Paint()..color = const Color.fromRGBO(101, 101, 107, 1)) 
-                    : (Paint()..shader = applyTextBlueGradient()),
+              width: (currentRadius != radius) ? radiusWidth.toDouble() : radiusExpandedWidth.toDouble(),
+              height: 40,
+              child: GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                child: Center(
+                  child: Text(
+                    "+$radius",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      leadingDistribution: TextLeadingDistribution.even,
+                      foreground: (currentRadius != radius)
+                          ? (Paint()
+                            ..color = const Color.fromRGBO(101, 101, 107, 1))
+                          : (Paint()..shader = applyTextBlueGradient()),
+                    ),
                   ),
                 ),
+                onTap: () {
+                  print(" Distance $radius clicked");
+                  setState(() {
+                    currentRadius = radius;
+                  });
+                },
               ),
             ),
-            onTap: () {
-              print(" Distance $radius clicked");
-              setState(() {
-                currentRadius = radius;
-              });
-            },
           ),
         ],
       ),
@@ -137,13 +154,19 @@ class _ProfileQuestionPageState extends State<ProfileQuestionPage> {
   Widget textLabel(String textLabel) {
     return Row(
       children: <Widget>[
-        Image.asset('assets/icons/GradientBlueEllipse.png', width: 11, height: 11,),
-        const SizedBox(width: 5,),
+        Image.asset(
+          'assets/icons/GradientBlueEllipse.png',
+          width: 11,
+          height: 11,
+        ),
+        const SizedBox(
+          width: 5,
+        ),
         Expanded(
           child: Text(
             textLabel,
             style: const TextStyle(
-              fontWeight: FontWeight.w700, 
+              fontWeight: FontWeight.w700,
               fontSize: 14,
               color: Color.fromRGBO(101, 101, 107, 1),
             ),
@@ -155,12 +178,12 @@ class _ProfileQuestionPageState extends State<ProfileQuestionPage> {
 
   Shader applyTextBlueGradient() {
     return const LinearGradient(
-        colors: [
-          Color.fromRGBO(0, 53, 190, 1), 
-          Color.fromRGBO(57, 103, 224, 1), 
-          Color.fromRGBO(117, 154, 255, 1)
-        ],
-      ).createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 100.0));
+      colors: [
+        Color.fromRGBO(0, 53, 190, 1),
+        Color.fromRGBO(57, 103, 224, 1),
+        Color.fromRGBO(117, 154, 255, 1)
+      ],
+    ).createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 100.0));
   }
 
   InputDecoration applyInputDecoration() {
@@ -174,7 +197,8 @@ class _ProfileQuestionPageState extends State<ProfileQuestionPage> {
         ),
         borderRadius: BorderRadius.circular(15),
       ),
-      focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+      focusedBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey)),
       prefixIcon: const Align(
         widthFactor: 2.0,
         heightFactor: 2.0,
@@ -185,8 +209,8 @@ class _ProfileQuestionPageState extends State<ProfileQuestionPage> {
         ),
       ),
       hintText: "0",
-      hintStyle: const TextStyle(color: Colors.grey, fontSize: 18, fontWeight: FontWeight.w300),
+      hintStyle: const TextStyle(
+          color: Colors.grey, fontSize: 18, fontWeight: FontWeight.w300),
     );
   }
-
 }
