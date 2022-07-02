@@ -21,6 +21,7 @@ class _ProfileQuestionPageState extends State<ProfileQuestionPage> {
   Color buttonColor2 = const Color.fromRGBO(190, 212, 255, 1);
   bool isActive = false;
   bool isSelected = false;
+  String currentRadius = '0';
 
   List radiusDistnace = [1, 2, 3, 4, 5, 10];
 
@@ -100,21 +101,23 @@ class _ProfileQuestionPageState extends State<ProfileQuestionPage> {
       decoration: BoxDecoration(
         border: Border.all(color: const Color.fromRGBO(0, 0, 0, 0.2)),
         borderRadius: BorderRadius.circular(14.0),
-        color: const Color.fromRGBO(245, 247, 251, 1),
+        color: (currentRadius != radius) ? const Color.fromRGBO(245, 247, 251, 1) : const Color.fromRGBO(190, 212, 255, 1),
       ),
       child: Stack(
         children: [
-          InkWell(
+          GestureDetector(
             child: SizedBox(
               width: 40.0,  
               height: 40.0,
               child: Center(
                 child: Text(
-                  "+"+radius,
+                  "+$radius",
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Color.fromRGBO(101, 101, 107, 1),
-                    leadingDistribution: TextLeadingDistribution.even
+                  style: TextStyle(
+                    leadingDistribution: TextLeadingDistribution.even,
+                    foreground: (currentRadius != radius) 
+                    ? (Paint()..color = const Color.fromRGBO(101, 101, 107, 1)) 
+                    : (Paint()..shader = applyTextBlueGradient()),
                   ),
                 ),
               ),
@@ -122,7 +125,7 @@ class _ProfileQuestionPageState extends State<ProfileQuestionPage> {
             onTap: () {
               print(" Distance $radius clicked");
               setState(() {
-                isSelected = !isSelected;
+                currentRadius = radius;
               });
             },
           ),
@@ -148,6 +151,16 @@ class _ProfileQuestionPageState extends State<ProfileQuestionPage> {
         ),
       ],
     );
+  }
+
+  Shader applyTextBlueGradient() {
+    return const LinearGradient(
+        colors: [
+          Color.fromRGBO(0, 53, 190, 1), 
+          Color.fromRGBO(57, 103, 224, 1), 
+          Color.fromRGBO(117, 154, 255, 1)
+        ],
+      ).createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 100.0));
   }
 
   InputDecoration applyInputDecoration() {
