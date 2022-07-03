@@ -114,6 +114,8 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
                     onSurface: Colors.transparent,
                   ),
                   onPressed: () async {
+                    print("min budeget $minBudgetController \n");
+                    print("about me $aboutMeController\n");
                     User? currentUser = auth.currentUser;
                     registerProfile();
                     FireStoreDataBase().createPersonalProfile(

@@ -76,6 +76,7 @@ class FireStoreDataBase {
   }
 
   Future createPersonalProfile(User ?currentUser, TextEditingController minBudget, TextEditingController maxBudget, TextEditingController about, TextEditingController work, TextEditingController study, TextEditingController roommate, TextEditingController birthdate) async {
+    print("creating personal profile\n");
     await FirebaseFirestore.instance.collection('users')
       .doc(currentUser?.uid)
       .update({ 
@@ -87,7 +88,7 @@ class FireStoreDataBase {
         'roommate': roommate,
         'birtdate': birthdate
       });
-      
+      print("created personal profile\n");
   }
 
   Future createHouseProfile(User ?currentUser) async {

@@ -81,14 +81,13 @@ class RoomiesPage extends StatelessWidget {
                     height: 50,
                     child: TextButton(
                       style: ButtonStyle(
-                          shape: MaterialStateProperty.all(
-                            const RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(9.0)),
-                            ),
+                        shape: MaterialStateProperty.all(
+                          const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(9.0)),
                           ),
-                          backgroundColor: MaterialStateProperty.all(
-                              Colors.white.withOpacity(0.2))),
+                        ),
+                        backgroundColor: MaterialStateProperty.all(Colors.white.withOpacity(0.2))
+                      ),
                       onPressed: () {
                         // Navigator.push(
                         //   context,
@@ -98,8 +97,7 @@ class RoomiesPage extends StatelessWidget {
                         // );
                         FirebaseAuth.instance.signOut();
                       },
-                      child: Image.asset('assets/icons/nextroom_icon_white.png',
-                          width: 28),
+                      child: Image.asset('assets/icons/nextroom_icon_white.png', width: 28),
                     ),
                   ),
                 ),
