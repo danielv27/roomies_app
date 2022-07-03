@@ -81,12 +81,12 @@ class FireStoreDataBase {
       .doc(currentUser?.uid)
       .update({ 
         'isHouseOwner': false,
-        'minimumBudget': minBudget,
-        'maximumBudget': maxBudget,
-        'about': about,
-        'work': work,
-        'roommate': roommate,
-        'birtdate': birthdate
+        'minimumBudget': minBudget.text,
+        'maximumBudget': maxBudget.text,
+        'about': about.text,
+        'work': work.text,
+        'roommate': roommate.text,
+        'birtdate': birthdate.text,
       });
       print("created personal profile\n");
   }
