@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:roomies_app/backend/database.dart';
 import 'package:roomies_app/pages/setup_page.dart';
@@ -38,8 +39,9 @@ class AuthPageState extends State<AuthPage> {
     super.dispose();
   }
 
-  bool invalidUserName = false;
+  bool invalidEmail = false;
   bool invalidPassword = false;
+
 
   @override
   Widget build(BuildContext context) {
@@ -140,7 +142,7 @@ class AuthPageState extends State<AuthPage> {
               ),
               labelText: "Email",
               labelStyle: const TextStyle(color: Colors.grey),
-              errorText: invalidUserName ? "Invalid Email" : null,
+              errorText: invalidEmail ? 'Email Can\'t Be Empty' : null,
             ),
           ),
           const SizedBox(height: 20),
@@ -213,8 +215,15 @@ class AuthPageState extends State<AuthPage> {
                 minimumSize: const Size.fromHeight(42),
               ),
               onPressed: () {
-                signIn();
-                FireStoreDataBase().getUsers();
+                setState(() {
+                  emailController.text.isEmpty ? invalidEmail = true : invalidEmail = false;
+                });
+                if (emailController.value.text.isNotEmpty) {
+                  signIn();
+                  FireStoreDataBase().getUsers();
+                } else {
+                  print("Login button disabled since email field is empty");
+                }
               }, 
               child: const Text(
                 "Login",
@@ -300,7 +309,7 @@ class AuthPageState extends State<AuthPage> {
               iconColor: Colors.grey,
               labelText: "Email",
               labelStyle: const TextStyle(color: Colors.grey),
-              errorText: invalidUserName ? "Invalid Email" : null
+              errorText: invalidEmail ? 'Email Can\'t Be Empty' : null,
             ),
           ),
           const SizedBox(height: 6),
@@ -334,7 +343,7 @@ class AuthPageState extends State<AuthPage> {
               iconColor: Colors.grey,
               labelText: "Confirm email",
               labelStyle: const TextStyle(color: Colors.grey),
-              errorText: invalidUserName ? "Invalid Email" : null
+              errorText: invalidEmail ? 'Email Can\'t Be Empty' : null,
             ),
           ),
           const SizedBox(height: 6),
@@ -407,8 +416,18 @@ class AuthPageState extends State<AuthPage> {
                 minimumSize: const Size.fromHeight(42),
               ),
               onPressed: () {
-                signUp(); // User signup with firebase authentication
-                Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: const SetupPage()));
+                setState(() {
+                  emailController.text.isEmpty ? invalidEmail = true : invalidEmail = false;
+                });
+                if (emailController.value.text.isNotEmpty) {
+                  signUp(); // User signup with firebase authentication
+                  Navigator.push(
+                    context, 
+                    PageTransition(type: PageTransitionType.fade, child: const SetupPage()),
+                  );
+                } else {
+                  print("Signup button disabled since email field is empty");
+                }
               },
               child: const Text(
                 "Create account",
@@ -478,7 +497,7 @@ class AuthPageState extends State<AuthPage> {
     try {
       FireStoreDataBase().createUser(emailController, passwordController, firstNameController, lastNameController);
     } on FirebaseAuthException catch (exc) {
-      print(exc);
+      print("SIGNUP ERROR: $exc");
       if (exc.code == "auth/email-already-in-use") {
           print("The email address is already in use");
       } else if (exc.code == "auth/invalid-email") {
@@ -488,35 +507,22 @@ class AuthPageState extends State<AuthPage> {
       } else if (exc.code == "auth/weak-password") {
           print("The password is too weak.");
       }
-      setState(() {
-        if (exc.toString().contains('email') ||
-            exc.toString().contains('user')) {
-          invalidUserName = true;
-        }
-        if (exc.toString().contains('password')) {
-          invalidPassword = true;
-        }
-        if (kDebugMode) {
-          print(exc.toString());
-        }
-      });
     }
   }
 
   Future signIn() async {
     try {
-      FireStoreDataBase().signinUser(emailController, passwordController);
-    } on FirebaseAuthException catch (exc) {
+      FireStoreDataBase().signinUser(emailController, passwordController, context);
+    } on PlatformException catch (exc) {
+      print("SIGNIN ERROR: $exc");
       setState(() {
         if (exc.toString().contains('email') ||
             exc.toString().contains('user')) {
-          invalidUserName = true;
+          invalidEmail = true;
         }
         if (exc.toString().contains('password')) {
           invalidPassword = true;
         }
-        // ignore: avoid_print
-        print(exc.toString());
       });
     }
   }
@@ -537,17 +543,13 @@ class AuthPageState extends State<AuthPage> {
     });
   }
 
-  void _loadUserEmailPassword() async {
+  void _loadUserEmailPassword() async { // this function is connected to _handleRemember function
     print("Load Email");
     try {
       SharedPreferences _prefs = await SharedPreferences.getInstance();
       var _email = _prefs.getString("email") ?? "";
       var _password = _prefs.getString("password") ?? "";
       var _rememberMe = _prefs.getBool("remember_me") ?? false;
-
-      print(_rememberMe);
-      print(_email);
-      print(_password);
 
       if (_rememberMe) {
         setState(() {
@@ -570,6 +572,7 @@ class AuthPageState extends State<AuthPage> {
   void _toggleSignup() {
     setState(() {
       _isSignupPage = !_isSignupPage;
+      invalidEmail = false; // removes error text under text fields when transitioning between signin and signup
     });
   }
 

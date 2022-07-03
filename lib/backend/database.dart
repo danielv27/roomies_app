@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import '../models/user_model.dart';
 
 
@@ -30,11 +31,31 @@ class FireStoreDataBase {
     }
   }
 
-  Future signinUser(TextEditingController emailController, TextEditingController passwordController) async {
+  Future signinUser(TextEditingController emailController, TextEditingController passwordController, context) async {
     await FirebaseAuth.instance.signInWithEmailAndPassword(
       email: emailController.text.trim(),
       password: passwordController.text.trim(),
-    );
+    ).catchError((err) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text("Error"),
+              content: const Text(
+                "The email address and password you entered don't match any Roomies account. Please try again."
+              ),
+              actions: [
+                ElevatedButton(
+                  child: const Text("Ok"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            );
+          }
+        );
+    });
   }  
 
   Future createUser(TextEditingController emailController, TextEditingController passwordController, TextEditingController firstNameController, TextEditingController lastNameController) async {
