@@ -90,18 +90,24 @@ class _PropertyQuestionPageState extends State<PropertyQuestionPage> {
           padding: const EdgeInsets.all(20.0),
           child: Row(
             children: [
-              CustomPaint(
-                size: const Size(20, 20),
-                painter: CirclePainter(),
+              Image.asset(
+                (currentPropertyType != proprtyTypeAtIndex) ? "assets/icons/Ring-circle.png" : "assets/icons/Ring-circle-selected.png",
+                height: 20,
+                width: 20,
               ),
+              // CustomPaint( // should we draw the create a custom-made blue ring or just use icons ?
+              //   size: const Size(20, 20),
+              //   painter: CirclePainter(),
+              // ),
               const SizedBox(
                 width: 14,
               ),
               Text(
                 proprtyTypeAtIndex,
-                style: const TextStyle(
-                  color: Color.fromRGBO(101, 101, 107, 1),
+                style: TextStyle(
+                  color: (currentPropertyType != proprtyTypeAtIndex) ? const Color.fromRGBO(101, 101, 107, 1) : Colors.white,
                   fontSize: 14,
+                  fontWeight: (currentPropertyType != proprtyTypeAtIndex) ? FontWeight.w300 : FontWeight.w500,
                 ),
               ),
               const Spacer(),
