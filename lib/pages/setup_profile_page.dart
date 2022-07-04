@@ -78,6 +78,7 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
         child: Form(
           key: formKey,
           child: PageView(
+            physics: const NeverScrollableScrollPhysics(),
             controller: pageController,
             onPageChanged: (index) {
               setState(() => isLastPage = index == 1);
