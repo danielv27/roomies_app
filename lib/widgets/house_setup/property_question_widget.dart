@@ -67,8 +67,7 @@ class _PropertyQuestionPageState extends State<PropertyQuestionPage> {
     );
   }
 
-  GestureDetector propertyType(
-      BuildContext context, String proprtyTypeAtIndex) {
+  GestureDetector propertyType(BuildContext context, String proprtyTypeAtIndex) {
     return GestureDetector(
       onTap: () {
         print("Tapped $proprtyTypeAtIndex");
@@ -91,7 +90,9 @@ class _PropertyQuestionPageState extends State<PropertyQuestionPage> {
           child: Row(
             children: [
               Image.asset(
-                (currentPropertyType != proprtyTypeAtIndex) ? "assets/icons/Ring-circle.png" : "assets/icons/Ring-circle-selected.png",
+                (currentPropertyType != proprtyTypeAtIndex) 
+                    ? "assets/icons/Ring-circle.png" 
+                    : "assets/icons/Ring-circle-selected.png",
                 height: 20,
                 width: 20,
               ),
@@ -105,14 +106,20 @@ class _PropertyQuestionPageState extends State<PropertyQuestionPage> {
               Text(
                 proprtyTypeAtIndex,
                 style: TextStyle(
-                  color: (currentPropertyType != proprtyTypeAtIndex) ? const Color.fromRGBO(101, 101, 107, 1) : Colors.white,
+                  color: (currentPropertyType != proprtyTypeAtIndex) 
+                      ? const Color.fromRGBO(101, 101, 107, 1) 
+                      : Colors.white,
                   fontSize: 14,
-                  fontWeight: (currentPropertyType != proprtyTypeAtIndex) ? FontWeight.w300 : FontWeight.w500,
+                  fontWeight: (currentPropertyType != proprtyTypeAtIndex) 
+                      ? FontWeight.w300 
+                      : FontWeight.w500,
                 ),
               ),
               const Spacer(),
               Image.asset(
-                (currentPropertyType != proprtyTypeAtIndex) ? "assets/icons/Grey-house.png" : "assets/icons/Grey-house-selected.png",
+                (currentPropertyType != proprtyTypeAtIndex) 
+                    ? "assets/icons/Grey-house.png" 
+                    : "assets/icons/Grey-house-selected.png",
                 height: 20,
                 width: 20,
               ),

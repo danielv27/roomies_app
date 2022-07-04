@@ -1,9 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:roomies_app/pages/auth_page.dart';
 import 'package:roomies_app/widgets/house_setup/address_question_widget.dart';
 import 'package:roomies_app/widgets/house_setup/check_info_widget.dart';
 import 'package:roomies_app/widgets/house_setup/property_question_widget.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+
+import '../backend/database.dart';
+import '../widgets/house_setup/house_condition_question_widget copy.dart';
 
 class SetupHousePage extends StatefulWidget {
   const SetupHousePage({Key? key}) : super(key: key);
@@ -19,8 +23,13 @@ class _SetupHousePageState extends State<SetupHousePage> with SingleTickerProvid
   final pageController = PageController();
 
   final constructionYearController = TextEditingController();
+  final livingSpaceController = TextEditingController();
+  final plotAreaContoller = TextEditingController();
 
   bool isLastPage = false;
+  int houseSetupPages = 4;
+
+  final FirebaseAuth auth = FirebaseAuth.instance;
 
   final String apiKey = "8d09db9c-0ecc-463e-a020-035728fb3f75";
   bool addressValidated = true; // change to false
@@ -48,7 +57,7 @@ class _SetupHousePageState extends State<SetupHousePage> with SingleTickerProvid
         ),
         title: SmoothPageIndicator(
           controller: pageController,
-          count: 3,
+          count: houseSetupPages,
           effect: const WormEffect(
             spacing: 16,
             dotHeight: 10,
@@ -75,106 +84,118 @@ class _SetupHousePageState extends State<SetupHousePage> with SingleTickerProvid
             physics: const NeverScrollableScrollPhysics(),
             controller: pageController,
             onPageChanged: (index) {
-              setState(() => isLastPage = index == 2);
+              setState(() {
+                isLastPage = index == houseSetupPages - 1;
+              });
             },
             children: <Widget> [
-              AddressQuestionPage(postalCodeController: postalCodeController, houseNumberController: houseNumberController, apartmentNumberController: apartmentNumberController),
+              AddressQuestionPage(
+                postalCodeController: postalCodeController, 
+                houseNumberController: houseNumberController, 
+                apartmentNumberController: apartmentNumberController
+              ),
               PropertyQuestionPage(),
-              CheckInfoPage(constructionYearController: constructionYearController),
+              CheckInfoPage(
+                constructionYearController: constructionYearController, 
+                livingSpaceController: livingSpaceController, 
+                plotAreaContoller: plotAreaContoller,
+              ),
+              HouseConditionQuestionPage(),
             ],
           ),
         ),
       ),
-      bottomSheet: isLastPage ?
-        SizedBox(
-          height: 80,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                decoration: applyBlueGradient(),
-                height: 50,
-                width: MediaQuery.of(context).size.width * 0.75,
-                margin: const EdgeInsets.only(bottom: 10),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    elevation: 5,
-                    primary: Colors.transparent,
-                    shadowColor: Colors.transparent,
-                    onSurface: Colors.transparent,
-                  ),
-                  onPressed: () async {
-                    registerHouse();
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: ((context) => AuthPage()))
-                    );
-                  }, 
-                  child: const Text(
-                    "Complete house",
-                    style: TextStyle(fontSize: 20, color:Colors.white)
-                  ),
-                ),
-              ),
-            ],
-          ),
-        )
-        :
-        SizedBox(
-          height: 80,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                decoration: applyBlueGradient(),
-                height: 50,
-                width: MediaQuery.of(context).size.width * 0.75,
-                margin: const EdgeInsets.only(bottom: 10),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    elevation: 5,
-                    primary: Colors.transparent,
-                    shadowColor: Colors.transparent,
-                    onSurface: Colors.transparent,
-                  ),
-                  onPressed: () { 
-                    if (checkControllers() && formKey.currentState!.validate()) {
-                      pageController.nextPage(
-                        duration: const Duration(milliseconds: 500), 
-                        curve: Curves.easeInOut,
-                      );
-                      // setState(() {
-                      //   addressValidated = false;
-                      // });
-                      // validateAddress(postalCodeController, houseNumberController, apiKey);
-                      if (addressValidated) {
-                        pageController.nextPage(
-                          duration: const Duration(milliseconds: 500), 
-                          curve: Curves.easeInOut,
+      bottomSheet: isLastPage 
+          ? SizedBox(
+              height: 80,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    decoration: applyBlueGradient(),
+                    height: 50,
+                    width: MediaQuery.of(context).size.width * 0.75,
+                    margin: const EdgeInsets.only(bottom: 10),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        elevation: 5,
+                        primary: Colors.transparent,
+                        shadowColor: Colors.transparent,
+                        onSurface: Colors.transparent,
+                      ),
+                      onPressed: () async {
+                        User? currentUser = auth.currentUser;
+                        FireStoreDataBase().createHouseProfile(
+                          currentUser,
                         );
-                      } else {
-                        showDialog(
-                          builder: (BuildContext context) { 
-                             return const AlertDialog(
-                               title: Text('Wrong Address'), 
-                               content: Text('Either post code or house number wrong'),
-                             );
-                           }, 
-                          context: context
-                        );
-                      }
-                    }
-                  },
-                  child: const Text(
-                    "Next",
-                    style: TextStyle(fontSize: 20, color:Colors.white)
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
+                      }, 
+                      child: const Text(
+                        "Complete house",
+                        style: TextStyle(fontSize: 20, color:Colors.white)
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
-        ),
+            )
+          : SizedBox(
+              height: 80,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    decoration: applyBlueGradient(),
+                    height: 50,
+                    width: MediaQuery.of(context).size.width * 0.75,
+                    margin: const EdgeInsets.only(bottom: 10),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        elevation: 5,
+                        primary: Colors.transparent,
+                        shadowColor: Colors.transparent,
+                        onSurface: Colors.transparent,
+                      ),
+                      onPressed: () { 
+                        if (checkControllers() && formKey.currentState!.validate()) {
+                          pageController.nextPage(
+                            duration: const Duration(milliseconds: 500), 
+                            curve: Curves.easeInOut,
+                          );
+                          // setState(() {
+                          //   addressValidated = false;
+                          // });
+                          // validateAddress(postalCodeController, houseNumberController, apiKey);
+                          if (addressValidated) {
+                            pageController.nextPage(
+                              duration: const Duration(milliseconds: 500), 
+                              curve: Curves.easeInOut,
+                            );
+                          } else {
+                            showDialog(
+                              builder: (BuildContext context) { 
+                                return const AlertDialog(
+                                  title: Text('Wrong Address'), 
+                                  content: Text('Either post code or house number wrong'),
+                                );
+                              }, 
+                              context: context
+                            );
+                          }
+                        }
+                      },
+                      child: const Text(
+                        "Next",
+                        style: TextStyle(fontSize: 20, color:Colors.white)
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
     );
   }
 
@@ -217,11 +238,4 @@ class _SetupHousePageState extends State<SetupHousePage> with SingleTickerProvid
   //   }
   // }
 
-}
-
-/*
-  implement register function to save all the filled text fields and associate it with the house
-*/
-void registerHouse() {
-  print("house registered");
 }

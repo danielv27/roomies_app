@@ -4,9 +4,13 @@ class CheckInfoPage extends StatelessWidget {
   const CheckInfoPage({
     Key? key,
     required this.constructionYearController,
+    required this.livingSpaceController,
+    required this.plotAreaContoller,
   }) : super(key: key);
 
   final TextEditingController constructionYearController;
+  final TextEditingController livingSpaceController;
+  final TextEditingController plotAreaContoller;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +48,7 @@ class CheckInfoPage extends StatelessWidget {
               style: TextStyle(
                 color: Colors.grey,
               ),
-            )
+            ),
           ),
           Container(
             padding: const EdgeInsets.only(left: 30.0, right: 30, top: 7),
@@ -60,17 +64,17 @@ class CheckInfoPage extends StatelessWidget {
             padding: const EdgeInsets.only(left: 30.0, right: 30, top: 16),
             alignment: Alignment.centerLeft,
             child: const Text(
-              "Woonoppervlakte", 
+              "Living Space",
               textAlign: TextAlign.left,
               style: TextStyle(
                 color: Colors.grey,
               ),
-            )
+            ),
           ),
           Container(
             padding: const EdgeInsets.only(left: 30.0, right: 30, top: 7),
             child: TextFormField(
-              controller: constructionYearController,
+              controller: livingSpaceController,
               style: const TextStyle(color: Colors.grey),
               cursorColor: Colors.grey,
               textInputAction: TextInputAction.next,
@@ -81,17 +85,17 @@ class CheckInfoPage extends StatelessWidget {
             padding: const EdgeInsets.only(left: 30.0, right: 30, top: 16),
             alignment: Alignment.centerLeft,
             child: const Text(
-              "Perceeloppervlakte", 
+              "Plot Area",
               textAlign: TextAlign.left,
               style: TextStyle(
                 color: Colors.grey,
               ),
-            )
+            ),
           ),
           Container(
             padding: const EdgeInsets.only(left: 30.0, right: 30, top: 7),
             child: TextFormField(
-              controller: constructionYearController,
+              controller: plotAreaContoller,
               style: const TextStyle(color: Colors.grey),
               cursorColor: Colors.grey,
               textInputAction: TextInputAction.next,
@@ -114,7 +118,9 @@ class CheckInfoPage extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(14),
       ),
-      focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+      focusedBorder: const UnderlineInputBorder(
+        borderSide: BorderSide(color: Colors.grey),
+      ),
       prefixIcon: const Icon(
         Icons.person,
         size: 20,
@@ -123,4 +129,5 @@ class CheckInfoPage extends StatelessWidget {
       labelStyle: const TextStyle(color: Colors.grey),
     );
   }
+  
 }
