@@ -94,11 +94,12 @@ class _ProfileQuestionPageState extends State<ProfileQuestionPage> {
               height: 10,
             ),
             TextFormField(
-                controller: widget.maxBudgetController,
-                style: const TextStyle(color: Colors.grey),
-                cursorColor: Colors.grey,
-                textInputAction: TextInputAction.next,
-                decoration: applyInputDecoration()),
+              controller: widget.maxBudgetController,
+              style: const TextStyle(color: Colors.grey),
+              cursorColor: Colors.grey,
+              textInputAction: TextInputAction.next,
+              decoration: applyInputDecoration()
+            ),
           ],
         ),
       ),
@@ -197,7 +198,8 @@ class _ProfileQuestionPageState extends State<ProfileQuestionPage> {
         borderRadius: BorderRadius.circular(15),
       ),
       focusedBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey)),
+        borderSide: BorderSide(color: Colors.grey),
+      ),
       prefixIcon: const Align(
         widthFactor: 2.0,
         heightFactor: 2.0,
@@ -208,8 +210,7 @@ class _ProfileQuestionPageState extends State<ProfileQuestionPage> {
         ),
       ),
       hintText: "0",
-      hintStyle: const TextStyle(
-          color: Colors.grey, fontSize: 18, fontWeight: FontWeight.w300),
+      hintStyle: const TextStyle(color: Colors.grey, fontSize: 18, fontWeight: FontWeight.w300),
     );
   }
 }

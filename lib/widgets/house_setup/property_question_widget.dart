@@ -2,23 +2,37 @@ import 'package:flutter/material.dart';
 
 import '../circle_ring.dart';
 
-class PropertyQuestionPage extends StatelessWidget {
-  PropertyQuestionPage({
+class PropertyQuestionPage extends StatefulWidget {
+  const PropertyQuestionPage({
     Key? key,
   }) : super(key: key);
 
-  final List propertyTypeList = ["Apartment", "Studio", "Studentencomplex", "Tussenwoning", "Hoekwoning", "2-onder-1-kapwoning", "Geschakelde woning"];
+  @override
+  State<PropertyQuestionPage> createState() => _PropertyQuestionPageState();
+}
+
+class _PropertyQuestionPageState extends State<PropertyQuestionPage> {
+  final List propertyTypeList = [
+    "Apartment",
+    "Studio",
+    "Studentencomplex",
+    "Tussenwoning",
+    "Hoekwoning",
+    "2-onder-1-kapwoning",
+    "Geschakelde woning"
+  ];
+  String currentPropertyType = "";
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
-        children: <Widget> [
+        children: <Widget>[
           Container(
             padding: const EdgeInsets.only(left: 30.0, right: 30, top: 5),
             alignment: Alignment.centerLeft,
             child: const Text(
-              "Cannenburgh 1, 1018 LG Amsterdam", 
+              "Cannenburgh 1, 1018 LG Amsterdam", // TODO: take information from the controllers and display it here
               style: TextStyle(
                 fontWeight: FontWeight.w600,
                 color: Colors.grey,
@@ -29,7 +43,7 @@ class PropertyQuestionPage extends StatelessWidget {
             padding: const EdgeInsets.only(left: 30.0, right: 30, top: 5),
             alignment: Alignment.centerLeft,
             child: const Text(
-              "What type of property?", 
+              "What type of property?",
               style: TextStyle(
                 fontWeight: FontWeight.w900,
                 fontSize: 24,
@@ -53,17 +67,23 @@ class PropertyQuestionPage extends StatelessWidget {
     );
   }
 
-  GestureDetector propertyType(BuildContext context, String proprtyTypeAtIndex) {
+  GestureDetector propertyType(
+      BuildContext context, String proprtyTypeAtIndex) {
     return GestureDetector(
-      onTap: () { 
-        print("Tapped $proprtyTypeAtIndex"); 
+      onTap: () {
+        print("Tapped $proprtyTypeAtIndex");
+        setState(() {
+          currentPropertyType = proprtyTypeAtIndex;
+        });
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 14.0),
         width: MediaQuery.of(context).size.width * 0.8,
         height: MediaQuery.of(context).size.height * 0.1,
         decoration: BoxDecoration(
-          color: const Color.fromRGBO(245,247,251, 1),
+          color: (currentPropertyType != proprtyTypeAtIndex)
+              ? const Color.fromRGBO(245, 247, 251, 1)
+              : const Color.fromRGBO(176, 203, 255, 1),
           borderRadius: BorderRadius.circular(14.0),
         ),
         child: Padding(
@@ -74,17 +94,19 @@ class PropertyQuestionPage extends StatelessWidget {
                 size: const Size(20, 20),
                 painter: CirclePainter(),
               ),
-              const SizedBox(width: 14,),
+              const SizedBox(
+                width: 14,
+              ),
               Text(
                 proprtyTypeAtIndex,
                 style: const TextStyle(
-                  color: Color.fromRGBO(101,101,107, 1),
+                  color: Color.fromRGBO(101, 101, 107, 1),
                   fontSize: 14,
                 ),
               ),
               const Spacer(),
               Image.asset(
-                "assets/icons/Grey-house.png",
+                (currentPropertyType != proprtyTypeAtIndex) ? "assets/icons/Grey-house.png" : "assets/icons/Grey-house-selected.png",
                 height: 20,
                 width: 20,
               ),
