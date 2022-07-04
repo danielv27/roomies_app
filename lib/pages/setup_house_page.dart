@@ -7,7 +7,7 @@ import 'package:roomies_app/widgets/house_setup/property_question_widget.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../backend/database.dart';
-import '../widgets/house_setup/house_condition_question_widget copy.dart';
+import '../widgets/house_setup/house_condition_question_widget.dart';
 
 class SetupHousePage extends StatefulWidget {
   const SetupHousePage({Key? key}) : super(key: key);
