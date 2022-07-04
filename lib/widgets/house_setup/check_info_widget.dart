@@ -50,7 +50,7 @@ class CheckInfoPage extends StatelessWidget {
                   width: 0,
                   style: BorderStyle.none,
                 ),
-                borderRadius: BorderRadius.circular(15),
+                borderRadius: BorderRadius.circular(14),
               ),
               focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
               prefixIcon: const Icon(

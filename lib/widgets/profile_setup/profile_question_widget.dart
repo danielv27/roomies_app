@@ -131,8 +131,7 @@ class _ProfileQuestionPageState extends State<ProfileQuestionPage> {
                     style: TextStyle(
                       leadingDistribution: TextLeadingDistribution.even,
                       foreground: (currentRadius != radius)
-                          ? (Paint()
-                            ..color = const Color.fromRGBO(101, 101, 107, 1))
+                          ? (Paint()..color = const Color.fromRGBO(101, 101, 107, 1))
                           : (Paint()..shader = applyTextBlueGradient()),
                     ),
                   ),
