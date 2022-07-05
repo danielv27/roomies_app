@@ -98,7 +98,7 @@ class _ProfileQuestionPageState extends State<ProfileQuestionPage> {
               style: const TextStyle(color: Colors.grey),
               cursorColor: Colors.grey,
               textInputAction: TextInputAction.next,
-              decoration: applyInputDecoration()
+              decoration: applyInputDecoration(),
             ),
           ],
         ),
