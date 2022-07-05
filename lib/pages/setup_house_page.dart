@@ -1,13 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:roomies_app/pages/auth_page.dart';
-import 'package:roomies_app/widgets/house_setup/address_question_widget.dart';
-import 'package:roomies_app/widgets/house_setup/check_info_widget.dart';
-import 'package:roomies_app/widgets/house_setup/property_question_widget.dart';
+import 'package:roomies_app/widgets/house_setup/property_address_setup_widget.dart';
+import 'package:roomies_app/widgets/house_setup/property_information_setup_widget.dart';
+import 'package:roomies_app/widgets/house_setup/property_type_setup_widget.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../backend/database.dart';
-import '../widgets/house_setup/house_condition_question_widget.dart';
+import '../widgets/house_setup/property_condition_setup_widget.dart';
 
 class SetupHousePage extends StatefulWidget {
   const SetupHousePage({Key? key}) : super(key: key);
@@ -17,14 +17,18 @@ class SetupHousePage extends StatefulWidget {
 }
 
 class _SetupHousePageState extends State<SetupHousePage> with SingleTickerProviderStateMixin {
+  final pageController = PageController();
+
   final postalCodeController = TextEditingController();
   final apartmentNumberController = TextEditingController();
   final houseNumberController = TextEditingController();
-  final pageController = PageController();
 
   final constructionYearController = TextEditingController();
   final livingSpaceController = TextEditingController();
   final plotAreaContoller = TextEditingController();
+
+  String propertyTypeChosen = "";
+  String propertyConditionChosen = "";
 
   bool isLastPage = false;
   int houseSetupPages = 4;
@@ -37,9 +41,15 @@ class _SetupHousePageState extends State<SetupHousePage> with SingleTickerProvid
   @override
   void dispose() {
     pageController.dispose();
+
     postalCodeController.dispose();
     apartmentNumberController.dispose();
     houseNumberController.dispose();
+
+    constructionYearController.dispose();
+    livingSpaceController.dispose();
+    plotAreaContoller.dispose();
+
     super.dispose();
   }
 
@@ -89,18 +99,22 @@ class _SetupHousePageState extends State<SetupHousePage> with SingleTickerProvid
               });
             },
             children: <Widget> [
-              AddressQuestionPage(
+              PropertyAddressSetupPage(
                 postalCodeController: postalCodeController, 
                 houseNumberController: houseNumberController, 
-                apartmentNumberController: apartmentNumberController
+                apartmentNumberController: apartmentNumberController,
               ),
-              PropertyQuestionPage(),
-              CheckInfoPage(
+              PropertyTypeSetupPage(
+                propertyTypeChosen: propertyTypeChosen,
+              ),
+              PropertyInformationSetupPage(
                 constructionYearController: constructionYearController, 
                 livingSpaceController: livingSpaceController, 
                 plotAreaContoller: plotAreaContoller,
               ),
-              HouseConditionQuestionPage(),
+              PropertyConditionSetupPage(
+                propertyConditionChosen: propertyConditionChosen,
+              ),
             ],
           ),
         ),
