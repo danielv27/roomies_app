@@ -416,23 +416,18 @@ class AuthPageState extends State<AuthPage> {
                 minimumSize: const Size.fromHeight(42),
               ),
               onPressed: () {
-                // setState(() {
-                //   emailController.text.isEmpty ? invalidEmail = true : invalidEmail = false;
-                // });
-                // if (emailController.value.text.isNotEmpty) {
-                //   signUp(); // User signup with firebase authentication
-                //   Navigator.push(
-                //     context, 
-                //     PageTransition(type: PageTransitionType.fade, child: const SetupPage()),
-                //   );
-                // } else {
-                //   print("Signup button disabled since email field is empty");
-                // }
-                // TODO: remove the bottom Navigator.push after testing
-                Navigator.push(
-                  context, 
-                  PageTransition(type: PageTransitionType.fade, child: const SetupPage()),
-                );
+                setState(() {
+                  emailController.text.isEmpty ? invalidEmail = true : invalidEmail = false;
+                });
+                if (emailController.value.text.isNotEmpty) {
+                  signUp(); // User signup with firebase authentication
+                  Navigator.push(
+                    context, 
+                    PageTransition(type: PageTransitionType.fade, child: const SetupPage()),
+                  );
+                } else {
+                  print("Signup button disabled since email field is empty");
+                }
               },
               child: const Text(
                 "Create account",
