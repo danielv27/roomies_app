@@ -8,6 +8,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../backend/database.dart';
 import '../widgets/house_setup/property_condition_setup_widget.dart';
+import '../widgets/house_setup/property_content_setup_widget.dart';
 
 class SetupHousePage extends StatefulWidget {
   const SetupHousePage({Key? key}) : super(key: key);
@@ -31,7 +32,7 @@ class _SetupHousePageState extends State<SetupHousePage> with SingleTickerProvid
   String propertyConditionChosen = "";
 
   bool isLastPage = false;
-  int houseSetupPages = 4;
+  int houseSetupPages = 5;
 
   final FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -115,6 +116,7 @@ class _SetupHousePageState extends State<SetupHousePage> with SingleTickerProvid
               PropertyConditionSetupPage(
                 propertyConditionChosen: propertyConditionChosen,
               ),
+              PropertyContentSetupPage(),
             ],
           ),
         ),
