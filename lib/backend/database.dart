@@ -58,7 +58,12 @@ class FireStoreDataBase {
     });
   }  
 
-  Future createUser(TextEditingController emailController, TextEditingController passwordController, TextEditingController firstNameController, TextEditingController lastNameController) async {
+  Future createUser(
+    TextEditingController emailController, 
+    TextEditingController passwordController, 
+    TextEditingController firstNameController, 
+    TextEditingController lastNameController,
+  ) async {
     UserCredential result = await FirebaseAuth.instance.createUserWithEmailAndPassword(
       email: emailController.text.trim(),
       password: passwordController.text.trim(),
@@ -75,7 +80,16 @@ class FireStoreDataBase {
     print("user created");
   }
 
-  Future createPersonalProfile(User ?currentUser, TextEditingController minBudget, TextEditingController maxBudget, TextEditingController about, TextEditingController work, TextEditingController study, TextEditingController roommate, TextEditingController birthdate) async {
+  Future createPersonalProfile(
+    User ?currentUser, 
+    TextEditingController minBudget, 
+    TextEditingController maxBudget, 
+    TextEditingController about, 
+    TextEditingController work, 
+    TextEditingController study, 
+    TextEditingController roommate, 
+    TextEditingController birthdate,
+  ) async {
     print("creating personal profile\n");
     await FirebaseFirestore.instance.collection('users')
       .doc(currentUser?.uid)
@@ -91,12 +105,30 @@ class FireStoreDataBase {
       print("created personal profile\n");
   }
 
-  Future createHouseProfile(User ?currentUser) async {
+  Future createHouseProfile(
+    User ?currentUser,
+    TextEditingController postalCodeController, 
+    TextEditingController houseNumberController, 
+    String propertyTypeChosen, 
+    TextEditingController constructionYearController, 
+    TextEditingController livingSpaceController, 
+    TextEditingController plotAreaContoller, 
+    String propertyConditionChosen,
+  ) async {
+    print("creating house profile\n");
     await FirebaseFirestore.instance.collection('users')
       .doc(currentUser?.uid)
       .update({ 
         'isHouseOwner': true,
+        'postlCode': postalCodeController.text,
+        'houseNumber': houseNumberController.text,
+        'propertyType': propertyTypeChosen,
+        'constructionYear': constructionYearController.text,
+        'livingSpace': livingSpaceController.text+"m2",
+        'plotArea': plotAreaContoller.text+"m2",
+        'propertyCondition': propertyConditionChosen,
       });
+      print("created house profile\n");
   }
 
 
