@@ -139,12 +139,21 @@ class _SetupHousePageState extends State<SetupHousePage> with SingleTickerProvid
                         onSurface: Colors.transparent,
                       ),
                       onPressed: () async {
-                        User? currentUser = auth.currentUser;
-                        FireStoreDataBase().createHouseProfile(
-                          currentUser,
-                        );
-                        Navigator.of(context).pop();
-                        Navigator.of(context).pop();
+                        print(propertyConditionChosen.toString());
+                        print(propertyTypeChosen.toString());
+                        // User? currentUser = auth.currentUser;
+                        // FireStoreDataBase().createHouseProfile(
+                        //   currentUser,
+                        //   postalCodeController,
+                        //   houseNumberController,
+                        //   propertyTypeChosen,
+                        //   constructionYearController,
+                        //   livingSpaceController,
+                        //   plotAreaContoller,
+                        //   propertyConditionChosen,
+                        // );
+                        // Navigator.of(context).pop();
+                        // Navigator.of(context).pop();
                       }, 
                       child: const Text(
                         "Complete house",
