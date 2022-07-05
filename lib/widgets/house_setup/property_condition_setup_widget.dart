@@ -2,16 +2,19 @@ import 'package:flutter/material.dart';
 
 import '../circle_ring.dart';
 
-class HouseConditionQuestionPage extends StatefulWidget {
-  const HouseConditionQuestionPage({
-    Key? key,
+class PropertyConditionSetupPage extends StatefulWidget {
+  PropertyConditionSetupPage({
+    Key? key, 
+    required this.propertyConditionChosen,
   }) : super(key: key);
 
+  late String propertyConditionChosen;
+
   @override
-  State<HouseConditionQuestionPage> createState() => _HouseConditionQuestionPageState();
+  State<PropertyConditionSetupPage> createState() => _PropertyConditionSetupPageState();
 }
 
-class _HouseConditionQuestionPageState extends State<HouseConditionQuestionPage> {
+class _PropertyConditionSetupPageState extends State<PropertyConditionSetupPage> {
   final List houseConditionList = [
     "Poor Condition\n",
     "Good Condition\n",
@@ -24,7 +27,7 @@ class _HouseConditionQuestionPageState extends State<HouseConditionQuestionPage>
     "The property is in perfect condition, just like new",
   ];
 
-  String currentCondition = "";
+  String propertyConditionChosen = "";
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +74,8 @@ class _HouseConditionQuestionPageState extends State<HouseConditionQuestionPage>
       onTap: () {
         print("Tapped $houseConditionAtIndex");
         setState(() {
-          currentCondition = houseConditionAtIndex;
+          widget.propertyConditionChosen = houseConditionAtIndex;
+          print(widget.propertyConditionChosen.toString());
         });
       },
       child: Container(
@@ -79,7 +83,7 @@ class _HouseConditionQuestionPageState extends State<HouseConditionQuestionPage>
         width: MediaQuery.of(context).size.width * 0.8,
         height: MediaQuery.of(context).size.height * 0.15,
         decoration: BoxDecoration(
-          color: (currentCondition != houseConditionAtIndex)
+          color: (widget.propertyConditionChosen != houseConditionAtIndex)
               ? const Color.fromRGBO(245, 247, 251, 1)
               : const Color.fromRGBO(176, 203, 255, 1),
           borderRadius: BorderRadius.circular(14.0),
@@ -90,7 +94,7 @@ class _HouseConditionQuestionPageState extends State<HouseConditionQuestionPage>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Image.asset(
-                (currentCondition != houseConditionAtIndex)
+                (widget.propertyConditionChosen != houseConditionAtIndex)
                     ? "assets/icons/Ring-circle.png"
                     : "assets/icons/Ring-circle-selected.png",
                 height: 20,
@@ -112,11 +116,11 @@ class _HouseConditionQuestionPageState extends State<HouseConditionQuestionPage>
                     Text(
                       houseConditionAtIndex,
                       style: TextStyle(
-                        color: (currentCondition != houseConditionAtIndex)
+                        color: (widget.propertyConditionChosen != houseConditionAtIndex)
                             ? const Color.fromRGBO(101, 101, 107, 1)
                             : Colors.white,
                         fontSize: 14,
-                        fontWeight: (currentCondition != houseConditionAtIndex)
+                        fontWeight: (widget.propertyConditionChosen != houseConditionAtIndex)
                             ? FontWeight.w300
                             : FontWeight.w500,
                       ),
@@ -124,11 +128,11 @@ class _HouseConditionQuestionPageState extends State<HouseConditionQuestionPage>
                     Text(
                       houseDescriptionAtIndex,
                       style: TextStyle(
-                        color: (currentCondition != houseConditionAtIndex)
+                        color: (widget.propertyConditionChosen != houseConditionAtIndex)
                             ? const Color.fromRGBO(101, 101, 107, 1)
                             : Colors.white,
                         fontSize: 14,
-                        fontWeight: (currentCondition != houseConditionAtIndex)
+                        fontWeight: (widget.propertyConditionChosen != houseConditionAtIndex)
                             ? FontWeight.w300
                             : FontWeight.w500,
                       ),
@@ -138,7 +142,7 @@ class _HouseConditionQuestionPageState extends State<HouseConditionQuestionPage>
               ),
               const Spacer(),
               Image.asset(
-                (currentCondition != houseConditionAtIndex)
+                (widget.propertyConditionChosen != houseConditionAtIndex)
                     ? "assets/icons/Grey-house.png"
                     : "assets/icons/Grey-house-selected.png",
                 height: 20,

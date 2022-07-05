@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class CheckInfoPage extends StatelessWidget {
-  const CheckInfoPage({
+class PropertyInformationSetupPage extends StatefulWidget {
+  const PropertyInformationSetupPage({
     Key? key,
     required this.constructionYearController,
     required this.livingSpaceController,
@@ -13,15 +13,20 @@ class CheckInfoPage extends StatelessWidget {
   final TextEditingController plotAreaContoller;
 
   @override
+  State<PropertyInformationSetupPage> createState() => _PropertyInformationSetupPageState();
+}
+
+class _PropertyInformationSetupPageState extends State<PropertyInformationSetupPage> {
+  @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
-        children: <Widget> [
+        children: <Widget>[
           Container(
             padding: const EdgeInsets.only(left: 30.0, right: 30, top: 5),
             alignment: Alignment.centerLeft,
             child: const Text(
-              "Cannenburgh 1, 1018 LG Amsterdam", 
+              "Cannenburgh 1, 1018 LG Amsterdam",
               style: TextStyle(
                 fontWeight: FontWeight.w600,
                 color: Colors.grey,
@@ -32,7 +37,7 @@ class CheckInfoPage extends StatelessWidget {
             padding: const EdgeInsets.only(left: 30.0, right: 30, top: 5),
             alignment: Alignment.centerLeft,
             child: const Text(
-              "Is this information correct?", 
+              "Is this information correct?",
               style: TextStyle(
                 fontWeight: FontWeight.w900,
                 fontSize: 24,
@@ -43,7 +48,7 @@ class CheckInfoPage extends StatelessWidget {
             padding: const EdgeInsets.only(left: 30.0, right: 30, top: 16),
             alignment: Alignment.centerLeft,
             child: const Text(
-              "Year of contruction", 
+              "Year of contruction",
               textAlign: TextAlign.left,
               style: TextStyle(
                 color: Colors.grey,
@@ -53,7 +58,7 @@ class CheckInfoPage extends StatelessWidget {
           Container(
             padding: const EdgeInsets.only(left: 30.0, right: 30, top: 7),
             child: TextFormField(
-              controller: constructionYearController,
+              controller: widget.constructionYearController,
               style: const TextStyle(color: Colors.grey),
               cursorColor: Colors.grey,
               textInputAction: TextInputAction.next,
@@ -74,7 +79,7 @@ class CheckInfoPage extends StatelessWidget {
           Container(
             padding: const EdgeInsets.only(left: 30.0, right: 30, top: 7),
             child: TextFormField(
-              controller: livingSpaceController,
+              controller: widget.livingSpaceController,
               style: const TextStyle(color: Colors.grey),
               cursorColor: Colors.grey,
               textInputAction: TextInputAction.next,
@@ -95,7 +100,7 @@ class CheckInfoPage extends StatelessWidget {
           Container(
             padding: const EdgeInsets.only(left: 30.0, right: 30, top: 7),
             child: TextFormField(
-              controller: plotAreaContoller,
+              controller: widget.plotAreaContoller,
               style: const TextStyle(color: Colors.grey),
               cursorColor: Colors.grey,
               textInputAction: TextInputAction.next,
@@ -129,5 +134,4 @@ class CheckInfoPage extends StatelessWidget {
       labelStyle: const TextStyle(color: Colors.grey),
     );
   }
-  
 }

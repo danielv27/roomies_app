@@ -2,16 +2,19 @@ import 'package:flutter/material.dart';
 
 import '../circle_ring.dart';
 
-class PropertyQuestionPage extends StatefulWidget {
-  const PropertyQuestionPage({
+class PropertyTypeSetupPage extends StatefulWidget {
+  PropertyTypeSetupPage({
     Key? key,
+    required this.propertyTypeChosen,
   }) : super(key: key);
 
+  late String propertyTypeChosen;
+
   @override
-  State<PropertyQuestionPage> createState() => _PropertyQuestionPageState();
+  State<PropertyTypeSetupPage> createState() => _PropertyTypeSetupPageState();
 }
 
-class _PropertyQuestionPageState extends State<PropertyQuestionPage> {
+class _PropertyTypeSetupPageState extends State<PropertyTypeSetupPage> {
   final List propertyTypeList = [
     "Apartment",
     "Studio",
@@ -21,7 +24,8 @@ class _PropertyQuestionPageState extends State<PropertyQuestionPage> {
     "2-onder-1-kapwoning",
     "Geschakelde woning"
   ];
-  String currentPropertyType = "";
+
+  String propertyTypeChosen = "";
 
   @override
   Widget build(BuildContext context) {
@@ -67,12 +71,14 @@ class _PropertyQuestionPageState extends State<PropertyQuestionPage> {
     );
   }
 
-  GestureDetector propertyType(BuildContext context, String proprtyTypeAtIndex) {
+  GestureDetector propertyType(
+      BuildContext context, String proprtyTypeAtIndex) {
     return GestureDetector(
       onTap: () {
         print("Tapped $proprtyTypeAtIndex");
         setState(() {
-          currentPropertyType = proprtyTypeAtIndex;
+          widget.propertyTypeChosen = proprtyTypeAtIndex;
+          print(widget.propertyTypeChosen.toString());
         });
       },
       child: Container(
@@ -80,7 +86,7 @@ class _PropertyQuestionPageState extends State<PropertyQuestionPage> {
         width: MediaQuery.of(context).size.width * 0.8,
         height: MediaQuery.of(context).size.height * 0.1,
         decoration: BoxDecoration(
-          color: (currentPropertyType != proprtyTypeAtIndex)
+          color: (widget.propertyTypeChosen != proprtyTypeAtIndex)
               ? const Color.fromRGBO(245, 247, 251, 1)
               : const Color.fromRGBO(176, 203, 255, 1),
           borderRadius: BorderRadius.circular(14.0),
@@ -90,8 +96,8 @@ class _PropertyQuestionPageState extends State<PropertyQuestionPage> {
           child: Row(
             children: [
               Image.asset(
-                (currentPropertyType != proprtyTypeAtIndex) 
-                    ? "assets/icons/Ring-circle.png" 
+                (widget.propertyTypeChosen != proprtyTypeAtIndex)
+                    ? "assets/icons/Ring-circle.png"
                     : "assets/icons/Ring-circle-selected.png",
                 height: 20,
                 width: 20,
@@ -106,19 +112,19 @@ class _PropertyQuestionPageState extends State<PropertyQuestionPage> {
               Text(
                 proprtyTypeAtIndex,
                 style: TextStyle(
-                  color: (currentPropertyType != proprtyTypeAtIndex) 
-                      ? const Color.fromRGBO(101, 101, 107, 1) 
+                  color: (widget.propertyTypeChosen != proprtyTypeAtIndex)
+                      ? const Color.fromRGBO(101, 101, 107, 1)
                       : Colors.white,
                   fontSize: 14,
-                  fontWeight: (currentPropertyType != proprtyTypeAtIndex) 
-                      ? FontWeight.w300 
+                  fontWeight: (widget.propertyTypeChosen != proprtyTypeAtIndex)
+                      ? FontWeight.w300
                       : FontWeight.w500,
                 ),
               ),
               const Spacer(),
               Image.asset(
-                (currentPropertyType != proprtyTypeAtIndex) 
-                    ? "assets/icons/Grey-house.png" 
+                (widget.propertyTypeChosen != proprtyTypeAtIndex)
+                    ? "assets/icons/Grey-house.png"
                     : "assets/icons/Grey-house-selected.png",
                 height: 20,
                 width: 20,

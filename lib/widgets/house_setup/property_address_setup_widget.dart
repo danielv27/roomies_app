@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class AddressQuestionPage extends StatelessWidget {
-  AddressQuestionPage({
+class PropertyAddressSetupPage extends StatefulWidget {
+  const PropertyAddressSetupPage({
     Key? key,
     required this.postalCodeController,
     required this.houseNumberController,
@@ -12,22 +12,25 @@ class AddressQuestionPage extends StatelessWidget {
   final TextEditingController houseNumberController;
   final TextEditingController apartmentNumberController;
 
-  final test = "1018 LG";
+  @override
+  State<PropertyAddressSetupPage> createState() => _PropertyAddressSetupPageState();
+}
+
+class _PropertyAddressSetupPageState extends State<PropertyAddressSetupPage> {
   final postCodeRegex = RegExp(r"^([0-9]{4} ?[A-Z]{2})$");
   final houseNumberRegex = RegExp(r'^[a-zA-Z0-9\- ]*$');
 
   // final String apiKey = "8d09db9c-0ecc-463e-a020-035728fb3f75";
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
-        children: <Widget> [
+        children: <Widget>[
           Container(
             padding: const EdgeInsets.only(left: 30.0, right: 30, top: 5),
             alignment: Alignment.centerLeft,
             child: const Text(
-              "List house", 
+              "List house",
               style: TextStyle(
                 fontWeight: FontWeight.w600,
                 color: Colors.grey,
@@ -38,7 +41,7 @@ class AddressQuestionPage extends StatelessWidget {
             padding: const EdgeInsets.only(left: 30.0, right: 30, top: 5),
             alignment: Alignment.centerLeft,
             child: const Text(
-              "What is your address?", 
+              "What is your address?",
               style: TextStyle(
                 fontWeight: FontWeight.w900,
                 fontSize: 24,
@@ -49,7 +52,7 @@ class AddressQuestionPage extends StatelessWidget {
           Container(
             padding: const EdgeInsets.only(left: 30.0, right: 30, top: 20),
             child: TextFormField(
-              controller: postalCodeController,
+              controller: widget.postalCodeController,
               style: const TextStyle(color: Colors.grey),
               cursorColor: Colors.grey,
               textInputAction: TextInputAction.next,
@@ -63,7 +66,8 @@ class AddressQuestionPage extends StatelessWidget {
                   ),
                   borderRadius: BorderRadius.circular(15),
                 ),
-                focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                focusedBorder: const UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey)),
                 prefixIcon: const Icon(
                   Icons.person,
                   size: 20,
@@ -84,7 +88,7 @@ class AddressQuestionPage extends StatelessWidget {
           Container(
             padding: const EdgeInsets.only(left: 30.0, right: 30, top: 20),
             child: TextFormField(
-              controller: houseNumberController,
+              controller: widget.houseNumberController,
               style: const TextStyle(color: Colors.grey),
               cursorColor: Colors.grey,
               textInputAction: TextInputAction.next,
@@ -98,7 +102,8 @@ class AddressQuestionPage extends StatelessWidget {
                   ),
                   borderRadius: BorderRadius.circular(15),
                 ),
-                focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                focusedBorder: const UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey)),
                 prefixIcon: const Icon(
                   Icons.person,
                   size: 20,
@@ -119,7 +124,7 @@ class AddressQuestionPage extends StatelessWidget {
           Container(
             padding: const EdgeInsets.only(left: 30.0, right: 30, top: 20),
             child: TextFormField(
-              controller: apartmentNumberController,
+              controller: widget.apartmentNumberController,
               style: const TextStyle(color: Colors.grey),
               cursorColor: Colors.grey,
               textInputAction: TextInputAction.done,
@@ -133,7 +138,8 @@ class AddressQuestionPage extends StatelessWidget {
                   ),
                   borderRadius: BorderRadius.circular(15),
                 ),
-                focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                focusedBorder: const UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey)),
                 prefixIcon: const Icon(
                   Icons.person,
                   size: 20,
@@ -148,19 +154,4 @@ class AddressQuestionPage extends StatelessWidget {
       ),
     );
   }
-
-  // Future<bool> validateAddress() async {
-  //   var postCode = postalCodeController.text;
-  //   var houseNum = houseNumberController.text;
-  //   final response = await http.get(
-  //     Uri.parse('https://json.api-postcode.nl?postcode=' + postCode + '&number=' + houseNum), 
-  //     headers: {'token': apiKey},
-  //   );
-  //   if (response.statusCode == 200) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // }
-
 }
