@@ -56,26 +56,7 @@ class _PropertyAddressSetupPageState extends State<PropertyAddressSetupPage> {
               style: const TextStyle(color: Colors.grey),
               cursorColor: Colors.grey,
               textInputAction: TextInputAction.next,
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: const Color.fromRGBO(245, 247, 251, 1),
-                border: OutlineInputBorder(
-                  borderSide: const BorderSide(
-                    width: 0,
-                    style: BorderStyle.none,
-                  ),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                focusedBorder: const UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey)),
-                prefixIcon: const Icon(
-                  Icons.person,
-                  size: 20,
-                  color: Colors.grey,
-                ),
-                labelText: "Postal code",
-                labelStyle: const TextStyle(color: Colors.grey),
-              ),
+              decoration: applyInputDecoration("Postal code"),
               validator: (value) {
                 if (value!.isEmpty || !postCodeRegex.hasMatch(value)) {
                   return "example 1234 AB or 1234AB";
@@ -92,26 +73,7 @@ class _PropertyAddressSetupPageState extends State<PropertyAddressSetupPage> {
               style: const TextStyle(color: Colors.grey),
               cursorColor: Colors.grey,
               textInputAction: TextInputAction.next,
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: const Color.fromRGBO(245, 247, 251, 1),
-                border: OutlineInputBorder(
-                  borderSide: const BorderSide(
-                    width: 0,
-                    style: BorderStyle.none,
-                  ),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                focusedBorder: const UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey)),
-                prefixIcon: const Icon(
-                  Icons.person,
-                  size: 20,
-                  color: Colors.grey,
-                ),
-                labelText: "House number",
-                labelStyle: const TextStyle(color: Colors.grey),
-              ),
+              decoration: applyInputDecoration("House number"),
               validator: (value) {
                 if (value!.isEmpty || !houseNumberRegex.hasMatch(value)) {
                   return "Enter only numbers or alphabet letters";
@@ -128,30 +90,35 @@ class _PropertyAddressSetupPageState extends State<PropertyAddressSetupPage> {
               style: const TextStyle(color: Colors.grey),
               cursorColor: Colors.grey,
               textInputAction: TextInputAction.done,
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: const Color.fromRGBO(245, 247, 251, 1),
-                border: OutlineInputBorder(
-                  borderSide: const BorderSide(
-                    width: 0,
-                    style: BorderStyle.none,
-                  ),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                focusedBorder: const UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey)),
-                prefixIcon: const Icon(
-                  Icons.person,
-                  size: 20,
-                  color: Colors.grey,
-                ),
-                labelText: "Apartment number",
-                labelStyle: const TextStyle(color: Colors.grey),
-              ),
+              decoration: applyInputDecoration("Apartment Number")
             ),
           ),
         ],
       ),
+    );
+  }
+
+  InputDecoration applyInputDecoration(String labelText) {
+    return InputDecoration(
+      filled: true,
+      fillColor: const Color.fromRGBO(245, 247, 251, 1),
+      border: OutlineInputBorder(
+        borderSide: const BorderSide(
+          width: 0,
+          style: BorderStyle.none,
+        ),
+        borderRadius: BorderRadius.circular(14),
+      ),
+      focusedBorder: const UnderlineInputBorder(
+        borderSide: BorderSide(color: Colors.grey),
+      ),
+      prefixIcon: const Icon(
+        Icons.person,
+        size: 20,
+        color: Colors.grey,
+      ),
+      labelText: labelText,
+      labelStyle: const TextStyle(color: Colors.grey),
     );
   }
 }

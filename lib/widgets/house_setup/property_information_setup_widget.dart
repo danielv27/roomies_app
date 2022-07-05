@@ -44,67 +44,35 @@ class _PropertyInformationSetupPageState extends State<PropertyInformationSetupP
               ),
             ),
           ),
+          const SizedBox(height: 10),
           Container(
-            padding: const EdgeInsets.only(left: 30.0, right: 30, top: 16),
-            alignment: Alignment.centerLeft,
-            child: const Text(
-              "Year of contruction",
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                color: Colors.grey,
-              ),
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.only(left: 30.0, right: 30, top: 7),
+            padding: const EdgeInsets.only(left: 30.0, right: 30, top: 20),
             child: TextFormField(
               controller: widget.constructionYearController,
               style: const TextStyle(color: Colors.grey),
               cursorColor: Colors.grey,
+              decoration: applyInputDecoration("Year of contruction"),
               textInputAction: TextInputAction.next,
-              decoration: applyInputDecoration(),
             ),
           ),
           Container(
-            padding: const EdgeInsets.only(left: 30.0, right: 30, top: 16),
-            alignment: Alignment.centerLeft,
-            child: const Text(
-              "Living Space",
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                color: Colors.grey,
-              ),
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.only(left: 30.0, right: 30, top: 7),
+            padding: const EdgeInsets.only(left: 30.0, right: 30, top: 20),
             child: TextFormField(
               controller: widget.livingSpaceController,
               style: const TextStyle(color: Colors.grey),
               cursorColor: Colors.grey,
               textInputAction: TextInputAction.next,
-              decoration: applyInputDecoration(),
+              decoration: applyInputDecoration("Living Space"),
             ),
           ),
           Container(
-            padding: const EdgeInsets.only(left: 30.0, right: 30, top: 16),
-            alignment: Alignment.centerLeft,
-            child: const Text(
-              "Plot Area",
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                color: Colors.grey,
-              ),
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.only(left: 30.0, right: 30, top: 7),
+            padding: const EdgeInsets.only(left: 30.0, right: 30, top: 20),
             child: TextFormField(
               controller: widget.plotAreaContoller,
               style: const TextStyle(color: Colors.grey),
               cursorColor: Colors.grey,
-              textInputAction: TextInputAction.next,
-              decoration: applyInputDecoration(),
+              textInputAction: TextInputAction.done,
+              decoration: applyInputDecoration("Plot Area"),
             ),
           ),
         ],
@@ -112,7 +80,7 @@ class _PropertyInformationSetupPageState extends State<PropertyInformationSetupP
     );
   }
 
-  InputDecoration applyInputDecoration() {
+  InputDecoration applyInputDecoration(String labelText) {
     return InputDecoration(
       filled: true,
       fillColor: const Color.fromRGBO(245, 247, 251, 1),
@@ -131,6 +99,7 @@ class _PropertyInformationSetupPageState extends State<PropertyInformationSetupP
         size: 20,
         color: Colors.grey,
       ),
+      labelText: labelText,
       labelStyle: const TextStyle(color: Colors.grey),
     );
   }
