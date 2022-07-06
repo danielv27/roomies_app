@@ -1,4 +1,10 @@
+import 'dart:io';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_ui/flutter_chat_ui.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../circle_ring.dart';
 
@@ -42,6 +48,14 @@ class _PropertyContentSetupPageState extends State<PropertyContentSetupPage> {
   String? furnishedDropdownValue;
   String? amountRoomsDropdownValue;
   String? availableRoomsDropdownValue;
+
+  final List<XFile> selectedHouseImages = [];
+  final FirebaseStorage _storageRef = FirebaseStorage.instance;
+  final List<String> arrImageUrls = [];
+  int uploadItem = 0;
+  bool isUploading = false;
+
+  final FirebaseAuth auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -192,6 +206,8 @@ class _PropertyContentSetupPageState extends State<PropertyContentSetupPage> {
       onTap: () {
         setState(() {
           print("Upload $descriptionField");
+          selectHouseImages();
+          uploadFunction(selectedHouseImages);
         });
       },
       child: Container(
@@ -269,6 +285,46 @@ class _PropertyContentSetupPageState extends State<PropertyContentSetupPage> {
       hintText: hintText,
       hintStyle: const TextStyle(color: Colors.grey, fontSize: 18, fontWeight: FontWeight.w300),
     );
+  }
+
+  void uploadFunction(List<XFile> _images) {
+    setState(() {
+      isUploading = true;
+    });
+    for (int i = 0; i < _images.length; i++) {
+      var imageUrl = uploadFile(_images[i]);
+      arrImageUrls.add(imageUrl.toString());
+    }
+  }
+
+  Future<String> uploadFile(XFile _image) async {
+    Reference reference = _storageRef.ref().child("house_images").child(auth.currentUser!.uid.toString()).child(_image.name);
+    UploadTask uploadTask = reference.putFile(File(_image.path));
+    await uploadTask.whenComplete(() {
+      setState(() {
+        uploadItem++;
+        if (uploadItem == selectedHouseImages.length) {
+          isUploading = false;
+          uploadItem = 0;
+        }    
+      });
+    });
+    return await reference.getDownloadURL();
+  }
+
+  Future selectHouseImages() async{
+    try {
+      final List<XFile>? images = await ImagePicker().pickMultiImage();
+      if (images!.isNotEmpty) {
+        selectedHouseImages.addAll(images);
+      }
+      print("Number of images to upload: ${images.length.toString()}");
+    } catch (error) {
+      print("ERROR: $error");
+    }
+    setState(() {
+      
+    });
   }
 
 }

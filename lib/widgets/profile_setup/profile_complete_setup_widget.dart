@@ -279,9 +279,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
           uploadItem = 0;
         }    
       });
-
     });
-
     return await reference.getDownloadURL();
   }
 
