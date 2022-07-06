@@ -31,7 +31,11 @@ class _SetupHousePageState extends State<SetupHousePage> with SingleTickerProvid
   String propertyTypeChosen = "";
   String propertyConditionChosen = "";
 
+  final houseDescriptionController = TextEditingController();
   final pricePerRoomController = TextEditingController();
+  final contactNameController = TextEditingController();
+  final contactEmailControler = TextEditingController();
+  final contactPhoneNumberControler = TextEditingController();
 
   bool isLastPage = false;
   int houseSetupPages = 5;
@@ -119,7 +123,11 @@ class _SetupHousePageState extends State<SetupHousePage> with SingleTickerProvid
                 propertyConditionChosen: propertyConditionChosen,
               ),
               PropertyContentSetupPage(
+                houseDescriptionController: houseDescriptionController,
                 pricePerRoomController: pricePerRoomController,
+                contactNameController: contactNameController,
+                contactEmailControler: contactEmailControler,
+                contactPhoneNumberControler: contactPhoneNumberControler,
               ),
             ],
           ),

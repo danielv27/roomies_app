@@ -5,10 +5,18 @@ import '../circle_ring.dart';
 class PropertyContentSetupPage extends StatefulWidget {
   const PropertyContentSetupPage({
     Key? key, 
+    required this.houseDescriptionController,
     required this.pricePerRoomController,
+    required this.contactNameController,
+    required this.contactEmailControler,
+    required this.contactPhoneNumberControler,
   }) : super(key: key);
 
+  final TextEditingController houseDescriptionController;
   final TextEditingController pricePerRoomController;
+  final TextEditingController contactNameController;
+  final TextEditingController contactEmailControler;
+  final TextEditingController contactPhoneNumberControler;
 
   @override
   State<PropertyContentSetupPage> createState() => _PropertyContentSetupPageState();
@@ -69,18 +77,18 @@ class _PropertyContentSetupPageState extends State<PropertyContentSetupPage> {
               uploadPictures(context, uploadDescriptionFields[0], uploadIcon[0],),
               uploadPictures(context, uploadDescriptionFields[1], uploadIcon[1],),
               textDescription("Description"),
-              contentFields("Write a complete description about the house with at least 100 words...", const AssetImage('assets/icons/person.png')),
+              contentFields("Write a complete description about the house with at least 100 words...", const AssetImage('assets/icons/person.png'), widget.houseDescriptionController),
               dropDownHouseChoices(context, "Furnished", furnishedList, furnishedDropdownValue, const AssetImage('assets/icons/person.png')),
               dropDownHouseChoices(context, "Total amount of rooms", amountRoomsList, amountRoomsDropdownValue, const AssetImage('assets/icons/rooms.png')),
               dropDownHouseChoices(context, "Available rooms", availableRooms, availableRoomsDropdownValue, const AssetImage('assets/icons/rooms.png')),
               uploadPictures(context, uploadDescriptionFields[2], uploadIcon[2],),
               textDescription("Price per room"),
-              contentFields("0", const AssetImage('assets/icons/coin.png')),
+              contentFields("0", const AssetImage('assets/icons/coin.png'), widget.pricePerRoomController),
               const SizedBox(height: 20,),
               textDescription("Contact info"),
-              contentFields("Name contact person", const AssetImage('assets/icons/email.png')),
-              contentFields("Email", const AssetImage('assets/icons/email.png')),
-              contentFields("Phone number", const AssetImage('assets/icons/email.png')),
+              contentFields("Name contact person", const AssetImage('assets/icons/email.png'), widget.contactNameController),
+              contentFields("Email", const AssetImage('assets/icons/email.png'), widget.contactEmailControler),
+              contentFields("Phone number", const AssetImage('assets/icons/email.png'), widget.contactPhoneNumberControler),
             ],
           ),
         ],
@@ -99,13 +107,13 @@ class _PropertyContentSetupPageState extends State<PropertyContentSetupPage> {
     );
   }
 
-  Widget contentFields(String hintText, var iconImage) {
+  Widget contentFields(String hintText, var iconImage, var controller) {
     return Padding(
       padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
       child: SizedBox(
         width: MediaQuery.of(context).size.width * 0.8,
         child: TextFormField(
-          controller: widget.pricePerRoomController,
+          controller: controller,
           style: const TextStyle(color: Colors.grey),
           cursorColor: Colors.grey,
           textInputAction: TextInputAction.next,
