@@ -64,14 +64,35 @@ class _PropertyContentSetupPageState extends State<PropertyContentSetupPage> {
           ),
           const SizedBox(height: 10),
           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               uploadPictures(context, uploadDescriptionFields[0], uploadIcon[0],),
               uploadPictures(context, uploadDescriptionFields[1], uploadIcon[1],),
-              furnishedChoice(context, "Furnished", furnishedList, furnishedDropdownValue),
-              furnishedChoice(context, "Total amount of rooms", amountRoomsList, amountRoomsDropdownValue),
-              furnishedChoice(context, "Available rooms", availableRooms, availableRoomsDropdownValue),
-              // uploadPictures(context, uploadDescriptionFields[2], uploadIcon[2],),
-              pricePerRoomField(),
+              dropDownHouseChoices(context, "Furnished", furnishedList, furnishedDropdownValue),
+              dropDownHouseChoices(context, "Total amount of rooms", amountRoomsList, amountRoomsDropdownValue),
+              dropDownHouseChoices(context, "Available rooms", availableRooms, availableRoomsDropdownValue),
+              uploadPictures(context, uploadDescriptionFields[2], uploadIcon[2],),
+              const Text(
+                "Price per room",
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Color.fromRGBO(101, 101, 107, 1),
+                ),
+              ),
+              contentFields("0", const AssetImage('assets/icons/coin.png')),
+              const SizedBox(height: 20,),
+              const Text(
+                "Contact info",
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Color.fromRGBO(101, 101, 107, 1),
+                ),
+              ),
+              contentFields("Name contact person", const AssetImage('assets/icons/email.png')),
+              contentFields("Email", const AssetImage('assets/icons/email.png')),
+              contentFields("Phone number", const AssetImage('assets/icons/email.png')),
             ],
           ),
         ],
@@ -79,32 +100,23 @@ class _PropertyContentSetupPageState extends State<PropertyContentSetupPage> {
     );
   }
 
-  Widget pricePerRoomField() {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.8,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            "Price per room",
-            style: TextStyle(
-              fontSize: 14,
-              color: Color.fromRGBO(101, 101, 107, 1),
-            ),
-          ),
-          TextFormField(
-            controller: widget.pricePerRoomController,
-            style: const TextStyle(color: Colors.grey),
-            cursorColor: Colors.grey,
-            textInputAction: TextInputAction.next,
-            decoration: applyInputDecoration(),
-          ),
-        ],
+  Widget contentFields(String hintText, var iconImage) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width * 0.8,
+        child: TextFormField(
+          controller: widget.pricePerRoomController,
+          style: const TextStyle(color: Colors.grey),
+          cursorColor: Colors.grey,
+          textInputAction: TextInputAction.next,
+          decoration: applyInputDecoration(hintText, iconImage),
+        ),
       ),
     );
   }
 
-  Widget furnishedChoice(BuildContext context, String dropDownDescription, List<String> dropDownList, String? dropDownChoice) {
+  Widget dropDownHouseChoices(BuildContext context, String dropDownDescription, List<String> dropDownList, String? dropDownChoice) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -215,7 +227,7 @@ class _PropertyContentSetupPageState extends State<PropertyContentSetupPage> {
     );
   }
 
-  InputDecoration applyInputDecoration() {
+  InputDecoration applyInputDecoration(String hintText, var imageIcon) {
     return InputDecoration(
       filled: true,
       fillColor: const Color.fromRGBO(245, 247, 251, 1),
@@ -229,16 +241,16 @@ class _PropertyContentSetupPageState extends State<PropertyContentSetupPage> {
       focusedBorder: const UnderlineInputBorder(
         borderSide: BorderSide(color: Colors.grey),
       ),
-      prefixIcon: const Align(
+      prefixIcon: Align(
         widthFactor: 2.0,
         heightFactor: 2.0,
         child: Image(
-          image: AssetImage('assets/icons/coin.png'),
+          image: imageIcon,
           height: 18,
           width: 18,
         ),
       ),
-      hintText: "0",
+      hintText: hintText,
       hintStyle: const TextStyle(color: Colors.grey, fontSize: 18, fontWeight: FontWeight.w300),
     );
   }
