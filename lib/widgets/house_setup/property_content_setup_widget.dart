@@ -108,17 +108,15 @@ class _PropertyContentSetupPageState extends State<PropertyContentSetupPage> {
   }
 
   Widget contentFields(String hintText, var iconImage, var controller) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width * 0.8,
-        child: TextFormField(
-          controller: controller,
-          style: const TextStyle(color: Colors.grey),
-          cursorColor: Colors.grey,
-          textInputAction: TextInputAction.next,
-          decoration: applyInputDecoration(hintText, iconImage),
-        ),
+    return Container(
+      margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+      width: MediaQuery.of(context).size.width * 0.8,
+      child: TextFormField(
+        controller: controller,
+        style: const TextStyle(color: Colors.grey),
+        cursorColor: Colors.grey,
+        textInputAction: TextInputAction.next,
+        decoration: contentFieldsDecoration(hintText, iconImage),
       ),
     );
   }
@@ -136,7 +134,7 @@ class _PropertyContentSetupPageState extends State<PropertyContentSetupPage> {
         ),
         Container(
           padding: const EdgeInsets.all(8),
-          margin: const EdgeInsets.only(top: 10.0, bottom: 14.0),
+          margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
           width: MediaQuery.of(context).size.width * 0.8,
           height: 65,
           decoration: BoxDecoration(
@@ -145,19 +143,7 @@ class _PropertyContentSetupPageState extends State<PropertyContentSetupPage> {
           ),
           child: DropdownButtonFormField<String>(
             isDense: true,
-            decoration: InputDecoration(
-              enabledBorder: InputBorder.none,
-              focusedBorder: InputBorder.none,
-              prefixIcon: Align(
-                widthFactor: 1.0,
-                heightFactor: 1.0,
-                child: ImageIcon(
-                  iconImage, 
-                  size: 15, 
-                  color: const Color.fromRGBO(101,101,107, 1),
-                ),
-              ),
-            ),
+            decoration: dropDownDecoration(iconImage),
             isExpanded: true,
             hint: const Text(
               "Choose",
@@ -185,15 +171,27 @@ class _PropertyContentSetupPageState extends State<PropertyContentSetupPage> {
     );
   }
 
+  InputDecoration dropDownDecoration(iconImage) {
+    return InputDecoration(
+      enabledBorder: InputBorder.none,
+      focusedBorder: InputBorder.none,
+      prefixIcon: Align(
+        widthFactor: 1.0,
+        heightFactor: 1.0,
+        child: ImageIcon(
+          iconImage, 
+          size: 15, 
+          color: const Color.fromRGBO(101,101,107, 1),
+        ),
+      ),
+    );
+  }
+
   GestureDetector uploadPictures(BuildContext context, String descriptionField, var uploadIcon) {
     return GestureDetector(
       onTap: () {
         setState(() {
-          if (descriptionField == "Pictures") {
-            print("upload house pictures");
-          } else {
-            print("Upload building map");
-          }
+          print("Upload $descriptionField");
         });
       },
       child: Container(
@@ -242,7 +240,7 @@ class _PropertyContentSetupPageState extends State<PropertyContentSetupPage> {
     );
   }
 
-  InputDecoration applyInputDecoration(String hintText, var imageIcon) {
+  InputDecoration contentFieldsDecoration(String hintText, var imageIcon) {
     return InputDecoration(
       filled: true,
       fillColor: const Color.fromRGBO(245, 247, 251, 1),
@@ -256,13 +254,16 @@ class _PropertyContentSetupPageState extends State<PropertyContentSetupPage> {
       focusedBorder: const UnderlineInputBorder(
         borderSide: BorderSide(color: Colors.grey),
       ),
-      prefixIcon: Align(
-        widthFactor: 2.0,
-        heightFactor: 2.0,
-        child: Image(
-          image: imageIcon,
-          height: 18,
-          width: 18,
+      prefixIcon: Padding(
+        padding: const EdgeInsets.only(left: 10),
+        child: Align(
+          widthFactor: 1.0,
+          heightFactor: 1.0,
+          child: Image(
+            image: imageIcon,
+            height: 15,
+            width: 15,
+          ),
         ),
       ),
       hintText: hintText,

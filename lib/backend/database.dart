@@ -114,6 +114,11 @@ class FireStoreDataBase {
     TextEditingController livingSpaceController, 
     TextEditingController plotAreaContoller, 
     String propertyConditionChosen,
+    TextEditingController houseDescriptionController,
+    TextEditingController pricePerRoomController,
+    TextEditingController contactNameController,
+    TextEditingController contactEmailControler,
+    TextEditingController contactPhoneNumberControler,
   ) async {
     print("creating house profile\n");
     await FirebaseFirestore.instance.collection('users')
@@ -127,6 +132,11 @@ class FireStoreDataBase {
         'livingSpace': livingSpaceController.text+"m2",
         'plotArea': plotAreaContoller.text+"m2",
         'propertyCondition': propertyConditionChosen,
+        'houseDescription': houseDescriptionController.text,
+        'pricePerRoom': pricePerRoomController.text,
+        'contactName': contactNameController.text,
+        'contactEmail': contactEmailControler.text,
+        'contactPhoneNumber': contactPhoneNumberControler.text
       });
       print("created house profile\n");
   }

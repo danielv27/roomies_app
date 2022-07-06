@@ -94,10 +94,14 @@ class _PropertyInformationSetupPageState extends State<PropertyInformationSetupP
       focusedBorder: const UnderlineInputBorder(
         borderSide: BorderSide(color: Colors.grey),
       ),
-      prefixIcon: const Icon(
-        Icons.person,
-        size: 20,
-        color: Colors.grey,
+      prefixIcon: const Align(
+          widthFactor: 1.0,
+        heightFactor: 1.0,
+        child: Image(
+          image: AssetImage('assets/icons/person.png'),
+          height: 15,
+          width: 15,
+        ),
       ),
       labelText: labelText,
       labelStyle: const TextStyle(color: Colors.grey),
