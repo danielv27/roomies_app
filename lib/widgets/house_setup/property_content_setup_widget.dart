@@ -68,34 +68,33 @@ class _PropertyContentSetupPageState extends State<PropertyContentSetupPage> {
             children: [
               uploadPictures(context, uploadDescriptionFields[0], uploadIcon[0],),
               uploadPictures(context, uploadDescriptionFields[1], uploadIcon[1],),
-              dropDownHouseChoices(context, "Furnished", furnishedList, furnishedDropdownValue),
-              dropDownHouseChoices(context, "Total amount of rooms", amountRoomsList, amountRoomsDropdownValue),
-              dropDownHouseChoices(context, "Available rooms", availableRooms, availableRoomsDropdownValue),
+              textDescription("Description"),
+              contentFields("Write a complete description about the house with at least 100 words...", const AssetImage('assets/icons/person.png')),
+              dropDownHouseChoices(context, "Furnished", furnishedList, furnishedDropdownValue, const AssetImage('assets/icons/person.png')),
+              dropDownHouseChoices(context, "Total amount of rooms", amountRoomsList, amountRoomsDropdownValue, const AssetImage('assets/icons/rooms.png')),
+              dropDownHouseChoices(context, "Available rooms", availableRooms, availableRoomsDropdownValue, const AssetImage('assets/icons/rooms.png')),
               uploadPictures(context, uploadDescriptionFields[2], uploadIcon[2],),
-              const Text(
-                "Price per room",
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Color.fromRGBO(101, 101, 107, 1),
-                ),
-              ),
+              textDescription("Price per room"),
               contentFields("0", const AssetImage('assets/icons/coin.png')),
               const SizedBox(height: 20,),
-              const Text(
-                "Contact info",
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Color.fromRGBO(101, 101, 107, 1),
-                ),
-              ),
+              textDescription("Contact info"),
               contentFields("Name contact person", const AssetImage('assets/icons/email.png')),
               contentFields("Email", const AssetImage('assets/icons/email.png')),
               contentFields("Phone number", const AssetImage('assets/icons/email.png')),
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  Text textDescription(String text) {
+    return Text(
+      text,
+      style: const TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.w600,
+        color: Color.fromRGBO(101, 101, 107, 1),
       ),
     );
   }
@@ -116,7 +115,7 @@ class _PropertyContentSetupPageState extends State<PropertyContentSetupPage> {
     );
   }
 
-  Widget dropDownHouseChoices(BuildContext context, String dropDownDescription, List<String> dropDownList, String? dropDownChoice) {
+  Widget dropDownHouseChoices(BuildContext context, String dropDownDescription, List<String> dropDownList, String? dropDownChoice, var iconImage) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -138,10 +137,18 @@ class _PropertyContentSetupPageState extends State<PropertyContentSetupPage> {
           ),
           child: DropdownButtonFormField<String>(
             isDense: true,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               enabledBorder: InputBorder.none,
               focusedBorder: InputBorder.none,
-              prefixIcon: Icon(Icons.person),
+              prefixIcon: Align(
+                widthFactor: 1.0,
+                heightFactor: 1.0,
+                child: ImageIcon(
+                  iconImage, 
+                  size: 15, 
+                  color: const Color.fromRGBO(101,101,107, 1),
+                ),
+              ),
             ),
             isExpanded: true,
             hint: const Text(
