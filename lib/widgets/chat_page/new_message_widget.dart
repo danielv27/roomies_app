@@ -6,10 +6,12 @@ import '../../backend/database.dart';
   
   class NewMessageWidget extends StatefulWidget {
     final UserModel otherUser;
+    final Function(String) onMessageSent;
     
-    NewMessageWidget({
+     NewMessageWidget({
       Key? key,
       required this.otherUser,
+      required this.onMessageSent
       }) : super(key: key);
 
     @override
@@ -21,13 +23,11 @@ import '../../backend/database.dart';
     final controller = TextEditingController();
     String message = ''; 
 
-    
-
     void sendMessage() async {
       FocusScope.of(context).unfocus();
       await FireStoreDataBase().uploadMessage(message, FirebaseAuth.instance.currentUser?.uid, widget.otherUser.id);
       setState(() {
-        
+        widget.onMessageSent(message); 
       });
       message = '';
       controller.clear();
@@ -62,6 +62,7 @@ import '../../backend/database.dart';
                 onChanged: (value) {
                   setState(() {
                     message = value;
+                    
                   });
                 },
                 decoration: const InputDecoration(
@@ -77,7 +78,7 @@ import '../../backend/database.dart';
               )
             ),
             GestureDetector(
-              onTap:() =>  message.trim().isNotEmpty ? sendMessage() : null,
+              onTap:() =>  message.trim().isNotEmpty ? {sendMessage()} : null, //if doesnt work change to onMessageSent() 
               child: Container(
                 height: 50,
                 width: 50,
