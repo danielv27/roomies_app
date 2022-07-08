@@ -95,7 +95,7 @@ class _PropertyInformationSetupPageState extends State<PropertyInformationSetupP
         borderSide: BorderSide(color: Colors.grey),
       ),
       prefixIcon: const Align(
-          widthFactor: 1.0,
+        widthFactor: 1.0,
         heightFactor: 1.0,
         child: Image(
           image: AssetImage('assets/icons/person.png'),

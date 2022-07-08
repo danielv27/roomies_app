@@ -139,20 +139,15 @@ class AuthPageState extends State<AuthPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.start, 
             children: [
-              SizedBox(
-                height: 24.0,
-                width: 24.0,
-                child: Theme(
-                  data: ThemeData(unselectedWidgetColor: (Colors.grey)),
-                  child: Checkbox(
-                    activeColor: Colors.red,
-                    value: _isChecked,
-                    onChanged: _handleRemember),
-                ),
-              ),
+              rememberMeGestureDetector(),
               const SizedBox(width: 10.0),
               const Text(
                 "Remember Me",
+                style: TextStyle(color: Color(0xff646464), fontSize: 14, fontFamily: 'Rubic'),
+              ),
+              const Spacer(),
+              const Text( // TODO: add forget password functionality
+                "Forgot Password",
                 style: TextStyle(color: Color(0xff646464), fontSize: 12, fontFamily: 'Rubic'),
               ),
             ],
@@ -233,7 +228,7 @@ class AuthPageState extends State<AuthPage> {
             textInputAction: TextInputAction.next,
             decoration: applyInputDecoration("First Name", Icons.person_rounded),
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 15),
           TextFormField(
             controller: lastNameController,
             style: const TextStyle(color: Colors.grey),
@@ -241,7 +236,7 @@ class AuthPageState extends State<AuthPage> {
             textInputAction: TextInputAction.next,
             decoration: applyInputDecoration("Last Name", Icons.person_rounded)
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 15),
           TextFormField(
             controller: emailController,
             style: const TextStyle(color: Colors.grey),
@@ -257,7 +252,7 @@ class AuthPageState extends State<AuthPage> {
             textInputAction: TextInputAction.next,
             decoration: emailSignupInputDecoration("Confirm email"),
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 15),
           TextFormField(
             controller: passwordController,
             style: const TextStyle(color: Colors.grey),
@@ -266,21 +261,11 @@ class AuthPageState extends State<AuthPage> {
             obscureText: _isHiddrenPassword,
             decoration: passwordInputDecoration(),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 15),
           Row(
             mainAxisAlignment: MainAxisAlignment.start, 
             children: [
-              SizedBox(
-                height: 24.0,
-                width: 24.0,
-                child: Theme(
-                  data: ThemeData(unselectedWidgetColor: (Colors.grey)),
-                  child: Checkbox(
-                    activeColor: Colors.red,
-                    value: _isChecked,
-                    onChanged: _handleRemember),
-                ),
-              ),
+              rememberMeGestureDetector(),
               const SizedBox(width: 10.0),
               const Text(
                 "Remember Me",
@@ -346,6 +331,32 @@ class AuthPageState extends State<AuthPage> {
     );
   }
 
+  GestureDetector rememberMeGestureDetector() {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _isChecked = !_isChecked;
+        });
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.fastLinearToSlowEaseIn,
+        height: 20.0,
+        width: 20.0,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5),
+          gradient: _isChecked ? applyBlueLinearGradient() : null,
+          border: _isChecked ? null : Border.all(color: const Color.fromRGBO(101, 101, 107, 1), width: 1.5,),
+        ),
+        child: _isChecked ? const Icon(
+          Icons.check,
+          size: 17,
+          color: Colors.white,
+        ) : null,
+      ),
+    );
+  }
+
   InputDecoration emailSigninInputDecoration() {
     return InputDecoration(
       filled: true,
@@ -358,10 +369,14 @@ class AuthPageState extends State<AuthPage> {
         borderRadius: BorderRadius.circular(15),
       ),
       focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-      prefixIcon: const Icon(
-        Icons.email,
-        size: 20,
-        color: Colors.grey,
+      prefixIcon: const Align(
+        widthFactor: 1.0,
+        heightFactor: 1.0,
+        child: Image(
+          image: AssetImage('assets/icons/Email.png'),
+          height: 20,
+          width: 20,
+        ),
       ),
       labelText: "Email",
       labelStyle: const TextStyle(color: Colors.grey),
@@ -381,10 +396,14 @@ class AuthPageState extends State<AuthPage> {
         borderRadius: BorderRadius.circular(15),
       ),
       focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-      prefixIcon: const Icon(
-        Icons.lock,
-        size: 20,
-        color: Colors.grey,
+      prefixIcon: const Align(
+        widthFactor: 1.0,
+        heightFactor: 1.0,
+        child: Image(
+          image: AssetImage('assets/icons/Password.png'),
+          height: 20,
+          width: 20,
+        ),
       ),
       labelText: "Password",
       labelStyle: const TextStyle(color: Colors.grey),
@@ -410,10 +429,14 @@ class AuthPageState extends State<AuthPage> {
         borderRadius: BorderRadius.circular(15),
       ),
       focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-      prefixIcon: const Icon(
-        Icons.email_outlined,
-        size: 20,
-        color: Colors.grey,
+      prefixIcon: const Align(
+        widthFactor: 1.0,
+        heightFactor: 1.0,
+        child: Image(
+          image: AssetImage('assets/icons/Email.png'),
+          height: 20,
+          width: 20,
+        ),
       ),
       iconColor: Colors.grey,
       labelText: labelText,
@@ -436,10 +459,14 @@ class AuthPageState extends State<AuthPage> {
       focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
       labelText: labelName,
       labelStyle: const TextStyle(color: Colors.grey),
-      prefixIcon: Icon(
-        icon,
-        size: 20,
-        color: Colors.grey,
+      prefixIcon: const Align(
+        widthFactor: 1.0,
+        heightFactor: 1.0,
+        child: Image(
+          image: AssetImage('assets/icons/person.png'),
+          height: 15,
+          width: 15,
+        ),
       ),
     );
   }
@@ -452,6 +479,16 @@ class AuthPageState extends State<AuthPage> {
         end: Alignment.bottomRight,
         colors: [Color.fromRGBO(0, 53, 190, 1), Color.fromRGBO(57, 103, 224, 1), Color.fromRGBO(117, 154, 255, 1)]
       )
+    );
+  }
+
+  LinearGradient applyBlueLinearGradient() {
+    return const LinearGradient(
+      colors: [
+        Color.fromRGBO(0, 53, 190, 1),
+        Color.fromRGBO(57, 103, 224, 1),
+        Color.fromRGBO(117, 154, 255, 1)
+      ],
     );
   }
 
@@ -471,42 +508,6 @@ class AuthPageState extends State<AuthPage> {
     print("Email field and Confirm Email field are different");
     return false;
   } 
-
-  void _handleRemember(bool? checkboxState) {
-    print("Handle Remember Me");
-
-    _isChecked = checkboxState!;
-    SharedPreferences.getInstance().then(
-      (prefs) {
-        prefs.setBool("remember_me", checkboxState);
-        prefs.setString('email', emailController.text);
-        prefs.setString('password', passwordController.text);
-      },
-    );
-    setState(() {
-      _isChecked = checkboxState;
-    });
-  }
-
-  void _loadUserEmailPassword() async { // this function is connected to _handleRemember function
-    print("Load Email");
-    try {
-      SharedPreferences _prefs = await SharedPreferences.getInstance();
-      var _email = _prefs.getString("email") ?? "";
-      var _password = _prefs.getString("password") ?? "";
-      var _rememberMe = _prefs.getBool("remember_me") ?? false;
-
-      if (_rememberMe) {
-        setState(() {
-          _isChecked = true;
-        });
-        emailController.text = _email;
-        passwordController.text = _password;
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
 
   void _togglePasswordView() {
     setState(() {
