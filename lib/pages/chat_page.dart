@@ -77,6 +77,8 @@ class _ChatPageState extends State<ChatPage> {
               builder:(context, snapshot) {
                 if(snapshot.connectionState == ConnectionState.done){
                   if(snapshot.hasData){
+                    messages = snapshot.data as List<Message>;
+                    messages.sort((a, b) => b.timeStamp.toString().compareTo(a.timeStamp.toString()));
                     FireStoreDataBase().listenToMessages(FirebaseAuth.instance.currentUser?.uid, widget.otherUser.id)
                     .listen(
                       (event) {
@@ -85,12 +87,12 @@ class _ChatPageState extends State<ChatPage> {
                         String? lastMessage = newMessages?[0].message;
                         print(lastMessage);
                         if(newMessages != null && newMessages.length > messages.length){
+                          // need to add case of handling multiple messages sent quickly using newMessages.length - messages.length
                           _addMessage(newMessages[0]);
                         }
                       },
                     );
-                    messages = snapshot.data as List<Message>;
-                    messages.sort((a, b) => b.timeStamp.toString().compareTo(a.timeStamp.toString()));
+
                     return AnimatedList(
                       key: _key,
                       padding: const EdgeInsets.only(bottom: 10),
