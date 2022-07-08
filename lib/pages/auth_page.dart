@@ -50,10 +50,38 @@ class AuthPageState extends State<AuthPage> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         resizeToAvoidBottomInset: true,
-        body: const Center(
-          child: Image(
-            image: AssetImage('assets/images/app-icon.png'),
+        body: Center(
+          child: Container(
             height: 100,
+            width: 100,
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(Radius.circular(20)),
+              gradient: const LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color.fromRGBO(239, 85, 100, 1),
+                  Color.fromRGBO(195, 46, 66, 1),
+                  Color.fromRGBO(190, 40, 62, 1),
+                  Color.fromRGBO(210, 66, 78, 1),
+                  Color.fromRGBO(244, 130, 114, 1),
+                ],
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.transparent.withOpacity(0.2),
+                  spreadRadius: 1,
+                  blurRadius: 3,
+                  offset: const Offset(0, 3), // changes position of shadow
+                ),
+              ],
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Center(
+                child: Image.asset("assets/images/app-icon.png"),
+              ),
+            ),
           ),
         ),
         bottomNavigationBar: Container(
