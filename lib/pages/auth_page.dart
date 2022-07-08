@@ -217,6 +217,7 @@ class AuthPageState extends State<AuthPage> {
               onPressed: () {
                 setState(() {
                   emailController.text.isEmpty ? invalidEmail = true : invalidEmail = false;
+                  passwordController.text.isEmpty ? invalidPassword = true : invalidPassword = false;
                 });
                 if (emailController.value.text.isNotEmpty) {
                   signIn();
@@ -419,14 +420,14 @@ class AuthPageState extends State<AuthPage> {
                 setState(() {
                   emailController.text.isEmpty ? invalidEmail = true : invalidEmail = false;
                 });
-                if (emailController.value.text.isNotEmpty) {
+                if (emailController.value.text.isNotEmpty && checkEmailControllers(emailController, confirmEmailController)) {
                   signUp(); // User signup with firebase authentication
                   Navigator.push(
                     context, 
                     PageTransition(type: PageTransitionType.fade, child: const SetupPage()),
                   );
                 } else {
-                  print("Signup button disabled since email field is empty");
+                  print("Signup button disabled");
                 }
               },
               child: const Text(
@@ -494,38 +495,21 @@ class AuthPageState extends State<AuthPage> {
   }
 
   Future signUp() async {
-    try {
-      FireStoreDataBase().createUser(emailController, passwordController, firstNameController, lastNameController);
-    } on FirebaseAuthException catch (exc) {
-      print("SIGNUP ERROR: $exc");
-      if (exc.code == "auth/email-already-in-use") {
-          print("The email address is already in use");
-      } else if (exc.code == "auth/invalid-email") {
-          print("The email address is not valid.");
-      } else if (exc.code == "auth/operation-not-allowed") {
-          print("Operation not allowed.");
-      } else if (exc.code == "auth/weak-password") {
-          print("The password is too weak.");
-      }
-    }
+    FireStoreDataBase().createUser(emailController, passwordController, firstNameController, lastNameController);
   }
 
   Future signIn() async {
-    try {
-      FireStoreDataBase().signinUser(emailController, passwordController, context);
-    } on PlatformException catch (exc) {
-      print("SIGNIN ERROR: $exc");
-      setState(() {
-        if (exc.toString().contains('email') ||
-            exc.toString().contains('user')) {
-          invalidEmail = true;
-        }
-        if (exc.toString().contains('password')) {
-          invalidPassword = true;
-        }
-      });
-    }
+    FireStoreDataBase().signinUser(emailController, passwordController, context);
   }
+
+  bool checkEmailControllers(TextEditingController emailOne, TextEditingController emailTwo) {
+    if (emailOne.text.trim() == emailTwo.text.trim()) {
+      print("Email field and Confirm Email field are the same");
+      return true;
+    }
+    print("Email field and Confirm Email field are different");
+    return false;
+  } 
 
   void _handleRemember(bool? checkboxState) {
     print("Handle Remember Me");
