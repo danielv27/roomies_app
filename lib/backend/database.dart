@@ -31,32 +31,56 @@ class FireStoreDataBase {
     }
   }
 
+  Future isNodeExists(User ?currentUser, String nodeKey) async {
+    var snapshot = FirebaseFirestore.instance.collection("users").doc(currentUser?.uid);
+    await snapshot
+      .get()
+      .then((doc) {
+        var documentData = doc.data();
+        if (documentData!.containsKey(nodeKey)) {
+          print("\n---------------------");
+          print("\nNODE EXSITS");
+          print("\n---------------------");
+          return true;
+        } else {
+          print("\n---------------------");
+          print("\nNODE DOES NOT EXSIT");
+          print("\n---------------------");
+          return false;
+        }
+      });
+  }
+
   Future signinUser(TextEditingController emailController, TextEditingController passwordController, context) async {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: emailController.text.trim(),
-      password: passwordController.text.trim(),
-    ).catchError((err) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text("Error"),
-              content: const Text(
-                "The email address and password you entered don't match any Roomies account. Please try again."
-              ),
-              actions: [
-                ElevatedButton(
-                  child: const Text("Ok"),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                )
-              ],
-            );
-          }
-        );
-    });
-  }  
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+    } on FirebaseAuthException catch (err) {
+      switch (err.code.toString()) {
+        case "invalid-email":
+          print("\nemail address is not valid\n");
+          break;
+        case "user-disabled":
+          print("if the user corresponding to the given email has been disabled");
+          break;
+        case "user-not-found":
+          print("there is no user corresponding to the given email");
+          break;
+        case "wrong-password":
+          print(" the password is invalid for the given email, or the account corresponding to the email does not have a password set");
+          break;
+        default:
+          print("\nunhandeled error\n");
+      }
+      return throw err.code.toString();
+    } catch (err) {
+      print("\n-------------------------");
+      print("\nERROR: $err");
+      print("\n-------------------------");
+    }
+  }
 
   Future createUser(
     TextEditingController emailController, 
@@ -64,10 +88,37 @@ class FireStoreDataBase {
     TextEditingController firstNameController, 
     TextEditingController lastNameController,
   ) async {
-    UserCredential result = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-      email: emailController.text.trim(),
-      password: passwordController.text.trim(),
-    );
+    late UserCredential result;
+    try {
+      result = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+    } on FirebaseAuthException catch (err) {
+      switch (err.code.toString()) {
+        case "email-already-in-use":
+          print("there already exists an account with the given email address");
+          break;
+        case "invalid-email":
+          print("the email address is not valid");
+          break;
+        case "operation-not-allowed":
+          print("email/password accounts are not enabled");
+          break;
+        case "weak-password":
+          print("the password is not strong enough");
+          break;
+        default:
+          print("\nunhandeled error\n");
+      }
+      rethrow;
+    } catch (err) {
+      print("\n-------------------------");
+      print("\nERROR: $err");
+      print("\n-------------------------");
+      rethrow;
+    }
+
     User? newUser = result.user;
     
     await FirebaseFirestore.instance.collection('users')
