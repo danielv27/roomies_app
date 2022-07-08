@@ -92,18 +92,18 @@ class AuthPageState extends State<AuthPage> {
 
   BoxDecoration applyRedGradient() {
     return const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color.fromRGBO(239, 85, 100, 1),
-              Color.fromRGBO(195, 46, 66, 1),
-              Color.fromRGBO(190, 40, 62, 1),
-              Color.fromRGBO(210, 66, 78, 1),
-              Color.fromRGBO(244, 130, 114, 1),
-            ],
-          ),
-        );
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: [
+          Color.fromRGBO(239, 85, 100, 1),
+          Color.fromRGBO(195, 46, 66, 1),
+          Color.fromRGBO(190, 40, 62, 1),
+          Color.fromRGBO(210, 66, 78, 1),
+          Color.fromRGBO(244, 130, 114, 1),
+        ],
+      ),
+    );
   }
 
   Widget showLogin() {
@@ -124,26 +124,7 @@ class AuthPageState extends State<AuthPage> {
             style: const TextStyle(color: Colors.grey),
             cursorColor: Colors.grey,
             textInputAction: TextInputAction.next,
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: const Color.fromRGBO(245, 247, 251, 1),
-              border: OutlineInputBorder(
-                borderSide: const BorderSide(
-                  width: 0,
-                  style: BorderStyle.none,
-                ),
-                borderRadius: BorderRadius.circular(15),
-              ),
-              focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-              prefixIcon: const Icon(
-                Icons.email,
-                size: 20,
-                color: Colors.grey,
-              ),
-              labelText: "Email",
-              labelStyle: const TextStyle(color: Colors.grey),
-              errorText: invalidEmail ? 'Email Can\'t Be Empty' : null,
-            ),
+            decoration: emailSigninInputDecoration(),
           ),
           const SizedBox(height: 20),
           TextFormField(
@@ -152,32 +133,7 @@ class AuthPageState extends State<AuthPage> {
             cursorColor: Colors.red,
             textInputAction: TextInputAction.done,
             obscureText: _isHiddrenPassword,
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: const Color.fromRGBO(245, 247, 251, 1),
-              border: OutlineInputBorder(
-                borderSide: const BorderSide(
-                  width: 0,
-                  style: BorderStyle.none,
-                ),
-                borderRadius: BorderRadius.circular(15),
-              ),
-              focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-              prefixIcon: const Icon(
-                Icons.lock,
-                size: 20,
-                color: Colors.grey,
-              ),
-              labelText: "Password",
-              labelStyle: const TextStyle(color: Colors.grey),
-              errorText: invalidPassword ? "Invalid Password" : null,
-              suffixIcon: InkWell(
-                onTap: _togglePasswordView,
-                child: const Icon(
-                  Icons.visibility,
-                ),
-              ),
-            ),
+            decoration: passwordInputDecoration(),
           ),
           const SizedBox(height: 20),
           Row(
@@ -291,61 +247,15 @@ class AuthPageState extends State<AuthPage> {
             style: const TextStyle(color: Colors.grey),
             cursorColor: Colors.grey,
             textInputAction: TextInputAction.next,
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: const Color.fromRGBO(245, 247, 251, 1),
-              border: OutlineInputBorder(
-                borderSide: const BorderSide(
-                  width: 0,
-                  style: BorderStyle.none,
-                ),
-                borderRadius: BorderRadius.circular(15),
-              ),
-              focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-              prefixIcon: const Icon(
-                Icons.email_outlined,
-                size: 20,
-                color: Colors.grey,
-              ),
-              iconColor: Colors.grey,
-              labelText: "Email",
-              labelStyle: const TextStyle(color: Colors.grey),
-              errorText: invalidEmail ? 'Email Can\'t Be Empty' : null,
-            ),
+            decoration: emailSignupInputDecoration("Email"),
           ),
           const SizedBox(height: 6),
           TextFormField(
             controller: confirmEmailController,
-            validator: (emailController) {
-              if (emailController == null || emailController.isEmpty) {
-                return 'Please enter some text';
-              }
-              return null;
-            },
             style: const TextStyle(color: Colors.grey),
             cursorColor: Colors.grey,
             textInputAction: TextInputAction.next,
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: const Color.fromRGBO(245, 247, 251, 1),
-              border: OutlineInputBorder(
-                borderSide: const BorderSide(
-                  width: 0,
-                  style: BorderStyle.none,
-                ),
-                borderRadius: BorderRadius.circular(15),
-              ),
-              focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-              prefixIcon: const Icon(
-                Icons.email_outlined,
-                size: 20,
-                color: Colors.grey,
-              ),
-              iconColor: Colors.grey,
-              labelText: "Confirm email",
-              labelStyle: const TextStyle(color: Colors.grey),
-              errorText: invalidEmail ? 'Email Can\'t Be Empty' : null,
-            ),
+            decoration: emailSignupInputDecoration("Confirm email"),
           ),
           const SizedBox(height: 6),
           TextFormField(
@@ -354,32 +264,7 @@ class AuthPageState extends State<AuthPage> {
             cursorColor: Colors.red,
             textInputAction: TextInputAction.done,
             obscureText: _isHiddrenPassword,
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: const Color.fromRGBO(245, 247, 251, 1),
-              border: OutlineInputBorder(
-                borderSide: const BorderSide(
-                  width: 0,
-                  style: BorderStyle.none,
-                ),
-                borderRadius: BorderRadius.circular(15),
-              ),
-              focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),                            
-              prefixIcon: const Icon(
-                Icons.lock,
-                size: 20,
-                color: Colors.grey,
-              ),
-              labelText: "Password",
-              labelStyle: const TextStyle(color: Colors.grey),
-              errorText: invalidPassword ? "Invalid Password" : null,
-              suffixIcon: InkWell(
-                onTap: _togglePasswordView,
-                child: const Icon(
-                  Icons.visibility,
-                ),
-              ),
-            ),
+            decoration: passwordInputDecoration(),
           ),
           const SizedBox(height: 20),
           Row(
@@ -458,6 +343,82 @@ class AuthPageState extends State<AuthPage> {
           ),
         ],
       ),
+    );
+  }
+
+  InputDecoration emailSigninInputDecoration() {
+    return InputDecoration(
+      filled: true,
+      fillColor: const Color.fromRGBO(245, 247, 251, 1),
+      border: OutlineInputBorder(
+        borderSide: const BorderSide(
+          width: 0,
+          style: BorderStyle.none,
+        ),
+        borderRadius: BorderRadius.circular(15),
+      ),
+      focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+      prefixIcon: const Icon(
+        Icons.email,
+        size: 20,
+        color: Colors.grey,
+      ),
+      labelText: "Email",
+      labelStyle: const TextStyle(color: Colors.grey),
+      errorText: invalidEmail ? 'Email Can\'t Be Empty' : null,
+    );
+  }
+
+  InputDecoration passwordInputDecoration() {
+    return InputDecoration(
+      filled: true,
+      fillColor: const Color.fromRGBO(245, 247, 251, 1),
+      border: OutlineInputBorder(
+        borderSide: const BorderSide(
+          width: 0,
+          style: BorderStyle.none,
+        ),
+        borderRadius: BorderRadius.circular(15),
+      ),
+      focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+      prefixIcon: const Icon(
+        Icons.lock,
+        size: 20,
+        color: Colors.grey,
+      ),
+      labelText: "Password",
+      labelStyle: const TextStyle(color: Colors.grey),
+      errorText: invalidPassword ? "Invalid Password" : null,
+      suffixIcon: InkWell(
+        onTap: _togglePasswordView,
+        child: const Icon(
+          Icons.visibility,
+        ),
+      ),
+    );
+  }
+
+  InputDecoration emailSignupInputDecoration(String labelText) {
+    return InputDecoration(
+      filled: true,
+      fillColor: const Color.fromRGBO(245, 247, 251, 1),
+      border: OutlineInputBorder(
+        borderSide: const BorderSide(
+          width: 0,
+          style: BorderStyle.none,
+        ),
+        borderRadius: BorderRadius.circular(15),
+      ),
+      focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+      prefixIcon: const Icon(
+        Icons.email_outlined,
+        size: 20,
+        color: Colors.grey,
+      ),
+      iconColor: Colors.grey,
+      labelText: labelText,
+      labelStyle: const TextStyle(color: Colors.grey),
+      errorText: invalidEmail ? 'Email Can\'t Be Empty' : null,
     );
   }
 
@@ -556,7 +517,9 @@ class AuthPageState extends State<AuthPage> {
   void _toggleSignup() {
     setState(() {
       _isSignupPage = !_isSignupPage;
-      invalidEmail = false; // removes error text under text fields when transitioning between signin and signup
+      // removes error text under text fields when transitioning between signin and signup
+      invalidEmail = false;
+      invalidPassword = false;
     });
   }
 
