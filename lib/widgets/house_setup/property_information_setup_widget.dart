@@ -37,7 +37,7 @@ class _PropertyInformationSetupPageState extends State<PropertyInformationSetupP
             padding: const EdgeInsets.only(left: 30.0, right: 30, top: 5),
             alignment: Alignment.centerLeft,
             child: const Text(
-              "Is this information correct?",
+              "Property Information",
               style: TextStyle(
                 fontWeight: FontWeight.w900,
                 fontSize: 24,
