@@ -130,7 +130,7 @@ class AuthPageState extends State<AuthPage> {
           TextFormField(
             controller: passwordController,
             style: const TextStyle(color: Colors.grey),
-            cursorColor: Colors.red,
+            cursorColor: Colors.grey,
             textInputAction: TextInputAction.done,
             obscureText: _isHiddrenPassword,
             decoration: passwordInputDecoration(),
@@ -410,8 +410,8 @@ class AuthPageState extends State<AuthPage> {
       errorText: invalidPassword ? "Invalid Password" : null,
       suffixIcon: InkWell(
         onTap: _togglePasswordView,
-        child: const Icon(
-          Icons.visibility,
+        child: Icon(
+          _isHiddrenPassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
         ),
       ),
     );
