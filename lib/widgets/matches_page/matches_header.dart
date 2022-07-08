@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:roomies_app/backend/database.dart';
 import 'package:roomies_app/widgets/matches_page/matches_body.dart';
 import '../../models/user_model.dart';
+import '../../pages/chat_page.dart';
 
 class MatchesHeaderWidget extends StatelessWidget {
   final List<UserModel> users;
@@ -121,7 +123,7 @@ Widget circularUserList(BuildContext context, List<UserModel> users){
         return Padding(
           padding: const EdgeInsets.only(top: 11,left: 15,right: 4),
           child: GestureDetector(
-            onTap: () => print('chat with user $index'),
+            onTap: () => {print('chat with user $index'), Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: ChatPage(otherUser: users[index],)))},
             child: Column(
               children: [
                 CircleAvatar(

@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:math';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -39,16 +42,30 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   List<Message> messages = [];
-  final GlobalKey<AnimatedListState> _key = GlobalKey();
+  //late final messageStream = FireStoreDataBase().listenToMessages(FirebaseAuth.instance.currentUser?.uid, widget.otherUser.id);
+  late GlobalKey<AnimatedListState> _key = GlobalKey();
 
-  void _addMessage(String message){
-    messages.insert(0, Message(message: message, otherUserID: widget.otherUser.id, sentByCurrent: true, timeStamp: DateTime.now()));
+
+
+  
+
+  
+
+
+  @override
+  void initState(){
+    super.initState();
+    
+  }
+  
+
+  void _addMessage(Message message){
+    messages.insert(0, message);
     _key.currentState!.insertItem(0, duration: const Duration(milliseconds: 130));
   }
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       resizeToAvoidBottomInset: true ,
       body: Column(
@@ -60,6 +77,18 @@ class _ChatPageState extends State<ChatPage> {
               builder:(context, snapshot) {
                 if(snapshot.connectionState == ConnectionState.done){
                   if(snapshot.hasData){
+                    FireStoreDataBase().listenToMessages(FirebaseAuth.instance.currentUser?.uid, widget.otherUser.id)
+                    .listen(
+                      (event) {
+                        List<Message>? newMessages = event;
+                        newMessages?.sort((a, b) => b.timeStamp.toString().compareTo(a.timeStamp.toString()));
+                        String? lastMessage = newMessages?[0].message;
+                        print(lastMessage);
+                        if(newMessages != null && newMessages.length > messages.length){
+                          _addMessage(newMessages[0]);
+                        }
+                      },
+                    );
                     messages = snapshot.data as List<Message>;
                     messages.sort((a, b) => b.timeStamp.toString().compareTo(a.timeStamp.toString()));
                     return AnimatedList(
@@ -84,6 +113,14 @@ class _ChatPageState extends State<ChatPage> {
                 if (snapshot.hasError) {
                 return const Text("Something went wrong");
                 }
+                if(snapshot.connectionState == ConnectionState.active){
+                   List<Message> newMessages = snapshot.data as List<Message>;
+                   if(newMessages.length > messages.length){
+                    newMessages.sort((a, b) => b.timeStamp.toString().compareTo(a.timeStamp.toString()));
+                    _addMessage(newMessages[0]);
+                   }
+                  
+                }
                 return const Center(child: CircularProgressIndicator(color: Colors.red));
               } 
               
@@ -91,49 +128,10 @@ class _ChatPageState extends State<ChatPage> {
           ),
           NewMessageWidget(
             otherUser: widget.otherUser, 
-            onMessageSent: (message) => _addMessage(message)
+            onMessageSent: (message) => _addMessage(Message(message: message, otherUserID: widget.otherUser.id, sentByCurrent: true, timeStamp: DateTime.now()))
           ),
         ],
       ),
-      );
+    );
   }
-
-  // getTitleText(String title) => Text(
-  //       title,
-  //       style: TextStyle(
-  //         color: Colors.black,
-  //         fontSize: 20,
-  //       ),
-  //     );
-
-  // getSenderView(CustomClipper clipper, BuildContext context) => ChatBubble(
-  //     clipper: clipper,
-  //     alignment: Alignment.topRight,
-  //     margin: EdgeInsets.only(top: 20),
-  //     backGroundColor: Colors.blue,
-  //     child: Container(
-  //       constraints: BoxConstraints(
-  //         maxWidth: MediaQuery.of(context).size.width * 0.7,
-  //       ),
-  //       child: Text(
-  //         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  //         style: TextStyle(color: Colors.white),
-  //       ),
-  //     ),
-  //   );
-
-  // getReceiverView(CustomClipper clipper, BuildContext context) => ChatBubble(
-  //   clipper: clipper,
-  //   backGroundColor: Color(0xffE7E7ED),
-  //   margin: EdgeInsets.only(top: 20),
-  //   child: Container(
-  //     constraints: BoxConstraints(
-  //       maxWidth: MediaQuery.of(context).size.width * 0.7,
-  //     ),
-  //     child: Text(
-  //       "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat",
-  //       style: TextStyle(color: Colors.black),
-  //     ),
-  //   ),
-  // );
 }

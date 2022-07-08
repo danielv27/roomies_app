@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,6 +9,7 @@ import '../models/user_model.dart';
 
 class FireStoreDataBase {
 
+  final db = FirebaseFirestore;
 
   Future<List<UserModel>?> getUsers() async {
     try {
@@ -156,11 +159,6 @@ class FireStoreDataBase {
             otherUserID: messageDoc['otherUserID'],
             sentByCurrent: messageDoc['sentByCurrent'],
             timeStamp: messageDoc['timeStamp'].toDate()
-            // id: userDoc.id,
-            // email: userDoc['email'],
-            // firstName: userDoc['firstName'],
-            // lastName: userDoc['lastName'],
-            // isHouseOwner: userDoc['isHouseOwner']
             );
           messages.add(currentMessage);
         }
@@ -170,9 +168,25 @@ class FireStoreDataBase {
       debugPrint("Error - $e");
       return null;  
     }
-
   }
 
-
+  Stream<List<Message>?> listenToMessages(String? currentUserID, String? otherUserID) async* {
+    try {
+      List<Message>? messages = await getMessages(currentUserID, otherUserID);
+      yield messages;
+      // final streamController = StreamController<List<Message>?>();
+      // streamController.add(messages);
+      while(true){
+        await Future.delayed(const Duration(seconds: 2));
+        List<Message>? newMessages = await getMessages(currentUserID, otherUserID);
+        if(newMessages!.length > messages!.length){
+          messages = newMessages;
+          yield newMessages;
+        } 
+      }
+    } catch (e) {
+      debugPrint("Error - $e");
+    }
+  }
 }
 
