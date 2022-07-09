@@ -298,7 +298,7 @@ class FireStoreDataBase {
   Stream<List<Message>?> listenToMessages(String? currentUserID, String? otherUserID) async* {
     try {
       List<Message>? messages = await getMessages(currentUserID, otherUserID);
-      yield messages;
+      //yield messages;
       while(true){
         await Future.delayed(const Duration(seconds: 2));
         List<Message>? newMessages = await getMessages(currentUserID, otherUserID);

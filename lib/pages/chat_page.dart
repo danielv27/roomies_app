@@ -61,8 +61,10 @@ class _ChatPageState extends State<ChatPage> {
 
   void _addMessage(Message message){
     messages.insert(0, message);
-    _key.currentState?.insertItem(0, duration: const Duration(milliseconds: 130));
-    //_key.currentState!.insertItem(0, duration: const Duration(milliseconds: 130));
+    //_key.currentState?.insertItem(0, duration: const Duration(milliseconds: 130));
+    if(_key.currentState != null){
+      _key.currentState?.insertItem(0, duration: const Duration(milliseconds: 130));
+    }
   }
 
   @override
@@ -84,16 +86,16 @@ class _ChatPageState extends State<ChatPage> {
                     .listen(
                       (event) {
                         List<Message>? newMessages = event;
-                        newMessages?.sort((a, b) => b.timeStamp.toString().compareTo(a.timeStamp.toString()));
-                        String? lastMessage = newMessages?[0].message;
-                        print(lastMessage);
                         if(newMessages != null && newMessages.length > messages.length){
+                          newMessages.sort((a, b) => b.timeStamp.toString().compareTo(a.timeStamp.toString()));
+                          String? lastMessage = newMessages[0].message;
+                          print(lastMessage);
+
                           // need to add case of handling multiple messages sent quickly using newMessages.length - messages.length
                           _addMessage(newMessages[0]);
                         }
                       },
                     );
-
                     return AnimatedList(
                       key: _key,
                       padding: const EdgeInsets.only(bottom: 10),

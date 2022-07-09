@@ -12,6 +12,7 @@ class ChatHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+          //height: MediaQuery.of(context).size.height *0.14,
           decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
@@ -24,7 +25,7 @@ class ChatHeader extends StatelessWidget {
             Color.fromRGBO(244, 130, 114, 1),
           ])),
           child: Padding(
-            padding: const EdgeInsets.only(left:14.0,right: 14.0),
+            padding: const EdgeInsets.only(left:14.0,right: 14.0,top: 10,bottom: 10),
             child: AppBar(
               leading: GestureDetector(
                 onTap:() =>  Navigator.pop(context),
@@ -36,7 +37,6 @@ class ChatHeader extends StatelessWidget {
                       color: Colors.white.withOpacity(0.4), // border color
                       shape: BoxShape.circle,
                     ),
-                    //color: Colors.white.withOpacity(0.4),
                     child: const Icon(Icons.arrow_back_ios_new_sharp,color: Colors.white,size: 16,)),
                 )
               ),
@@ -44,6 +44,14 @@ class ChatHeader extends StatelessWidget {
               shadowColor: Colors.transparent,
               centerTitle: true,
               title: Text("${otherUser.firstName} ${otherUser.lastName}"),
+              actions: [
+                CircleAvatar(
+                  backgroundColor: Colors.red,
+                  backgroundImage: NetworkImage(otherUser.firstImgUrl,scale: 0.8),
+                  radius: 26,
+                ),
+                
+              ],
             ),
           ),
         );
