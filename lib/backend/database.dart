@@ -14,26 +14,29 @@ class FireStoreDataBase {
   Future<List<UserModel>?> getUsers() async {
     try {
       List<UserModel> userList = [];
-      await FirebaseFirestore.instance.collection("users").get().then((querySnapshot) {
-        for (var userDoc in querySnapshot.docs) {
-          if(userDoc.id != FirebaseAuth.instance.currentUser?.uid){
-            UserModel newUser = UserModel(
-              id: userDoc.id,
-              email: userDoc['email'],
-              firstName: userDoc['firstName'],
-              lastName: userDoc['lastName'],
-              isHouseOwner: userDoc['isHouseOwner']
-              );
-            userList.add(newUser);
+      await FirebaseFirestore.instance.collection("users")
+      .get()
+      .then(
+        (querySnapshot) {
+          for (var userDoc in querySnapshot.docs) {
+            if(userDoc.id != FirebaseAuth.instance.currentUser?.uid && userDoc.data().containsKey('isHouseOwner')){
+              UserModel newUser = UserModel(
+                id: userDoc.id,
+                email: userDoc['email'],
+                firstName: userDoc['firstName'],
+                lastName: userDoc['lastName'],
+                isHouseOwner: userDoc['isHouseOwner']
+                );
+              userList.add(newUser);
+            }
           }
         }
-      });
+      );
       return userList;
     } catch (e) {
       debugPrint("Error - $e");
       return null;
     }
-    
   }
   Future<UserModel?> getUserByID(String? userID) async {
     try {
@@ -174,8 +177,6 @@ class FireStoreDataBase {
     try {
       List<Message>? messages = await getMessages(currentUserID, otherUserID);
       yield messages;
-      // final streamController = StreamController<List<Message>?>();
-      // streamController.add(messages);
       while(true){
         await Future.delayed(const Duration(seconds: 2));
         List<Message>? newMessages = await getMessages(currentUserID, otherUserID);
