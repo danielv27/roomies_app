@@ -61,7 +61,8 @@ class _ChatPageState extends State<ChatPage> {
 
   void _addMessage(Message message){
     messages.insert(0, message);
-    _key.currentState!.insertItem(0, duration: const Duration(milliseconds: 130));
+    _key.currentState?.insertItem(0, duration: const Duration(milliseconds: 130));
+    //_key.currentState!.insertItem(0, duration: const Duration(milliseconds: 130));
   }
 
   @override
