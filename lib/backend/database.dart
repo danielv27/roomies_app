@@ -197,9 +197,8 @@ class FireStoreDataBase {
     TextEditingController birthdate,
   ) async {
     print("creating personal profile\n");
-    await FirebaseFirestore.instance.collection('users')
-      .doc(currentUser?.uid)
-      .update({ 
+    await FirebaseFirestore.instance.collection('users/${currentUser?.uid}/personal_profile')
+      .add({ 
         'isHouseOwner': false,
         'minimumBudget': minBudget.text,
         'maximumBudget': maxBudget.text,
@@ -226,9 +225,9 @@ class FireStoreDataBase {
     TextEditingController contactEmailControler,
     TextEditingController contactPhoneNumberControler,
   ) async {
-    await FirebaseFirestore.instance.collection('users')
-      .doc(currentUser?.uid)
-      .update({ 
+    print("creating house profile\n");
+    await FirebaseFirestore.instance.collection('users/${currentUser?.uid}/house_profile"')
+      .add({ 
         'isHouseOwner': true,
         'postlCode': postalCodeController.text,
         'houseNumber': houseNumberController.text,
