@@ -71,8 +71,7 @@ class _PropertyTypeSetupPageState extends State<PropertyTypeSetupPage> {
     );
   }
 
-  GestureDetector propertyType(
-      BuildContext context, String proprtyTypeAtIndex) {
+  GestureDetector propertyType(BuildContext context, String proprtyTypeAtIndex) {
     return GestureDetector(
       onTap: () {
         print("Tapped $proprtyTypeAtIndex");
