@@ -16,7 +16,6 @@ class AuthPage extends StatefulWidget {
 // ignore: use_key_in_widget_constructors
 class AuthPageState extends State<AuthPage> {
   final emailController = TextEditingController();
-  final confirmEmailController = TextEditingController();
   final passwordController = TextEditingController();
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
@@ -272,14 +271,6 @@ class AuthPageState extends State<AuthPage> {
             textInputAction: TextInputAction.next,
             decoration: emailSignupInputDecoration("Email"),
           ),
-          const SizedBox(height: 6),
-          TextFormField(
-            controller: confirmEmailController,
-            style: const TextStyle(color: Colors.grey),
-            cursorColor: Colors.grey,
-            textInputAction: TextInputAction.next,
-            decoration: emailSignupInputDecoration("Confirm email"),
-          ),
           const SizedBox(height: 15),
           TextFormField(
             controller: passwordController,
@@ -318,7 +309,7 @@ class AuthPageState extends State<AuthPage> {
                 setState(() {
                   emailController.text.isEmpty ? invalidEmail = true : invalidEmail = false;
                 });
-                if (emailController.value.text.isNotEmpty && checkEmailControllers(emailController, confirmEmailController)) {
+                if (emailController.value.text.isNotEmpty) {
                   signUp(); // User signup with firebase authentication
                   Navigator.push(
                     context, 
@@ -527,15 +518,6 @@ class AuthPageState extends State<AuthPage> {
   Future signIn() async {
     FireStoreDataBase().signinUser(emailController, passwordController, context);
   }
-
-  bool checkEmailControllers(TextEditingController emailOne, TextEditingController emailTwo) {
-    if (emailOne.text.trim() == emailTwo.text.trim()) {
-      print("Email field and Confirm Email field are the same");
-      return true;
-    }
-    print("Email field and Confirm Email field are different");
-    return false;
-  } 
 
   void _togglePasswordView() {
     setState(() {
