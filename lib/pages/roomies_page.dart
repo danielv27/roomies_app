@@ -42,17 +42,9 @@ class RoomiesPage extends StatelessWidget {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(75),
         child: Container(
-          decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                Color.fromRGBO(239, 85, 100, 1),
-                Color.fromRGBO(195, 46, 66, 1),
-                Color.fromRGBO(190, 40, 62, 1),
-                Color.fromRGBO(210, 66, 78, 1),
-                Color.fromRGBO(244, 130, 114, 1),
-              ])),
+          decoration: BoxDecoration(
+            gradient: applyRedLinearGradient(),
+          ),
           child: AppBar(
             centerTitle: false,
             automaticallyImplyLeading: false,
@@ -112,6 +104,20 @@ class RoomiesPage extends StatelessWidget {
           //likeDislikeBar(context),
         ],
       ),
+    );
+  }
+
+  LinearGradient applyRedLinearGradient() {
+    return const LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [
+      Color.fromRGBO(239, 85, 100, 1),
+      Color.fromRGBO(195, 46, 66, 1),
+      Color.fromRGBO(190, 40, 62, 1),
+      Color.fromRGBO(210, 66, 78, 1),
+      Color.fromRGBO(244, 130, 114, 1),
+      ]
     );
   }
 

@@ -45,7 +45,9 @@ class AuthPageState extends State<AuthPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: applyRedGradient(),
+      decoration: BoxDecoration(
+        gradient: applyRedLinearGradient(),
+      ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         resizeToAvoidBottomInset: true,
@@ -55,17 +57,7 @@ class AuthPageState extends State<AuthPage> {
             width: 100,
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.all(Radius.circular(20)),
-              gradient: const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Color.fromRGBO(239, 85, 100, 1),
-                  Color.fromRGBO(195, 46, 66, 1),
-                  Color.fromRGBO(190, 40, 62, 1),
-                  Color.fromRGBO(210, 66, 78, 1),
-                  Color.fromRGBO(244, 130, 114, 1),
-                ],
-              ),
+              gradient: applyRedLinearGradient(),
               boxShadow: [
                 BoxShadow(
                   color: Colors.transparent.withOpacity(0.2),
@@ -117,19 +109,17 @@ class AuthPageState extends State<AuthPage> {
     );
   }
 
-  BoxDecoration applyRedGradient() {
-    return const BoxDecoration(
-      gradient: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [
-          Color.fromRGBO(239, 85, 100, 1),
-          Color.fromRGBO(195, 46, 66, 1),
-          Color.fromRGBO(190, 40, 62, 1),
-          Color.fromRGBO(210, 66, 78, 1),
-          Color.fromRGBO(244, 130, 114, 1),
-        ],
-      ),
+  LinearGradient applyRedLinearGradient() {
+    return const LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [
+        Color.fromRGBO(239, 85, 100, 1),
+        Color.fromRGBO(195, 46, 66, 1),
+        Color.fromRGBO(190, 40, 62, 1),
+        Color.fromRGBO(210, 66, 78, 1),
+        Color.fromRGBO(244, 130, 114, 1),
+      ],
     );
   }
 
