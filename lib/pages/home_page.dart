@@ -1,17 +1,22 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
+import 'package:roomies_app/backend/database.dart';
+import 'package:roomies_app/main.dart';
 import 'package:roomies_app/widgets/bottom_bar.dart';
 import 'roomies_page.dart';
 import 'houses_page.dart';
 import 'matches_page.dart';
 
-//this is the underlying page for all states of the homepage ()
+
 class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+
   @override
   ChangePageState createState() => ChangePageState();
 }
   
-class ChangePageState extends State<HomePage> {
+class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
   int _previousPage = 0;
   int _currentPage = 0;
   
@@ -20,6 +25,31 @@ class ChangePageState extends State<HomePage> {
     const MatchesPage(),
     const HousesPage(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+  }
+
+  
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+
+    if(state == AppLifecycleState.detached || state == AppLifecycleState.paused){
+      FireStoreDataBase().goOffline(FirebaseAuth.instance.currentUser?.uid);
+    }
+    else{
+      FireStoreDataBase().goOnline();
+    }
+  }
   
   @override
   Widget build(BuildContext context) {

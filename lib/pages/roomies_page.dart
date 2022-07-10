@@ -88,13 +88,9 @@ class RoomiesPage extends StatelessWidget {
                         ),
                         backgroundColor: MaterialStateProperty.all(Colors.white.withOpacity(0.2))
                       ),
-                      onPressed: () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute<void>(
-                        //     builder: (BuildContext context) => const SetupProfilePage(),
-                        //   ),
-                        // );
+                      onPressed: () async {
+                        FireStoreDataBase().goOffline(FirebaseAuth.instance.currentUser?.uid);
+                        //await Future.delayed(const Duration(milliseconds: 300));
                         FirebaseAuth.instance.signOut();
                       },
                       child: Image.asset('assets/icons/nextroom_icon_white.png', width: 28),

@@ -11,8 +11,6 @@ import '../models/user_model.dart';
 
 class FireStoreDataBase {
 
-  final db = FirebaseFirestore;
-
   Future<List<UserModel>?> getUsers() async {
     try {
       List<UserModel> userList = [];
@@ -312,5 +310,19 @@ class FireStoreDataBase {
     }
   }
 
+  void goOffline(String? uid) async{
+    await FirebaseFirestore.instance.collection('users')
+    .doc(uid)
+    .update({ 
+      'online': false,
+    });
+  }
 
+  void goOnline() async{
+    await FirebaseFirestore.instance.collection('users')
+    .doc(FirebaseAuth.instance.currentUser?.uid)
+    .update({ 
+      'online': true,
+    });
+  }
 }
