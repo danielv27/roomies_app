@@ -197,15 +197,21 @@ class FireStoreDataBase {
     TextEditingController birthdate,
   ) async {
     print("creating personal profile\n");
-    await FirebaseFirestore.instance.collection('users/${currentUser?.uid}/personal_profile')
+    await FirebaseFirestore.instance.collection('users')
+      .doc(currentUser?.uid)
+      .collection('personal_profile')
       .add({ 
-        'isHouseOwner': false,
         'minimumBudget': minBudget.text,
         'maximumBudget': maxBudget.text,
         'about': about.text,
         'work': work.text,
         'roommate': roommate.text,
         'birtdate': birthdate.text,
+      });
+    await FirebaseFirestore.instance.collection('users')
+      .doc(currentUser?.uid)
+      .update({ 
+        'isHouseOwner': false,
       });
       print("created personal profile\n");
   }
@@ -226,9 +232,10 @@ class FireStoreDataBase {
     TextEditingController contactPhoneNumberControler,
   ) async {
     print("creating house profile\n");
-    await FirebaseFirestore.instance.collection('users/${currentUser?.uid}/house_profile"')
+    await FirebaseFirestore.instance.collection('users')
+      .doc(currentUser?.uid)
+      .collection('house_profile')
       .add({ 
-        'isHouseOwner': true,
         'postlCode': postalCodeController.text,
         'houseNumber': houseNumberController.text,
         'propertyType': propertyTypeChosen,
@@ -241,6 +248,11 @@ class FireStoreDataBase {
         'contactName': contactNameController.text,
         'contactEmail': contactEmailControler.text,
         'contactPhoneNumber': contactPhoneNumberControler.text
+      });
+    await FirebaseFirestore.instance.collection('users')
+      .doc(currentUser?.uid)
+      .update({
+        'isHouseOwner': true,
       });
     print("created house profile\n");
   }
