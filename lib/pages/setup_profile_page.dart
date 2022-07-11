@@ -2,12 +2,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:roomies_app/models/user_profile_images.dart';
 import 'package:roomies_app/widgets/profile_setup/profile_complete_setup_widget.dart';
 import 'package:roomies_app/widgets/profile_setup/profile_question_setup_widget.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../backend/database.dart';
+import '../models/user_profile_images.dart';
+import '../models/user_profile_model.dart';
 
 
 class SetupProfilePage extends StatefulWidget {
@@ -27,7 +28,8 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
   final roomMateController = TextEditingController();
   final birthDateController = TextEditingController();
   
-  late UserProfileImages userProfileImages = UserProfileImages(imageURLS: []);
+  late UserPersonalProfileModel userPersonalProfileModel;
+  late UserProfileImages userProfileImages;
 
   final pageController = PageController();
 
@@ -90,7 +92,8 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
             children: <Widget> [
               ProfileQuestionPage(
                 minBudgetController: minBudgetController, 
-                maxBudgetController: maxBudgetController
+                maxBudgetController: maxBudgetController,
+                userPersonalProfileModel: userPersonalProfileModel,
               ),
               CompleteProfilePage(
                 aboutMeController: aboutMeController, 
@@ -127,6 +130,7 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
                         User? currentUser = auth.currentUser;
                         await FireStoreDataBase().createPersonalProfile(
                           currentUser,
+                          userPersonalProfileModel.radius,
                           minBudgetController,
                           maxBudgetController,
                           aboutMeController,

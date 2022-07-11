@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:roomies_app/models/user_profile_model.dart';
 
 class ProfileQuestionPage extends StatefulWidget {
-  const ProfileQuestionPage({
+
+  ProfileQuestionPage({
     Key? key,
     required this.minBudgetController,
-    required this.maxBudgetController,
+    required this.maxBudgetController, 
+    required this.userPersonalProfileModel,
   }) : super(key: key);
 
   final TextEditingController minBudgetController;
   final TextEditingController maxBudgetController;
+  UserPersonalProfileModel userPersonalProfileModel;
 
   @override
   State<ProfileQuestionPage> createState() => _ProfileQuestionPageState();
@@ -142,6 +146,7 @@ class _ProfileQuestionPageState extends State<ProfileQuestionPage> {
                   setState(() {
                     currentRadius = radius;
                   });
+                  widget.userPersonalProfileModel.radius = radius;
                 },
               ),
             ),

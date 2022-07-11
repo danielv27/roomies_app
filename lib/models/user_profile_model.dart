@@ -9,3 +9,16 @@ class UserProfileModel {
     required this.imageURLS,
   });
 }
+
+class UserPersonalProfileModel {
+  String radius;
+  final String minimumBudget;
+  final String maximumBudget;
+
+  UserPersonalProfileModel({
+    required this.radius,
+    required this.minimumBudget,
+    required this.maximumBudget,
+  });
+
+}

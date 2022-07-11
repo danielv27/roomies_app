@@ -190,6 +190,7 @@ class FireStoreDataBase {
 
   Future createPersonalProfile(
     User ?currentUser, 
+    String radius,
     TextEditingController minBudget, 
     TextEditingController maxBudget, 
     TextEditingController about, 
@@ -203,6 +204,7 @@ class FireStoreDataBase {
       .doc(currentUser?.uid)
       .collection('personal_profile')
       .add({ 
+        'radius': radius,
         'minimumBudget': minBudget.text,
         'maximumBudget': maxBudget.text,
         'about': about.text,
