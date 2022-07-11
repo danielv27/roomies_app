@@ -1,6 +1,8 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:roomies_app/models/user_profile_images.dart';
 import 'package:roomies_app/widgets/profile_setup/profile_complete_setup_widget.dart';
 import 'package:roomies_app/widgets/profile_setup/profile_question_setup_widget.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -24,6 +26,8 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
   final studyController = TextEditingController();
   final roomMateController = TextEditingController();
   final birthDateController = TextEditingController();
+  
+  late UserProfileImages userProfileImages = UserProfileImages(imageURLS: []);
 
   final pageController = PageController();
 
@@ -93,7 +97,8 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
                 workController: workController, 
                 studyController: studyController,
                 roomMateController: roomMateController,
-                birthDateController: birthDateController
+                birthDateController: birthDateController,
+                userProfileImages: userProfileImages,
               ),
             ],
           ),
@@ -120,7 +125,7 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
                       ),
                       onPressed: () async {
                         User? currentUser = auth.currentUser;
-                        FireStoreDataBase().createPersonalProfile(
+                        await FireStoreDataBase().createPersonalProfile(
                           currentUser,
                           minBudgetController,
                           maxBudgetController,
@@ -130,6 +135,7 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
                           roomMateController,
                           birthDateController,
                         );
+                        await uploadImageUrls();
                         Navigator.of(context).pop();
                         Navigator.of(context).pop();
                       }, 
@@ -196,6 +202,19 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
         colors: [Color.fromRGBO(0, 53, 190, 1), Color.fromRGBO(57, 103, 224, 1), Color.fromRGBO(117, 154, 255, 1)]
       )
     );
+  }
+  
+  Future<void> uploadImageUrls() async {
+    try { 
+      await FirebaseFirestore.instance.collection('users')
+        .doc(auth.currentUser?.uid)
+        .collection("profile_images")
+        .add({
+          'urls': userProfileImages.imageURLS,
+        });
+    } catch (e) {
+      debugPrint("Error - $e");
+    }
   }
 
 }
