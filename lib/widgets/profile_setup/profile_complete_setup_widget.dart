@@ -5,6 +5,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:roomies_app/models/user_profile_model.dart';
+
+import '../../models/user_profile_images.dart';
 
 class CompleteProfilePage extends StatefulWidget {
   const CompleteProfilePage({
@@ -14,6 +17,7 @@ class CompleteProfilePage extends StatefulWidget {
     required this.studyController, 
     required this.roomMateController, 
     required this.birthDateController,
+    required this.userProfileImages,
   }) : super(key: key);
 
   final TextEditingController aboutMeController;
@@ -21,6 +25,7 @@ class CompleteProfilePage extends StatefulWidget {
   final TextEditingController studyController;
   final TextEditingController roomMateController;
   final TextEditingController birthDateController;
+  final UserProfileImages userProfileImages;
 
   @override
   State<CompleteProfilePage> createState() => _CompleteProfilePageState();
@@ -283,18 +288,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
     });
 
     var url = await reference.getDownloadURL();
-    try { 
-      await FirebaseFirestore.instance.collection('users')
-        .doc(auth.currentUser?.uid)
-        .collection("profile_images")
-        .add({
-          'url': url.toString(),
-          'name': reference.name.toString(),
-          'timeStamp': DateTime.now()
-        });
-    } catch (e) {
-      debugPrint("Error - $e");
-    }
+    widget.userProfileImages.imageURLS.add(url);
 
     return await reference.getDownloadURL();
   }
