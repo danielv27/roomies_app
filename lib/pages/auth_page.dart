@@ -8,6 +8,8 @@ import 'package:roomies_app/backend/database.dart';
 import 'package:roomies_app/pages/setup_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../widgets/gradients/gradient.dart';
+
 class AuthPage extends StatefulWidget {
   @override
   AuthPageState createState() => AuthPageState();
@@ -46,7 +48,9 @@ class AuthPageState extends State<AuthPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: applyRedGradient(),
+      decoration: BoxDecoration(
+        gradient: redGradient(),
+      ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         resizeToAvoidBottomInset: true,

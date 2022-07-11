@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:roomies_app/backend/database.dart';
@@ -9,11 +11,12 @@ import '../widgets/chat_page/new_message_widget.dart';
 
 class ChatPage extends StatefulWidget {
   final UserModel otherUser;
+  VoidCallback? wentBack;
   
-  
-  const ChatPage({
+  ChatPage({
       Key? key,
-      required this.otherUser
+      required this.otherUser,
+      this.wentBack
     }) : super(key: key);  
 
   @override
@@ -22,8 +25,8 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   List<Message> messages = [];
-  //late final messageStream = FireStoreDataBase().listenToMessages(FirebaseAuth.instance.currentUser?.uid, widget.otherUser.id);
   late final GlobalKey<AnimatedListState> _key = GlobalKey();
+  
 
   @override
   void initState(){
@@ -33,7 +36,6 @@ class _ChatPageState extends State<ChatPage> {
   
   void _addMessage(Message message){
     messages.insert(0, message);
-    //_key.currentState?.insertItem(0, duration: const Duration(milliseconds: 130));
     if(_key.currentState != null){
       _key.currentState?.insertItem(0, duration: const Duration(milliseconds: 130));
     }
@@ -45,7 +47,10 @@ class _ChatPageState extends State<ChatPage> {
       resizeToAvoidBottomInset: true ,
       body: Column(
         children: [
-          ChatHeader(otherUser: widget.otherUser),
+          ChatHeader(
+            otherUser: widget.otherUser,
+            wentBack:() => widget.wentBack!(),
+          ),
           Expanded(
             child: FutureBuilder(
               future: FireStoreDataBase().getMessages(FirebaseAuth.instance.currentUser?.uid, widget.otherUser.id),
@@ -79,11 +84,7 @@ class _ChatPageState extends State<ChatPage> {
                           child: MessageBubbleWidget(message: messages[index]));
                       }
                     );
-                  }else{
-                    Center(child: Text('not messages with this user'),);
-                    
                   }
-
                 }
                 if (snapshot.hasError) {
                 return const Text("Something went wrong");

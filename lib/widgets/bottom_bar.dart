@@ -1,6 +1,7 @@
 library bottom_bar;
 
 import 'package:flutter/material.dart';
+import 'package:roomies_app/widgets/gradients/gradient.dart';
 
 class BottomBar extends StatelessWidget {
   /// Creates a `BottomBar` that displays a list of `BottomBarItem` along with
@@ -103,17 +104,7 @@ class BottomBar extends StatelessWidget {
                 Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(100),
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                      Color.fromRGBO(239, 85, 100, 1),
-                      Color.fromRGBO(195, 46, 66, 1),
-                      Color.fromRGBO(190, 40, 62, 1),
-                      Color.fromRGBO(210, 66, 78, 1),
-                      Color.fromRGBO(244, 130, 114, 1),
-                      ]
-                    ),
+                    gradient: redGradient()
                   ),
                   child: _BottomBarItemWidget(
                     index: index,

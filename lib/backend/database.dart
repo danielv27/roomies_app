@@ -296,7 +296,6 @@ class FireStoreDataBase {
   Stream<List<Message>?> listenToMessages(String? currentUserID, String? otherUserID) async* {
     try {
       List<Message>? messages = await getMessages(currentUserID, otherUserID);
-      //yield messages;
       while(true){
         await Future.delayed(const Duration(seconds: 2));
         List<Message>? newMessages = await getMessages(currentUserID, otherUserID);
@@ -325,4 +324,36 @@ class FireStoreDataBase {
       'online': true,
     });
   }
+
+  Future<bool?> getOnlineStatus(String? uid) async {
+    bool? onlineStatus;
+    await FirebaseFirestore.instance.collection('users')
+    .doc(uid)
+    .get()
+    .then((doc) {
+      if(doc.data()!.containsKey('online') && doc['online']){
+        onlineStatus = true;
+      }
+      else{
+        onlineStatus = false;
+      }
+    });
+    return onlineStatus;
+  }
+
+  Stream<bool> checkIfOnline(String? uid) async* {
+    try {
+      while(true) {
+        bool? isOnline = await getOnlineStatus(uid);
+        if(isOnline != null){
+          yield (isOnline) ? true : false;
+        }
+        await Future.delayed(const Duration(seconds: 3));
+      }
+    } catch (e) {
+      debugPrint("Error - $e");
+    }
+  }
+
+  
 }

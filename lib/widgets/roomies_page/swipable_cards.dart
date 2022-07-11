@@ -102,7 +102,7 @@ class SwipableCardsState extends State<SwipableCards> {
                         }
 
                         if(index >= 1 && xPos < deviceWidth * 0.35){
-                            imgController.previousPage(duration: Duration(milliseconds: 200),curve: Curves.easeInOut);
+                            imgController.previousPage(duration: const Duration(milliseconds: 200),curve: Curves.easeInOut);
                             print("current image index: ${index - 1}");
                         }
                         
@@ -147,17 +147,6 @@ class SwipableCardsState extends State<SwipableCards> {
               ],
             );
           },
-          // will be used for adding a label to the swipable cards later on          
-          // overlayBuilder: (context, properties) {
-          //   //final opacity = min(properties.swipeProgress, 1.0);
-          //   final isRight = properties.direction == SwipeDirection.right;
-          //   return Opacity(
-          //     opacity: isRight ? 1 : 0,
-          //     child: Text("OLAOLAOAOALAOO"),
-          //   );
-          // },
-          //add this line to remove the ability to move the image around
-          //allowVerticalSwipe: false,
         ),
         Align(
           alignment: Alignment.bottomCenter,

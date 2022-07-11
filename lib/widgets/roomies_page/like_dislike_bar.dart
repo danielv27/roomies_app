@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:roomies_app/widgets/gradients/gradient.dart';
 import 'package:swipable_stack/swipable_stack.dart';
 
 Widget likeDislikeBar(BuildContext context, SwipableStackController controller) {
@@ -37,18 +38,8 @@ Widget likeDislikeBar(BuildContext context, SwipableStackController controller) 
             size: const Size(70, 70),
             child: ClipOval(
               child: Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Color.fromRGBO(239, 85, 100, 1),
-                      Color.fromRGBO(195, 46, 66, 1),
-                      Color.fromRGBO(190, 40, 62, 1),
-                      Color.fromRGBO(210, 66, 78, 1),
-                      Color.fromRGBO(244, 130, 114, 1),
-                    ]
-                  )
+                decoration: BoxDecoration(
+                  gradient: redGradient(),
                 ),
                 child: Material(
                   color: Colors.transparent,
@@ -118,6 +109,7 @@ Widget likeDislikeBar(BuildContext context, SwipableStackController controller) 
       ),
       builder: (BuildContext context) {
         return SingleChildScrollView(
+          
           padding: MediaQuery.of(context).viewInsets,
           child: Center(
             child: Column(
