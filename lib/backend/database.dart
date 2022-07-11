@@ -325,57 +325,36 @@ class FireStoreDataBase {
     }
   }
 
-  Future<List<UserProfileModel>?> getImagesByUserId(String currentUserID) async{
-    List<UserProfileModel>? profileImages = [];
+  Future<List<UserProfileModel>?> getUsersImages() async{
+    late UserProfileModel userProfileModel;
+    List<UserModel>? users = await getUsers();
+    List<UserProfileModel>? usersProfileModel = [];
+    List<String> userProfileImages = [];
 
-    try{    
-      await FirebaseFirestore.instance.collection('users/$currentUserID/profile_images')
-        .get()
-        .then((querySnapshot) {
-          for (var image in querySnapshot.docs) {
-              UserProfileModel userProfileModel = UserProfileModel(
-                id: image.id,
-                imageName: image['name'],
-                imageUrl: image['url'],
-              );
-            profileImages.add(userProfileModel);
-          }
-        });
-      return profileImages;
+    try{  
+      for (var user in users!) {
+        print("User: ${user.firstName}");
+        await FirebaseFirestore.instance.collection('users/${user.id}/profile_images')
+          .get()
+          .then((querySnapshot) {
+            for (var doc in querySnapshot.docs) {
+              doc.data().values.forEach((element) { 
+                userProfileImages.add(element[0].toString());
+              });
+            }
+            print("User profile images\n $userProfileImages");
+            userProfileModel = UserProfileModel(
+              userModel: user,
+              imageURLS: userProfileImages,
+            );
+          });
+        usersProfileModel.add(userProfileModel);
+      }
+      return usersProfileModel;
     } catch (e) {
       debugPrint("Error - $e");
       return null;
     }
-  }
-
-  Stream<ListResult> listAllPaginated(Reference storageRef) async* {
-    String? pageToken;
-    do {
-      final listResult = await storageRef.list(ListOptions(
-        maxResults: 3,
-        pageToken: pageToken,
-      ));
-      yield listResult;
-      pageToken = listResult.nextPageToken;
-    } while (pageToken != null);
-  }
-
-  Future<List<String>?> getUsersId() async {
-    late Future<List<UserModel>?> usersFutureList;
-    List<String> usersID = [];
-
-    usersFutureList = FireStoreDataBase().getUsers();
-    await FireStoreDataBase().getUsers();
-
-    usersFutureList.then((users) async {
-      if (users!.isNotEmpty) { 
-        for (var user_1 in users){
-          usersID.add(user_1.id);
-        }
-        return usersID;
-      }
-    });
-    return usersID;
   }
 
 }
