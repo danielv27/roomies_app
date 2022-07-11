@@ -28,7 +28,7 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
   final roomMateController = TextEditingController();
   final birthDateController = TextEditingController();
   
-  late UserPersonalProfileModel userPersonalProfileModel;
+  late UserSignupProfileModel userPersonalProfileModel;
   late UserProfileImages userProfileImages;
 
   final pageController = PageController();

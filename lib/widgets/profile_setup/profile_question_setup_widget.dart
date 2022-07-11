@@ -12,7 +12,7 @@ class ProfileQuestionPage extends StatefulWidget {
 
   final TextEditingController minBudgetController;
   final TextEditingController maxBudgetController;
-  UserPersonalProfileModel userPersonalProfileModel;
+  UserSignupProfileModel userPersonalProfileModel;
 
   @override
   State<ProfileQuestionPage> createState() => _ProfileQuestionPageState();

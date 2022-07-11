@@ -10,12 +10,12 @@ class UserProfileModel {
   });
 }
 
-class UserPersonalProfileModel {
+class UserSignupProfileModel {
   String radius;
   final String minimumBudget;
   final String maximumBudget;
 
-  UserPersonalProfileModel({
+  UserSignupProfileModel({
     required this.radius,
     required this.minimumBudget,
     required this.maximumBudget,
