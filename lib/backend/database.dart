@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:roomies_app/models/user_profile_model.dart';
 
 import '../models/message.dart';
 import '../models/user_model.dart';
@@ -323,5 +325,57 @@ class FireStoreDataBase {
     }
   }
 
+  Future<List<UserProfileModel>?> getImagesByUserId(String currentUserID) async{
+    List<UserProfileModel>? profileImages = [];
+
+    try{    
+      await FirebaseFirestore.instance.collection('users/$currentUserID/profile_images')
+        .get()
+        .then((querySnapshot) {
+          for (var image in querySnapshot.docs) {
+              UserProfileModel userProfileModel = UserProfileModel(
+                id: image.id,
+                imageName: image['name'],
+                imageUrl: image['url'],
+              );
+            profileImages.add(userProfileModel);
+          }
+        });
+      return profileImages;
+    } catch (e) {
+      debugPrint("Error - $e");
+      return null;
+    }
+  }
+
+  Stream<ListResult> listAllPaginated(Reference storageRef) async* {
+    String? pageToken;
+    do {
+      final listResult = await storageRef.list(ListOptions(
+        maxResults: 3,
+        pageToken: pageToken,
+      ));
+      yield listResult;
+      pageToken = listResult.nextPageToken;
+    } while (pageToken != null);
+  }
+
+  Future<List<String>?> getUsersId() async {
+    late Future<List<UserModel>?> usersFutureList;
+    List<String> usersID = [];
+
+    usersFutureList = FireStoreDataBase().getUsers();
+    await FireStoreDataBase().getUsers();
+
+    usersFutureList.then((users) async {
+      if (users!.isNotEmpty) { 
+        for (var user_1 in users){
+          usersID.add(user_1.id);
+        }
+        return usersID;
+      }
+    });
+    return usersID;
+  }
 
 }
