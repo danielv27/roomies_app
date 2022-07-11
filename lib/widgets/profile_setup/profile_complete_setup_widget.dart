@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -280,6 +281,21 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
         }    
       });
     });
+
+    var url = await reference.getDownloadURL();
+    try { 
+      await FirebaseFirestore.instance.collection('users')
+        .doc(auth.currentUser?.uid)
+        .collection("profile_images")
+        .add({
+          'url': url.toString(),
+          'name': reference.name.toString(),
+          'timeStamp': DateTime.now()
+        });
+    } catch (e) {
+      debugPrint("Error - $e");
+    }
+
     return await reference.getDownloadURL();
   }
 
