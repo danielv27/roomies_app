@@ -40,9 +40,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
 
   final List<XFile> selectedProfileImages = [];
   final FirebaseStorage storageRef = FirebaseStorage.instance;
-  final List<String> arrImageUrls = [];
   int uploadItem = 0;
-  bool isUploading = false;
 
   final FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -101,11 +99,13 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                           width: 30,
                           decoration: applyBlueGradient(),
                           child: FloatingActionButton(
-                            heroTag: "btn1",
+                            heroTag: "btn1_$index",
                             elevation: 0,
                             onPressed: () async { 
                               await selectProfileImage();
-                              uploadFunction(selectedProfileImages);
+                              // print(selectedProfileImages[index].name);
+                              uploadFile(selectedProfileImages[index]);
+                              // uploadFunction(selectedProfileImages);
                             },
                             backgroundColor: Colors.transparent,
                             child: const Icon(Icons.add),
@@ -136,7 +136,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                           width: 30,
                           decoration: applyBlueGradient(),
                           child: FloatingActionButton(
-                            heroTag: "btn2",
+                            heroTag: "btn2_$index",
                             elevation: 0,
                             onPressed: () { 
                               removeProfileImage(index);
@@ -274,26 +274,6 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
     );
   }
 
-  Widget showLoading() {
-    return Center(
-      child: Column(
-        children: const [
-          CircularProgressIndicator(),
-        ],
-      ),
-    );
-  }
-
-  void uploadFunction(List<XFile> _images) {
-    setState(() {
-      isUploading = true;
-    });
-    for (int i = 0; i < _images.length; i++) {
-      var imageUrl = uploadFile(_images[i]);
-      arrImageUrls.add(imageUrl.toString());
-    }
-  }
-
   Future<String> uploadFile(XFile _image) async {
     Reference reference = storageRef.ref().child("profile_images").child(auth.currentUser!.uid.toString()).child(_image.name);
     UploadTask uploadTask = reference.putFile(File(_image.path));
@@ -301,7 +281,6 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
       setState(() {
         uploadItem++;
         if (uploadItem == selectedProfileImages.length) {
-          isUploading = false;
           uploadItem = 0;
         }    
       });
