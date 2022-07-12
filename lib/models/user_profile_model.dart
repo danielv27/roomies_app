@@ -2,7 +2,7 @@ import 'user_model.dart';
 
 class UserProfileModel {
   final UserModel userModel;
-  final List<String> imageURLS;
+  final List<dynamic> imageURLS;
 
   UserProfileModel({
     required this.userModel,

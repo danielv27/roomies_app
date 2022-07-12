@@ -328,23 +328,22 @@ class FireStoreDataBase {
   }
 
   Future<List<UserProfileModel>?> getUsersImages() async{
-    late UserProfileModel userProfileModel;
     List<UserModel>? users = await getUsers();
     List<UserProfileModel>? usersProfileModel = [];
-    List<String> userProfileImages = [];
 
     try{  
       for (var user in users!) {
-        print("User: ${user.firstName}");
+        late UserProfileModel userProfileModel;
+        late List<dynamic> userProfileImages = [];
+
+        print("${user.firstName}");
+
         await FirebaseFirestore.instance.collection('users/${user.id}/profile_images')
           .get()
           .then((querySnapshot) {
             for (var doc in querySnapshot.docs) {
-              doc.data().values.forEach((element) { 
-                userProfileImages.add(element[0].toString());
-              });
+              userProfileImages = doc.data()['urls'];
             }
-            print("User profile images\n $userProfileImages");
             userProfileModel = UserProfileModel(
               userModel: user,
               imageURLS: userProfileImages,

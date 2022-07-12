@@ -38,6 +38,7 @@ class SwipableCards extends StatefulWidget {
 
 class SwipableCardsState extends State<SwipableCards> {
   late final SwipableStackController swipeController; // = SwipableStackController()..addListener(_listenController);
+  Future<List<UserProfileModel>?> futureListUserProfileModel = FireStoreDataBase().getUsersImages();
 
   void _listenController() => setState(() {});
 
@@ -60,10 +61,9 @@ class SwipableCardsState extends State<SwipableCards> {
     return Stack(
       children: [
         FutureBuilder(
-          future: FireStoreDataBase().getUsersImages(),
+          future: futureListUserProfileModel,
           builder: (context, snapshot) {
             var userProfileModelList = snapshot.data as List<UserProfileModel>?;
-            // print(userProfileModelList);
             if (snapshot.hasData) {
               return SwipableStack(
                 itemCount: userProfileModelList!.length,
@@ -83,10 +83,10 @@ class SwipableCardsState extends State<SwipableCards> {
                   final currentUserIndex = properties.index % userProfileModelList.length;
                   final currenUserImages = userProfileModelList[currentUserIndex].imageURLS;
                   final imgController = PageController(viewportFraction: 1.03,keepPage: true);
-                  
+
                   final images = List.generate(
                     currenUserImages.length,
-                    (index) =>  Image.network(currenUserImages[index].toString(),fit: BoxFit.fill,)
+                    (index) =>  Image.network(currenUserImages[index],fit: BoxFit.fill,)
                   );
 
                   return Stack(
