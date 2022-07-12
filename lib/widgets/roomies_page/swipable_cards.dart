@@ -5,28 +5,6 @@ import '../../models/user_profile_model.dart';
 import 'like_dislike_bar.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-const userImageArray = [
-  [
-    'assets/images/profile_pic2.jpg',
-    'assets/images/profile_pic3.jpg',
-    'assets/images/profile_pic2.jpg',
-    'assets/images/profile_pic5.jpg',
-  ],
-  [
-    'assets/images/profile_pic3.jpg',
-    'assets/images/profile_pic2.jpg',
-    'assets/images/profile_pic4.jpg',
-    'assets/images/profile_pic5.jpg',
-  ],
-  [
-    'assets/images/profile_pic4.jpg',
-    'assets/images/profile_pic5.jpg',
-  ],
-  [
-    'assets/images/profile_pic5.jpg',
-  ]
-];
-
 class SwipableCards extends StatefulWidget {
   
   const SwipableCards({Key? key, }) : super(key: key);

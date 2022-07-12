@@ -6,30 +6,6 @@ import 'package:roomies_app/pages/setup_profile_page.dart';
 import '../backend/database.dart';
 import '../widgets/roomies_page/swipable_cards.dart';
 
-//user for swipable cards testing. should be removed once images are added to database users
-
-const userImageArray = [
-  [
-    'assets/images/profile_pic2.jpg',
-    'assets/images/profile_pic3.jpg',
-    'assets/images/profile_pic2.jpg',
-    'assets/images/profile_pic5.jpg',
-  ],
-  [
-    'assets/images/profile_pic3.jpg',
-    'assets/images/profile_pic2.jpg',
-    'assets/images/profile_pic4.jpg',
-    'assets/images/profile_pic5.jpg',
-  ],
-  [
-    'assets/images/profile_pic4.jpg',
-    'assets/images/profile_pic5.jpg',
-  ],
-  [
-    'assets/images/profile_pic5.jpg',
-  ]
-];
-
 class RoomiesPage extends StatelessWidget {
   RoomiesPage({Key? key}) : super(key: key);
 
