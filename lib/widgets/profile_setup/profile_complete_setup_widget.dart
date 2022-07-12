@@ -100,8 +100,8 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                             child: IconButton(
                               color: Colors.white,
                               icon: const Icon(Icons.add),
-                              onPressed: () {
-                                selectProfileImage();
+                              onPressed: () async {
+                                await selectProfileImage();
                                 uploadFunction(selectedProfileImages);
                               },
                             ),
@@ -299,7 +299,9 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
         source: ImageSource.gallery,
         imageQuality: 85,
       );
-      selectedProfileImages.add(profileImage!);
+      if (profileImage != null) {
+        selectedProfileImages.add(profileImage);
+      }
     } catch (e) {
       print("error" + e.toString());
     }
