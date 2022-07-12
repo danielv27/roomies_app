@@ -20,7 +20,7 @@ class UserModel {
     required this.firstName,
     required this.lastName,
     required this.isHouseOwner,
-    this.firstImgUrl = 'http://www.classicaloasis.com/wp-content/uploads/2014/03/profile-square.jpg'
+    required this.firstImgUrl,
   });
 }
 

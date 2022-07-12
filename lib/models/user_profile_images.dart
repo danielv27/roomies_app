@@ -1,5 +1,5 @@
 class UserProfileImages {
-  final List<String> imageURLS;
+  final List<dynamic> imageURLS;
 
   UserProfileImages({
     required this.imageURLS,

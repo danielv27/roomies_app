@@ -300,7 +300,6 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
         imageQuality: 85,
       );
       selectedProfileImages.add(profileImage!);
-      print("List of Select images : ${profileImage.length.toString()}");
     } catch (e) {
       print("error" + e.toString());
     }

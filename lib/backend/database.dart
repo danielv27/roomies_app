@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:roomies_app/models/user_profile_images.dart';
 import 'package:roomies_app/models/user_profile_model.dart';
 
 import '../models/message.dart';
@@ -21,16 +22,18 @@ class FireStoreDataBase {
       await FirebaseFirestore.instance.collection("users")
       .get()
       .then(
-        (querySnapshot) {
+        (querySnapshot) async {
           for (var userDoc in querySnapshot.docs) {
             if(userDoc.id != FirebaseAuth.instance.currentUser?.uid && userDoc.data().containsKey('isHouseOwner')){
+              UserProfileImages? usersProfileImages = await getUsersImagesById(userDoc.id);
               UserModel newUser = UserModel(
                 id: userDoc.id,
                 email: userDoc['email'],
                 firstName: userDoc['firstName'],
                 lastName: userDoc['lastName'],
-                isHouseOwner: userDoc['isHouseOwner']
-                );
+                isHouseOwner: userDoc['isHouseOwner'],
+                firstImgUrl: usersProfileImages!.imageURLS[0],
+              );
               userList.add(newUser);
             }
           }
@@ -46,6 +49,7 @@ class FireStoreDataBase {
   Future<UserModel?> getUserByID(String? userID) async {
     try {
       UserModel? newUser;
+      UserProfileImages? usersProfileImages = await getUsersImagesById(userID);
       await FirebaseFirestore.instance.collection("users")
       .doc(userID)
       .get()
@@ -55,8 +59,9 @@ class FireStoreDataBase {
           email: userDoc['email'],
           firstName: userDoc['firstName'],
           lastName: userDoc['lastName'],
-          isHouseOwner: userDoc['isHouseOwner']
-          );
+          isHouseOwner: userDoc['isHouseOwner'],
+          firstImgUrl: usersProfileImages!.imageURLS[0],
+        );
       });
       return newUser;
     } catch (e) {
@@ -71,14 +76,16 @@ class FireStoreDataBase {
       await FirebaseFirestore.instance.collection("users")
       .doc(FirebaseAuth.instance.currentUser?.uid)
       .get()
-      .then((userDoc) {
+      .then((userDoc) async {
+        UserProfileImages? usersProfileImages = await getUsersImagesById(userDoc.id);
         newUser = UserModel(
           id: userDoc.id,
           email: userDoc['email'],
           firstName: userDoc['firstName'],
           lastName: userDoc['lastName'],
-          isHouseOwner: userDoc['isHouseOwner']
-          );
+          isHouseOwner: userDoc['isHouseOwner'],
+          firstImgUrl: usersProfileImages!.imageURLS[0],
+        );
       });
       return newUser;
     } catch (e) {
@@ -95,14 +102,8 @@ class FireStoreDataBase {
       .then((doc) {
         var documentData = doc.data();
         if (documentData!.containsKey(nodeKey)) {
-          print("\n---------------------");
-          print("\nNODE EXSITS");
-          print("\n---------------------");
           return true;
         } else {
-          print("\n---------------------");
-          print("\nNODE DOES NOT EXSIT");
-          print("\n---------------------");
           return false;
         }
       });
@@ -336,8 +337,6 @@ class FireStoreDataBase {
         late UserProfileModel userProfileModel;
         late List<dynamic> userProfileImages = [];
 
-        print("${user.firstName}");
-
         await FirebaseFirestore.instance.collection('users/${user.id}/profile_images')
           .get()
           .then((querySnapshot) {
@@ -355,6 +354,45 @@ class FireStoreDataBase {
     } catch (e) {
       debugPrint("Error - $e");
       return null;
+    }
+  }
+
+  Future<UserProfileImages?> getUsersImagesById(String? currentUserID) async{
+    try{ 
+      late UserProfileImages userProfileImagesModel;
+      late List<dynamic> userProfileImages = [];
+
+      await FirebaseFirestore.instance.collection('users/$currentUserID/profile_images')
+        .get()
+        .then((querySnapshot) {
+          for (var doc in querySnapshot.docs) {
+            userProfileImages = doc['urls'];
+          }
+          userProfileImagesModel = UserProfileImages(
+            imageURLS: userProfileImages,
+          );
+        });
+      return userProfileImagesModel;
+    } catch (e) {
+      debugPrint("Error - $e");
+      return null;
+    }
+  }
+
+  Future<String> getUsersFirstImage(String? currentUserID) async{
+    try{ 
+      late String userProfileFirstImage = "";
+      await FirebaseFirestore.instance.collection('users/$currentUserID/profile_images')
+        .get()
+        .then((querySnapshot) {
+          for (var doc in querySnapshot.docs) {
+            userProfileFirstImage = doc['urls'][0];
+          }
+        });
+      return userProfileFirstImage;
+    } catch (e) {
+      debugPrint("Error - $e");
+      return "http://www.classicaloasis.com/wp-content/uploads/2014/03/profile-square.jpg";
     }
   }
 
