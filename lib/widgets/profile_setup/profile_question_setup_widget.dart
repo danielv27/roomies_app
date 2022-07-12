@@ -24,7 +24,6 @@ class _ProfileQuestionPageState extends State<ProfileQuestionPage> {
   var radiusWidth = 40;
   var radiusExpandedWidth = 65;
 
-  String currentRadius = '0';
   List radiusDistnace = [1, 2, 3, 4, 5, 10];
 
   @override
@@ -115,7 +114,7 @@ class _ProfileQuestionPageState extends State<ProfileQuestionPage> {
       decoration: BoxDecoration(
         border: Border.all(color: const Color.fromRGBO(0, 0, 0, 0.2)),
         borderRadius: BorderRadius.circular(14.0),
-        color: (currentRadius != radius)
+        color: (widget.userPersonalProfileModel.radius != radius)
             ? const Color.fromRGBO(245, 247, 251, 1)
             : const Color.fromRGBO(190, 212, 255, 1),
       ),
@@ -125,7 +124,7 @@ class _ProfileQuestionPageState extends State<ProfileQuestionPage> {
             duration: const Duration(milliseconds: 500),
             curve: Curves.fastOutSlowIn,
             child: SizedBox(
-              width: (currentRadius != radius) ? radiusWidth.toDouble() : radiusExpandedWidth.toDouble(),
+              width: (widget.userPersonalProfileModel.radius != radius) ? radiusWidth.toDouble() : radiusExpandedWidth.toDouble(),
               height: 40,
               child: GestureDetector(
                 behavior: HitTestBehavior.translucent,
@@ -135,7 +134,7 @@ class _ProfileQuestionPageState extends State<ProfileQuestionPage> {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       leadingDistribution: TextLeadingDistribution.even,
-                      foreground: (currentRadius != radius)
+                      foreground: (widget.userPersonalProfileModel.radius != radius)
                           ? (Paint()..color = const Color.fromRGBO(101, 101, 107, 1))
                           : (Paint()..shader = applyTextBlueGradient()),
                     ),
@@ -144,9 +143,8 @@ class _ProfileQuestionPageState extends State<ProfileQuestionPage> {
                 onTap: () {
                   print(" Distance $radius clicked");
                   setState(() {
-                    currentRadius = radius;
+                    widget.userPersonalProfileModel.radius = radius;
                   });
-                  widget.userPersonalProfileModel.radius = radius;
                 },
               ),
             ),

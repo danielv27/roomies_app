@@ -12,13 +12,9 @@ class UserProfileModel {
 
 class UserSignupProfileModel {
   String radius;
-  final String minimumBudget;
-  final String maximumBudget;
 
   UserSignupProfileModel({
-    required this.radius,
-    required this.minimumBudget,
-    required this.maximumBudget,
+    this.radius = "0",
   });
 
 }
