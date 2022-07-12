@@ -80,53 +80,71 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
               itemCount: selectedProfileImages.length + 1,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
-                childAspectRatio: MediaQuery.of(context).size.width / (MediaQuery.of(context).size.height / 1.5),
+                childAspectRatio: (MediaQuery.of(context).size.width) / (MediaQuery.of(context).size.height / 1.3),
               ), 
               itemBuilder: (context, index) {
                 return index == selectedProfileImages.length 
                 ? GridTile(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: const Color.fromRGBO(245, 247, 251, 1),
-                    ),
-                    child: Stack(
-                      children: [
-                        Positioned(
-                          right: 0,
-                          bottom: 0,
-                          child: Container(
-                            decoration: applyBlueGradient(),
-                            child: IconButton(
-                              color: Colors.white,
-                              icon: const Icon(Icons.add),
-                              onPressed: () async {
-                                await selectProfileImage();
-                                uploadFunction(selectedProfileImages);
-                              },
-                            ),
+                  child: Stack(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(bottom: 10, right: 10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: const Color.fromRGBO(245, 247, 251, 1),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: Container(
+                          height: 30,
+                          width: 30,
+                          decoration: applyBlueGradient(),
+                          child: FloatingActionButton(
+                            elevation: 0,
+                            onPressed: () async { 
+                              await selectProfileImage();
+                              uploadFunction(selectedProfileImages);
+                            },
+                            backgroundColor: Colors.transparent,
+                            child: const Icon(Icons.add),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 )
                 : GridTile(
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      side: BorderSide(
-                        color: Colors.grey.withOpacity(0.2),
-                        width: 1,
+                  child: Stack(
+                    children: [
+                      Container(
+                        height: MediaQuery.of(context).size.height,
+                        margin: const EdgeInsets.only(bottom: 10, right: 10),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Image.file(
+                            File(selectedProfileImages[index].path), 
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: Image.file(
-                        File(selectedProfileImages[index].path), 
-                        fit: BoxFit.cover,
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: Container(
+                          height: 30,
+                          width: 30,
+                          decoration: applyBlueGradient(),
+                          child: FloatingActionButton(
+                            elevation: 0,
+                            onPressed: () { 
+                              removeProfileImage(index);
+                            },
+                            backgroundColor: Colors.transparent,
+                            child: const Icon(Icons.remove),
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 );
               }
@@ -290,7 +308,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
     var url = await reference.getDownloadURL();
     widget.userProfileImages.imageURLS.add(url);
 
-    return await reference.getDownloadURL();
+    return url;
   }
 
   Future<void> selectProfileImage() async {
@@ -307,6 +325,12 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
     }
     setState(() {
       
+    });
+  }
+
+  removeProfileImage(int index) {
+    setState(() {
+      selectedProfileImages.removeAt(index);
     });
   }
 
