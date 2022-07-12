@@ -101,6 +101,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                           width: 30,
                           decoration: applyBlueGradient(),
                           child: FloatingActionButton(
+                            heroTag: "btn1",
                             elevation: 0,
                             onPressed: () async { 
                               await selectProfileImage();
@@ -135,6 +136,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                           width: 30,
                           decoration: applyBlueGradient(),
                           child: FloatingActionButton(
+                            heroTag: "btn2",
                             elevation: 0,
                             onPressed: () { 
                               removeProfileImage(index);
