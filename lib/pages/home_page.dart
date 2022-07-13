@@ -84,6 +84,7 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
           borderRadius: const BorderRadius.all(Radius.circular(120))
         ),
         child: BottomBar(
+          height: MediaQuery.of(context).size.height * 0.1,
           selectedIndex: _currentPage,
           onTap: (int index) {
             _previousPage = _currentPage;

@@ -24,7 +24,6 @@ import '../../backend/database.dart';
     String message = ''; 
 
     void sendMessage() async {
-      FocusScope.of(context).unfocus();
       await FireStoreDataBase().uploadMessage(message, FirebaseAuth.instance.currentUser?.uid, widget.otherUser.id);
       setState(() {
         widget.onMessageSent(message); 
