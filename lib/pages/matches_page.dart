@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:roomies_app/backend/database.dart';
+import 'package:roomies_app/widgets/gradients/gradient.dart';
 import '../models/user_model.dart';
 import '../widgets/matches_page/matches_body.dart';
 import '../widgets/matches_page/matches_header.dart';
@@ -13,17 +14,9 @@ class MatchesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-          decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-            Color.fromRGBO(239, 85, 100, 1),
-            Color.fromRGBO(195, 46, 66, 1),
-            Color.fromRGBO(190, 40, 62, 1),
-            Color.fromRGBO(210, 66, 78, 1),
-            Color.fromRGBO(244, 130, 114, 1),
-          ])),
+          decoration: BoxDecoration(
+          gradient: redGradient()
+          ),
           child: FutureBuilder(
             future: FireStoreDataBase().getUsers(),
             builder: (context, snapshot) {

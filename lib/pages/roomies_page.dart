@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart'; //breaks ios add font manually
 import 'package:roomies_app/pages/setup_profile_page.dart';
 import '../backend/database.dart';
+import '../widgets/gradients/gradient.dart';
 import '../widgets/roomies_page/swipable_cards.dart';
 
 class RoomiesPage extends StatelessWidget {
@@ -19,7 +20,7 @@ class RoomiesPage extends StatelessWidget {
         preferredSize: const Size.fromHeight(75),
         child: Container(
           decoration: BoxDecoration(
-            gradient: applyRedLinearGradient(),
+            gradient: redGradient()
           ),
           child: AppBar(
             centerTitle: false,
@@ -56,13 +57,9 @@ class RoomiesPage extends StatelessWidget {
                         ),
                         backgroundColor: MaterialStateProperty.all(Colors.white.withOpacity(0.2))
                       ),
-                      onPressed: () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute<void>(
-                        //     builder: (BuildContext context) => const SetupProfilePage(),
-                        //   ),
-                        // );
+                      onPressed: () async {
+                        FireStoreDataBase().goOffline(FirebaseAuth.instance.currentUser?.uid);
+                        await Future.delayed(const Duration(milliseconds: 150));
                         FirebaseAuth.instance.signOut();
                       },
                       child: Image.asset('assets/icons/nextroom_icon_white.png', width: 28),
@@ -74,28 +71,14 @@ class RoomiesPage extends StatelessWidget {
           ),
         ),
       ),
-      body: Column(
-        children: [
-          imageRoomiesInfo(context),
-          //likeDislikeBar(context),
-        ],
+      body: SizedBox(
+        height: MediaQuery.of(context).size.height * 0.72,
+        child: const SwipableCards(),
       ),
     );
   }
 
-  LinearGradient applyRedLinearGradient() {
-    return const LinearGradient(
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
-      colors: [
-      Color.fromRGBO(239, 85, 100, 1),
-      Color.fromRGBO(195, 46, 66, 1),
-      Color.fromRGBO(190, 40, 62, 1),
-      Color.fromRGBO(210, 66, 78, 1),
-      Color.fromRGBO(244, 130, 114, 1),
-      ]
-    );
-  }
+
 
   SizedBox imageRoomiesInfo(BuildContext context) {
     return SizedBox(
@@ -306,4 +289,5 @@ class RoomiesPage extends StatelessWidget {
   //     ),
   //   );
   // }
+
 }

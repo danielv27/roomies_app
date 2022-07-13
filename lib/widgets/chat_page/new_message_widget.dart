@@ -66,14 +66,16 @@ import '../../backend/database.dart';
                   });
                 },
                 decoration: const InputDecoration(
+                  isCollapsed: true,
                   alignLabelWithHint: false,
                   border: InputBorder.none,
                   labelText: 'Type something...',
                   focusColor: Colors.white,
                   labelStyle: TextStyle(
-                    color: Color.fromARGB(195, 48, 48, 52)
-
-                  )
+                    color: Color.fromARGB(195, 48, 48, 52),
+                    fontSize: 15
+                  ),
+                  floatingLabelBehavior: FloatingLabelBehavior.never
                 ),
               )
             ),

@@ -6,9 +6,6 @@ import 'package:roomies_app/backend/database.dart';
 import 'pages/home_page.dart';
 import 'pages/auth_page.dart';
 
-void goOnline() async {
-  // FireStoreDataBase().goOnline(FirebaseAuth.instance.currentUser?.uid); //can be implemented later on to check for online users
-}
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,14 +13,12 @@ Future main() async {
       [DeviceOrientation.portraitUp]
   );
   await Firebase.initializeApp();
-  goOnline();
 
   runApp(const App());
 }
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
-
 
   // This widget is the root of your application.
   @override
@@ -53,6 +48,7 @@ class MainPage extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         }
         else if (snapshot.hasData) {
+          FireStoreDataBase().goOnline();
           return HomePage();
         }
         else {

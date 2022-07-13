@@ -14,8 +14,6 @@ import '../models/user_model.dart';
 
 class FireStoreDataBase {
 
-  final db = FirebaseFirestore;
-
   Future<List<UserModel>?> getUsers() async {
     try {
       List<UserModel> userList = [];
@@ -314,7 +312,6 @@ class FireStoreDataBase {
   Stream<List<Message>?> listenToMessages(String? currentUserID, String? otherUserID) async* {
     try {
       List<Message>? messages = await getMessages(currentUserID, otherUserID);
-      //yield messages;
       while(true){
         await Future.delayed(const Duration(seconds: 2));
         List<Message>? newMessages = await getMessages(currentUserID, otherUserID);
@@ -393,6 +390,52 @@ class FireStoreDataBase {
     } catch (e) {
       debugPrint("Error - $e");
       return "http://www.classicaloasis.com/wp-content/uploads/2014/03/profile-square.jpg";
+    }
+  }
+
+  void goOffline(String? uid) async{
+    await FirebaseFirestore.instance.collection('users')
+    .doc(uid)
+    .update({ 
+      'online': false,
+    });
+  }
+
+  void goOnline() async{
+    await FirebaseFirestore.instance.collection('users')
+    .doc(FirebaseAuth.instance.currentUser?.uid)
+    .update({ 
+      'online': true,
+    });
+  }
+
+  Future<bool?> getOnlineStatus(String? uid) async {
+    bool? onlineStatus;
+    await FirebaseFirestore.instance.collection('users')
+    .doc(uid)
+    .get()
+    .then((doc) {
+      if(doc.data()!.containsKey('online') && doc['online']){
+        onlineStatus = true;
+      }
+      else{
+        onlineStatus = false;
+      }
+    });
+    return onlineStatus;
+  }
+
+  Stream<bool> checkIfOnline(String? uid) async* {
+    try {
+      while(true) {
+        bool? isOnline = await getOnlineStatus(uid);
+        if(isOnline != null){
+          yield (isOnline) ? true : false;
+        }
+        await Future.delayed(const Duration(seconds: 3));
+      }
+    } catch (e) {
+      debugPrint("Error - $e");
     }
   }
 
