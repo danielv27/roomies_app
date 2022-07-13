@@ -19,17 +19,24 @@ class HomePage extends StatefulWidget {
 class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
   int _previousPage = 0;
   int _currentPage = 0;
+
+  final roomiesPage = RoomiesPage();
+  final matchesPage = const MatchesPage();
+  final housesPage = const HousesPage();
   
-  final pages = [
-    RoomiesPage(),
-    const MatchesPage(),
-    const HousesPage(),
+  
+  late final pages = [
+      roomiesPage,
+      matchesPage,
+      housesPage
   ];
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+
+    
   }
 
   @override
@@ -53,6 +60,10 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
   
   @override
   Widget build(BuildContext context) {
+    // roomiesPage.build(context);
+    // matchesPage.build(context);
+    // housesPage.build(context);
+    
     return Scaffold(
       body: PageTransitionSwitcher(
         transitionBuilder: (child, primaryAnimation, secondaryAnimation) => pageTransition(context,primaryAnimation,child, _currentPage, _previousPage),
