@@ -325,7 +325,7 @@ class FireStoreDataBase {
     }
   }
 
-  Future<List<UserProfileModel>?> getUsersImages() async{
+  Future<List<UserProfileModel>?> getUsersImages() async {
     List<UserModel>? users = await getUsers();
     List<UserProfileModel>? usersProfileModel = [];
 
@@ -380,8 +380,10 @@ class FireStoreDataBase {
     try{ 
       late String userProfileFirstImage = "";
       await FirebaseFirestore.instance.collection('users/$currentUserID/profile_images')
+        .limit(1)
         .get()
         .then((querySnapshot) {
+          userProfileFirstImage = querySnapshot.docs[0]['urls'][0];
           for (var doc in querySnapshot.docs) {
             userProfileFirstImage = doc['urls'][0];
           }

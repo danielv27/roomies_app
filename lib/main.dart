@@ -49,7 +49,7 @@ class MainPage extends StatelessWidget {
         }
         else if (snapshot.hasData) {
           FireStoreDataBase().goOnline();
-          return HomePage();
+          return const HomePage();
         }
         else {
           return AuthPage();
