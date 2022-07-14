@@ -296,7 +296,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
     try {
       final XFile? profileImage = await ImagePicker().pickImage(
         source: ImageSource.gallery,
-        imageQuality: 85,
+        imageQuality: 30,
       );
       if (profileImage != null) {
         selectedProfileImages.add(profileImage);
