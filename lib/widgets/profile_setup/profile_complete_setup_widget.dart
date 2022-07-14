@@ -103,9 +103,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                             elevation: 0,
                             onPressed: () async { 
                               await selectProfileImage();
-                              // print(selectedProfileImages[index].name);
                               uploadFile(selectedProfileImages[index]);
-                              // uploadFunction(selectedProfileImages);
                             },
                             backgroundColor: Colors.transparent,
                             child: const Icon(Icons.add),
@@ -138,7 +136,8 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                           child: FloatingActionButton(
                             heroTag: "btn2_$index",
                             elevation: 0,
-                            onPressed: () { 
+                            onPressed: () async { 
+                              await removeFile(selectedProfileImages[index]);
                               removeProfileImage(index);
                             },
                             backgroundColor: Colors.transparent,
@@ -276,15 +275,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
 
   Future<String> uploadFile(XFile _image) async {
     Reference reference = storageRef.ref().child("profile_images").child(auth.currentUser!.uid.toString()).child(_image.name);
-    UploadTask uploadTask = reference.putFile(File(_image.path));
-    await uploadTask.whenComplete(() {
-      setState(() {
-        uploadItem++;
-        if (uploadItem == selectedProfileImages.length) {
-          uploadItem = 0;
-        }    
-      });
-    });
+    await reference.putFile(File(_image.path));
 
     var url = await reference.getDownloadURL();
     widget.userProfileImages.imageURLS.add(url);
@@ -309,9 +300,15 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
     });
   }
 
+  Future removeFile(XFile _image) async {
+    Reference reference = storageRef.ref().child("profile_images").child(auth.currentUser!.uid.toString()).child(_image.name);
+    await reference.delete();
+  }
+
   removeProfileImage(int index) {
     setState(() {
       selectedProfileImages.removeAt(index);
+      widget.userProfileImages.imageURLS.removeAt(index);
     });
   }
 
