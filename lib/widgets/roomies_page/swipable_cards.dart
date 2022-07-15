@@ -18,20 +18,18 @@ class SwipableCardsState extends State<SwipableCards> {
   late final SwipableStackController swipeController; // = SwipableStackController()..addListener(_listenController);
   Future<List<UserProfileModel>?> futureListUserProfileModel = FireStoreDataBase().getUsersImages();
 
-  void _listenController() => setState(() {});
+
 
   @override
   void initState() {
     super.initState();
-    swipeController = SwipableStackController()..addListener(_listenController);
+    swipeController = SwipableStackController();
   }
 
   @override
   void dispose() {
     super.dispose();
-    swipeController
-      ..removeListener(_listenController)
-      ..dispose();
+    swipeController.dispose();
   }
 
   @override
