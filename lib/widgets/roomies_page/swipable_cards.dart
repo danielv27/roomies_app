@@ -16,14 +16,19 @@ class SwipableCards extends StatefulWidget {
 
 class SwipableCardsState extends State<SwipableCards> {
   late final SwipableStackController swipeController; // = SwipableStackController()..addListener(_listenController);
-  Future<List<UserProfileModel>?> futureListUserProfileModel = FireStoreDataBase().getUsersImages();
+  late final Future<List<UserProfileModel>?> futureListUserProfileModel;
 
 
 
   @override
   void initState() {
     super.initState();
+
     swipeController = SwipableStackController();
+
+    swipeController = SwipableStackController();
+    futureListUserProfileModel = FireStoreDataBase().getUsersImages();
+
   }
 
   @override
@@ -144,6 +149,8 @@ class SwipableCardsState extends State<SwipableCards> {
                 //add this line to remove the ability to move the image around
                 //allowVerticalSwipe: false,
               );
+            } if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
             } if (snapshot.hasError) {
               return const Text(
                 "Something went wrong",
