@@ -179,7 +179,7 @@ class AuthPageState extends State<AuthPage> {
                 });
                 if (emailController.value.text.isNotEmpty) {
                   signIn();
-                  FireStoreDataBase().getUsers();
+                  FireStoreDataBase().getUsers(4);
                 } else {
                   print("Login button disabled since email field is empty");
                 }

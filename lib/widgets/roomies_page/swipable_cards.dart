@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:roomies_app/backend/database.dart';
+import 'package:roomies_app/backend/user_profile_provider.dart';
 import 'package:swipable_stack/swipable_stack.dart';
 import '../../models/user_profile_model.dart';
 import 'like_dislike_bar.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class SwipableCards extends StatefulWidget {
+  final List<UserProfileModel> userProfileModels;
+  final initialPage;
   
-  const SwipableCards({Key? key, }) : super(key: key);
+  const SwipableCards({
+    Key? key,
+    required this.userProfileModels,
+    required this.initialPage
+    }) : super(key: key);
+    
 
   
   @override
@@ -16,18 +25,16 @@ class SwipableCards extends StatefulWidget {
 
 class SwipableCardsState extends State<SwipableCards> {
   late final SwipableStackController swipeController; // = SwipableStackController()..addListener(_listenController);
-  late final Future<List<UserProfileModel>?> futureListUserProfileModel;
+  late final Future<List<UserProfileModel>?> futureListUserProfileModel = FireStoreDataBase().getUsersImages(3);
 
-
-
+  bool isLoading = true;
+  
   @override
   void initState() {
     super.initState();
 
     swipeController = SwipableStackController();
-
-    swipeController = SwipableStackController();
-    futureListUserProfileModel = FireStoreDataBase().getUsersImages();
+    //futureListUserProfileModel = FireStoreDataBase().getUsersImages();
 
   }
 
@@ -37,17 +44,21 @@ class SwipableCardsState extends State<SwipableCards> {
     swipeController.dispose();
   }
 
+  void load() async {
+    await Future.delayed(const Duration(seconds: 2));
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        FutureBuilder(
-          future: futureListUserProfileModel,
-          builder: (context, snapshot) {
-            var userProfileModelList = snapshot.data as List<UserProfileModel>?;
-            if (snapshot.hasData) {
-              return SwipableStack(
-                itemCount: userProfileModelList!.length,
+    load();      
+    if(!isLoading) {
+      return Stack(
+        children: [
+              SwipableStack(
+                itemCount: widget.userProfileModels.length,
                 onWillMoveNext: (index, direction) {
                   final allowedActions = [
                     SwipeDirection.right,
@@ -58,12 +69,14 @@ class SwipableCardsState extends State<SwipableCards> {
                 controller: swipeController,
                 onSwipeCompleted: (index, direction) {
                   //this is where a swipe is handled
+                  Provider.of<UserProfileProvider>(context,listen: false).incrementIndex();
                   print("swipped user: $index,\ndirection: $direction\n");
+                  
                 },
                 builder: (context, properties) {
-                  final currentUserIndex = properties.index % userProfileModelList.length;
-                  final currenUserImages = userProfileModelList[currentUserIndex].imageURLS;
-                  final imgController = PageController(viewportFraction: 1.03,keepPage: true);
+                  final int currentUserIndex = (properties.index % widget.userProfileModels.length + widget.initialPage) as int;
+                  final currenUserImages = widget.userProfileModels[currentUserIndex].imageURLS;
+                  final imgController = PageController();
 
                   final images = List.generate(
                     currenUserImages.length,
@@ -110,7 +123,7 @@ class SwipableCardsState extends State<SwipableCards> {
                               imgController.jumpToPage(index);
                             }),
                             
-                            count: userProfileModelList[currentUserIndex].imageURLS.length,
+                            count: widget.userProfileModels[currentUserIndex].imageURLS.length,
                             effect: const ScrollingDotsEffect(
                               dotHeight: 3,
                               dotWidth: 72,
@@ -126,7 +139,7 @@ class SwipableCardsState extends State<SwipableCards> {
                         child: Padding(
                           padding: const EdgeInsets.only(bottom: 120),
                           child: Text(
-                            userProfileModelList[currentUserIndex].userModel.firstName, 
+                            widget.userProfileModels[currentUserIndex].userModel.firstName + ' $currentUserIndex', 
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 32
@@ -148,23 +161,15 @@ class SwipableCardsState extends State<SwipableCards> {
                 // },
                 //add this line to remove the ability to move the image around
                 //allowVerticalSwipe: false,
-              );
-            } if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } if (snapshot.hasError) {
-              return const Text(
-                "Something went wrong",
-              );
-            } else {
-              return const Center(child: CircularProgressIndicator()); 
-            }
-          }
-        ),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: likeDislikeBar(context, swipeController),
-        ),
-      ]
-    );
+              ),
+
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: likeDislikeBar(context, swipeController),
+          ),
+        ]
+      );
+    }
+    return const Center(child:CircularProgressIndicator());
   }
 }

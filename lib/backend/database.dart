@@ -14,10 +14,11 @@ import '../models/user_model.dart';
 
 class FireStoreDataBase {
 
-  Future<List<UserModel>?> getUsers() async {
+  Future<List<UserModel>?> getUsers(int limit) async {
     try {
       List<UserModel> userList = [];
       await FirebaseFirestore.instance.collection("users")
+      .limit(limit)
       .get()
       .then(
         (querySnapshot) async {
@@ -325,8 +326,8 @@ class FireStoreDataBase {
     }
   }
 
-  Future<List<UserProfileModel>?> getUsersImages() async {
-    List<UserModel>? users = await getUsers();
+  Future<List<UserProfileModel>?> getUsersImages(int limit) async {
+    List<UserModel>? users = await getUsers(limit);
     List<UserProfileModel>? usersProfileModel = [];
 
     try{  
@@ -335,6 +336,7 @@ class FireStoreDataBase {
         late List<dynamic> userProfileImages = [];
 
         await FirebaseFirestore.instance.collection('users/${user.id}/profile_images')
+          .limit(limit)
           .get()
           .then((querySnapshot) {
             for (var doc in querySnapshot.docs) {

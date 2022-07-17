@@ -1,16 +1,22 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
+import 'package:provider/provider.dart';
 import 'package:roomies_app/backend/database.dart';
+import 'package:roomies_app/backend/user_profile_provider.dart';
 import 'package:roomies_app/main.dart';
 import 'package:roomies_app/widgets/bottom_bar.dart';
+import '../models/user_profile_model.dart';
 import 'roomies_page.dart';
 import 'houses_page.dart';
 import 'matches_page.dart';
 
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({
+    Key? key,
+
+  }) : super(key: key);
 
   @override
   ChangePageState createState() => ChangePageState();
@@ -20,23 +26,25 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
   int _previousPage = 0;
   int _currentPage = 0;
 
-  final roomiesPage = RoomiesPage();
-  final matchesPage = const MatchesPage();
-  final housesPage = const HousesPage();
   
+
+  // final roomiesPage = RoomiesPage();
+  // final matchesPage = const MatchesPage();
+  // final housesPage = const HousesPage();
+
+
   
-  late final pages = [
-      roomiesPage,
-      matchesPage,
-      housesPage
-  ];
+  // late final pages = [
+  //     RoomiesPage(),
+  //     MatchesPage(),
+  //     HousesPage()
+  // ];
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-
-    
+    Provider.of<UserProfileProvider>(context, listen: false).loadUsers(4);
   }
 
   @override
@@ -60,10 +68,18 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
   
   @override
   Widget build(BuildContext context) {
-    // roomiesPage.build(context);
-    // matchesPage.build(context);
-    // housesPage.build(context);
+
+    List<UserProfileModel>? userProfileModels = context.read<UserProfileProvider>().userProfileModels;
     
+
+    final pages = [
+      RoomiesPage(userProfileModels: userProfileModels),
+      const MatchesPage(),
+      const HousesPage()
+    ];
+
+
+  
     return Scaffold(
       body: PageTransitionSwitcher(
         transitionBuilder: (child, primaryAnimation, secondaryAnimation) => pageTransition(context,primaryAnimation,child, _currentPage, _previousPage),
@@ -89,6 +105,7 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
           onTap: (int index) {
             _previousPage = _currentPage;
             setState(() => _currentPage = index);
+            // Provider.of<UserProfileProvider>(context).trimList();
           },
           //activeColor is a mandatory fiend but doesnt do anything as the bottom bar library was modified.
           items: <BottomBarItem>[

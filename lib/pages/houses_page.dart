@@ -29,13 +29,13 @@ class HousesPage extends StatelessWidget {
         ),
       ),
       body: FutureBuilder(
-            future: FireStoreDataBase().getUsers(),
+            future: FireStoreDataBase().getUsers(4),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 List<UserModel> userList = snapshot.data as List<UserModel>;
                 return Center(
                   child: ListView.builder(
-                    padding: EdgeInsets.only(top: 70,left: 70, bottom: 115),
+                    padding: const EdgeInsets.only(top: 70,left: 70, bottom: 115),
                     itemCount: userList.length,
                     itemBuilder: (context, index) {
                       var user = userList[index];
