@@ -18,7 +18,7 @@ class MatchesPage extends StatelessWidget {
           gradient: redGradient()
           ),
           child: FutureBuilder(
-            future: FireStoreDataBase().getUsers(4),
+            future: FireStoreDataBase().getUsers(5),
             builder: (context, snapshot) {
               if(snapshot.connectionState == ConnectionState.done){
                 List<UserModel> userList = snapshot.data as List<UserModel>;
