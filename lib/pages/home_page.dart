@@ -15,7 +15,6 @@ import 'matches_page.dart';
 class HomePage extends StatefulWidget {
   const HomePage({
     Key? key,
-
   }) : super(key: key);
 
   @override
@@ -26,25 +25,11 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
   int _previousPage = 0;
   int _currentPage = 0;
 
-  
-
-  // final roomiesPage = RoomiesPage();
-  // final matchesPage = const MatchesPage();
-  // final housesPage = const HousesPage();
-
-
-  
-  // late final pages = [
-  //     RoomiesPage(),
-  //     MatchesPage(),
-  //     HousesPage()
-  // ];
-
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    Provider.of<UserProfileProvider>(context, listen: false).loadUsers(4);
+    
   }
 
   @override
@@ -53,7 +38,6 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
   }
 
-  
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
@@ -69,11 +53,8 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
 
-    List<UserProfileModel>? userProfileModels = context.read<UserProfileProvider>().userProfileModels;
-    
-
     final pages = [
-      RoomiesPage(userProfileModels: userProfileModels),
+      RoomiesPage(),
       const MatchesPage(),
       const HousesPage()
     ];
@@ -102,11 +83,7 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
         child: BottomBar(
           height: MediaQuery.of(context).size.height * 0.1,
           selectedIndex: _currentPage,
-          onTap: (int index) {
-            _previousPage = _currentPage;
-            setState(() => _currentPage = index);
-            // Provider.of<UserProfileProvider>(context).trimList();
-          },
+
           //activeColor is a mandatory fiend but doesnt do anything as the bottom bar library was modified.
           items: <BottomBarItem>[
             /// Roomies
@@ -132,8 +109,14 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
               inactiveColor: Colors.grey,
               inactiveIcon: Image.asset('assets/icons/Home.png', height: 30,),
             ),
-              
+            
           ],
+          onTap: (int index) {
+            _previousPage = _currentPage;
+            setState(
+              () => _currentPage = index 
+            );
+          },
         ),
       ),
     );

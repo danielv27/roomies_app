@@ -4,27 +4,23 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart'; //breaks ios add font manually
 import 'package:provider/provider.dart';
 import '../backend/database.dart';
+
 import '../backend/user_profile_provider.dart';
-import '../models/user_profile_model.dart';
 import '../widgets/gradients/gradient.dart';
 import '../widgets/roomies_page/swipable_cards.dart';
 
 class RoomiesPage extends StatelessWidget {
-  final userProfileModels;
-  // final initialPage;
-  
+  final user = FirebaseAuth.instance.currentUser!;
+  final List dataList = [];  
+
   RoomiesPage({
     Key? key,
-    required this.userProfileModels,
-    // required this.initialPage
   }) : super(key: key);
 
-  final user = FirebaseAuth.instance.currentUser!;
-  final List dataList = [];
 
   @override
   Widget build(BuildContext context) {
-    int initialPage = context.read<UserProfileProvider>().pagesSwiped;
+    final userProvider = context.watch<UserProfileProvider>();
     return Scaffold(  
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(75),
@@ -83,7 +79,7 @@ class RoomiesPage extends StatelessWidget {
       ),
       body: SizedBox(
         height: MediaQuery.of(context).size.height * 0.72,
-        child: SwipableCards(userProfileModels: userProfileModels,initialPage: initialPage)          
+        child: SwipableCards(userProvider: userProvider)          
       ),
     );
   }
