@@ -144,7 +144,11 @@ class SwipableCardsState extends State<SwipableCards> {
                           )
                         ),
                       )
-                    )
+                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: likeDislikeBar(context, swipeController, userProfileModels[currentUserIndex]),
+                    ),
                   ],
                 );
               },
@@ -160,11 +164,6 @@ class SwipableCardsState extends State<SwipableCards> {
               //add this line to remove the ability to move the image around
               //allowVerticalSwipe: false,
             ),
-
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: likeDislikeBar(context, swipeController),
-        ),
       ]
     );
   }

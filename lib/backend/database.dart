@@ -25,6 +25,7 @@ class FireStoreDataBase {
           for (var userDoc in querySnapshot.docs) {
             if(userDoc.id != FirebaseAuth.instance.currentUser?.uid && userDoc.data().containsKey('isHouseOwner')){
               UserProfileImages? usersProfileImages = await getUsersImagesById(userDoc.id);
+              UserSignupProfileModel userSignupProfileModel = await getUserProfile(userDoc.id);
               UserModel newUser = UserModel(
                 id: userDoc.id,
                 email: userDoc['email'],
@@ -32,6 +33,7 @@ class FireStoreDataBase {
                 lastName: userDoc['lastName'],
                 isHouseOwner: userDoc['isHouseOwner'],
                 firstImgUrl: usersProfileImages!.imageURLS[0],
+                userSignupProfileModel: userSignupProfileModel,
               );
               userList.add(newUser);
             }
@@ -49,6 +51,8 @@ class FireStoreDataBase {
     try {
       UserModel? newUser;
       UserProfileImages? usersProfileImages = await getUsersImagesById(userID);
+      UserSignupProfileModel? userSignupProfileModel = await getUserProfile(userID);
+
       await FirebaseFirestore.instance.collection("users")
       .doc(userID)
       .get()
@@ -59,7 +63,8 @@ class FireStoreDataBase {
           firstName: userDoc['firstName'],
           lastName: userDoc['lastName'],
           isHouseOwner: userDoc['isHouseOwner'],
-          firstImgUrl: usersProfileImages!.imageURLS[0],
+          firstImgUrl: usersProfileImages!.imageURLS[0], 
+          userSignupProfileModel: userSignupProfileModel,
         );
       });
       return newUser;
@@ -77,13 +82,16 @@ class FireStoreDataBase {
       .get()
       .then((userDoc) async {
         UserProfileImages? usersProfileImages = await getUsersImagesById(userDoc.id);
+        UserSignupProfileModel? userSignupProfileModel = await getUserProfile(userDoc.id);
+
         newUser = UserModel(
           id: userDoc.id,
           email: userDoc['email'],
           firstName: userDoc['firstName'],
           lastName: userDoc['lastName'],
           isHouseOwner: userDoc['isHouseOwner'],
-          firstImgUrl: usersProfileImages!.imageURLS[0],
+          firstImgUrl: usersProfileImages!.imageURLS[0], 
+          userSignupProfileModel: userSignupProfileModel,
         );
       });
       return newUser;
@@ -210,7 +218,7 @@ class FireStoreDataBase {
         'about': about.text,
         'work': work.text,
         'roommate': roommate.text,
-        'birtdate': birthdate.text,
+        'birthdate': birthdate.text,
       });
     await FirebaseFirestore.instance.collection('users')
       .doc(currentUser?.uid)
@@ -458,6 +466,27 @@ class FireStoreDataBase {
       debugPrint("Error - $e");
       return null;
     }
+  }
+
+  Future<UserSignupProfileModel> getUserProfile(String? currentUserID) async{
+    late UserSignupProfileModel userSignupProfileModel;
+    await FirebaseFirestore.instance.collection('users/$currentUserID/personal_profile')
+      .get()
+      .then((querySnapshot) {
+        for (var doc in querySnapshot.docs) {
+          userSignupProfileModel = UserSignupProfileModel(
+            about: doc['about'],
+            work: doc['work'],
+            study: doc['study'], 
+            birthdate: doc['birthdate'], 
+            maxBudget: doc['maximumBudget'], 
+            minBudget: doc['minimumBudget'], 
+            roommate: doc['roommate'],
+            radius: doc['radius'],
+          );
+        }
+      });
+    return userSignupProfileModel;
   }
 
 }

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:roomies_app/models/user_profile_model.dart';
 
 class UserModel {
   final String id;
@@ -13,6 +14,7 @@ class UserModel {
   house owner the same logic applies but with a house image
   */
   final String firstImgUrl; 
+  final UserSignupProfileModel userSignupProfileModel;
 
   UserModel({
     required this.id,
@@ -20,7 +22,8 @@ class UserModel {
     required this.firstName,
     required this.lastName,
     required this.isHouseOwner,
-    required this.firstImgUrl,
+    required this.firstImgUrl, 
+    required this.userSignupProfileModel,
   });
 }
 
