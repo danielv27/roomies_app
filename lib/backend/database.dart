@@ -443,4 +443,21 @@ class FireStoreDataBase {
     }
   }
 
+  Future<String?> getUserType(String? currentUserID) async {
+    try {
+      bool? isHouseOwner;
+      await FirebaseFirestore.instance.collection('users').doc(currentUserID)
+      .get()
+      .then((value) {
+        isHouseOwner = value.data()!['isHouseOwner'];  
+        isHouseOwner = (isHouseOwner.toString() == "true") ? true : false;
+        print(isHouseOwner);
+      });
+      return isHouseOwner.toString();
+    } catch (e) {
+      debugPrint("Error - $e");
+      return null;
+    }
+  }
+
 }
