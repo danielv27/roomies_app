@@ -20,6 +20,7 @@ class UserProfileProvider extends ChangeNotifier {
   void loadUsers(int limit) async {
     userProfileModels == null ? {
       userProfileModels = await FireStoreDataBase().getUsersImages(limit),
+      
     }:
     {
       FireStoreDataBase().getUsersImages(limit).then((newUsers) => newUsers !=null ?userProfileModels?.addAll(newUsers):null),

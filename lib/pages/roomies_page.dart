@@ -21,6 +21,7 @@ class RoomiesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userProvider = context.watch<UserProfileProvider>();
+    userProvider.loadUsers(4);
     return Scaffold(  
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(75),

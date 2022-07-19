@@ -22,13 +22,13 @@ class SwipableCards extends StatefulWidget {
 class SwipableCardsState extends State<SwipableCards> {
   late final SwipableStackController swipeController;
   late final initialIndex = widget.userProvider.pagesSwiped;
-
   late final Future<List<UserProfileModel>?> futureListUserProfileModel = FireStoreDataBase().getUsersImages(3);
+
+  bool loading = true;
 
   @override
   void initState() {
     super.initState();
-    widget.userProvider.loadUsers(4);
     swipeController = SwipableStackController();
   }
 
@@ -38,11 +38,21 @@ class SwipableCardsState extends State<SwipableCards> {
     swipeController.dispose();
   }
 
+  void load() async {
+    //doesnt really work at the moment
+    await Future.delayed(const Duration(milliseconds: 500));
+    setState(() {
+      loading = false;
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
     final List<UserProfileModel>? userProfileModels = widget.userProvider.userProfileModels;
-    return userProfileModels == null ? const Center(child: CircularProgressIndicator()):
+    //load();
+    return userProfileModels == null ?
+    const Center(child: CircularProgressIndicator()):
     Stack(
       children: [
             SwipableStack(
