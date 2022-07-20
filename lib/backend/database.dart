@@ -344,7 +344,6 @@ class FireStoreDataBase {
         late List<dynamic> userProfileImages = [];
 
         await FirebaseFirestore.instance.collection('users/${user.id}/profile_images')
-          .limit(limit)
           .get()
           .then((querySnapshot) {
             for (var doc in querySnapshot.docs) {
@@ -387,6 +386,33 @@ class FireStoreDataBase {
       return null;
     }
   }
+
+
+  Future<UserProfileModel?> getUserProfileByID(String uid) async {
+    try {
+      UserModel? userModel = await getUserByID(uid);  
+      UserProfileModel? userProfileModel;
+      late List<dynamic> userProfileImages = [];
+
+      await FirebaseFirestore.instance.collection('users/${userModel?.id}/profile_images')
+        .get()
+        .then((querySnapshot) {
+          for (var doc in querySnapshot.docs) {
+            userProfileImages = doc.data()['urls'];
+          }
+          userProfileModel = UserProfileModel(
+            userModel: userModel!,
+            imageURLS: userProfileImages,
+          );
+        });
+      return userProfileModel;
+    } catch (e) {
+      debugPrint("Error - $e");
+      return null;
+    }
+  }
+
+  
 
   Future<UserProfileImages?> getUsersImagesById(String? currentUserID) async{
     try{ 
@@ -513,11 +539,57 @@ class FireStoreDataBase {
     return userSignupProfileModel;
   }
 
-  void addEncounter(bool match, String currentUserID, String otherUserID) async {
+  Future<void> addEncounter(bool match, String currentUserID, String otherUserID) async {
     await FirebaseFirestore.instance.collection('users/$currentUserID/encounters')
     .doc(otherUserID)
     .set({ 
       'match': match,
     });
+  }
+
+
+  Future<List<String>> getEncounters(String currentUserID) async {
+    List<String> encounters = [];
+    await FirebaseFirestore.instance.collection('users/$currentUserID/encounters')
+    .get()
+    .then((querySnapshot) {
+      for(var doc in querySnapshot.docs){
+        encounters.add(doc.id);
+      }
+    });
+    return encounters;
+  }
+
+  Future<List<String>> getMatches(String currentUserID) async {
+    List<String> matches = [];
+    await FirebaseFirestore.instance.collection('users/$currentUserID/encounters')
+    .where('match', isEqualTo: true)
+    .get()
+    .then((querySnapshot) {
+      for(var doc in querySnapshot.docs){
+        matches.add(doc.id);
+      }
+    });
+    return matches;
+  }  
+
+  Future<List<UserProfileModel>> getNewUsers(int limit) async {
+    final String? currentUserID = FirebaseAuth.instance.currentUser?.uid;
+    List<UserProfileModel> newUsers = [];
+    List<String> encounters = await getEncounters(currentUserID!);
+    print(encounters[0]);
+    await FirebaseFirestore.instance.collection('users')
+    .where(FieldPath.documentId, whereNotIn: encounters)
+    .limit(limit)
+    .get()
+    .then((querySnapshot) async {
+      if(querySnapshot.docs.isNotEmpty){
+        for(var doc in querySnapshot.docs){
+          UserProfileModel? user = await getUserProfileByID(doc.id);
+          user != null ? newUsers.add(user):null;
+      }
+      }
+    });
+    return newUsers;
   }
 }

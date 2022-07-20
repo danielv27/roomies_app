@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:roomies_app/backend/current_profile_provider.dart';
 import 'package:roomies_app/backend/database.dart';
 import 'package:roomies_app/backend/user_profile_provider.dart';
 import 'package:swipable_stack/swipable_stack.dart';
@@ -49,6 +50,7 @@ class SwipableCardsState extends State<SwipableCards> {
 
   @override
   Widget build(BuildContext context) {
+      final String? currentUserID = context.read<CurrentUserProvider>().currentUser?.userModel.id;
     final List<UserProfileModel>? userProfileModels = widget.userProvider.userProfileModels;
     int currentUserIndex = widget.userProvider.pagesSwiped;
     //load();
@@ -66,17 +68,19 @@ class SwipableCardsState extends State<SwipableCards> {
                 return allowedActions.contains(direction);
               },
               controller: swipeController,
-              onSwipeCompleted: (index, direction) {
+              onSwipeCompleted: (index, direction) async {
                 //this is where a swipe is handled
                 Provider.of<UserProfileProvider>(context,listen: false).incrementIndex();
                 if(direction == SwipeDirection.right){
-                  
+                  print('liked ${userProfileModels[index].userModel.firstName} ${userProfileModels[index].userModel.lastName}');
+                  print('currentUserID: $currentUserID');
+                  FireStoreDataBase().addEncounter(true, currentUserID!, userProfileModels[index].userModel.id);
                 }
                 if(direction == SwipeDirection.left){
-                  
-                }
-                print("swipped user: ${userProfileModels[index].userModel.firstName},\ndirection: $direction\n");
-                
+                  print('diskliked ${userProfileModels[index].userModel.firstName} ${userProfileModels[index].userModel.lastName}');
+                  print('currentUserID: $currentUserID');
+                  FireStoreDataBase().addEncounter(false, currentUserID!, userProfileModels[index].userModel.id);
+                }                
               },
               builder: (context, properties) {
                 final currentUserIndex = properties.index + initialIndex; 
@@ -87,7 +91,6 @@ class SwipableCardsState extends State<SwipableCards> {
                   currenUserImages.length,
                   (index) =>  Image.network(currenUserImages[index],fit: BoxFit.fill,)
                 );
-
                 return Stack(
                   children: [
                     PageView.builder(
@@ -105,13 +108,10 @@ class SwipableCardsState extends State<SwipableCards> {
                             
                             if(index < currenUserImages.length - 1 && xPos > deviceWidth * 0.65){
                                 imgController.nextPage(duration: const Duration(milliseconds: 200),curve: Curves.easeInOut);
-                                print("current image index: ${index + 1}");
-                              
                             }
 
                             if(index >= 1 && xPos < deviceWidth * 0.35){
-                                imgController.previousPage(duration: Duration(milliseconds: 200),curve: Curves.easeInOut);
-                                print("current image index: ${index - 1}");
+                                imgController.previousPage(duration: const Duration(milliseconds: 200),curve: Curves.easeInOut);
                             }
                             
                           },                        
@@ -144,7 +144,7 @@ class SwipableCardsState extends State<SwipableCards> {
                       child: Padding(
                         padding: const EdgeInsets.only(bottom: 120),
                         child: Text(
-                          userProfileModels[currentUserIndex].userModel.firstName + ' $currentUserIndex', 
+                          userProfileModels[currentUserIndex].userModel.firstName + ' $currentUserIndex', //current userIndex for testing purposes
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 32
@@ -155,17 +155,6 @@ class SwipableCardsState extends State<SwipableCards> {
                   ],
                 );
               },
-              // will be used for adding a label to the swipable cards later on          
-              // overlayBuilder: (context, properties) {
-              //   //final opacity = min(properties.swipeProgress, 1.0);
-              //   final isRight = properties.direction == SwipeDirection.right;
-              //   return Opacity(
-              //     opacity: isRight ? 1 : 0,
-              //     child: Text("OLAOLAOAOALAOO"),
-              //   );
-              // },
-              //add this line to remove the ability to move the image around
-              //allowVerticalSwipe: false,
             ),
             Align(
               alignment: Alignment.bottomCenter,
