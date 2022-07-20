@@ -4,7 +4,25 @@ import 'package:swipable_stack/swipable_stack.dart';
 
 import '../../models/user_profile_model.dart';
 
-Widget likeDislikeBar(BuildContext context, SwipableStackController controller, UserProfileModel userProfileModels) {
+class LikeDislikeBar extends StatefulWidget {
+  const LikeDislikeBar({
+    Key? key,
+    required this.swipeController,
+    required this.userProfileModels,
+    required this.currentUserIndex,
+  }) : super(key: key);
+
+  final SwipableStackController swipeController;
+  final List<UserProfileModel>? userProfileModels;
+  final int currentUserIndex;
+
+  @override
+  State<LikeDislikeBar> createState() => _LikeDislikeBarState();
+}
+
+class _LikeDislikeBarState extends State<LikeDislikeBar> {
+  @override
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 23.0),
       child: Row(
@@ -19,7 +37,7 @@ Widget likeDislikeBar(BuildContext context, SwipableStackController controller, 
                   splashColor: Colors.red[50],
                   onTap: () {
                     print("Dislike button pressed");
-                    controller.next(swipeDirection: SwipeDirection.left);
+                    widget.swipeController.next(swipeDirection: SwipeDirection.left);
                   },
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -49,7 +67,7 @@ Widget likeDislikeBar(BuildContext context, SwipableStackController controller, 
                     splashColor: Colors.red[50],
                     onTap: () {
                       print("Like Button pressed");
-                      controller.next(swipeDirection: SwipeDirection.right);
+                      widget.swipeController.next(swipeDirection: SwipeDirection.right);
                     },
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -76,7 +94,7 @@ Widget likeDislikeBar(BuildContext context, SwipableStackController controller, 
                   splashColor: Colors.red[50],
                   onTap: () {
                     print("Info button pressed");
-                    showUserInfo(context, userProfileModels);
+                    showUserInfo(context, widget.userProfileModels![widget.currentUserIndex]);
                   },
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -211,3 +229,4 @@ Widget likeDislikeBar(BuildContext context, SwipableStackController controller, 
       ),
     );
   }
+}
