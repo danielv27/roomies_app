@@ -1,9 +1,13 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:roomies_app/backend/current_profile_provider.dart';
 import 'package:roomies_app/backend/database.dart';
 import 'package:roomies_app/widgets/matches_page/matches_body.dart';
 import '../../models/user_model.dart';
 import '../../pages/chat_page.dart';
+import 'package:provider/provider.dart';
 
 class MatchesHeaderWidget extends StatelessWidget {
   final List<UserModel> users;
@@ -18,7 +22,7 @@ class MatchesHeaderWidget extends StatelessWidget {
       padding: const EdgeInsets.only(top:32),
       child: Column(
         children: [
-          searchBar(users),
+          searchBar(context, users),
           SizedBox(height: MediaQuery.of(context).size.height*0.02),
           circularUserList(context, users),
         ],
@@ -27,7 +31,7 @@ class MatchesHeaderWidget extends StatelessWidget {
   }
 }
 
-Widget searchBar(List<UserModel> users){
+Widget searchBar(BuildContext context,List<UserModel> users){
   DateTime now = DateTime.now();
   String dayTime = "morning";
   if(now.hour >= 21){
@@ -39,77 +43,64 @@ Widget searchBar(List<UserModel> users){
   else if(now.hour >= 12){
     dayTime = "afternoon";
   }
-  return FutureBuilder(
-    future: FireStoreDataBase().getCurrentUser(),
-    builder: (context, snapshot) {
-      if(snapshot.connectionState == ConnectionState.done){
-        UserModel currentUser = snapshot.data as UserModel;
-        return AppBar(
-          centerTitle: false,
-          backgroundColor: Colors.transparent,
-          shadowColor: Colors.transparent,
-          actions: [
-            GestureDetector(
-              onTap: () { 
-                print('search pressed');
-                  showSearch(
-                    context: context,
-                    delegate: MatchesSearchDelegate(users)
-                );
-              },
-              child: CircleAvatar(
-                radius: 32,
-                backgroundColor: Colors.white.withOpacity(0.4),
-                child: const Icon(Icons.search_rounded,color: Colors.white,),
-              ),
+  UserModel? currentUser = context.read<CurrentUserProvider>().currentUser?.userModel;
+  return AppBar(
+    centerTitle: false,
+    backgroundColor: Colors.transparent,
+    shadowColor: Colors.transparent,
+    actions: [
+      GestureDetector(
+        onTap: () { 
+          print('search pressed');
+            showSearch(
+              context: context,
+              delegate: MatchesSearchDelegate(users)
+          );
+        },
+        child: CircleAvatar(
+          radius: 32,
+          backgroundColor: Colors.white.withOpacity(0.4),
+          child: const Icon(Icons.search_rounded,color: Colors.white,),
+        ),
+      ),
+      GestureDetector(
+        onTap: () {
+          print('profile pressed');
+        },
+        child: CircleAvatar(
+          backgroundColor: Colors.red,
+          radius: 32,
+          backgroundImage: NetworkImage(currentUser!.firstImgUrl),
+        ),
+      ),
+      const Padding(padding: EdgeInsets.only(right: 16))
+
+    ],
+    title: Column(
+      children: [
+          Align(
+          alignment: Alignment.topLeft,
+          child: Text(
+            "Good $dayTime,",
+            textAlign: TextAlign.left,
+            style: const TextStyle(
+              fontSize: 16,
+              color: Colors.white
             ),
-            GestureDetector(
-              onTap: () {
-                print('profile pressed');
-              },
-              child: CircleAvatar(
-                backgroundColor: Colors.red,
-                radius: 32,
-                backgroundImage: NetworkImage(currentUser.firstImgUrl),
-              ),
-            ),
-            const Padding(padding: EdgeInsets.only(right: 16))
-      
-          ],
-          title: Column(
-            children: [
-               Align(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  "Good $dayTime,",
-                  textAlign: TextAlign.left,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.white
-                  ),
-                ),
-              ),
-              Align(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  "${currentUser.firstName} ${currentUser.lastName}",
-                  style: const TextStyle(
-                    //fontSize: 16,
-                    color: Colors.white
-                  ),
-                ),
-              ),
-            ],
           ),
-        );
-      }
-      if (snapshot.hasError) {
-        return const Text(
-          "Something went wrong",
-        );
-      }
-      return const Center(child: CircularProgressIndicator(color: Colors.red));
-    }
+        ),
+        Align(
+          alignment: Alignment.topLeft,
+          child: Text(
+            "${currentUser.firstName} ${currentUser.lastName}",
+            style: const TextStyle(
+              //fontSize: 16,
+              color: Colors.white
+            ),
+          ),
+        ),
+      ],
+    ),
   );
 }
 

@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 import 'package:provider/provider.dart';
+import 'package:roomies_app/backend/current_profile_provider.dart';
 import 'package:roomies_app/backend/database.dart';
 import 'package:roomies_app/backend/user_profile_provider.dart';
 import 'package:roomies_app/main.dart';
@@ -29,7 +30,7 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    
+    Provider.of<CurrentUserProvider>(context, listen: false).initialize();
   }
 
   @override

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:roomies_app/models/user_profile_images.dart';
@@ -76,7 +75,8 @@ class FireStoreDataBase {
 
   Future<UserModel?> getCurrentUser() async {
     try {
-      UserModel? newUser;
+      
+      UserModel? currentUser;
       await FirebaseFirestore.instance.collection("users")
       .doc(FirebaseAuth.instance.currentUser?.uid)
       .get()
@@ -84,7 +84,7 @@ class FireStoreDataBase {
         UserProfileImages? usersProfileImages = await getUsersImagesById(userDoc.id);
         UserSignupProfileModel? userSignupProfileModel = await getUserProfile(userDoc.id);
 
-        newUser = UserModel(
+        currentUser = UserModel(
           id: userDoc.id,
           email: userDoc['email'],
           firstName: userDoc['firstName'],
@@ -94,7 +94,7 @@ class FireStoreDataBase {
           userSignupProfileModel: userSignupProfileModel,
         );
       });
-      return newUser;
+      return currentUser;
     } catch (e) {
       debugPrint("Error - $e");
       return null;
@@ -358,6 +358,30 @@ class FireStoreDataBase {
         usersProfileModel.add(userProfileModel);
       }
       return usersProfileModel;
+    } catch (e) {
+      debugPrint("Error - $e");
+      return null;
+    }
+  }
+
+    Future<UserProfileModel?> getCurrentUserProfile() async {
+    try {
+      UserModel? userModel = await getCurrentUser();  
+      UserProfileModel? userProfileModel;
+      late List<dynamic> userProfileImages = [];
+
+      await FirebaseFirestore.instance.collection('users/${userModel?.id}/profile_images')
+        .get()
+        .then((querySnapshot) {
+          for (var doc in querySnapshot.docs) {
+            userProfileImages = doc.data()['urls'];
+          }
+          userProfileModel = UserProfileModel(
+            userModel: userModel!,
+            imageURLS: userProfileImages,
+          );
+        });
+      return userProfileModel;
     } catch (e) {
       debugPrint("Error - $e");
       return null;

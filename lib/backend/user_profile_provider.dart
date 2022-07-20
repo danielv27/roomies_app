@@ -10,20 +10,18 @@ class UserProfileProvider extends ChangeNotifier {
     //remove elements from beggining of array depending on how many page were swiped
   }
 
-  void incrementIndex(){
-    print('original PagesSwiped $pagesSwiped');
+  Future<void> incrementIndex() async {
     pagesSwiped++;
-    print('new pagesSwiped: $pagesSwiped');
-    loadUsers(1);
+    print('pagesSwiped: $pagesSwiped');
+    await loadUsers(1);
   }
 
-  void loadUsers(int limit) async {
+  Future<void> loadUsers(int limit) async {
     userProfileModels == null ? {
       userProfileModels = await FireStoreDataBase().getUsersImages(limit),
-      
     }:
     {
-      FireStoreDataBase().getUsersImages(limit).then((newUsers) => newUsers !=null ?userProfileModels?.addAll(newUsers):null),
+      await FireStoreDataBase().getUsersImages(limit).then((newUsers) => newUsers !=null ?userProfileModels?.addAll(newUsers):null),
     };
     notifyListeners();
   }

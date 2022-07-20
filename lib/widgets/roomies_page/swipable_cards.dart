@@ -50,6 +50,7 @@ class SwipableCardsState extends State<SwipableCards> {
   @override
   Widget build(BuildContext context) {
     final List<UserProfileModel>? userProfileModels = widget.userProvider.userProfileModels;
+    int currentUserIndex = widget.userProvider.pagesSwiped;
     //load();
     return userProfileModels == null ?
     const Center(child: CircularProgressIndicator()):
@@ -72,7 +73,7 @@ class SwipableCardsState extends State<SwipableCards> {
                 
               },
               builder: (context, properties) {
-                final int currentUserIndex = properties.index + initialIndex; 
+                final currentUserIndex = properties.index + initialIndex; 
                 final currenUserImages = userProfileModels[currentUserIndex].imageURLS;
                 final imgController = PageController();
 
@@ -91,7 +92,7 @@ class SwipableCardsState extends State<SwipableCards> {
                       controller: imgController,
                       itemBuilder: (context, index){
                         return GestureDetector(
-                          child: images[index],//Image.asset(currenUserImages[index],width: MediaQuery.of(context).size.width),
+                          child: images[index],
                           onTapUp:(details) {
                             var deviceWidth = MediaQuery.of(context).size.width;
                             var xPos = details.globalPosition.dx;
@@ -145,10 +146,6 @@ class SwipableCardsState extends State<SwipableCards> {
                         ),
                       )
                     ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: likeDislikeBar(context, swipeController, userProfileModels[currentUserIndex]),
-                    ),
                   ],
                 );
               },
@@ -164,6 +161,10 @@ class SwipableCardsState extends State<SwipableCards> {
               //add this line to remove the ability to move the image around
               //allowVerticalSwipe: false,
             ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: likeDislikeBar(context, swipeController, userProfileModels[currentUserIndex]),
+        ),
       ]
     );
   }
