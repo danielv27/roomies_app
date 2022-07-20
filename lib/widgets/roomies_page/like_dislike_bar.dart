@@ -1,3 +1,4 @@
+import 'package:bottom_sheet/bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:roomies_app/widgets/gradients/gradient.dart';
 import 'package:swipable_stack/swipable_stack.dart';
@@ -133,139 +134,116 @@ class _LikeDislikeBarState extends State<LikeDislikeBar> with SingleTickerProvid
   }
 
   void showUserInfo(BuildContext context, UserProfileModel userProfileModel, double modalSheetHeight) {
-    showModalBottomSheet(
-      transitionAnimationController: animationController,
-      barrierColor: Colors.transparent,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
+    showStickyFlexibleBottomSheet(
       context: context,
-      shape: const RoundedRectangleBorder(
+      minHeight: 0,
+      initHeight: 0.5,
+      maxHeight: 0.95,
+      headerHeight: 165,
+      anchors: [0, 0.5, 0.95],
+      isSafeArea: true,
+      bottomSheetColor: Colors.transparent,
+      decoration: const BoxDecoration(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(30.0), 
           topRight: Radius.circular(30.0)
         ),
+        shape: BoxShape.rectangle,
+        color: Colors.white,
       ),
-      builder: (BuildContext context) {
-        return makeDissmissable(
-          child: DraggableScrollableSheet(
-            initialChildSize: modalSheetHeight,
-            minChildSize: modalSheetHeight,
-            maxChildSize: 1,
-            builder: (_, ScrollController scrollController) {
-              return Stack(
-                children: [
-                  Container(
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(30.0), 
-                        topRight: Radius.circular(30.0)
-                      ),
-                      color: Colors.white,
-                    ),
-                    padding: const EdgeInsets.all(15),
-                    child: ListView(
-                      controller: scrollController,
-                      children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.only(bottom: 15.0, top:  25.0),
-                            child: Text(
-                              "${userProfileModel.userModel.firstName}, 22",
-                              style: const TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.w600
-                              ),
-                            ),
-                          ),
-                        ),
-                        Row(
-                          children: [
-                            Image.asset("assets/icons/Location.png", width: 20, height: 20,),
-                            const Padding(
-                              padding: EdgeInsets.only(left: 8.0),
-                              child: Text(
-                                "Amsterdam, De Pijp",
-                                style: TextStyle(
-                                  color: Color.fromRGBO(128, 128, 128, 1),
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                            const Spacer(),
-                            Image.asset("assets/icons/coin.png", width: 20, height: 20,),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: Text(
-                                "\u{20AC}${userProfileModel.userModel.userSignupProfileModel.minBudget} - \u{20AC}${userProfileModel.userModel.userSignupProfileModel.maxBudget}",
-                                style: const TextStyle(
-                                  color: Colors.grey,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 16,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.only(bottom: 15.0, top: 15.0),
-                          child: Divider(
-                            color: Color.fromARGB(255, 163, 163, 163),
-                          ),
-                        ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            textTitle("About"),
-                            textDescription(userProfileModel.userModel.userSignupProfileModel.about),
-                            const SizedBox(height: 12,),
-                            textTitle("Work"),
-                            textDescription(userProfileModel.userModel.userSignupProfileModel.work),
-                            const SizedBox(height: 12,),
-                            textTitle("Study"),
-                            textDescription(userProfileModel.userModel.userSignupProfileModel.study),
-                            const SizedBox(height: 12,),
-                            textTitle("What I like to see in a roommate"),
-                            textDescription(userProfileModel.userModel.userSignupProfileModel.roommate),
-                            const SizedBox(height: 12,),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  Transform.translate(
-                    offset: const Offset(-25, -25),
-                    child: Align(
-                      alignment: Alignment.topRight,
-                      child: Container(
-                        height: 50,
-                        width: 50,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          gradient: redGradient(),
-                        ),
-                        child: FloatingActionButton(
-                          elevation: 0,
-                          onPressed: () { 
-                              buttonInfoPressed = !buttonInfoPressed;
-                              showUserInfo(context, userProfileModel, modalSheetHeight * 1.5);
-                              // scrollController.jumpTo(100);
-                              //animationController.animateTo(0.5, duration: Duration(milliseconds: 300), curve: Curves.easeIn);
-                            //scrollController.jumpTo(0.5);
-                          },
-                          backgroundColor: Colors.transparent,
-                          child: const Icon(Icons.arrow_upward_outlined),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            }
-          ),
-        );
+      headerBuilder: (BuildContext context, double bottomSheetOffset) {
+        return headerInfo(userProfileModel); 
       },
+      bodyBuilder: (BuildContext context, double offset) {
+        return bodyInfo(userProfileModel);
+      },
+    );
+  }
+
+  Widget headerInfo(UserProfileModel userProfileModel) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 15.0, right: 15.0, top: 15.0),
+      child: Column(
+        children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 15.0, top:  25.0),
+              child: Text(
+                "${userProfileModel.userModel.firstName}, 22",
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w600
+                ),
+              ),
+            ),
+          ),
+          Row(
+            children: [
+              Image.asset("assets/icons/Location.png", width: 20, height: 20,),
+              const Padding(
+                padding: EdgeInsets.only(left: 8.0),
+                child: Text(
+                  "Amsterdam, De Pijp",
+                  style: TextStyle(
+                    color: Color.fromRGBO(128, 128, 128, 1),
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              const Spacer(),
+              Image.asset("assets/icons/coin.png", width: 20, height: 20,),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Text(
+                  "\u{20AC}${userProfileModel.userModel.userSignupProfileModel.minBudget} - \u{20AC}${userProfileModel.userModel.userSignupProfileModel.maxBudget}",
+                  style: const TextStyle(
+                    color: Colors.grey,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const Padding(
+            padding: EdgeInsets.only(top: 15.0),
+            child: Divider(
+              color: Color.fromARGB(255, 163, 163, 163),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  SliverChildListDelegate bodyInfo(UserProfileModel userProfileModel) {
+    return SliverChildListDelegate(
+      <Widget> [
+        Padding(
+          padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                textTitle("About"),
+                textDescription(userProfileModel.userModel.userSignupProfileModel.about),
+                const SizedBox(height: 12,),
+                textTitle("Work"),
+                textDescription(userProfileModel.userModel.userSignupProfileModel.work),
+                const SizedBox(height: 12,),
+                textTitle("Study"),
+                textDescription(userProfileModel.userModel.userSignupProfileModel.study),
+                const SizedBox(height: 12,),
+                textTitle("What I like to see in a roommate"),
+                textDescription(userProfileModel.userModel.userSignupProfileModel.roommate),
+                const SizedBox(height: 12,),
+              ],
+            ),
+          ),
+        )
+      ]
     );
   }
 
