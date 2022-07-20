@@ -165,6 +165,16 @@ class _LikeDislikeBarState extends State<LikeDislikeBar> with SingleTickerProvid
       padding: const EdgeInsets.only(left: 15.0, right: 15.0, top: 15.0),
       child: Column(
         children: [
+          Center(
+            child: Container(
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                color: Color.fromRGBO(238, 238, 238, 1),
+              ),
+              height: 5,
+              width: 80,
+            ),
+          ),
           Align(
             alignment: Alignment.centerLeft,
             child: Padding(
