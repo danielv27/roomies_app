@@ -171,7 +171,7 @@ class SwipableCardsState extends State<SwipableCards> {
         ),
         Align(
           alignment: Alignment.bottomCenter,
-          child: LikeDislikeBar(swipeController: swipeController, userProfileModels: userProfileModels, currentUserIndex: currentUserIndex, buttonInfoPressed: buttonInfoPressed),
+          child: LikeDislikeBar(swipeController: swipeController, userProfileModels: userProfileModels, currentUserIndex: currentUserIndex),
         ),
       ]
     );
