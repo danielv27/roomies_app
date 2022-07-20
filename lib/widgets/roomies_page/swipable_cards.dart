@@ -9,10 +9,12 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class SwipableCards extends StatefulWidget {
   final UserProfileProvider userProvider;
+  late bool buttonInfoPressed;
   
-  const SwipableCards({
+  SwipableCards({
     Key? key,
-    required this.userProvider
+    required this.userProvider,
+    required this.buttonInfoPressed,
     }) : super(key: key);
     
   @override
@@ -23,7 +25,7 @@ class SwipableCardsState extends State<SwipableCards> {
   late final SwipableStackController swipeController;
   late final initialIndex = widget.userProvider.pagesSwiped;
   late final Future<List<UserProfileModel>?> futureListUserProfileModel = FireStoreDataBase().getUsersImages(3);
-
+  late final buttonInfoPressed = widget.buttonInfoPressed;
   bool loading = true;
 
   @override
@@ -56,120 +58,120 @@ class SwipableCardsState extends State<SwipableCards> {
     const Center(child: CircularProgressIndicator()):
     Stack(
       children: [
-            SwipableStack(
-              itemCount: userProfileModels.length,
-              onWillMoveNext: (index, direction) {
-                final allowedActions = [
-                  SwipeDirection.right,
-                  SwipeDirection.left,
-                ];
-                return allowedActions.contains(direction);
-              },
-              controller: swipeController,
-              onSwipeCompleted: (index, direction) {
-                //this is where a swipe is handled
-                Provider.of<UserProfileProvider>(context,listen: false).incrementIndex();
-                if(direction == SwipeDirection.right){
-                  
-                }
-                if(direction == SwipeDirection.left){
-                  
-                }
-                print("swipped user: ${userProfileModels[index].userModel.firstName},\ndirection: $direction\n");
-                
-              },
-              builder: (context, properties) {
-                final currentUserIndex = properties.index + initialIndex; 
-                final currenUserImages = userProfileModels[currentUserIndex].imageURLS;
-                final imgController = PageController();
+        SwipableStack(
+          itemCount: userProfileModels.length,
+          onWillMoveNext: (index, direction) {
+            final allowedActions = [
+              SwipeDirection.right,
+              SwipeDirection.left,
+            ];
+            return allowedActions.contains(direction);
+          },
+          controller: swipeController,
+          onSwipeCompleted: (index, direction) {
+            //this is where a swipe is handled
+            Provider.of<UserProfileProvider>(context,listen: false).incrementIndex();
+            if(direction == SwipeDirection.right){
+              
+            }
+            if(direction == SwipeDirection.left){
+              
+            }
+            print("swipped user: ${userProfileModels[index].userModel.firstName},\ndirection: $direction\n");
+            
+          },
+          builder: (context, properties) {
+            final currentUserIndex = properties.index + initialIndex; 
+            final currenUserImages = userProfileModels[currentUserIndex].imageURLS;
+            final imgController = PageController();
 
-                final images = List.generate(
-                  currenUserImages.length,
-                  (index) =>  Image.network(currenUserImages[index],fit: BoxFit.fill,)
-                );
+            final images = List.generate(
+              currenUserImages.length,
+              (index) =>  Image.network(currenUserImages[index],fit: BoxFit.fill,)
+            );
 
-                return Stack(
-                  children: [
-                    PageView.builder(
-                      allowImplicitScrolling: true,
-                      itemCount: currenUserImages.length,
-                      scrollDirection: Axis.horizontal,
-                      physics: const NeverScrollableScrollPhysics(),
-                      controller: imgController,
-                      itemBuilder: (context, index){
-                        return GestureDetector(
-                          child: images[index],
-                          onTapUp:(details) {
-                            var deviceWidth = MediaQuery.of(context).size.width;
-                            var xPos = details.globalPosition.dx;
-                            
-                            if(index < currenUserImages.length - 1 && xPos > deviceWidth * 0.65){
-                                imgController.nextPage(duration: const Duration(milliseconds: 200),curve: Curves.easeInOut);
-                                print("current image index: ${index + 1}");
-                              
-                            }
-
-                            if(index >= 1 && xPos < deviceWidth * 0.35){
-                                imgController.previousPage(duration: Duration(milliseconds: 200),curve: Curves.easeInOut);
-                                print("current image index: ${index - 1}");
-                            }
-                            
-                          },                        
-                        ); 
-                      },
-                    ),
-                    Align(
-                      alignment: Alignment.topCenter,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 11.0),
-                        child: SmoothPageIndicator(
-                          controller: imgController,
-                          onDotClicked: ((index) {
-                            imgController.jumpToPage(index);
-                          }),
+            return Stack(
+              children: [
+                PageView.builder(
+                  allowImplicitScrolling: true,
+                  itemCount: currenUserImages.length,
+                  scrollDirection: Axis.horizontal,
+                  physics: const NeverScrollableScrollPhysics(),
+                  controller: imgController,
+                  itemBuilder: (context, index){
+                    return GestureDetector(
+                      child: images[index],
+                      onTapUp:(details) {
+                        var deviceWidth = MediaQuery.of(context).size.width;
+                        var xPos = details.globalPosition.dx;
+                        
+                        if(index < currenUserImages.length - 1 && xPos > deviceWidth * 0.65){
+                            imgController.nextPage(duration: const Duration(milliseconds: 200),curve: Curves.easeInOut);
+                            print("current image index: ${index + 1}");
                           
-                          count: userProfileModels[currentUserIndex].imageURLS.length,
-                          effect: const ScrollingDotsEffect(
-                            dotHeight: 3,
-                            dotWidth: 72,
-                            spacing: 4.5,
-                            activeDotColor: Colors.white,
-                            activeDotScale: 1
-                          ),
-                        ),
+                        }
+
+                        if(index >= 1 && xPos < deviceWidth * 0.35){
+                            imgController.previousPage(duration: Duration(milliseconds: 200),curve: Curves.easeInOut);
+                            print("current image index: ${index - 1}");
+                        }
+                        
+                      },                        
+                    ); 
+                  },
+                ),
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 11.0),
+                    child: SmoothPageIndicator(
+                      controller: imgController,
+                      onDotClicked: ((index) {
+                        imgController.jumpToPage(index);
+                      }),
+                      
+                      count: userProfileModels[currentUserIndex].imageURLS.length,
+                      effect: const ScrollingDotsEffect(
+                        dotHeight: 3,
+                        dotWidth: 72,
+                        spacing: 4.5,
+                        activeDotColor: Colors.white,
+                        activeDotScale: 1
                       ),
                     ),
-                    Align(
-                      alignment: Alignment.bottomLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 120),
-                        child: Text(
-                          userProfileModels[currentUserIndex].userModel.firstName + ' $currentUserIndex', 
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 32
-                          )
-                        ),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 120),
+                    child: Text(
+                      userProfileModels[currentUserIndex].userModel.firstName + ' $currentUserIndex', 
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 32
                       )
                     ),
-                  ],
-                );
-              },
-              // will be used for adding a label to the swipable cards later on          
-              // overlayBuilder: (context, properties) {
-              //   //final opacity = min(properties.swipeProgress, 1.0);
-              //   final isRight = properties.direction == SwipeDirection.right;
-              //   return Opacity(
-              //     opacity: isRight ? 1 : 0,
-              //     child: Text("OLAOLAOAOALAOO"),
-              //   );
-              // },
-              //add this line to remove the ability to move the image around
-              //allowVerticalSwipe: false,
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: LikeDislikeBar(swipeController: swipeController, userProfileModels: userProfileModels, currentUserIndex: currentUserIndex),
+                  )
+                ),
+              ],
+            );
+          },
+          // will be used for adding a label to the swipable cards later on          
+          // overlayBuilder: (context, properties) {
+          //   //final opacity = min(properties.swipeProgress, 1.0);
+          //   final isRight = properties.direction == SwipeDirection.right;
+          //   return Opacity(
+          //     opacity: isRight ? 1 : 0,
+          //     child: Text("OLAOLAOAOALAOO"),
+          //   );
+          // },
+          //add this line to remove the ability to move the image around
+          //allowVerticalSwipe: false,
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: LikeDislikeBar(swipeController: swipeController, userProfileModels: userProfileModels, currentUserIndex: currentUserIndex, buttonInfoPressed: buttonInfoPressed),
         ),
       ]
     );

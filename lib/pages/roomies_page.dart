@@ -20,6 +20,8 @@ class RoomiesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool buttonInfoPressed = false;
+
     final userProvider = context.watch<UserProfileProvider>();
     userProvider.loadUsers(4);
     return Scaffold(  
@@ -80,7 +82,7 @@ class RoomiesPage extends StatelessWidget {
       ),
       body: SizedBox(
         height: MediaQuery.of(context).size.height * 0.72,
-        child: SwipableCards(userProvider: userProvider)          
+        child: SwipableCards(userProvider: userProvider, buttonInfoPressed: buttonInfoPressed)          
       ),
     );
   }
