@@ -468,7 +468,7 @@ class FireStoreDataBase {
         if(isOnline != null){
           yield (isOnline) ? true : false;
         }
-        await Future.delayed(const Duration(seconds: 3));
+        await Future.delayed(const Duration(seconds: 2));
       }
     } catch (e) {
       debugPrint("Error - $e");
@@ -513,4 +513,11 @@ class FireStoreDataBase {
     return userSignupProfileModel;
   }
 
+  void addEncounter(bool match, String currentUserID, String otherUserID) async {
+    await FirebaseFirestore.instance.collection('users/$currentUserID/encounters')
+    .doc(otherUserID)
+    .set({ 
+      'match': match,
+    });
+  }
 }

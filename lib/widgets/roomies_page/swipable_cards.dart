@@ -69,7 +69,13 @@ class SwipableCardsState extends State<SwipableCards> {
               onSwipeCompleted: (index, direction) {
                 //this is where a swipe is handled
                 Provider.of<UserProfileProvider>(context,listen: false).incrementIndex();
-                print("swipped user: $index,\ndirection: $direction\n");
+                if(direction == SwipeDirection.right){
+                  
+                }
+                if(direction == SwipeDirection.left){
+                  
+                }
+                print("swipped user: ${userProfileModels[index].userModel.firstName},\ndirection: $direction\n");
                 
               },
               builder: (context, properties) {
