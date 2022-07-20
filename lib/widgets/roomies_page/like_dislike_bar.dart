@@ -25,7 +25,6 @@ class _LikeDislikeBarState extends State<LikeDislikeBar> with SingleTickerProvid
   bool buttonInfoPressed = false;
 
   @override
-  @override
   initState() {
     super.initState();
     animationController = BottomSheet.createAnimationController(this);
