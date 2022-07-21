@@ -1,10 +1,47 @@
+import 'package:bottom_sheet/bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:roomies_app/widgets/gradients/gradient.dart';
 import 'package:swipable_stack/swipable_stack.dart';
 
 import '../../models/user_profile_model.dart';
 
-Widget likeDislikeBar(BuildContext context, SwipableStackController controller, UserProfileModel userProfileModels) {
+class LikeDislikeBar extends StatefulWidget {
+  LikeDislikeBar({
+    Key? key,
+    required this.swipeController,
+    required this.userProfileModels,
+    required this.currentUserIndex,
+  }) : super(key: key);
+
+  final SwipableStackController swipeController;
+  final List<UserProfileModel>? userProfileModels;
+  final int currentUserIndex;
+
+  @override
+  State<LikeDislikeBar> createState() => _LikeDislikeBarState();
+}
+
+class _LikeDislikeBarState extends State<LikeDislikeBar> with SingleTickerProviderStateMixin {
+  late AnimationController animationController;
+  bool buttonInfoPressed = false;
+
+  @override
+  initState() {
+    super.initState();
+    animationController = BottomSheet.createAnimationController(this);
+    animationController.duration = const Duration(milliseconds: 500);
+  }
+
+  @override
+  void dispose() {
+    animationController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var modalSheetHeight = buttonInfoPressed ? 0.8 : 0.5;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 23.0),
       child: Row(
@@ -19,7 +56,7 @@ Widget likeDislikeBar(BuildContext context, SwipableStackController controller, 
                   splashColor: Colors.red[50],
                   onTap: () {
                     print("Dislike button pressed");
-                    controller.next(swipeDirection: SwipeDirection.left);
+                    widget.swipeController.next(swipeDirection: SwipeDirection.left);
                   },
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -49,7 +86,7 @@ Widget likeDislikeBar(BuildContext context, SwipableStackController controller, 
                     splashColor: Colors.red[50],
                     onTap: () {
                       print("Like Button pressed");
-                      controller.next(swipeDirection: SwipeDirection.right);
+                      widget.swipeController.next(swipeDirection: SwipeDirection.right);
                     },
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -75,8 +112,7 @@ Widget likeDislikeBar(BuildContext context, SwipableStackController controller, 
                 child: InkWell(
                   splashColor: Colors.red[50],
                   onTap: () {
-                    print("Info button pressed");
-                    showUserInfo(context, userProfileModels);
+                    showUserInfo(context, widget.userProfileModels![widget.currentUserIndex], modalSheetHeight);
                   },
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -84,7 +120,6 @@ Widget likeDislikeBar(BuildContext context, SwipableStackController controller, 
                       ImageIcon(
                         AssetImage("assets/icons/Info_circle.png"),
                         color: Colors.white,
-                        
                         size: 28,
                       ),
                     ],
@@ -98,97 +133,127 @@ Widget likeDislikeBar(BuildContext context, SwipableStackController controller, 
     );
   }
 
-  void showUserInfo(BuildContext context, UserProfileModel userProfileModel) {
-    showModalBottomSheet<void>(
-      barrierColor: Colors.transparent,
-      isScrollControlled: true,
+  void showUserInfo(BuildContext context, UserProfileModel userProfileModel, double modalSheetHeight) {
+    showStickyFlexibleBottomSheet(
       context: context,
-      shape: const RoundedRectangleBorder(
+      minHeight: 0,
+      initHeight: 0.5,
+      maxHeight: 0.95,
+      headerHeight: 165,
+      anchors: [0, 0.5, 0.95],
+      isSafeArea: true,
+      bottomSheetColor: Colors.transparent,
+      decoration: const BoxDecoration(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(30.0), 
           topRight: Radius.circular(30.0)
         ),
+        shape: BoxShape.rectangle,
+        color: Colors.white,
       ),
-      builder: (BuildContext context) {
-        return SingleChildScrollView(
-          padding: MediaQuery.of(context).viewInsets,
-          child: Container(
-            padding: const EdgeInsets.all(15),
+      headerBuilder: (BuildContext context, double bottomSheetOffset) {
+        return headerInfo(userProfileModel); 
+      },
+      bodyBuilder: (BuildContext context, double offset) {
+        return bodyInfo(userProfileModel);
+      },
+    );
+  }
+
+  Widget headerInfo(UserProfileModel userProfileModel) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 15.0, right: 15.0, top: 15.0),
+      child: Column(
+        children: [
+          Center(
+            child: Container(
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                color: Color.fromRGBO(238, 238, 238, 1),
+              ),
+              height: 5,
+              width: 80,
+            ),
+          ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 15.0, top:  25.0),
+              child: Text(
+                "${userProfileModel.userModel.firstName}, 22",
+                style: const TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w600
+                ),
+              ),
+            ),
+          ),
+          Row(
+            children: [
+              Image.asset("assets/icons/Location.png", width: 20, height: 20,),
+              const Padding(
+                padding: EdgeInsets.only(left: 8.0),
+                child: Text(
+                  "Amsterdam, De Pijp",
+                  style: TextStyle(
+                    color: Color.fromRGBO(128, 128, 128, 1),
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              const Spacer(),
+              Image.asset("assets/icons/coin.png", width: 20, height: 20,),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Text(
+                  "\u{20AC}${userProfileModel.userModel.userSignupProfileModel.minBudget} - \u{20AC}${userProfileModel.userModel.userSignupProfileModel.maxBudget}",
+                  style: const TextStyle(
+                    color: Colors.grey,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const Padding(
+            padding: EdgeInsets.only(top: 15.0),
+            child: Divider(
+              color: Color.fromARGB(255, 163, 163, 163),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  SliverChildListDelegate bodyInfo(UserProfileModel userProfileModel) {
+    return SliverChildListDelegate(
+      <Widget> [
+        Padding(
+          padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
+          child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
               children: [
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 15.0, top:  25.0),
-                    child: Text(
-                      "${userProfileModel.userModel.firstName}, 22",
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w600
-                      ),
-                    ),
-                  ),
-                ),
-                Row(
-                  children: [
-                    Image.asset("assets/icons/Location.png", width: 20, height: 20,),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 8.0),
-                      child: Text(
-                        "Amsterdam, De Pijp",
-                        style: TextStyle(
-                          color: Color.fromRGBO(128, 128, 128, 1),
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                    const Spacer(),
-                    Image.asset("assets/icons/coin.png", width: 20, height: 20,),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Text(
-                        "\u{20AC}${userProfileModel.userModel.userSignupProfileModel.minBudget} - \u{20AC}${userProfileModel.userModel.userSignupProfileModel.maxBudget}",
-                        style: const TextStyle(
-                          color: Colors.grey,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 15.0, top: 15.0),
-                  child: Divider(
-                    color: Color.fromARGB(255, 163, 163, 163),
-                  ),
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    textTitle("About"),
-                    textDescription(userProfileModel.userModel.userSignupProfileModel.about),
-                    const SizedBox(height: 12,),
-                    textTitle("Work"),
-                    textDescription(userProfileModel.userModel.userSignupProfileModel.work),
-                    const SizedBox(height: 12,),
-                    textTitle("Study"),
-                    textDescription(userProfileModel.userModel.userSignupProfileModel.study),
-                    const SizedBox(height: 12,),
-                    textTitle("What I like to see in a roommate"),
-                    textDescription(userProfileModel.userModel.userSignupProfileModel.roommate),
-                    const SizedBox(height: 12,),
-                  ],
-                ),
+                textTitle("About"),
+                textDescription(userProfileModel.userModel.userSignupProfileModel.about),
+                const SizedBox(height: 12,),
+                textTitle("Work"),
+                textDescription(userProfileModel.userModel.userSignupProfileModel.work),
+                const SizedBox(height: 12,),
+                textTitle("Study"),
+                textDescription(userProfileModel.userModel.userSignupProfileModel.study),
+                const SizedBox(height: 12,),
+                textTitle("What I like to see in a roommate"),
+                textDescription(userProfileModel.userModel.userSignupProfileModel.roommate),
+                const SizedBox(height: 12,),
               ],
             ),
           ),
-        );
-      },
+        )
+      ]
     );
   }
 
@@ -211,3 +276,15 @@ Widget likeDislikeBar(BuildContext context, SwipableStackController controller, 
       ),
     );
   }
+  
+  Widget makeDissmissable({required DraggableScrollableSheet child}) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () {
+        Navigator.of(context).pop();
+      },
+      child: GestureDetector(onTap: () {}, child: child,),
+    );
+  }
+
+}

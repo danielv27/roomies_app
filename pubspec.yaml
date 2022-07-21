@@ -55,6 +55,8 @@ dependencies:
   dob_input_field: ^1.0.0
   page_transition: ^2.0.9
   flutter_chat_bubble: ^2.0.0
+  sliding_up_panel: ^2.0.0+1
+  bottom_sheet: ^3.1.1
 
 dev_dependencies:
   flutter_test:
