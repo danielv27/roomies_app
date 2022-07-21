@@ -25,7 +25,7 @@ class UserSignupProfileModel {
     required this.maxBudget, 
     required this.about, 
     required this.work, 
-    required this.study, 
+    this.study = "", 
     required this.roommate, 
     required this.birthdate,
     this.radius = "0",

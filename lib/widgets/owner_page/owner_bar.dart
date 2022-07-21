@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:roomies_app/pages/auth_page.dart';
 
 import '../../backend/database.dart';
 import '../../models/user_model.dart';
@@ -25,7 +24,7 @@ class OwnerBar extends StatelessWidget {
       dayTime = "afternoon";
     }
     return FutureBuilder(
-      future: FireStoreDataBase().getCurrentUser(),
+      future: FireStoreDataBase().getCurrentUserModel(),
       builder: (context, snapshot) {
         if(snapshot.connectionState == ConnectionState.done && snapshot.hasData){
           UserModel currentUser = snapshot.data as UserModel;

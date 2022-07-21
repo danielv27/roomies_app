@@ -1,52 +1,44 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:roomies_app/models/user_profile_images.dart';
 import 'package:roomies_app/models/user_profile_model.dart';
-
 import '../models/message.dart';
 import '../models/user_model.dart';
 
 
 class FireStoreDataBase {
 
-  Future<List<UserModel>?> getUsers(int limit) async {
+  Future<UserModel?> getCurrentUserModel() async {
     try {
-      List<UserModel> userList = [];
+      UserModel? currentUser;
       await FirebaseFirestore.instance.collection("users")
-      .limit(limit)
+      .doc(FirebaseAuth.instance.currentUser?.uid)
       .get()
-      .then(
-        (querySnapshot) async {
-          for (var userDoc in querySnapshot.docs) {
-            if(userDoc.id != FirebaseAuth.instance.currentUser?.uid && userDoc.data().containsKey('isHouseOwner')){
-              UserProfileImages? usersProfileImages = await getUsersImagesById(userDoc.id);
-              UserSignupProfileModel userSignupProfileModel = await getUserProfile(userDoc.id);
-              UserModel newUser = UserModel(
-                id: userDoc.id,
-                email: userDoc['email'],
-                firstName: userDoc['firstName'],
-                lastName: userDoc['lastName'],
-                isHouseOwner: userDoc['isHouseOwner'],
-                firstImgUrl: usersProfileImages!.imageURLS[0],
-                userSignupProfileModel: userSignupProfileModel,
-              );
-              userList.add(newUser);
-            }
-          }
-        }
-      );
-      return userList;
+      .then((userDoc) async {
+        UserProfileImages? usersProfileImages = await getUsersImagesById(userDoc.id);
+        UserSignupProfileModel? userSignupProfileModel = await getUserProfile(userDoc.id);
+
+        currentUser = UserModel(
+          id: userDoc.id,
+          email: userDoc['email'],
+          firstName: userDoc['firstName'],
+          lastName: userDoc['lastName'],
+          isHouseOwner: userDoc['isHouseOwner'],
+          firstImgUrl: usersProfileImages!.imageURLS[0], 
+          userSignupProfileModel: userSignupProfileModel,
+        );
+      });
+      return currentUser;
     } catch (e) {
       debugPrint("Error - $e");
       return null;
     }
   }
 
-  Future<UserModel?> getUserByID(String? userID) async {
+  Future<UserModel?> getUserModelByID(String? userID) async {
     try {
       UserModel? newUser;
       UserProfileImages? usersProfileImages = await getUsersImagesById(userID);
@@ -73,28 +65,36 @@ class FireStoreDataBase {
     }
   }
 
-  Future<UserModel?> getCurrentUser() async {
+  //retrieve random users that are not house owners
+  Future<List<UserModel>?> getUsers(int limit) async {
     try {
-      
-      UserModel? currentUser;
+      List<UserModel> userList = [];
+      List<String?>? encounters = await getEncountersIDs(FirebaseAuth.instance.currentUser?.uid);
+      encounters!.add(FirebaseAuth.instance.currentUser?.uid);
       await FirebaseFirestore.instance.collection("users")
-      .doc(FirebaseAuth.instance.currentUser?.uid)
+      .limit(limit)
+      .where('isHouseOwner',isEqualTo: false)
+      .where(FieldPath.documentId, whereNotIn: encounters)
       .get()
-      .then((userDoc) async {
-        UserProfileImages? usersProfileImages = await getUsersImagesById(userDoc.id);
-        UserSignupProfileModel? userSignupProfileModel = await getUserProfile(userDoc.id);
-
-        currentUser = UserModel(
-          id: userDoc.id,
-          email: userDoc['email'],
-          firstName: userDoc['firstName'],
-          lastName: userDoc['lastName'],
-          isHouseOwner: userDoc['isHouseOwner'],
-          firstImgUrl: usersProfileImages!.imageURLS[0], 
-          userSignupProfileModel: userSignupProfileModel,
-        );
-      });
-      return currentUser;
+      .then(
+        (querySnapshot) async {
+          for (var userDoc in querySnapshot.docs) {
+            UserProfileImages? usersProfileImages = await getUsersImagesById(userDoc.id);
+            UserSignupProfileModel userSignupProfileModel = await getUserProfile(userDoc.id);
+            UserModel newUser = UserModel(
+              id: userDoc.id,
+              email: userDoc['email'],
+              firstName: userDoc['firstName'],
+              lastName: userDoc['lastName'],
+              isHouseOwner: userDoc['isHouseOwner'],
+              firstImgUrl: usersProfileImages!.imageURLS[0],
+              userSignupProfileModel: userSignupProfileModel,
+            );
+            userList.add(newUser);
+          }
+        }
+      );
+      return userList;
     } catch (e) {
       debugPrint("Error - $e");
       return null;
@@ -102,19 +102,8 @@ class FireStoreDataBase {
   }
 
 
-  Future isNodeExists(User ?currentUser, String nodeKey) async {
-    var snapshot = FirebaseFirestore.instance.collection("users").doc(currentUser?.uid);
-    await snapshot
-      .get()
-      .then((doc) {
-        var documentData = doc.data();
-        if (documentData!.containsKey(nodeKey)) {
-          return true;
-        } else {
-          return false;
-        }
-      });
-  }
+
+
 
   Future signinUser(TextEditingController emailController, TextEditingController passwordController, context) async {
     try {
@@ -141,9 +130,7 @@ class FireStoreDataBase {
       }
       return throw err.code.toString();
     } catch (err) {
-      print("\n-------------------------");
-      print("\nERROR: $err");
-      print("\n-------------------------");
+      ("\nERROR: $err");
     }
   }
 
@@ -178,9 +165,7 @@ class FireStoreDataBase {
       }
       rethrow;
     } catch (err) {
-      print("\n-------------------------");
       print("\nERROR: $err");
-      print("\n-------------------------");
       rethrow;
     }
 
@@ -193,7 +178,6 @@ class FireStoreDataBase {
         'lastName': lastNameController.text,
         'email': emailController.text,
       });
-    print("user created");
   }
 
   Future createPersonalProfile(
@@ -207,7 +191,6 @@ class FireStoreDataBase {
     TextEditingController roommate, 
     TextEditingController birthdate,
   ) async {
-    print("creating personal profile\n");
     await FirebaseFirestore.instance.collection('users')
       .doc(currentUser?.uid)
       .collection('personal_profile')
@@ -217,6 +200,7 @@ class FireStoreDataBase {
         'maximumBudget': maxBudget.text,
         'about': about.text,
         'work': work.text,
+        'study': study.text,
         'roommate': roommate.text,
         'birthdate': birthdate.text,
       });
@@ -225,7 +209,6 @@ class FireStoreDataBase {
       .update({ 
         'isHouseOwner': false,
       });
-      print("created personal profile\n");
   }
 
   Future createHouseProfile(
@@ -243,7 +226,6 @@ class FireStoreDataBase {
     TextEditingController contactEmailControler,
     TextEditingController contactPhoneNumberControler,
   ) async {
-    print("creating house profile\n");
     await FirebaseFirestore.instance.collection('users')
       .doc(currentUser?.uid)
       .collection('house_profile')
@@ -266,8 +248,275 @@ class FireStoreDataBase {
       .update({
         'isHouseOwner': true,
       });
-    print("created house profile\n");
   }
+
+
+
+  Future<List<UserProfileModel>?> getUsersImages(int limit) async {
+    List<UserModel>? users = await getUsers(limit);
+    List<UserProfileModel>? usersProfileModel = [];
+
+    try{  
+      for (var user in users!) {
+        late UserProfileModel userProfileModel;
+        late List<dynamic> userProfileImages = [];
+
+        await FirebaseFirestore.instance.collection('users/${user.id}/profile_images')
+          .get()
+          .then((querySnapshot) {
+            for (var doc in querySnapshot.docs) {
+              userProfileImages = doc.data()['urls'];
+            }
+            userProfileModel = UserProfileModel(
+              userModel: user,
+              imageURLS: userProfileImages,
+            );
+          });
+        usersProfileModel.add(userProfileModel);
+      }
+      return usersProfileModel;
+    } catch (e) {
+      debugPrint("Error - $e");
+      return null;
+    }
+  }
+
+    Future<UserProfileModel?> getCurrentUserProfile() async {
+    try {
+      UserModel? userModel = await getCurrentUserModel();  
+      UserProfileModel? userProfileModel;
+      late List<dynamic> userProfileImages = [];
+
+      await FirebaseFirestore.instance.collection('users/${userModel?.id}/profile_images')
+        .get()
+        .then((querySnapshot) {
+          for (var doc in querySnapshot.docs) {
+            userProfileImages = doc.data()['urls'];
+          }
+          userProfileModel = UserProfileModel(
+            userModel: userModel!,
+            imageURLS: userProfileImages,
+          );
+        });
+      return userProfileModel;
+    } catch (e) {
+      debugPrint("Error - $e");
+      return null;
+    }
+  }
+
+
+  Future<UserProfileModel?> getUserProfileByID(String uid) async {
+    try {
+      UserModel? userModel = await getUserModelByID(uid);  
+      UserProfileModel? userProfileModel;
+      late List<dynamic> userProfileImages = [];
+
+      await FirebaseFirestore.instance.collection('users/${userModel?.id}/profile_images')
+        .get()
+        .then((querySnapshot) {
+          for (var doc in querySnapshot.docs) {
+            userProfileImages = doc.data()['urls'];
+          }
+          userProfileModel = UserProfileModel(
+            userModel: userModel!,
+            imageURLS: userProfileImages,
+          );
+        });
+      return userProfileModel;
+    } catch (e) {
+      debugPrint("Error - $e");
+      return null;
+    }
+  }
+
+  
+
+  Future<UserProfileImages?> getUsersImagesById(String? currentUserID) async{
+    try{ 
+      late UserProfileImages userProfileImagesModel;
+      late List<dynamic> userProfileImages = [];
+
+      await FirebaseFirestore.instance.collection('users/$currentUserID/profile_images')
+        .get()
+        .then((querySnapshot) {
+          for (var doc in querySnapshot.docs) {
+            userProfileImages = doc['urls'];
+          }
+          userProfileImagesModel = UserProfileImages(
+            imageURLS: userProfileImages,
+          );
+        });
+      return userProfileImagesModel;
+    } catch (e) {
+      debugPrint("Error - $e");
+      return null;
+    }
+  }
+
+  Future<String> getUsersFirstImage(String? currentUserID) async{
+    try{ 
+      late String userProfileFirstImage = "";
+      await FirebaseFirestore.instance.collection('users/$currentUserID/profile_images')
+        .limit(1)
+        .get()
+        .then((querySnapshot) {
+          userProfileFirstImage = querySnapshot.docs[0]['urls'][0];
+          for (var doc in querySnapshot.docs) {
+            userProfileFirstImage = doc['urls'][0];
+          }
+        });
+      return userProfileFirstImage;
+    } catch (e) {
+      debugPrint("Error - $e");
+      return "http://www.classicaloasis.com/wp-content/uploads/2014/03/profile-square.jpg";
+    }
+  }
+
+
+
+  Future<String?> getUserType(String? currentUserID) async {
+    try {
+      bool? isHouseOwner;
+      await FirebaseFirestore.instance.collection('users').doc(currentUserID)
+      .get()
+      .then((value) {
+        isHouseOwner = value.data()!['isHouseOwner'];  
+        isHouseOwner = (isHouseOwner.toString() == "true") ? true : false;
+        print(isHouseOwner);
+      });
+      return isHouseOwner.toString();
+    } catch (e) {
+      debugPrint("Error - $e");
+      return null;
+    }
+  }
+
+  Future<UserSignupProfileModel> getUserProfile(String? currentUserID) async{
+    late UserSignupProfileModel userSignupProfileModel;
+    await FirebaseFirestore.instance.collection('users/$currentUserID/personal_profile')
+      .get()
+      .then((querySnapshot) {
+        for (var doc in querySnapshot.docs) {
+          userSignupProfileModel = UserSignupProfileModel(
+            about: doc['about'],
+            work: doc['work'],
+            study: doc['study'], 
+            birthdate: doc['birthdate'], 
+            maxBudget: doc['maximumBudget'], 
+            minBudget: doc['minimumBudget'], 
+            roommate: doc['roommate'],
+            radius: doc['radius'],
+          );
+        }
+      });
+    return userSignupProfileModel;
+  }
+
+  Future<void> addEncounter(bool match, String currentUserID, String otherUserID) async {
+    await FirebaseFirestore.instance.collection('users/$currentUserID/encounters')
+    .doc(otherUserID)
+    .set({ 
+      'match': match,
+    });
+  }
+
+
+  Future<List<String>?> getEncountersIDs(String? currentUserID) async {
+    List<String> encounters = [];
+    await FirebaseFirestore.instance.collection('users/$currentUserID/encounters')
+    .get()
+    .then((querySnapshot) {
+      for(var doc in querySnapshot.docs){
+        encounters.add(doc.id);
+      }
+    });
+    return encounters;
+  }
+
+  Future<List<String>> getMatchesIDs(String currentUserID) async {
+    List<String> matches = [];
+    await FirebaseFirestore.instance.collection('users/$currentUserID/encounters')
+    .where('match', isEqualTo: true)
+    .get()
+    .then((querySnapshot) {
+      for(var doc in querySnapshot.docs){
+        matches.add(doc.id);
+      }
+    });
+    return matches;
+  }  
+
+  // Future<List<UserProfileModel>> getNewUsers(int limit) async {
+  //   final String? currentUserID = FirebaseAuth.instance.currentUser?.uid;
+  //   List<UserProfileModel> newUsers = [];
+  //   List<String> encounters = await getEncountersIDs(currentUserID!);
+  //   print(encounters[0]);
+  //   await FirebaseFirestore.instance.collection('users')
+  //   .where(FieldPath.documentId, whereNotIn: encounters)
+  //   .limit(limit)
+  //   .get()
+  //   .then((querySnapshot) async {
+  //     if(querySnapshot.docs.isNotEmpty){
+  //       for(var doc in querySnapshot.docs){
+  //         UserProfileModel? user = await getUserProfileByID(doc.id);
+  //         user != null ? newUsers.add(user):null;
+  //     }
+  //     }
+  //   });
+  //   return newUsers;
+  // }
+
+  //////////////////////////////////////////////Online Offline///////////////////////////////////////////////
+
+  void goOffline(String? uid) async{
+    await FirebaseFirestore.instance.collection('users')
+    .doc(uid)
+    .update({ 
+      'online': false,
+    });
+  }
+
+  void goOnline() async{
+    await FirebaseFirestore.instance.collection('users')
+    .doc(FirebaseAuth.instance.currentUser?.uid)
+    .update({ 
+      'online': true,
+    });
+  }
+
+  Future<bool?> getOnlineStatus(String? uid) async {
+    bool? onlineStatus;
+    await FirebaseFirestore.instance.collection('users')
+    .doc(uid)
+    .get()
+    .then((doc) {
+      if(doc.data()!.containsKey('online') && doc['online']){
+        onlineStatus = true;
+      }
+      else{
+        onlineStatus = false;
+      }
+    });
+    return onlineStatus;
+  }
+
+  Stream<bool> checkIfOnline(String? uid) async* {
+    try {
+      while(true) {
+        bool? isOnline = await getOnlineStatus(uid);
+        if(isOnline != null){
+          yield (isOnline) ? true : false;
+        }
+        await Future.delayed(const Duration(seconds: 2));
+      }
+    } catch (e) {
+      debugPrint("Error - $e");
+    }
+  }
+
+
+  ////////////////////////////////////////////////////Messaging///////////////////////////////////////////////////////
 
   Future uploadMessage(String message, String? fromID, String? toID) async {
     final fromRef = FirebaseFirestore.instance.collection('users/$fromID/messages');
@@ -334,262 +583,6 @@ class FireStoreDataBase {
     }
   }
 
-  Future<List<UserProfileModel>?> getUsersImages(int limit) async {
-    List<UserModel>? users = await getUsers(limit);
-    List<UserProfileModel>? usersProfileModel = [];
-
-    try{  
-      for (var user in users!) {
-        late UserProfileModel userProfileModel;
-        late List<dynamic> userProfileImages = [];
-
-        await FirebaseFirestore.instance.collection('users/${user.id}/profile_images')
-          .get()
-          .then((querySnapshot) {
-            for (var doc in querySnapshot.docs) {
-              userProfileImages = doc.data()['urls'];
-            }
-            userProfileModel = UserProfileModel(
-              userModel: user,
-              imageURLS: userProfileImages,
-            );
-          });
-        usersProfileModel.add(userProfileModel);
-      }
-      return usersProfileModel;
-    } catch (e) {
-      debugPrint("Error - $e");
-      return null;
-    }
-  }
-
-    Future<UserProfileModel?> getCurrentUserProfile() async {
-    try {
-      UserModel? userModel = await getCurrentUser();  
-      UserProfileModel? userProfileModel;
-      late List<dynamic> userProfileImages = [];
-
-      await FirebaseFirestore.instance.collection('users/${userModel?.id}/profile_images')
-        .get()
-        .then((querySnapshot) {
-          for (var doc in querySnapshot.docs) {
-            userProfileImages = doc.data()['urls'];
-          }
-          userProfileModel = UserProfileModel(
-            userModel: userModel!,
-            imageURLS: userProfileImages,
-          );
-        });
-      return userProfileModel;
-    } catch (e) {
-      debugPrint("Error - $e");
-      return null;
-    }
-  }
 
 
-  Future<UserProfileModel?> getUserProfileByID(String uid) async {
-    try {
-      UserModel? userModel = await getUserByID(uid);  
-      UserProfileModel? userProfileModel;
-      late List<dynamic> userProfileImages = [];
-
-      await FirebaseFirestore.instance.collection('users/${userModel?.id}/profile_images')
-        .get()
-        .then((querySnapshot) {
-          for (var doc in querySnapshot.docs) {
-            userProfileImages = doc.data()['urls'];
-          }
-          userProfileModel = UserProfileModel(
-            userModel: userModel!,
-            imageURLS: userProfileImages,
-          );
-        });
-      return userProfileModel;
-    } catch (e) {
-      debugPrint("Error - $e");
-      return null;
-    }
-  }
-
-  
-
-  Future<UserProfileImages?> getUsersImagesById(String? currentUserID) async{
-    try{ 
-      late UserProfileImages userProfileImagesModel;
-      late List<dynamic> userProfileImages = [];
-
-      await FirebaseFirestore.instance.collection('users/$currentUserID/profile_images')
-        .get()
-        .then((querySnapshot) {
-          for (var doc in querySnapshot.docs) {
-            userProfileImages = doc['urls'];
-          }
-          userProfileImagesModel = UserProfileImages(
-            imageURLS: userProfileImages,
-          );
-        });
-      return userProfileImagesModel;
-    } catch (e) {
-      debugPrint("Error - $e");
-      return null;
-    }
-  }
-
-  Future<String> getUsersFirstImage(String? currentUserID) async{
-    try{ 
-      late String userProfileFirstImage = "";
-      await FirebaseFirestore.instance.collection('users/$currentUserID/profile_images')
-        .limit(1)
-        .get()
-        .then((querySnapshot) {
-          userProfileFirstImage = querySnapshot.docs[0]['urls'][0];
-          for (var doc in querySnapshot.docs) {
-            userProfileFirstImage = doc['urls'][0];
-          }
-        });
-      return userProfileFirstImage;
-    } catch (e) {
-      debugPrint("Error - $e");
-      return "http://www.classicaloasis.com/wp-content/uploads/2014/03/profile-square.jpg";
-    }
-  }
-
-  void goOffline(String? uid) async{
-    await FirebaseFirestore.instance.collection('users')
-    .doc(uid)
-    .update({ 
-      'online': false,
-    });
-  }
-
-  void goOnline() async{
-    await FirebaseFirestore.instance.collection('users')
-    .doc(FirebaseAuth.instance.currentUser?.uid)
-    .update({ 
-      'online': true,
-    });
-  }
-
-  Future<bool?> getOnlineStatus(String? uid) async {
-    bool? onlineStatus;
-    await FirebaseFirestore.instance.collection('users')
-    .doc(uid)
-    .get()
-    .then((doc) {
-      if(doc.data()!.containsKey('online') && doc['online']){
-        onlineStatus = true;
-      }
-      else{
-        onlineStatus = false;
-      }
-    });
-    return onlineStatus;
-  }
-
-  Stream<bool> checkIfOnline(String? uid) async* {
-    try {
-      while(true) {
-        bool? isOnline = await getOnlineStatus(uid);
-        if(isOnline != null){
-          yield (isOnline) ? true : false;
-        }
-        await Future.delayed(const Duration(seconds: 2));
-      }
-    } catch (e) {
-      debugPrint("Error - $e");
-    }
-  }
-
-  Future<String?> getUserType(String? currentUserID) async {
-    try {
-      bool? isHouseOwner;
-      await FirebaseFirestore.instance.collection('users').doc(currentUserID)
-      .get()
-      .then((value) {
-        isHouseOwner = value.data()!['isHouseOwner'];  
-        isHouseOwner = (isHouseOwner.toString() == "true") ? true : false;
-        print(isHouseOwner);
-      });
-      return isHouseOwner.toString();
-    } catch (e) {
-      debugPrint("Error - $e");
-      return null;
-    }
-  }
-
-  Future<UserSignupProfileModel> getUserProfile(String? currentUserID) async{
-    late UserSignupProfileModel userSignupProfileModel;
-    await FirebaseFirestore.instance.collection('users/$currentUserID/personal_profile')
-      .get()
-      .then((querySnapshot) {
-        for (var doc in querySnapshot.docs) {
-          userSignupProfileModel = UserSignupProfileModel(
-            about: doc['about'],
-            work: doc['work'],
-            study: doc['study'], 
-            birthdate: doc['birthdate'], 
-            maxBudget: doc['maximumBudget'], 
-            minBudget: doc['minimumBudget'], 
-            roommate: doc['roommate'],
-            radius: doc['radius'],
-          );
-        }
-      });
-    return userSignupProfileModel;
-  }
-
-  Future<void> addEncounter(bool match, String currentUserID, String otherUserID) async {
-    await FirebaseFirestore.instance.collection('users/$currentUserID/encounters')
-    .doc(otherUserID)
-    .set({ 
-      'match': match,
-    });
-  }
-
-
-  Future<List<String>> getEncounters(String currentUserID) async {
-    List<String> encounters = [];
-    await FirebaseFirestore.instance.collection('users/$currentUserID/encounters')
-    .get()
-    .then((querySnapshot) {
-      for(var doc in querySnapshot.docs){
-        encounters.add(doc.id);
-      }
-    });
-    return encounters;
-  }
-
-  Future<List<String>> getMatches(String currentUserID) async {
-    List<String> matches = [];
-    await FirebaseFirestore.instance.collection('users/$currentUserID/encounters')
-    .where('match', isEqualTo: true)
-    .get()
-    .then((querySnapshot) {
-      for(var doc in querySnapshot.docs){
-        matches.add(doc.id);
-      }
-    });
-    return matches;
-  }  
-
-  Future<List<UserProfileModel>> getNewUsers(int limit) async {
-    final String? currentUserID = FirebaseAuth.instance.currentUser?.uid;
-    List<UserProfileModel> newUsers = [];
-    List<String> encounters = await getEncounters(currentUserID!);
-    print(encounters[0]);
-    await FirebaseFirestore.instance.collection('users')
-    .where(FieldPath.documentId, whereNotIn: encounters)
-    .limit(limit)
-    .get()
-    .then((querySnapshot) async {
-      if(querySnapshot.docs.isNotEmpty){
-        for(var doc in querySnapshot.docs){
-          UserProfileModel? user = await getUserProfileByID(doc.id);
-          user != null ? newUsers.add(user):null;
-      }
-      }
-    });
-    return newUsers;
-  }
 }
