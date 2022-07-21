@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:roomies_app/backend/current_profile_provider.dart';
 import 'package:roomies_app/backend/database.dart';
+import 'package:roomies_app/backend/matches_provider.dart';
 import 'package:roomies_app/backend/user_profile_provider.dart';
 import 'pages/home_page.dart';
 import 'pages/auth_page.dart';
@@ -59,6 +60,9 @@ class MainPage extends StatelessWidget {
               ),
               ChangeNotifierProvider(
                 create: (context) => CurrentUserProvider()
+              ),
+              ChangeNotifierProvider(
+                create: (context) => MatchesProvider()
               ),
             ],
             child: const HomePage()

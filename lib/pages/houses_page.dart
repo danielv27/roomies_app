@@ -14,7 +14,7 @@ class HousesPage extends StatelessWidget {
     final UserProfileModel? currentUser = context.read<CurrentUserProvider>().currentUser;
     
     return currentUser == null ? 
-      Center(child:CircularProgressIndicator()):
+      const Center(child:CircularProgressIndicator()):
       Scaffold(
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(60),
@@ -22,7 +22,7 @@ class HousesPage extends StatelessWidget {
           ),
         ),
         body: FutureBuilder(
-              future: FireStoreDataBase().getUsers(5),
+              future: FireStoreDataBase().getNewUsers(5),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   List<UserModel> userList = snapshot.data as List<UserModel>;
@@ -38,7 +38,7 @@ class HousesPage extends StatelessWidget {
                             Text("first name: ${user.firstName}"),
                             Text("last name: ${user.lastName}"),
                             Text("UID: ${user.id}"),
-                            SizedBox(height: 10,)
+                            const SizedBox(height: 10,)
                           ],
                         );
                       },

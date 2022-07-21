@@ -11,6 +11,8 @@ import '../models/user_model.dart';
 
 class FireStoreDataBase {
 
+  ///////////////////////////////////// Users ///////////////////////////////
+  
   Future<UserModel?> getCurrentUserModel() async {
     try {
       UserModel? currentUser;
@@ -66,7 +68,7 @@ class FireStoreDataBase {
   }
 
   //retrieve random users that are not house owners
-  Future<List<UserModel>?> getUsers(int limit) async {
+  Future<List<UserModel>?> getNewUsers(int limit) async {
     try {
       List<UserModel> userList = [];
       List<String?>? encounters = await getEncountersIDs(FirebaseAuth.instance.currentUser?.uid);
@@ -102,158 +104,8 @@ class FireStoreDataBase {
   }
 
 
-
-
-
-  Future signinUser(TextEditingController emailController, TextEditingController passwordController, context) async {
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      );
-    } on FirebaseAuthException catch (err) {
-      switch (err.code.toString()) {
-        case "invalid-email":
-          print("\nemail address is not valid\n");
-          break;
-        case "user-disabled":
-          print("if the user corresponding to the given email has been disabled");
-          break;
-        case "user-not-found":
-          print("there is no user corresponding to the given email");
-          break;
-        case "wrong-password":
-          print(" the password is invalid for the given email, or the account corresponding to the email does not have a password set");
-          break;
-        default:
-          print("\nunhandeled error\n");
-      }
-      return throw err.code.toString();
-    } catch (err) {
-      ("\nERROR: $err");
-    }
-  }
-
-  Future createUser(
-    TextEditingController emailController, 
-    TextEditingController passwordController, 
-    TextEditingController firstNameController, 
-    TextEditingController lastNameController,
-  ) async {
-    late UserCredential result;
-    try {
-      result = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      );
-    } on FirebaseAuthException catch (err) {
-      switch (err.code.toString()) {
-        case "email-already-in-use":
-          print("there already exists an account with the given email address");
-          break;
-        case "invalid-email":
-          print("the email address is not valid");
-          break;
-        case "operation-not-allowed":
-          print("email/password accounts are not enabled");
-          break;
-        case "weak-password":
-          print("the password is not strong enough");
-          break;
-        default:
-          print("\nunhandeled error\n");
-      }
-      rethrow;
-    } catch (err) {
-      print("\nERROR: $err");
-      rethrow;
-    }
-
-    User? newUser = result.user;
-    
-    await FirebaseFirestore.instance.collection('users')
-      .doc(newUser?.uid)
-      .set({
-        'firstName': firstNameController.text,
-        'lastName': lastNameController.text,
-        'email': emailController.text,
-      });
-  }
-
-  Future createPersonalProfile(
-    User ?currentUser, 
-    String radius,
-    TextEditingController minBudget, 
-    TextEditingController maxBudget, 
-    TextEditingController about, 
-    TextEditingController work, 
-    TextEditingController study, 
-    TextEditingController roommate, 
-    TextEditingController birthdate,
-  ) async {
-    await FirebaseFirestore.instance.collection('users')
-      .doc(currentUser?.uid)
-      .collection('personal_profile')
-      .add({ 
-        'radius': radius,
-        'minimumBudget': minBudget.text,
-        'maximumBudget': maxBudget.text,
-        'about': about.text,
-        'work': work.text,
-        'study': study.text,
-        'roommate': roommate.text,
-        'birthdate': birthdate.text,
-      });
-    await FirebaseFirestore.instance.collection('users')
-      .doc(currentUser?.uid)
-      .update({ 
-        'isHouseOwner': false,
-      });
-  }
-
-  Future createHouseProfile(
-    User ?currentUser,
-    TextEditingController postalCodeController, 
-    TextEditingController houseNumberController, 
-    String propertyTypeChosen, 
-    TextEditingController constructionYearController, 
-    TextEditingController livingSpaceController, 
-    TextEditingController plotAreaContoller, 
-    String propertyConditionChosen,
-    TextEditingController houseDescriptionController,
-    TextEditingController pricePerRoomController,
-    TextEditingController contactNameController,
-    TextEditingController contactEmailControler,
-    TextEditingController contactPhoneNumberControler,
-  ) async {
-    await FirebaseFirestore.instance.collection('users')
-      .doc(currentUser?.uid)
-      .collection('house_profile')
-      .add({ 
-        'postlCode': postalCodeController.text,
-        'houseNumber': houseNumberController.text,
-        'propertyType': propertyTypeChosen,
-        'constructionYear': constructionYearController.text,
-        'livingSpace': livingSpaceController.text+"m2",
-        'plotArea': plotAreaContoller.text+"m2",
-        'propertyCondition': propertyConditionChosen,
-        'houseDescription': houseDescriptionController.text,
-        'pricePerRoom': pricePerRoomController.text,
-        'contactName': contactNameController.text,
-        'contactEmail': contactEmailControler.text,
-        'contactPhoneNumber': contactPhoneNumberControler.text
-      });
-    await FirebaseFirestore.instance.collection('users')
-      .doc(currentUser?.uid)
-      .update({
-        'isHouseOwner': true,
-      });
-  }
-
-
-
-  Future<List<UserProfileModel>?> getUsersImages(int limit) async {
-    List<UserModel>? users = await getUsers(limit);
+  Future<List<UserProfileModel>?> getNewUserProfileModels(int limit) async {
+    List<UserModel>? users = await getNewUsers(limit);
     List<UserProfileModel>? usersProfileModel = [];
 
     try{  
@@ -447,25 +299,155 @@ class FireStoreDataBase {
     return matches;
   }  
 
-  // Future<List<UserProfileModel>> getNewUsers(int limit) async {
-  //   final String? currentUserID = FirebaseAuth.instance.currentUser?.uid;
-  //   List<UserProfileModel> newUsers = [];
-  //   List<String> encounters = await getEncountersIDs(currentUserID!);
-  //   print(encounters[0]);
-  //   await FirebaseFirestore.instance.collection('users')
-  //   .where(FieldPath.documentId, whereNotIn: encounters)
-  //   .limit(limit)
-  //   .get()
-  //   .then((querySnapshot) async {
-  //     if(querySnapshot.docs.isNotEmpty){
-  //       for(var doc in querySnapshot.docs){
-  //         UserProfileModel? user = await getUserProfileByID(doc.id);
-  //         user != null ? newUsers.add(user):null;
-  //     }
-  //     }
-  //   });
-  //   return newUsers;
-  // }
+
+  ////////////////////// sign-in sign-up //////////////////////
+  
+  Future signinUser(TextEditingController emailController, TextEditingController passwordController, context) async {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+    } on FirebaseAuthException catch (err) {
+      switch (err.code.toString()) {
+        case "invalid-email":
+          print("\nemail address is not valid\n");
+          break;
+        case "user-disabled":
+          print("if the user corresponding to the given email has been disabled");
+          break;
+        case "user-not-found":
+          print("there is no user corresponding to the given email");
+          break;
+        case "wrong-password":
+          print(" the password is invalid for the given email, or the account corresponding to the email does not have a password set");
+          break;
+        default:
+          print("\nunhandeled error\n");
+      }
+      return throw err.code.toString();
+    } catch (err) {
+      ("\nERROR: $err");
+    }
+  }
+
+  Future createUser(
+    TextEditingController emailController, 
+    TextEditingController passwordController, 
+    TextEditingController firstNameController, 
+    TextEditingController lastNameController,
+  ) async {
+    late UserCredential result;
+    try {
+      result = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+    } on FirebaseAuthException catch (err) {
+      switch (err.code.toString()) {
+        case "email-already-in-use":
+          print("there already exists an account with the given email address");
+          break;
+        case "invalid-email":
+          print("the email address is not valid");
+          break;
+        case "operation-not-allowed":
+          print("email/password accounts are not enabled");
+          break;
+        case "weak-password":
+          print("the password is not strong enough");
+          break;
+        default:
+          print("\nunhandeled error\n");
+      }
+      rethrow;
+    } catch (err) {
+      print("\nERROR: $err");
+      rethrow;
+    }
+
+    User? newUser = result.user;
+    
+    await FirebaseFirestore.instance.collection('users')
+      .doc(newUser?.uid)
+      .set({
+        'firstName': firstNameController.text,
+        'lastName': lastNameController.text,
+        'email': emailController.text,
+      });
+  }
+
+  Future createPersonalProfile(
+    User ?currentUser, 
+    String radius,
+    TextEditingController minBudget, 
+    TextEditingController maxBudget, 
+    TextEditingController about, 
+    TextEditingController work, 
+    TextEditingController study, 
+    TextEditingController roommate, 
+    TextEditingController birthdate,
+  ) async {
+    await FirebaseFirestore.instance.collection('users')
+      .doc(currentUser?.uid)
+      .collection('personal_profile')
+      .add({ 
+        'radius': radius,
+        'minimumBudget': minBudget.text,
+        'maximumBudget': maxBudget.text,
+        'about': about.text,
+        'work': work.text,
+        'study': study.text,
+        'roommate': roommate.text,
+        'birthdate': birthdate.text,
+      });
+    await FirebaseFirestore.instance.collection('users')
+      .doc(currentUser?.uid)
+      .update({ 
+        'isHouseOwner': false,
+      });
+  }
+
+  Future createHouseProfile(
+    User ?currentUser,
+    TextEditingController postalCodeController, 
+    TextEditingController houseNumberController, 
+    String propertyTypeChosen, 
+    TextEditingController constructionYearController, 
+    TextEditingController livingSpaceController, 
+    TextEditingController plotAreaContoller, 
+    String propertyConditionChosen,
+    TextEditingController houseDescriptionController,
+    TextEditingController pricePerRoomController,
+    TextEditingController contactNameController,
+    TextEditingController contactEmailControler,
+    TextEditingController contactPhoneNumberControler,
+  ) async {
+    await FirebaseFirestore.instance.collection('users')
+      .doc(currentUser?.uid)
+      .collection('house_profile')
+      .add({ 
+        'postlCode': postalCodeController.text,
+        'houseNumber': houseNumberController.text,
+        'propertyType': propertyTypeChosen,
+        'constructionYear': constructionYearController.text,
+        'livingSpace': livingSpaceController.text+"m2",
+        'plotArea': plotAreaContoller.text+"m2",
+        'propertyCondition': propertyConditionChosen,
+        'houseDescription': houseDescriptionController.text,
+        'pricePerRoom': pricePerRoomController.text,
+        'contactName': contactNameController.text,
+        'contactEmail': contactEmailControler.text,
+        'contactPhoneNumber': contactPhoneNumberControler.text
+      });
+    await FirebaseFirestore.instance.collection('users')
+      .doc(currentUser?.uid)
+      .update({
+        'isHouseOwner': true,
+      });
+  }
+
+
 
   //////////////////////////////////////////////Online Offline///////////////////////////////////////////////
 

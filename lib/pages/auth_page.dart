@@ -1,12 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:roomies_app/backend/database.dart';
 import 'package:roomies_app/pages/setup_page.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../widgets/gradients/gradient.dart';
 
@@ -179,7 +175,7 @@ class AuthPageState extends State<AuthPage> {
                 });
                 if (emailController.value.text.isNotEmpty) {
                   signIn();
-                  FireStoreDataBase().getUsers(4);
+                  FireStoreDataBase().getNewUsers(4);
                 } else {
                   print("Login button disabled since email field is empty");
                 }

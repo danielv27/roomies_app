@@ -25,7 +25,7 @@ class SwipableCards extends StatefulWidget {
 class SwipableCardsState extends State<SwipableCards> {
   late final SwipableStackController swipeController;
   late final initialIndex = widget.userProvider.pagesSwiped;
-  late final Future<List<UserProfileModel>?> futureListUserProfileModel = FireStoreDataBase().getUsersImages(3);
+  late final Future<List<UserProfileModel>?> futureListUserProfileModel = FireStoreDataBase().getNewUserProfileModels(3);
   late final buttonInfoPressed = widget.buttonInfoPressed;
   bool loading = true;
 
@@ -116,7 +116,7 @@ class SwipableCardsState extends State<SwipableCards> {
                         }
 
                         if(index >= 1 && xPos < deviceWidth * 0.35){
-                            imgController.previousPage(duration: Duration(milliseconds: 200),curve: Curves.easeInOut);
+                            imgController.previousPage(duration: const Duration(milliseconds: 200),curve: Curves.easeInOut);
                             print("current image index: ${index - 1}");
                         }
                         
