@@ -4,6 +4,7 @@ import 'package:animations/animations.dart';
 import 'package:provider/provider.dart';
 import 'package:roomies_app/backend/current_profile_provider.dart';
 import 'package:roomies_app/backend/database.dart';
+import 'package:roomies_app/backend/matches_provider.dart';
 import 'package:roomies_app/backend/user_profile_provider.dart';
 import 'package:roomies_app/main.dart';
 import 'package:roomies_app/widgets/bottom_bar.dart';
@@ -32,6 +33,7 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     Provider.of<CurrentUserProvider>(context, listen: false).initialize();
     Provider.of<UserProfileProvider>(context, listen: false).loadUsers(10);
+    Provider.of<MatchesProvider>(context, listen: false).loadMatches();
   }
 
   @override

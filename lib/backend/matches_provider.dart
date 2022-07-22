@@ -1,11 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:roomies_app/models/user_profile_model.dart';
+import '../models/user_model.dart';
 import 'database.dart';
 
 class MatchesProvider extends ChangeNotifier {
   List<String> userIDs = [];
-  List<UserProfileModel> userProfileModels = [];
+  List<UserModel> userModels = [];
 
   //probably not the way to do it but we do need to check wether the user matched with anyone in the background
   void listenToMatches() async {
@@ -23,8 +24,8 @@ class MatchesProvider extends ChangeNotifier {
     for(var userID in userIDs){
       var currentUserMatchesIDs = await FireStoreDataBase().getMatchesIDs(userID);
       if(currentUserMatchesIDs.contains(FirebaseAuth.instance.currentUser!.uid)){
-        UserProfileModel? currentUser = await FireStoreDataBase().getUserProfileByID(userID);
-        userProfileModels.add(currentUser!);
+        UserModel? currentUser = await FireStoreDataBase().getUserModelByID(userID);
+        userModels.add(currentUser!);
       }
     }
     notifyListeners();

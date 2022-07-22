@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:roomies_app/backend/database.dart';
+import 'package:roomies_app/backend/matches_provider.dart';
 import 'package:roomies_app/widgets/gradients/gradient.dart';
 import '../models/user_model.dart';
 import '../widgets/matches_page/matches_body.dart';
@@ -11,30 +13,20 @@ class MatchesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final matchesProvider = context.watch<MatchesProvider>();
+    List<UserModel>? userModels = matchesProvider.userModels;
     return Scaffold(
       body: Container(
           decoration: BoxDecoration(
           gradient: redGradient()
           ),
-          child: FutureBuilder(
-            future: FireStoreDataBase().getNewUsers(10, null),
-            builder: (context, snapshot) {
-              if(snapshot.connectionState == ConnectionState.done){
-                List<UserModel> userList = snapshot.data as List<UserModel>;
-                return Column(
-                  children: [
-                    MatchesHeaderWidget(users: userList),
-                    MatchesBodyWidget(users: userList)
-                  ] 
-                );             
-              }
-              if (snapshot.hasError) {
-                return const Text("Something went wrong");
-              }
-              return const Center(child: CircularProgressIndicator(color: Colors.red));
-        
-            },
-          ),
+
+          child: Column(
+            children: [
+              MatchesHeaderWidget(users: userModels),
+              MatchesBodyWidget(users: userModels)
+            ] 
+          ),          
         ),
       
     );
