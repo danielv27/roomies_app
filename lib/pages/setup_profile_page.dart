@@ -2,6 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:roomies_app/widgets/gradients/blue_gradient.dart';
 import 'package:roomies_app/widgets/profile_setup/profile_complete_setup_widget.dart';
 import 'package:roomies_app/widgets/profile_setup/profile_question_setup_widget.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -67,7 +68,7 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
             activeDotColor: Colors.pink,
           ),
           onDotClicked: (index) {
-            if (checkControllers()) {
+            if (formKey.currentState!.validate()) {
               pageController.animateToPage(
                 index, 
                 duration: const Duration(milliseconds: 500), 
@@ -115,7 +116,10 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                    decoration: applyBlueGradient(),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      gradient: blueGradient()
+                    ),
                     height: 50,
                     width: MediaQuery.of(context).size.width * 0.75,
                     margin: const EdgeInsets.only(bottom: 10),
@@ -127,22 +131,34 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
                         onSurface: Colors.transparent,
                       ),
                       onPressed: () async {
-                        User? currentUser = auth.currentUser;
-                        await FireStoreDataBase().createPersonalProfile(
-                          currentUser,
-                          userPersonalProfileModel.radius,
-                          minBudgetController,
-                          maxBudgetController,
-                          aboutMeController,
-                          workController,
-                          studyController,
-                          roomMateController,
-                          birthDateController,
-                        );
-                        await uploadImageUrls();
-                        Navigator.of(context).pop();
-                        Navigator.of(context).pop();
-                      }, 
+                        if (formKey.currentState!.validate() && userProfileImages.imageURLS.isNotEmpty) {
+                          User? currentUser = auth.currentUser;
+                          await FireStoreDataBase().createPersonalProfile(
+                            currentUser,
+                            userPersonalProfileModel.radius,
+                            minBudgetController,
+                            maxBudgetController,
+                            aboutMeController,
+                            workController,
+                            studyController,
+                            roomMateController,
+                            birthDateController,
+                          );
+                          await uploadImageUrls();
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context){
+                              return const AlertDialog(
+                                title: Text("Alert Dialog"),
+                                content: Text("Please Upload at least 1 profile image"),
+                              );
+                            }
+                          );
+                        }
+                      },
                       child: const Text(
                         "Complete profile",
                         style: TextStyle(fontSize: 20, color:Colors.white)
@@ -159,7 +175,10 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                    decoration: applyBlueGradient(),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      gradient: blueGradient(),
+                    ),
                     height: 50,
                     width: MediaQuery.of(context).size.width * 0.75,
                     margin: const EdgeInsets.only(bottom: 10),
@@ -171,7 +190,7 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
                         onSurface: Colors.transparent,
                       ),
                       onPressed: () { 
-                        if (checkControllers() && formKey.currentState!.validate()) {
+                        if (formKey.currentState!.validate()) {
                           pageController.nextPage(
                             duration: const Duration(milliseconds: 500), 
                             curve: Curves.easeInOut,
@@ -188,13 +207,6 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
               ),
             ),
     );
-  }
-
-  bool checkControllers() {
-    if (minBudgetController.text.isNotEmpty || maxBudgetController.text.isNotEmpty) {
-      return true;
-    }
-    return false;
   }
 
   BoxDecoration applyBlueGradient() {

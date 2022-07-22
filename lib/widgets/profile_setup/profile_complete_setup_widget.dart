@@ -4,8 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:roomies_app/models/user_profile_model.dart';
+import 'package:roomies_app/widgets/gradients/blue_gradient.dart';
 
 import '../../models/user_profile_images.dart';
 
@@ -45,6 +47,12 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
   final FirebaseAuth auth = FirebaseAuth.instance;
 
   final List<Map> myProfileImage = List.generate(6, (index) => {"profile_image_": index, "name": "ProfileImage $index"}).toList();
+
+  final dateBirth = RegExp('r^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}');
+
+  final _formKey = GlobalKey<FormState>();
+  String? inputtedValue;
+  bool userInteracts() => inputtedValue != null;
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +105,10 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                         child: Container(
                           height: 30,
                           width: 30,
-                          decoration: applyBlueGradient(),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: blueGradient(),
+                          ),
                           child: FloatingActionButton(
                             heroTag: "btn1_$index",
                             elevation: 0,
@@ -132,7 +143,10 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                         child: Container(
                           height: 30,
                           width: 30,
-                          decoration: applyBlueGradient(),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: blueGradient(),
+                          ),
                           child: FloatingActionButton(
                             heroTag: "btn2_$index",
                             elevation: 0,
@@ -161,7 +175,14 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
               controller: widget.aboutMeController,
               style: const TextStyle(color: Colors.grey),
               cursorColor: Colors.grey,
-              decoration: applyInputDecoration(aboutMeDescription)
+              decoration: applyInputDecoration(aboutMeDescription),
+              validator: (value) {
+                if (value == null && value!.isEmpty) {
+                  return "Please enter a description";
+                } else {
+                  return null;
+                }
+              },
             ),
             const SizedBox(height: 30,),
             textLabel("WORK"),
@@ -174,7 +195,14 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
               controller: widget.workController,
               style: const TextStyle(color: Colors.grey),
               cursorColor: Colors.grey,
-              decoration: applyInputDecoration(workDescription)
+              decoration: applyInputDecoration(workDescription),
+              validator: (value) {
+                if (value == null && value!.isEmpty) {
+                  return "Please enter a description";
+                } else {
+                  return null;
+                }
+              },
             ),
             const SizedBox(height: 30,),
             textLabel("STUDY"),
@@ -187,7 +215,14 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
               controller: widget.studyController,
               style: const TextStyle(color: Colors.grey),
               cursorColor: Colors.grey,
-              decoration: applyInputDecoration(studyDescription)
+              decoration: applyInputDecoration(studyDescription),
+              validator: (value) {
+                if (value == null && value!.isEmpty) {
+                  return "Please enter a description";
+                } else {
+                  return null;
+                }
+              },
             ),
             const SizedBox(height: 30,),
             textLabel("WHAT DO I LIKE TO SEE IN A ROOM MATE"),
@@ -200,17 +235,35 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
               controller: widget.roomMateController,
               style: const TextStyle(color: Colors.grey),
               cursorColor: Colors.grey,
-              decoration: applyInputDecoration(roomMateDescription)
+              decoration: applyInputDecoration(roomMateDescription),
+              validator: (value) {
+                if (value == null && value!.isEmpty) {
+                  return "Please enter a description";
+                } else {
+                  return null;
+                }
+              },
             ),
             const SizedBox(height: 30,),
             textLabel("MY DATE OF BIRTH"),
             const SizedBox(height: 10,),
-            TextField(
+            TextFormField(
               controller: widget.birthDateController,
               style: const TextStyle(color: Colors.grey),
               cursorColor: Colors.grey,
               textInputAction: TextInputAction.next,
-              decoration: applyInputDecoration(birthDateDescription)
+              decoration: applyInputDecoration(birthDateDescription),
+              validator: (value) {
+                if (inputtedValue != null && value == null && value!.isEmpty) {
+                  return "Please enter your date of birth";
+                } else {
+                  return null;
+                }
+              },
+              onChanged: (value) => setState(() => inputtedValue = value),
+              inputFormatters: [
+                FilteringTextInputFormatter.deny(dateBirth),
+              ],
             ),
             const SizedBox(height: 30,),
           ],
@@ -259,17 +312,6 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
       ),
       hintText: hint,
       hintStyle: const TextStyle(color: Colors.grey, fontSize: 15, fontWeight: FontWeight.w300),
-    );
-  }
-
-  BoxDecoration applyBlueGradient() {
-    return const BoxDecoration(
-      shape: BoxShape.circle,
-      gradient: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [Color.fromRGBO(0, 53, 190, 1), Color.fromRGBO(57, 103, 224, 1), Color.fromRGBO(117, 154, 255, 1)]
-      )
     );
   }
 

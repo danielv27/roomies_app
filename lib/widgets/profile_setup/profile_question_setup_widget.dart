@@ -160,7 +160,6 @@ class _ProfileQuestionPageState extends State<ProfileQuestionPage> {
                   ),
                 ),
                 onTap: () {
-                  print(" Distance $radius clicked");
                   setState(() {
                     widget.userPersonalProfileModel.radius = radius;
                   });
