@@ -1,11 +1,14 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:roomies_app/models/user_profile_model.dart';
 import 'package:roomies_app/widgets/gradients/blue_gradient.dart';
 
+import '../../backend/database.dart';
 import '../../models/user_profile_images.dart';
 
 class CompleteProfilePage extends StatefulWidget {
@@ -16,14 +19,24 @@ class CompleteProfilePage extends StatefulWidget {
     required this.studyController, 
     required this.roomMateController, 
     required this.birthDateController,
-    required this.userProfileImages,
+    required this.userProfileImages, 
+    required this.pageController, 
+    required this.minBudgetController, 
+    required this.maxBudgetController, 
+    required this.userPersonalProfileModel,
   }) : super(key: key);
+
+  final TextEditingController minBudgetController;
+  final TextEditingController maxBudgetController;
+  final UserSignupProfileModel userPersonalProfileModel;
 
   final TextEditingController aboutMeController;
   final TextEditingController workController;
   final TextEditingController studyController;
   final TextEditingController roomMateController;
   final TextEditingController birthDateController;
+
+  final PageController pageController;
   final UserProfileImages userProfileImages;
 
   @override
@@ -45,216 +58,285 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
 
   final List<Map> myProfileImage = List.generate(6, (index) => {"profile_image_": index, "name": "ProfileImage $index"}).toList();
 
+  final formKey2 = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(
-        padding: const EdgeInsets.only(left: 30.0, right: 30, top: 5),
-        child: Column(
-          children: <Widget> [
-            Container(
-              alignment: Alignment.centerLeft,
-              child: const Text(
-                "Pesonal profile", 
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  color: Colors.grey,
-                ),
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.only(bottom: 80),
+        child: SingleChildScrollView(
+          child: Form(
+            key: formKey2,
+            child: Container(
+              padding: const EdgeInsets.only(left: 30.0, right: 30, top: 5),
+              child: Column(
+                children: <Widget> [
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    child: const Text(
+                      "Pesonal profile", 
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    child: const Text(
+                      "Make your profile complete", 
+                      style: TextStyle(
+                        fontWeight: FontWeight.w900,
+                        fontSize: 24,
+                      ),
+                    ),
+                  ),
+                  GridView.builder(
+                    shrinkWrap: true,
+                    itemCount: selectedProfileImages.length + 1,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      childAspectRatio: (MediaQuery.of(context).size.width) / (MediaQuery.of(context).size.height / 1.3),
+                    ), 
+                    itemBuilder: (context, index) {
+                      return index == selectedProfileImages.length 
+                      ? GridTile(
+                        child: Stack(
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(bottom: 10, right: 10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: const Color.fromRGBO(245, 247, 251, 1),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.bottomRight,
+                              child: Container(
+                                height: 30,
+                                width: 30,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  gradient: blueGradient(),
+                                ),
+                                child: FloatingActionButton(
+                                  heroTag: "btn1_$index",
+                                  elevation: 0,
+                                  onPressed: () async { 
+                                    await selectProfileImage();
+                                    uploadFile(selectedProfileImages[index]);
+                                  },
+                                  backgroundColor: Colors.transparent,
+                                  child: const Icon(Icons.add),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                      : GridTile(
+                        child: Stack(
+                          children: [
+                            Container(
+                              height: MediaQuery.of(context).size.height,
+                              margin: const EdgeInsets.only(bottom: 10, right: 10),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: Image.file(
+                                  File(selectedProfileImages[index].path), 
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.bottomRight,
+                              child: Container(
+                                height: 30,
+                                width: 30,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  gradient: blueGradient(),
+                                ),
+                                child: FloatingActionButton(
+                                  heroTag: "btn2_$index",
+                                  elevation: 0,
+                                  onPressed: () async { 
+                                    await removeFile(selectedProfileImages[index]);
+                                    removeProfileImage(index);
+                                  },
+                                  backgroundColor: Colors.transparent,
+                                  child: const Icon(Icons.remove),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                  ),
+                  const SizedBox(height: 30,),
+                  textLabel("ABOUT ME"),
+                  const SizedBox(height: 10,),
+                  TextFormField(
+                    textInputAction: TextInputAction.newline,
+                    keyboardType: TextInputType.multiline,
+                    minLines: 1,
+                    maxLines: 10,
+                    controller: widget.aboutMeController,
+                    style: const TextStyle(color: Colors.grey),
+                    cursorColor: Colors.grey,
+                    decoration: applyInputDecoration(aboutMeDescription),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "Please enter a description";
+                      } else {
+                        return null;
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 30,),
+                  textLabel("WORK"),
+                  const SizedBox(height: 10,),
+                  TextFormField(
+                    textInputAction: TextInputAction.newline,
+                    keyboardType: TextInputType.multiline,
+                    minLines: 1,
+                    maxLines: 10,
+                    controller: widget.workController,
+                    style: const TextStyle(color: Colors.grey),
+                    cursorColor: Colors.grey,
+                    decoration: applyInputDecoration(workDescription),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "Please enter a description";
+                      } else {
+                        return null;
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 30,),
+                  textLabel("STUDY"),
+                  const SizedBox(height: 10,),
+                  TextFormField(
+                    textInputAction: TextInputAction.newline,
+                    keyboardType: TextInputType.multiline,
+                    minLines: 1,
+                    maxLines: 10,
+                    controller: widget.studyController,
+                    style: const TextStyle(color: Colors.grey),
+                    cursorColor: Colors.grey,
+                    decoration: applyInputDecoration(studyDescription),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "Please enter a description";
+                      } else {
+                        return null;
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 30,),
+                  textLabel("WHAT DO I LIKE TO SEE IN A ROOM MATE"),
+                  const SizedBox(height: 10,),
+                  TextFormField(
+                    textInputAction: TextInputAction.newline,
+                    keyboardType: TextInputType.multiline,
+                    minLines: 1,
+                    maxLines: 10,              
+                    controller: widget.roomMateController,
+                    style: const TextStyle(color: Colors.grey),
+                    cursorColor: Colors.grey,
+                    decoration: applyInputDecoration(roomMateDescription),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "Please enter a description";
+                      } else {
+                        return null;
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 30,),
+                  textLabel("MY DATE OF BIRTH"),
+                  const SizedBox(height: 10,),
+                  TextFormField(
+                    controller: widget.birthDateController,
+                    style: const TextStyle(color: Colors.grey),
+                    cursorColor: Colors.grey,
+                    textInputAction: TextInputAction.next,
+                    decoration: applyInputDecoration(birthDateDescription),
+                    validator: (value) { // TODO: Add a date Regex
+                      if (value!.isEmpty) {
+                        return "Please enter your date of birth";
+                      } else {
+                        return null;
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 30,),
+                ],
               ),
             ),
-            Container(
-              alignment: Alignment.centerLeft,
-              child: const Text(
-                "Make your profile complete", 
-                style: TextStyle(
-                  fontWeight: FontWeight.w900,
-                  fontSize: 24,
-                ),
-              ),
-            ),
-            GridView.builder(
-              shrinkWrap: true,
-              itemCount: selectedProfileImages.length + 1,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                childAspectRatio: (MediaQuery.of(context).size.width) / (MediaQuery.of(context).size.height / 1.3),
-              ), 
-              itemBuilder: (context, index) {
-                return index == selectedProfileImages.length 
-                ? GridTile(
-                  child: Stack(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.only(bottom: 10, right: 10),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: const Color.fromRGBO(245, 247, 251, 1),
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: Container(
-                          height: 30,
-                          width: 30,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            gradient: blueGradient(),
-                          ),
-                          child: FloatingActionButton(
-                            heroTag: "btn1_$index",
-                            elevation: 0,
-                            onPressed: () async { 
-                              await selectProfileImage();
-                              uploadFile(selectedProfileImages[index]);
-                            },
-                            backgroundColor: Colors.transparent,
-                            child: const Icon(Icons.add),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-                : GridTile(
-                  child: Stack(
-                    children: [
-                      Container(
-                        height: MediaQuery.of(context).size.height,
-                        margin: const EdgeInsets.only(bottom: 10, right: 10),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: Image.file(
-                            File(selectedProfileImages[index].path), 
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: Container(
-                          height: 30,
-                          width: 30,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            gradient: blueGradient(),
-                          ),
-                          child: FloatingActionButton(
-                            heroTag: "btn2_$index",
-                            elevation: 0,
-                            onPressed: () async { 
-                              await removeFile(selectedProfileImages[index]);
-                              removeProfileImage(index);
-                            },
-                            backgroundColor: Colors.transparent,
-                            child: const Icon(Icons.remove),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }
-            ),
-            const SizedBox(height: 30,),
-            textLabel("ABOUT ME"),
-            const SizedBox(height: 10,),
-            TextFormField(
-              textInputAction: TextInputAction.newline,
-              keyboardType: TextInputType.multiline,
-              minLines: 1,
-              maxLines: 10,
-              controller: widget.aboutMeController,
-              style: const TextStyle(color: Colors.grey),
-              cursorColor: Colors.grey,
-              decoration: applyInputDecoration(aboutMeDescription),
-              validator: (value) {
-                if (value == null && value!.isEmpty) {
-                  return "Please enter a description";
-                } else {
-                  return null;
-                }
-              },
-            ),
-            const SizedBox(height: 30,),
-            textLabel("WORK"),
-            const SizedBox(height: 10,),
-            TextFormField(
-              textInputAction: TextInputAction.newline,
-              keyboardType: TextInputType.multiline,
-              minLines: 1,
-              maxLines: 10,
-              controller: widget.workController,
-              style: const TextStyle(color: Colors.grey),
-              cursorColor: Colors.grey,
-              decoration: applyInputDecoration(workDescription),
-              validator: (value) {
-                if (value == null && value!.isEmpty) {
-                  return "Please enter a description";
-                } else {
-                  return null;
-                }
-              },
-            ),
-            const SizedBox(height: 30,),
-            textLabel("STUDY"),
-            const SizedBox(height: 10,),
-            TextFormField(
-              textInputAction: TextInputAction.newline,
-              keyboardType: TextInputType.multiline,
-              minLines: 1,
-              maxLines: 10,
-              controller: widget.studyController,
-              style: const TextStyle(color: Colors.grey),
-              cursorColor: Colors.grey,
-              decoration: applyInputDecoration(studyDescription),
-              validator: (value) {
-                if (value == null && value!.isEmpty) {
-                  return "Please enter a description";
-                } else {
-                  return null;
-                }
-              },
-            ),
-            const SizedBox(height: 30,),
-            textLabel("WHAT DO I LIKE TO SEE IN A ROOM MATE"),
-            const SizedBox(height: 10,),
-            TextFormField(
-              textInputAction: TextInputAction.newline,
-              keyboardType: TextInputType.multiline,
-              minLines: 1,
-              maxLines: 10,              
-              controller: widget.roomMateController,
-              style: const TextStyle(color: Colors.grey),
-              cursorColor: Colors.grey,
-              decoration: applyInputDecoration(roomMateDescription),
-              validator: (value) {
-                if (value == null && value!.isEmpty) {
-                  return "Please enter a description";
-                } else {
-                  return null;
-                }
-              },
-            ),
-            const SizedBox(height: 30,),
-            textLabel("MY DATE OF BIRTH"),
-            const SizedBox(height: 10,),
-            TextFormField(
-              controller: widget.birthDateController,
-              style: const TextStyle(color: Colors.grey),
-              cursorColor: Colors.grey,
-              textInputAction: TextInputAction.next,
-              decoration: applyInputDecoration(birthDateDescription),
-              validator: (value) { // TODO: Add a date Regex
-                if (value == null && value!.isEmpty) {
-                  return "Please enter your date of birth";
-                } else {
-                  return null;
-                }
-              },
-            ),
-            const SizedBox(height: 30,),
-          ],
+          ),
         ),
+      ),
+      bottomSheet: bottomSheet(context),
+    );
+  }
+
+  SizedBox bottomSheet(BuildContext context) {
+    return SizedBox(
+      height: 80,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              gradient: blueGradient()
+            ),
+            height: 50,
+            width: MediaQuery.of(context).size.width * 0.75,
+            margin: const EdgeInsets.only(bottom: 10),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                elevation: 5,
+                primary: Colors.transparent,
+                shadowColor: Colors.transparent,
+                onSurface: Colors.transparent,
+              ),
+              onPressed: () async {
+                if (formKey2.currentState!.validate()) {
+                  if (widget.userProfileImages.imageURLS.isNotEmpty) {
+                    User? currentUser = auth.currentUser;
+                    print("test");
+                    await FireStoreDataBase().createPersonalProfile(
+                      currentUser,
+                      widget.userPersonalProfileModel.radius,
+                      widget.minBudgetController,
+                      widget.maxBudgetController,
+                      widget.aboutMeController,
+                      widget.workController,
+                      widget.studyController,
+                      widget.roomMateController,
+                      widget.birthDateController,
+                    );
+                    await uploadImageUrls();
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
+                  } 
+                  else {
+                    alertImageEmpty(context);
+                  }
+                }
+              },
+              child: const Text(
+                "Complete profile",
+                style: TextStyle(fontSize: 20, color:Colors.white)
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -302,6 +384,18 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
     );
   }
 
+  Future<dynamic> alertImageEmpty(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context){
+        return const AlertDialog(
+          title: Text("Upload Images"),
+          content: Text("Please Upload at least 1 profile image"),
+        );
+      }
+    );
+  }
+
   Future<String> uploadFile(XFile _image) async {
     Reference reference = storageRef.ref().child("profile_images").child(auth.currentUser!.uid.toString()).child(_image.name);
     await reference.putFile(File(_image.path));
@@ -339,6 +433,19 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
       selectedProfileImages.removeAt(index);
       widget.userProfileImages.imageURLS.removeAt(index);
     });
+  }
+  
+  Future<void> uploadImageUrls() async {
+    try { 
+      await FirebaseFirestore.instance.collection('users')
+        .doc(auth.currentUser?.uid)
+        .collection("profile_images")
+        .add({
+          'urls': widget.userProfileImages.imageURLS,
+        });
+    } catch (e) {
+      debugPrint("Error - $e");
+    }
   }
 
 }

@@ -8,11 +8,13 @@ class ProfileQuestionPage extends StatefulWidget {
     Key? key,
     required this.minBudgetController,
     required this.maxBudgetController, 
-    required this.userPersonalProfileModel,
+    required this.userPersonalProfileModel, 
+    required this.pageController,
   }) : super(key: key);
 
   final TextEditingController minBudgetController;
   final TextEditingController maxBudgetController;
+  final PageController pageController;
   UserSignupProfileModel userPersonalProfileModel;
 
   @override
@@ -21,6 +23,7 @@ class ProfileQuestionPage extends StatefulWidget {
 
 class _ProfileQuestionPageState extends State<ProfileQuestionPage> {
   final priceRegex = RegExp(r'^[a-zA-Z0-9\- ]*$');
+  final formKey1 = GlobalKey<FormState>();
 
   var radiusWidth = 40;
   var radiusExpandedWidth = 65;
@@ -29,101 +32,152 @@ class _ProfileQuestionPageState extends State<ProfileQuestionPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(
-        padding: const EdgeInsets.only(left: 30.0, right: 30, top: 5),
-        child: Column(
-          children: <Widget>[
-            Container(
-              alignment: Alignment.centerLeft,
-              child: const Text(
-                "Personal profile",
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  color: Colors.grey,
-                ),
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.only(bottom: 80),
+        child: SingleChildScrollView(
+          child: Form(
+            key: formKey1,
+            child: Container(
+              padding: const EdgeInsets.only(left: 30.0, right: 30, top: 5),
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    child: const Text(
+                      "Personal profile",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.centerLeft,
+                    child: const Text(
+                      "Where do you want to live?",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w900,
+                        fontSize: 24,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  textLabel("Radius in KM (optional)"),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    children: <Widget>[
+                      radiusCard(radiusDistnace[0].toString()),
+                      const Spacer(),
+                      radiusCard(radiusDistnace[1].toString()),
+                      const Spacer(),
+                      radiusCard(radiusDistnace[2].toString()),
+                      const Spacer(),
+                      radiusCard(radiusDistnace[3].toString()),
+                      const Spacer(),
+                      radiusCard(radiusDistnace[4].toString()),
+                      const Spacer(),
+                      radiusCard(radiusDistnace[5].toString()),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  textLabel("Minimum Budget"),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    controller: widget.minBudgetController,
+                    style: const TextStyle(color: Colors.grey),
+                    cursorColor: Colors.grey,
+                    textInputAction: TextInputAction.next,
+                    decoration: applyInputDecoration(),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "Please enter your minimum budget";
+                      } else if (int.tryParse(value) == null) {
+                        return "Please enter only numbers";
+                      } else {
+                        return null;
+                      }
+                    },
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  textLabel("Maximum Budget"),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    controller: widget.maxBudgetController,
+                    style: const TextStyle(color: Colors.grey),
+                    cursorColor: Colors.grey,
+                    textInputAction: TextInputAction.next,
+                    decoration: applyInputDecoration(),
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return "Please enter your maximum budget";
+                      } else if (int.tryParse(value) == null) {
+                        return "Please enter only numbers";
+                      } else {
+                        return null;
+                      }
+                    },
+                  ),
+                ],
               ),
             ),
-            Container(
-              alignment: Alignment.centerLeft,
-              child: const Text(
-                "Where do you want to live?",
-                style: TextStyle(
-                  fontWeight: FontWeight.w900,
-                  fontSize: 24,
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            textLabel("Radius in KM (optional)"),
-            const SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: <Widget>[
-                radiusCard(radiusDistnace[0].toString()),
-                const Spacer(),
-                radiusCard(radiusDistnace[1].toString()),
-                const Spacer(),
-                radiusCard(radiusDistnace[2].toString()),
-                const Spacer(),
-                radiusCard(radiusDistnace[3].toString()),
-                const Spacer(),
-                radiusCard(radiusDistnace[4].toString()),
-                const Spacer(),
-                radiusCard(radiusDistnace[5].toString()),
-              ],
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            textLabel("Minimum Budget"),
-            const SizedBox(
-              height: 10,
-            ),
-            TextFormField(
-              controller: widget.minBudgetController,
-              style: const TextStyle(color: Colors.grey),
-              cursorColor: Colors.grey,
-              textInputAction: TextInputAction.next,
-              decoration: applyInputDecoration(),
-              validator: (value) {
-                if (value == null && value!.isEmpty) {
-                  return "Please enter your minimum budget";
-                } else if (int.tryParse(value) == null) {
-                  return "Please enter only numbers";
-                } else {
-                  return null;
-                }
-              },
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            textLabel("Maximum Budget"),
-            const SizedBox(
-              height: 10,
-            ),
-            TextFormField(
-              controller: widget.maxBudgetController,
-              style: const TextStyle(color: Colors.grey),
-              cursorColor: Colors.grey,
-              textInputAction: TextInputAction.next,
-              decoration: applyInputDecoration(),
-              validator: (value) {
-                if (value == null && value!.isEmpty) {
-                  return "Please enter your maximum budget";
-                } else if (int.tryParse(value) == null) {
-                  return "Please enter only numbers";
-                } else {
-                  return null;
-                }
-              },
-            ),
-          ],
+          ),
         ),
+      ),
+      bottomSheet: bottomSheet(context),
+    );
+  }
+
+
+  Widget bottomSheet(BuildContext context) {
+    return SizedBox(
+      height: 80,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              gradient: blueGradient(),
+            ),
+            height: 50,
+            width: MediaQuery.of(context).size.width * 0.75,
+            margin: const EdgeInsets.only(bottom: 10),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                elevation: 5,
+                primary: Colors.transparent,
+                shadowColor: Colors.transparent,
+                onSurface: Colors.transparent,
+              ),
+              onPressed: () { 
+                if (formKey1.currentState!.validate()) {
+                  widget.pageController.nextPage(
+                    duration: const Duration(milliseconds: 500), 
+                    curve: Curves.easeInOut,
+                  );
+                }
+              },
+              child: const Text(
+                "Next",
+                style: TextStyle(fontSize: 20, color:Colors.white)
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

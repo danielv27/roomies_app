@@ -6,7 +6,7 @@ import 'package:roomies_app/widgets/house_setup/property_type_setup_widget.dart'
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../widgets/house_setup/property_condition_setup_widget.dart';
-import '../widgets/house_setup/property_last_setup_widget.dart';
+import '../widgets/house_setup/property_complete_setup_widget.dart';
 
 class SetupHousePage extends StatefulWidget {
   const SetupHousePage({Key? key}) : super(key: key);
@@ -108,7 +108,7 @@ class _SetupHousePageState extends State<SetupHousePage> with SingleTickerProvid
             propertyConditionController: propertyConditionController,
             pageController: pageController,
           ),
-          ProperLastSetupPage(
+          ProperCompleteSetupPage(
             postalCodeController: postalCodeController, 
             houseNumberController: houseNumberController, 
             apartmentNumberController: apartmentNumberController,

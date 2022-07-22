@@ -8,8 +8,8 @@ import 'package:image_picker/image_picker.dart';
 import '../../backend/database.dart';
 import '../gradients/blue_gradient.dart';
 
-class ProperLastSetupPage extends StatefulWidget {
-  const ProperLastSetupPage({
+class ProperCompleteSetupPage extends StatefulWidget {
+  const ProperCompleteSetupPage({
     Key? key, 
     required this.houseDescriptionController,
     required this.pricePerRoomController,
@@ -54,10 +54,10 @@ class ProperLastSetupPage extends StatefulWidget {
   final PageController pageController;
 
   @override
-  State<ProperLastSetupPage> createState() => _ProperLastSetupPageState();
+  State<ProperCompleteSetupPage> createState() => _ProperCompleteSetupPageState();
 }
 
-class _ProperLastSetupPageState extends State<ProperLastSetupPage> {
+class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
   final List uploadIcon = [
     Image.asset("assets/icons/upload-house-images.png", width: 42, height: 42.77),
     Image.asset("assets/icons/upload-building-map.png", width: 43.2, height: 37.8),
