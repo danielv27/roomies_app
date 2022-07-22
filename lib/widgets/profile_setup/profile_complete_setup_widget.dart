@@ -1,12 +1,9 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:roomies_app/models/user_profile_model.dart';
 import 'package:roomies_app/widgets/gradients/blue_gradient.dart';
 
 import '../../models/user_profile_images.dart';
@@ -41,14 +38,12 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
   String birthDateDescription = "dd/mm/yyyy";
 
   final List<XFile> selectedProfileImages = [];
-  final FirebaseStorage storageRef = FirebaseStorage.instance;
   int uploadItem = 0;
 
+  final FirebaseStorage storageRef = FirebaseStorage.instance;
   final FirebaseAuth auth = FirebaseAuth.instance;
 
   final List<Map> myProfileImage = List.generate(6, (index) => {"profile_image_": index, "name": "ProfileImage $index"}).toList();
-
-  final dateBirth = RegExp('r^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}');
 
   @override
   Widget build(BuildContext context) {
@@ -249,16 +244,13 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
               cursorColor: Colors.grey,
               textInputAction: TextInputAction.next,
               decoration: applyInputDecoration(birthDateDescription),
-              validator: (value) {
+              validator: (value) { // TODO: Add a date Regex
                 if (value == null && value!.isEmpty) {
                   return "Please enter your date of birth";
                 } else {
                   return null;
                 }
               },
-              inputFormatters: [
-                FilteringTextInputFormatter.deny(dateBirth),
-              ],
             ),
             const SizedBox(height: 30,),
           ],
@@ -329,8 +321,8 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
       if (profileImage != null) {
         selectedProfileImages.add(profileImage);
       }
-    } catch (e) {
-      print("error" + e.toString());
+    } catch (error) {
+      debugPrint("ERROR: $error");
     }
     setState(() {
       
