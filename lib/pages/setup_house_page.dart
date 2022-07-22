@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:roomies_app/pages/auth_page.dart';
+import 'package:roomies_app/widgets/gradients/blue_gradient.dart';
 import 'package:roomies_app/widgets/house_setup/property_address_setup_widget.dart';
 import 'package:roomies_app/widgets/house_setup/property_information_setup_widget.dart';
 import 'package:roomies_app/widgets/house_setup/property_type_setup_widget.dart';
@@ -141,7 +142,10 @@ class _SetupHousePageState extends State<SetupHousePage> with SingleTickerProvid
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                    decoration: applyBlueGradient(),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      gradient: blueGradient(),
+                    ),
                     height: 50,
                     width: MediaQuery.of(context).size.width * 0.75,
                     margin: const EdgeInsets.only(bottom: 10),
@@ -190,7 +194,10 @@ class _SetupHousePageState extends State<SetupHousePage> with SingleTickerProvid
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                    decoration: applyBlueGradient(),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      gradient: blueGradient(),
+                    ),
                     height: 50,
                     width: MediaQuery.of(context).size.width * 0.75,
                     margin: const EdgeInsets.only(bottom: 10),
@@ -246,17 +253,6 @@ class _SetupHousePageState extends State<SetupHousePage> with SingleTickerProvid
       return true;
     }
     return false;
-  }
-
-  BoxDecoration applyBlueGradient() {
-    return BoxDecoration(
-      borderRadius: BorderRadius.circular(10),
-      gradient: const LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [Color.fromRGBO(0, 53, 190, 1), Color.fromRGBO(57, 103, 224, 1), Color.fromRGBO(117, 154, 255, 1)]
-      )
-    );
   }
 
   // validateAddress(TextEditingController postalCodeController, TextEditingController houseNumberController, String apiKey) async {
