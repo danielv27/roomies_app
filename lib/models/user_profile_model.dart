@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import 'user_model.dart';
 
 class UserProfileModel {
@@ -8,6 +10,13 @@ class UserProfileModel {
     required this.userModel,
     required this.imageURLS,
   });
+
+  @override
+  bool operator ==(other) => other is UserProfileModel && userModel.id == other.userModel.id;
+  
+  @override
+  int get hashCode => hashValues(userModel, imageURLS);  
+  
 }
 
 class UserSignupProfileModel {

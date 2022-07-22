@@ -31,6 +31,7 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     Provider.of<CurrentUserProvider>(context, listen: false).initialize();
+    Provider.of<UserProfileProvider>(context, listen: false).loadUsers(10);
   }
 
   @override
@@ -60,8 +61,6 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
       const HousesPage()
     ];
 
-
-  
     return Scaffold(
       body: PageTransitionSwitcher(
         transitionBuilder: (child, primaryAnimation, secondaryAnimation) => pageTransition(context,primaryAnimation,child, _currentPage, _previousPage),

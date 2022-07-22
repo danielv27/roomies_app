@@ -22,7 +22,7 @@ class HousesPage extends StatelessWidget {
           ),
         ),
         body: FutureBuilder(
-              future: FireStoreDataBase().getNewUsers(5),
+              future: FireStoreDataBase().getNewUsers(5, null),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   List<UserModel> userList = snapshot.data as List<UserModel>;

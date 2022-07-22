@@ -52,10 +52,15 @@ class SwipableCardsState extends State<SwipableCards> {
 
   @override
   Widget build(BuildContext context) {
-      final String? currentUserID = context.read<CurrentUserProvider>().currentUser?.userModel.id;
+    
+    final String? currentUserID = context.read<CurrentUserProvider>().currentUser?.userModel.id;
     final List<UserProfileModel>? userProfileModels = widget.userProvider.userProfileModels;
     int currentUserIndex = widget.userProvider.pagesSwiped;
-    //load();
+
+    if(userProfileModels != null && currentUserIndex >= userProfileModels.length){
+      return const Center(child:Text('No More Users To Swipe'));
+    }
+
     return userProfileModels == null ?
     const Center(child: CircularProgressIndicator()):
     Stack(
@@ -73,14 +78,13 @@ class SwipableCardsState extends State<SwipableCards> {
           onSwipeCompleted: (index, direction) {
             //this is where a swipe is handled
             Provider.of<UserProfileProvider>(context,listen: false).incrementIndex();
+            print('userListLength = ${userProfileModels.length}');
             if(direction == SwipeDirection.right){
               print('liked ${userProfileModels[index].userModel.firstName} ${userProfileModels[index].userModel.lastName}');
-              print('currentUserID: $currentUserID');
               FireStoreDataBase().addEncounter(true, currentUserID!, userProfileModels[index].userModel.id);
             }
             if(direction == SwipeDirection.left){
               print('diskliked ${userProfileModels[index].userModel.firstName} ${userProfileModels[index].userModel.lastName}');
-              print('currentUserID: $currentUserID');
               FireStoreDataBase().addEncounter(false, currentUserID!, userProfileModels[index].userModel.id);
             }   
           },

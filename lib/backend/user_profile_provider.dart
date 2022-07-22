@@ -13,7 +13,7 @@ class UserProfileProvider extends ChangeNotifier {
   Future<void> incrementIndex() async {
     pagesSwiped++;
     print('pagesSwiped: $pagesSwiped');
-    await loadUsers(1);
+    await loadUsers(5);
   }
 
   Future<void> loadUsers(int limit) async {
@@ -21,7 +21,15 @@ class UserProfileProvider extends ChangeNotifier {
       userProfileModels = await FireStoreDataBase().getNewUserProfileModels(limit),
     }:
     {
-      await FireStoreDataBase().getNewUserProfileModels(limit).then((newUsers) => newUsers !=null ?userProfileModels?.addAll(newUsers):null),
+      await FireStoreDataBase().getNewUserProfileModels(limit).then((newUsers) {
+        if(newUsers != null){
+          for(var user in newUsers){
+            if(!userProfileModels!.contains(user)){
+              userProfileModels?.add(user);
+            }
+          }
+        }
+      })
     };
     notifyListeners();
   }

@@ -68,7 +68,7 @@ class FireStoreDataBase {
   }
 
   //retrieve random users that are not house owners
-  Future<List<UserModel>?> getNewUsers(int limit) async {
+  Future<List<UserModel>?> getNewUsers(int limit, List<String?>? currentEncounters) async {
     try {
       List<UserModel> userList = [];
       List<String?>? encounters = await getEncountersIDs(FirebaseAuth.instance.currentUser?.uid);
@@ -105,7 +105,7 @@ class FireStoreDataBase {
 
 
   Future<List<UserProfileModel>?> getNewUserProfileModels(int limit) async {
-    List<UserModel>? users = await getNewUsers(limit);
+    List<UserModel>? users = await getNewUsers(limit, null);
     List<UserProfileModel>? usersProfileModel = [];
 
     try{  
