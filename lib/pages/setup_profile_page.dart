@@ -45,7 +45,8 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
     super.dispose();
   }
 
-  final formKey = GlobalKey<FormState>();
+  final formKey1 = GlobalKey<FormState>();
+  final formKey2 = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +69,7 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
             activeDotColor: Colors.pink,
           ),
           onDotClicked: (index) {
-            if (formKey.currentState!.validate()) {
+            if (formKey1.currentState!.validate()) {
               pageController.animateToPage(
                 index, 
                 duration: const Duration(milliseconds: 500), 
@@ -80,32 +81,36 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
       ),
       body: Container(
         padding: const EdgeInsets.only(bottom: 80),
-        child: Form(
-          key: formKey,
-          child: PageView(
-            physics: const NeverScrollableScrollPhysics(),
-            controller: pageController,
-            onPageChanged: (index) {
-              setState(() {
-                isLastPage = index == profileSetupPages - 1;
-              });
-            },
-            children: <Widget> [
-              ProfileQuestionPage(
+        child: PageView(
+          physics: const NeverScrollableScrollPhysics(),
+          controller: pageController,
+          onPageChanged: (index) {
+            setState(() {
+              isLastPage = index == profileSetupPages - 1;
+            });
+          },
+          children: <Widget> [
+            Form(
+              key: formKey1,
+              child: ProfileQuestionPage(
                 minBudgetController: minBudgetController, 
                 maxBudgetController: maxBudgetController,
                 userPersonalProfileModel: userPersonalProfileModel,
               ),
-              CompleteProfilePage(
-                aboutMeController: aboutMeController, 
-                workController: workController, 
-                studyController: studyController,
-                roomMateController: roomMateController,
-                birthDateController: birthDateController,
-                userProfileImages: userProfileImages,
-              ),
-            ],
-          ),
+            ),
+            Form(
+              key: formKey2,
+              autovalidateMode: AutovalidateMode.always,
+                child: CompleteProfilePage(
+                  aboutMeController: aboutMeController, 
+                  workController: workController, 
+                  studyController: studyController,
+                  roomMateController: roomMateController,
+                  birthDateController: birthDateController,
+                  userProfileImages: userProfileImages,
+                ),
+            ),
+          ],
         ),
       ),
       bottomSheet: isLastPage 
@@ -131,24 +136,29 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
                         onSurface: Colors.transparent,
                       ),
                       onPressed: () async {
-                        if (formKey.currentState!.validate() && userProfileImages.imageURLS.isNotEmpty) {
-                          User? currentUser = auth.currentUser;
-                          await FireStoreDataBase().createPersonalProfile(
-                            currentUser,
-                            userPersonalProfileModel.radius,
-                            minBudgetController,
-                            maxBudgetController,
-                            aboutMeController,
-                            workController,
-                            studyController,
-                            roomMateController,
-                            birthDateController,
-                          );
-                          await uploadImageUrls();
-                          Navigator.of(context).pop();
-                          Navigator.of(context).pop();
+                        if (formKey2.currentState!.validate() && checkControllers()) { // TODO: Bug --> valdiate is awlways true
+                          if (userProfileImages.imageURLS.isNotEmpty) {
+                            User? currentUser = auth.currentUser;
+                            await FireStoreDataBase().createPersonalProfile(
+                              currentUser,
+                              userPersonalProfileModel.radius,
+                              minBudgetController,
+                              maxBudgetController,
+                              aboutMeController,
+                              workController,
+                              studyController,
+                              roomMateController,
+                              birthDateController,
+                            );
+                            await uploadImageUrls();
+                            Navigator.of(context).pop();
+                            Navigator.of(context).pop();
+                          } 
+                          else {
+                            alertImageEmpty(context);
+                          }
                         } else {
-                          popupImage(context);
+                          alertFieldEmpty(context);
                         }
                       },
                       child: const Text(
@@ -182,7 +192,7 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
                         onSurface: Colors.transparent,
                       ),
                       onPressed: () { 
-                        if (formKey.currentState!.validate()) {
+                        if (formKey1.currentState!.validate()) {
                           pageController.nextPage(
                             duration: const Duration(milliseconds: 500), 
                             curve: Curves.easeInOut,
@@ -201,13 +211,25 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
     );
   }
 
-  Future<dynamic> popupImage(BuildContext context) {
+  Future<dynamic> alertImageEmpty(BuildContext context) {
     return showDialog(
       context: context,
       builder: (BuildContext context){
         return const AlertDialog(
           title: Text("Upload Images"),
           content: Text("Please Upload at least 1 profile image"),
+        );
+      }
+    );
+  }
+
+  Future<dynamic> alertFieldEmpty(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context){
+        return const AlertDialog(
+          title: Text("Empty Fields"),
+          content: Text("Please make sure to fill all the required fields"),
         );
       }
     );
@@ -224,6 +246,23 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
     } catch (e) {
       debugPrint("Error - $e");
     }
+  }
+  
+  bool checkControllers() {
+    if (aboutMeController.text.isEmpty) {
+      return false;
+    } else if (workController.text.isEmpty) {
+      return false;
+    } else if (studyController.text.isEmpty) {
+      return false;
+    } else if (roomMateController.text.isEmpty) {
+      return false;
+    } else if (birthDateController.text.isEmpty) {
+      return false;
+    } else {
+      return true;
+    }
+    
   }
 
 }

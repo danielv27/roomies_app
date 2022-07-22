@@ -50,10 +50,6 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
 
   final dateBirth = RegExp('r^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}');
 
-  final _formKey = GlobalKey<FormState>();
-  String? inputtedValue;
-  bool userInteracts() => inputtedValue != null;
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -254,13 +250,12 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
               textInputAction: TextInputAction.next,
               decoration: applyInputDecoration(birthDateDescription),
               validator: (value) {
-                if (inputtedValue != null && value == null && value!.isEmpty) {
+                if (value == null && value!.isEmpty) {
                   return "Please enter your date of birth";
                 } else {
                   return null;
                 }
               },
-              onChanged: (value) => setState(() => inputtedValue = value),
               inputFormatters: [
                 FilteringTextInputFormatter.deny(dateBirth),
               ],
