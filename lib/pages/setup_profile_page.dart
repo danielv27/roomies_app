@@ -148,15 +148,7 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
                           Navigator.of(context).pop();
                           Navigator.of(context).pop();
                         } else {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context){
-                              return const AlertDialog(
-                                title: Text("Alert Dialog"),
-                                content: Text("Please Upload at least 1 profile image"),
-                              );
-                            }
-                          );
+                          popupImage(context);
                         }
                       },
                       child: const Text(
@@ -209,14 +201,15 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
     );
   }
 
-  BoxDecoration applyBlueGradient() {
-    return BoxDecoration(
-      borderRadius: BorderRadius.circular(10),
-      gradient: const LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [Color.fromRGBO(0, 53, 190, 1), Color.fromRGBO(57, 103, 224, 1), Color.fromRGBO(117, 154, 255, 1)]
-      )
+  Future<dynamic> popupImage(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context){
+        return const AlertDialog(
+          title: Text("Upload Images"),
+          content: Text("Please Upload at least 1 profile image"),
+        );
+      }
     );
   }
   
