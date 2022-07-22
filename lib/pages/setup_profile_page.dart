@@ -2,6 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:roomies_app/widgets/gradients/blue_gradient.dart';
 import 'package:roomies_app/widgets/profile_setup/profile_complete_setup_widget.dart';
 import 'package:roomies_app/widgets/profile_setup/profile_question_setup_widget.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -44,7 +45,8 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
     super.dispose();
   }
 
-  final formKey = GlobalKey<FormState>();
+  final formKey1 = GlobalKey<FormState>();
+  final formKey2 = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +69,7 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
             activeDotColor: Colors.pink,
           ),
           onDotClicked: (index) {
-            if (checkControllers()) {
+            if (formKey1.currentState!.validate()) {
               pageController.animateToPage(
                 index, 
                 duration: const Duration(milliseconds: 500), 
@@ -79,32 +81,36 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
       ),
       body: Container(
         padding: const EdgeInsets.only(bottom: 80),
-        child: Form(
-          key: formKey,
-          child: PageView(
-            physics: const NeverScrollableScrollPhysics(),
-            controller: pageController,
-            onPageChanged: (index) {
-              setState(() {
-                isLastPage = index == profileSetupPages - 1;
-              });
-            },
-            children: <Widget> [
-              ProfileQuestionPage(
+        child: PageView(
+          physics: const NeverScrollableScrollPhysics(),
+          controller: pageController,
+          onPageChanged: (index) {
+            setState(() {
+              isLastPage = index == profileSetupPages - 1;
+            });
+          },
+          children: <Widget> [
+            Form(
+              key: formKey1,
+              child: ProfileQuestionPage(
                 minBudgetController: minBudgetController, 
                 maxBudgetController: maxBudgetController,
                 userPersonalProfileModel: userPersonalProfileModel,
               ),
-              CompleteProfilePage(
-                aboutMeController: aboutMeController, 
-                workController: workController, 
-                studyController: studyController,
-                roomMateController: roomMateController,
-                birthDateController: birthDateController,
-                userProfileImages: userProfileImages,
-              ),
-            ],
-          ),
+            ),
+            Form(
+              key: formKey2,
+              autovalidateMode: AutovalidateMode.always,
+                child: CompleteProfilePage(
+                  aboutMeController: aboutMeController, 
+                  workController: workController, 
+                  studyController: studyController,
+                  roomMateController: roomMateController,
+                  birthDateController: birthDateController,
+                  userProfileImages: userProfileImages,
+                ),
+            ),
+          ],
         ),
       ),
       bottomSheet: isLastPage 
@@ -115,7 +121,10 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                    decoration: applyBlueGradient(),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      gradient: blueGradient()
+                    ),
                     height: 50,
                     width: MediaQuery.of(context).size.width * 0.75,
                     margin: const EdgeInsets.only(bottom: 10),
@@ -127,22 +136,31 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
                         onSurface: Colors.transparent,
                       ),
                       onPressed: () async {
-                        User? currentUser = auth.currentUser;
-                        await FireStoreDataBase().createPersonalProfile(
-                          currentUser,
-                          userPersonalProfileModel.radius,
-                          minBudgetController,
-                          maxBudgetController,
-                          aboutMeController,
-                          workController,
-                          studyController,
-                          roomMateController,
-                          birthDateController,
-                        );
-                        await uploadImageUrls();
-                        Navigator.of(context).pop();
-                        Navigator.of(context).pop();
-                      }, 
+                        if (formKey2.currentState!.validate() && checkControllers()) { // TODO: Bug --> valdiate is awlways true
+                          if (userProfileImages.imageURLS.isNotEmpty) {
+                            User? currentUser = auth.currentUser;
+                            await FireStoreDataBase().createPersonalProfile(
+                              currentUser,
+                              userPersonalProfileModel.radius,
+                              minBudgetController,
+                              maxBudgetController,
+                              aboutMeController,
+                              workController,
+                              studyController,
+                              roomMateController,
+                              birthDateController,
+                            );
+                            await uploadImageUrls();
+                            Navigator.of(context).pop();
+                            Navigator.of(context).pop();
+                          } 
+                          else {
+                            alertImageEmpty(context);
+                          }
+                        } else {
+                          alertFieldEmpty(context);
+                        }
+                      },
                       child: const Text(
                         "Complete profile",
                         style: TextStyle(fontSize: 20, color:Colors.white)
@@ -159,7 +177,10 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                    decoration: applyBlueGradient(),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      gradient: blueGradient(),
+                    ),
                     height: 50,
                     width: MediaQuery.of(context).size.width * 0.75,
                     margin: const EdgeInsets.only(bottom: 10),
@@ -171,7 +192,7 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
                         onSurface: Colors.transparent,
                       ),
                       onPressed: () { 
-                        if (checkControllers() && formKey.currentState!.validate()) {
+                        if (formKey1.currentState!.validate()) {
                           pageController.nextPage(
                             duration: const Duration(milliseconds: 500), 
                             curve: Curves.easeInOut,
@@ -190,21 +211,27 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
     );
   }
 
-  bool checkControllers() {
-    if (minBudgetController.text.isNotEmpty || maxBudgetController.text.isNotEmpty) {
-      return true;
-    }
-    return false;
+  Future<dynamic> alertImageEmpty(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context){
+        return const AlertDialog(
+          title: Text("Upload Images"),
+          content: Text("Please Upload at least 1 profile image"),
+        );
+      }
+    );
   }
 
-  BoxDecoration applyBlueGradient() {
-    return BoxDecoration(
-      borderRadius: BorderRadius.circular(10),
-      gradient: const LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [Color.fromRGBO(0, 53, 190, 1), Color.fromRGBO(57, 103, 224, 1), Color.fromRGBO(117, 154, 255, 1)]
-      )
+  Future<dynamic> alertFieldEmpty(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context){
+        return const AlertDialog(
+          title: Text("Empty Fields"),
+          content: Text("Please make sure to fill all the required fields"),
+        );
+      }
     );
   }
   
@@ -219,6 +246,23 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
     } catch (e) {
       debugPrint("Error - $e");
     }
+  }
+  
+  bool checkControllers() {
+    if (aboutMeController.text.isEmpty) {
+      return false;
+    } else if (workController.text.isEmpty) {
+      return false;
+    } else if (studyController.text.isEmpty) {
+      return false;
+    } else if (roomMateController.text.isEmpty) {
+      return false;
+    } else if (birthDateController.text.isEmpty) {
+      return false;
+    } else {
+      return true;
+    }
+    
   }
 
 }

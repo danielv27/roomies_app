@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:roomies_app/models/user_profile_model.dart';
+import 'package:roomies_app/widgets/gradients/blue_gradient.dart';
 
 class ProfileQuestionPage extends StatefulWidget {
 
@@ -88,6 +89,15 @@ class _ProfileQuestionPageState extends State<ProfileQuestionPage> {
               cursorColor: Colors.grey,
               textInputAction: TextInputAction.next,
               decoration: applyInputDecoration(),
+              validator: (value) {
+                if (value == null && value!.isEmpty) {
+                  return "Please enter your minimum budget";
+                } else if (int.tryParse(value) == null) {
+                  return "Please enter only numbers";
+                } else {
+                  return null;
+                }
+              },
             ),
             const SizedBox(
               height: 30,
@@ -102,6 +112,15 @@ class _ProfileQuestionPageState extends State<ProfileQuestionPage> {
               cursorColor: Colors.grey,
               textInputAction: TextInputAction.next,
               decoration: applyInputDecoration(),
+              validator: (value) {
+                if (value == null && value!.isEmpty) {
+                  return "Please enter your maximum budget";
+                } else if (int.tryParse(value) == null) {
+                  return "Please enter only numbers";
+                } else {
+                  return null;
+                }
+              },
             ),
           ],
         ),
@@ -136,12 +155,11 @@ class _ProfileQuestionPageState extends State<ProfileQuestionPage> {
                       leadingDistribution: TextLeadingDistribution.even,
                       foreground: (widget.userPersonalProfileModel.radius != radius)
                           ? (Paint()..color = const Color.fromRGBO(101, 101, 107, 1))
-                          : (Paint()..shader = applyTextBlueGradient()),
+                          : (Paint()..shader = blueGradient().createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 100.0))),
                     ),
                   ),
                 ),
                 onTap: () {
-                  print(" Distance $radius clicked");
                   setState(() {
                     widget.userPersonalProfileModel.radius = radius;
                   });
@@ -177,16 +195,6 @@ class _ProfileQuestionPageState extends State<ProfileQuestionPage> {
         ),
       ],
     );
-  }
-
-  Shader applyTextBlueGradient() {
-    return const LinearGradient(
-      colors: [
-        Color.fromRGBO(0, 53, 190, 1),
-        Color.fromRGBO(57, 103, 224, 1),
-        Color.fromRGBO(117, 154, 255, 1)
-      ],
-    ).createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 100.0));
   }
 
   InputDecoration applyInputDecoration() {
