@@ -14,7 +14,6 @@ class MatchesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final matchesProvider = context.watch<MatchesProvider>();
-    List<UserModel>? userModels = matchesProvider.userModels;
     return Scaffold(
       body: Container(
           decoration: BoxDecoration(
@@ -23,8 +22,8 @@ class MatchesPage extends StatelessWidget {
 
           child: Column(
             children: [
-              MatchesHeaderWidget(users: userModels),
-              MatchesBodyWidget(users: userModels)
+              MatchesHeaderWidget(provider: matchesProvider),
+              MatchesBodyWidget(provider: matchesProvider)
             ] 
           ),          
         ),

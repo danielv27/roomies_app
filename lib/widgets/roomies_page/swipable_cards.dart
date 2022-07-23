@@ -25,7 +25,6 @@ class SwipableCards extends StatefulWidget {
 class SwipableCardsState extends State<SwipableCards> {
   late final SwipableStackController swipeController;
   late final initialIndex = widget.userProvider.pagesSwiped;
-  late final Future<List<UserProfileModel>?> futureListUserProfileModel = FireStoreDataBase().getNewUserProfileModels(3);
   late final buttonInfoPressed = widget.buttonInfoPressed;
   bool loading = true;
 
@@ -57,10 +56,9 @@ class SwipableCardsState extends State<SwipableCards> {
     final List<UserProfileModel>? userProfileModels = widget.userProvider.userProfileModels;
     int currentUserIndex = widget.userProvider.pagesSwiped;
 
-    if(userProfileModels != null && currentUserIndex >= userProfileModels.length){
+    if(userProfileModels != null && (currentUserIndex >= userProfileModels.length || userProfileModels.isEmpty)){
       return const Center(child:Text('No More Users To Swipe'));
     }
-
     return userProfileModels == null ?
     const Center(child: CircularProgressIndicator()):
     Stack(

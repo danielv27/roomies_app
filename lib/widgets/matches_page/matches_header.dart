@@ -5,20 +5,30 @@ import 'package:page_transition/page_transition.dart';
 import 'package:roomies_app/backend/current_profile_provider.dart';
 import 'package:roomies_app/backend/database.dart';
 import 'package:roomies_app/widgets/matches_page/matches_body.dart';
+import '../../backend/matches_provider.dart';
 import '../../models/user_model.dart';
 import '../../pages/chat_page.dart';
 import 'package:provider/provider.dart';
 
-class MatchesHeaderWidget extends StatelessWidget {
-  final List<UserModel> users;
+class MatchesHeaderWidget extends StatefulWidget {
+  final MatchesProvider provider;
 
   const MatchesHeaderWidget({
       Key? key,
-      required this.users
+      required this.provider
     }) : super(key: key);
+
+  @override
+  State<MatchesHeaderWidget> createState() => _MatchesHeaderWidgetState();
+}
+
+class _MatchesHeaderWidgetState extends State<MatchesHeaderWidget> {
+  late final List<UserModel>? users = widget.provider.userModels;
+
   @override
   Widget build(BuildContext context){
-    return Padding(
+    return users == null ? CircularProgressIndicator() :
+    Padding(
       padding: const EdgeInsets.only(top:32),
       child: Column(
         children: [
@@ -31,7 +41,7 @@ class MatchesHeaderWidget extends StatelessWidget {
   }
 }
 
-Widget searchBar(BuildContext context,List<UserModel> users){
+Widget searchBar(BuildContext context,List<UserModel>? users){
   DateTime now = DateTime.now();
   String dayTime = "morning";
   if(now.hour >= 21){
@@ -104,23 +114,23 @@ Widget searchBar(BuildContext context,List<UserModel> users){
   );
 }
 
-Widget circularUserList(BuildContext context, List<UserModel> users){
+Widget circularUserList(BuildContext context, List<UserModel>? users){
   return SizedBox(
     height: MediaQuery.of(context).size.height *0.13,
     child: ListView.builder(
       scrollDirection: Axis.horizontal,
-      itemCount: users.length,
+      itemCount: users?.length,
       itemBuilder: (context, index){
         return Padding(
           padding: const EdgeInsets.only(top: 11,left: 15,right: 4),
           child: GestureDetector(
-            onTap: () => {print('chat with user $index'), Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: ChatPage(otherUser: users[index],)))},
+            onTap: () => {print('chat with user $index'), Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: ChatPage(otherUser: users![index],)))},
             child: Column(
               children: [
                 CircleAvatar(
                   backgroundColor: Colors.red[700],
                   radius: 28,
-                  backgroundImage: NetworkImage(users[index].firstImgUrl),
+                  backgroundImage: NetworkImage(users![index].firstImgUrl),
                 ),
                 Text(users[index].firstName, style: TextStyle(color: Colors.white),)
               ],

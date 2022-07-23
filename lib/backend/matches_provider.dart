@@ -6,7 +6,7 @@ import 'database.dart';
 
 class MatchesProvider extends ChangeNotifier {
   List<String> userIDs = [];
-  List<UserModel> userModels = [];
+  List<UserModel>? userModels;
 
   //probably not the way to do it but we do need to check wether the user matched with anyone in the background
   void listenToMatches() async {
@@ -23,11 +23,14 @@ class MatchesProvider extends ChangeNotifier {
     userIDs = await FireStoreDataBase().getMatchesIDs(FirebaseAuth.instance.currentUser!.uid);
     for(var userID in userIDs){
       var currentUserMatchesIDs = await FireStoreDataBase().getMatchesIDs(userID);
-      if(currentUserMatchesIDs.contains(FirebaseAuth.instance.currentUser!.uid)){
+      
+      if(currentUserMatchesIDs.contains(FirebaseAuth.instance.currentUser?.uid)){
+        userModels ??= [];
         UserModel? currentUser = await FireStoreDataBase().getUserModelByID(userID);
-        userModels.add(currentUser!);
+        currentUser != null? userModels?.add(currentUser):null;
       }
     }
+    userModels ??= [];
     notifyListeners();
   }
 }

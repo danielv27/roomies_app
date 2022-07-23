@@ -4,15 +4,16 @@ import 'package:page_transition/page_transition.dart';
 import 'package:roomies_app/backend/database.dart';
 import 'package:roomies_app/pages/chat_page.dart';
 import 'package:roomies_app/widgets/matches_page/user_tile.dart';
+import '../../backend/matches_provider.dart';
 import '../../models/message.dart';
 import '../../models/user_model.dart';
 
 class MatchesBodyWidget extends StatefulWidget {
-  final List<UserModel> users;
+  final MatchesProvider provider;
   
   const MatchesBodyWidget({
       Key? key,
-      required this.users
+      required this.provider
     }) : super(key: key);
 
   @override
@@ -22,8 +23,11 @@ class MatchesBodyWidget extends StatefulWidget {
 class _MatchesBodyWidgetState extends State<MatchesBodyWidget> {
   @override
   Widget build(BuildContext context){
-    widget.users.sort((a, b) => a.lastName.compareTo(b.lastName));
-    return Expanded(
+    List<UserModel>? users = widget.provider.userModels;
+    users?.sort((a, b) => a.lastName.compareTo(b.lastName));
+    return users == null ? CircularProgressIndicator() :
+    
+    Expanded(
       child: Container(
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -32,7 +36,7 @@ class _MatchesBodyWidgetState extends State<MatchesBodyWidget> {
             topRight: Radius.circular(20)
           ),
         ),
-        child: userTileList(widget.users),
+        child: userTileList(users),
       )
     );
   }
