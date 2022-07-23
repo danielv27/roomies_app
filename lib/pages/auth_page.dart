@@ -22,11 +22,6 @@ class AuthPageState extends State<AuthPage> {
   bool _isHiddrenPassword = true;
   bool _isSignupPage = false;
 
-  // @override
-  // void initState() {
-  //   _loadUserEmailPassword();
-  //   super.initState();
-  // }
 
   @override
   void dispose() {

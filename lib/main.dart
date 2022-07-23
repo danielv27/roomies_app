@@ -7,6 +7,8 @@ import 'package:roomies_app/backend/current_profile_provider.dart';
 import 'package:roomies_app/backend/database.dart';
 import 'package:roomies_app/backend/matches_provider.dart';
 import 'package:roomies_app/backend/user_profile_provider.dart';
+import 'package:roomies_app/pages/owner_page.dart';
+import 'backend/user_type_provider.dart';
 import 'pages/home_page.dart';
 import 'pages/auth_page.dart';
 
@@ -53,19 +55,9 @@ class MainPage extends StatelessWidget {
         }
         else if (snapshot.hasData) {
           FireStoreDataBase().goOnline();
-          return MultiProvider(
-            providers: [
-              ChangeNotifierProvider(
-                create: (context) => UserProfileProvider(),
-              ),
-              ChangeNotifierProvider(
-                create: (context) => CurrentUserProvider()
-              ),
-              ChangeNotifierProvider(
-                create: (context) => MatchesProvider()
-              ),
-            ],
-            child: const HomePage()
+          return ChangeNotifierProvider(
+            create: (context) => UserTypeProvider(),  
+            child: const UserTypeSelector()
           );
         }
         else {
@@ -76,5 +68,50 @@ class MainPage extends StatelessWidget {
   );
 }
 
+class UserTypeSelector extends StatefulWidget {
+  const UserTypeSelector({ Key? key }) : super(key: key);
+
+  @override
+  State<UserTypeSelector> createState() => _UserTypeSelectorState();
+}
+
+class _UserTypeSelectorState extends State<UserTypeSelector> {
+  final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+
+  @override
+  void initState() {
+    Provider.of<UserTypeProvider>(context, listen: false).getType(firebaseAuth.currentUser!.uid);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final userProvider = context.watch<UserTypeProvider>();
+
+    if (userProvider.isHouseOwner == "true") {
+      return const OwnerPage();
+    } else if (userProvider.isHouseOwner == "false") {
+      return MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+            create: (context) => UserProfileProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (context) => CurrentUserProvider()
+          ),
+          ChangeNotifierProvider(
+            create: (context) => MatchesProvider()
+          ),
+          ChangeNotifierProvider(
+            create: (context) => UserTypeProvider() 
+          ),
+        ],
+        child:  const HomePage()
+      );
+    } else {
+      return const Center(child: CircularProgressIndicator(color: Colors.blue)); 
+    }
+  }
+}
 
 

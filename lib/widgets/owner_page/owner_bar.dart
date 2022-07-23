@@ -23,11 +23,7 @@ class OwnerBar extends StatelessWidget {
     else if(now.hour >= 12){
       dayTime = "afternoon";
     }
-    return FutureBuilder(
-      future: FireStoreDataBase().getCurrentUserModel(),
-      builder: (context, snapshot) {
-        if(snapshot.connectionState == ConnectionState.done && snapshot.hasData){
-          UserModel currentUser = snapshot.data as UserModel;
+
           return AppBar(
             automaticallyImplyLeading: false,
             systemOverlayStyle: const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
@@ -49,11 +45,11 @@ class OwnerBar extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 4,),
-                Align(
+                const Align(
                   alignment: Alignment.topLeft,
                   child: Text(
-                    "${currentUser.firstName} ${currentUser.lastName}",
-                    style: const TextStyle(
+                    "test",
+                    style: TextStyle(
                       fontSize: 20,
                       color: Colors.white,
                       fontWeight: FontWeight.w600
@@ -79,7 +75,6 @@ class OwnerBar extends StatelessWidget {
                     onPressed: () async {
                       await Future.delayed(const Duration(milliseconds: 150));
                       await FirebaseAuth.instance.signOut();
-                      Navigator.of(context).pop(); // remove this when main.dart is implemented with user type
                     },
                     child: Image.asset('assets/icons/nextroom_icon_white.png', width: 28),
                   ),
@@ -88,13 +83,4 @@ class OwnerBar extends StatelessWidget {
             ],
           );
         }
-        if (snapshot.hasError) {
-          return const Text(
-            "Something went wrong",
-          );
-        }
-        return const Center(child: CircularProgressIndicator());
-      }
-    );
   }
-}
