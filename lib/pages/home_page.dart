@@ -33,7 +33,8 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     Provider.of<CurrentUserProvider>(context, listen: false).initialize();
     Provider.of<UserProfileProvider>(context, listen: false).loadUsers(10);
-    Provider.of<MatchesProvider>(context, listen: false).loadMatches();
+    
+    
   }
 
   @override

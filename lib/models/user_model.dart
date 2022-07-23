@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:roomies_app/models/user_profile_model.dart';
 
 class UserModel {
@@ -25,6 +26,12 @@ class UserModel {
     required this.firstImgUrl, 
     required this.userSignupProfileModel,
   });
+
+  @override
+  bool operator ==(other) => other is UserModel && id == other.id;
+  
+  @override
+  int get hashCode => hashValues(id, email);
 }
 
 class HouseOwner {

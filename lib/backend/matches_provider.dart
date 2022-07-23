@@ -27,7 +27,7 @@ class MatchesProvider extends ChangeNotifier {
       if(currentUserMatchesIDs.contains(FirebaseAuth.instance.currentUser?.uid)){
         userModels ??= [];
         UserModel? currentUser = await FireStoreDataBase().getUserModelByID(userID);
-        currentUser != null? userModels?.add(currentUser):null;
+        currentUser != null && !(userModels!.contains(currentUser))? userModels?.add(currentUser):null;
       }
     }
     userModels ??= [];

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -77,20 +79,22 @@ class UserTypeSelector extends StatefulWidget {
 
 class _UserTypeSelectorState extends State<UserTypeSelector> {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-
+  
   @override
   void initState() {
-    Provider.of<UserTypeProvider>(context, listen: false).getType(firebaseAuth.currentUser!.uid);
     super.initState();
+    Provider.of<UserTypeProvider>(context, listen: false).getCurrentUserType();
+      
   }
+
 
   @override
   Widget build(BuildContext context) {
     final userProvider = context.watch<UserTypeProvider>();
-
+    Provider.of<UserTypeProvider>(context, listen: false).checkIfUserSetUpProfile().listen((event){});
     if (userProvider.isHouseOwner == "true") {
       return const OwnerPage();
-    } else if (userProvider.isHouseOwner == "false") {
+    } else if (userProvider.isHouseOwner == "false" && userProvider.profileSetUp) {
       return MultiProvider(
         providers: [
           ChangeNotifierProvider(
@@ -101,14 +105,16 @@ class _UserTypeSelectorState extends State<UserTypeSelector> {
           ),
           ChangeNotifierProvider(
             create: (context) => MatchesProvider()
+            
           ),
           ChangeNotifierProvider(
             create: (context) => UserTypeProvider() 
           ),
         ],
-        child:  const HomePage()
+        child: const HomePage()
       );
     } else {
+      
       return const Center(child: CircularProgressIndicator(color: Colors.blue)); 
     }
   }

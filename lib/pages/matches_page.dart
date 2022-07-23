@@ -8,12 +8,27 @@ import '../widgets/matches_page/matches_body.dart';
 import '../widgets/matches_page/matches_header.dart';
 
 
-class MatchesPage extends StatelessWidget {
+class MatchesPage extends StatefulWidget {
   const MatchesPage({Key? key}) : super(key: key);
+
+  @override
+  State<MatchesPage> createState() => _MatchesPageState();
+}
+
+class _MatchesPageState extends State<MatchesPage> {
+
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<MatchesProvider>(context, listen: false).loadMatches();
+  }
 
   @override
   Widget build(BuildContext context) {
     final matchesProvider = context.watch<MatchesProvider>();
+    if(matchesProvider.userModels == null){
+      return const Center(child: CircularProgressIndicator());
+    }
     return Scaffold(
       body: Container(
           decoration: BoxDecoration(

@@ -227,10 +227,10 @@ class FireStoreDataBase {
 
 
 
-  Future<String?> getUserType(String? currentUserID) async {
+  Future<String?> getCurrentUserType() async {
     try {
       bool? isHouseOwner;
-      await FirebaseFirestore.instance.collection('users').doc(currentUserID)
+      await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser?.uid)
       .get()
       .then((value) {
         isHouseOwner = value.data()!['isHouseOwner'];  
@@ -242,6 +242,15 @@ class FireStoreDataBase {
       debugPrint("Error - $e");
       return null;
     }
+  }
+
+  Future<bool> checkIfCurrentUserProfileComplete() async{
+    bool complete = false;
+    final currentUserID = FirebaseAuth.instance.currentUser?.uid;
+    await FirebaseFirestore.instance.collection('users/$currentUserID/personal_profile')
+    .get()
+    .then((querySnapshot) => querySnapshot.docs.isNotEmpty ? complete = true: complete = false);
+    return complete;
   }
 
   Future<UserSignupProfileModel> getUserProfile(String? currentUserID) async{

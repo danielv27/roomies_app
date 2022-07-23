@@ -24,10 +24,9 @@ class MatchesHeaderWidget extends StatefulWidget {
 
 class _MatchesHeaderWidgetState extends State<MatchesHeaderWidget> {
   late final List<UserModel>? users = widget.provider.userModels;
-
   @override
   Widget build(BuildContext context){
-    return users == null ? CircularProgressIndicator() :
+    return users == null ? const CircularProgressIndicator() :
     Padding(
       padding: const EdgeInsets.only(top:32),
       child: Column(
