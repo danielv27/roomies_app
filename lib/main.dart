@@ -83,18 +83,16 @@ class _UserTypeSelectorState extends State<UserTypeSelector> {
   @override
   void initState() {
     super.initState();
-    Provider.of<UserTypeProvider>(context, listen: false).getCurrentUserType();
-      
+    Provider.of<UserTypeProvider>(context, listen: false).checkIfUserSetUpProfile().listen((event){});
   }
 
 
   @override
   Widget build(BuildContext context) {
     final userProvider = context.watch<UserTypeProvider>();
-    Provider.of<UserTypeProvider>(context, listen: false).checkIfUserSetUpProfile().listen((event){});
-    if (userProvider.isHouseOwner == "true") {
+    if (userProvider.houseSetUp) {
       return const OwnerPage();
-    } else if (userProvider.isHouseOwner == "false" && userProvider.profileSetUp) {
+    } else if (userProvider.profileSetUp) {
       return MultiProvider(
         providers: [
           ChangeNotifierProvider(

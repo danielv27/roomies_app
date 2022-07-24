@@ -253,6 +253,16 @@ class FireStoreDataBase {
     return complete;
   }
 
+  Future<bool> checkIfCurrentUserHouseComplete() async{
+    bool complete = false;
+    final currentUserID = FirebaseAuth.instance.currentUser?.uid;
+    await FirebaseFirestore.instance.collection('users/$currentUserID/house_profile')
+    .get()
+    .then((querySnapshot) => querySnapshot.docs.isNotEmpty ? complete = true: complete = false);
+    return complete;
+  }
+
+
   Future<UserSignupProfileModel> getUserProfile(String? currentUserID) async{
     late UserSignupProfileModel userSignupProfileModel;
     await FirebaseFirestore.instance.collection('users/$currentUserID/personal_profile')
