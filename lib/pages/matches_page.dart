@@ -31,10 +31,19 @@ class _MatchesPageState extends State<MatchesPage> {
     }
     return Scaffold(
       body: Container(
-          decoration: BoxDecoration(
-          gradient: redGradient()
+          decoration: const BoxDecoration(
+            gradient:  LinearGradient(
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: [
+              Color.fromRGBO(239, 85, 100, 1),
+              Color.fromRGBO(195, 46, 66, 1),
+              Color.fromRGBO(190, 40, 62, 1),
+              Color.fromRGBO(210, 66, 78, 1),
+              Color.fromRGBO(244, 130, 114, 1),
+              ]
+            ),
           ),
-
           child: Column(
             children: [
               MatchesHeaderWidget(provider: matchesProvider),

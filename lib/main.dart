@@ -114,7 +114,6 @@ class _UserTypeSelectorState extends State<UserTypeSelector> {
         child: const HomePage()
       );
     } else {
-      
       return const Center(child: CircularProgressIndicator(color: Colors.blue)); 
     }
   }

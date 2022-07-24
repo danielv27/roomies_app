@@ -4,11 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:roomies_app/backend/current_profile_provider.dart';
 import 'package:roomies_app/backend/database.dart';
+import 'package:roomies_app/widgets/matches_page/avatar_with_gradient_border.dart';
 import 'package:roomies_app/widgets/matches_page/matches_body.dart';
 import '../../backend/matches_provider.dart';
 import '../../models/user_model.dart';
 import '../../pages/chat_page.dart';
 import 'package:provider/provider.dart';
+
+import '../gradients/gradient.dart';
 
 class MatchesHeaderWidget extends StatefulWidget {
   final MatchesProvider provider;
@@ -67,7 +70,7 @@ Widget searchBar(BuildContext context,List<UserModel>? users){
           );
         },
         child: CircleAvatar(
-          radius: 32,
+          radius: 28,
           backgroundColor: Colors.white.withOpacity(0.4),
           child: const Icon(Icons.search_rounded,color: Colors.white,),
         ),
@@ -76,10 +79,27 @@ Widget searchBar(BuildContext context,List<UserModel>? users){
         onTap: () {
           print('profile pressed');
         },
-        child: CircleAvatar(
-          backgroundColor: Colors.red,
-          radius: 32,
-          backgroundImage: NetworkImage(currentUser!.firstImgUrl),
+        child: Container(
+          decoration:const  BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: [
+              Color.fromARGB(255, 255, 113, 127),
+              Color.fromARGB(255, 208, 70, 82),
+              Color.fromARGB(255, 221, 33, 61),
+              Color.fromARGB(255, 243, 55, 80),
+              Color.fromARGB(255, 241, 168, 158),
+              ]
+            ),
+          shape: BoxShape.circle
+          ),
+          padding: const EdgeInsets.all(3.5),
+          child: CircleAvatar(
+            backgroundColor: Colors.red[700],
+            radius: 28,
+            backgroundImage: NetworkImage(currentUser!.firstImgUrl),
+          ),
         ),
       ),
       const Padding(padding: EdgeInsets.only(right: 16))
@@ -126,10 +146,10 @@ Widget circularUserList(BuildContext context, List<UserModel>? users){
             onTap: () => {print('chat with user $index'), Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: ChatPage(otherUser: users![index],)))},
             child: Column(
               children: [
-                CircleAvatar(
+                AvatarWithGradientBorder(
                   backgroundColor: Colors.red[700],
-                  radius: 28,
-                  backgroundImage: NetworkImage(users![index].firstImgUrl),
+                  radius: 26,
+                  image: NetworkImage(users![index].firstImgUrl),
                 ),
                 Text(users[index].firstName, style: TextStyle(color: Colors.white),)
               ],
