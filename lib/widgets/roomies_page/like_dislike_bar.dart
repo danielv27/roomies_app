@@ -141,7 +141,6 @@ class _LikeDislikeBarState extends State<LikeDislikeBar> with SingleTickerProvid
       maxHeight: 0.95,
       headerHeight: 165,
       anchors: [0, 0.5, 0.95],
-      isSafeArea: true,
       bottomSheetColor: Colors.transparent,
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.only(
