@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:roomies_app/backend/current_house_provider.dart';
+
+import '../../models/house_profile_model.dart';
 
 class ListedOwnerHouse extends StatefulWidget {
-  ListedOwnerHouse({Key? key}) : super(key: key);
+  const ListedOwnerHouse({
+    Key? key,
+    required this.houseProvider
+  }) : super(key: key);
+
+  final CurrentHouseProvider houseProvider;
 
   @override
   State<ListedOwnerHouse> createState() => _OwnerHouseState();
@@ -10,6 +18,8 @@ class ListedOwnerHouse extends StatefulWidget {
 class _OwnerHouseState extends State<ListedOwnerHouse> {
   @override
   Widget build(BuildContext context) {
+    final HouseSignupProfileModel? houseProfile = widget.houseProvider.currentUser?.houseSignupProfileModel;
+
     return Container(
       margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
       child: Container(
@@ -40,9 +50,9 @@ class _OwnerHouseState extends State<ListedOwnerHouse> {
                 width: 14,
               ),
               Text(
-                "Address",
-                style: TextStyle(
-                  color:const Color.fromRGBO(101, 101, 107, 1),
+                "${houseProfile?.postalCode}, ${houseProfile?.houseNumber}",
+                style: const TextStyle(
+                  color:Color.fromRGBO(101, 101, 107, 1),
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                 ),
