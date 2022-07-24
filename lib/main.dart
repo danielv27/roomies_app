@@ -10,7 +10,7 @@ import 'package:roomies_app/backend/database.dart';
 import 'package:roomies_app/backend/matches_provider.dart';
 import 'package:roomies_app/backend/user_profile_provider.dart';
 import 'package:roomies_app/pages/owner_page.dart';
-import 'backend/user_type_provider.dart';
+import 'backend/setup_completion_provider.dart';
 import 'pages/home_page.dart';
 import 'pages/auth_page.dart';
 
@@ -58,7 +58,7 @@ class MainPage extends StatelessWidget {
         else if (snapshot.hasData) {
           FireStoreDataBase().goOnline();
           return ChangeNotifierProvider(
-            create: (context) => UserTypeProvider(),  
+            create: (context) => SetUpCompletionProvider(),  
             child: const UserTypeSelector()
           );
         }
@@ -83,13 +83,12 @@ class _UserTypeSelectorState extends State<UserTypeSelector> {
   @override
   void initState() {
     super.initState();
-    Provider.of<UserTypeProvider>(context, listen: false).checkIfUserSetUpProfile().listen((event){});
+    Provider.of<SetUpCompletionProvider>(context, listen: false).checkIfSetUpComplete().listen((event){});
   }
-
 
   @override
   Widget build(BuildContext context) {
-    final userProvider = context.watch<UserTypeProvider>();
+    final userProvider = context.watch<SetUpCompletionProvider>();
     if (userProvider.houseSetUp) {
       return const OwnerPage();
     } else if (userProvider.profileSetUp) {
@@ -102,17 +101,13 @@ class _UserTypeSelectorState extends State<UserTypeSelector> {
             create: (context) => CurrentUserProvider()
           ),
           ChangeNotifierProvider(
-            create: (context) => MatchesProvider()
-            
-          ),
-          ChangeNotifierProvider(
-            create: (context) => UserTypeProvider() 
+            create: (context) => MatchesProvider() 
           ),
         ],
         child: const HomePage()
       );
     } else {
-      return const Center(child: CircularProgressIndicator(color: Colors.blue)); 
+      return const Center(child: CircularProgressIndicator(color: Colors.red)); 
     }
   }
 }

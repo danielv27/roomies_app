@@ -2,14 +2,14 @@
 import 'package:flutter/material.dart';
 import 'package:roomies_app/backend/database.dart';
 
-class UserTypeProvider extends ChangeNotifier {
+class SetUpCompletionProvider extends ChangeNotifier {
   bool profileSetUp = false;
   bool houseSetUp = false;
   
-  Stream<void> checkIfUserSetUpProfile() async* {
+  Stream<void> checkIfSetUpComplete() async* {
     while(!profileSetUp && !houseSetUp){
       await Future.delayed(const Duration(milliseconds: 200));
-      print('event');
+      print('checking if setup complete');
       notifyListeners();
       bool newProfileStatus = await FireStoreDataBase().checkIfCurrentUserProfileComplete();
       if(profileSetUp != newProfileStatus){

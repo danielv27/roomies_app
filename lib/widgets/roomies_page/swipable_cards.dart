@@ -60,7 +60,7 @@ class SwipableCardsState extends State<SwipableCards> {
       return const Center(child:Text('No More Users To Swipe'));
     }
     return userProfileModels == null ?
-    const Center(child: CircularProgressIndicator()):
+    const Center(child: CircularProgressIndicator(color: Colors.red)):
     Stack(
       children: [
         SwipableStack(
