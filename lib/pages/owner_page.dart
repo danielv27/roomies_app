@@ -55,7 +55,7 @@ class _OwnerPageState extends State<OwnerPage> {
                 ),
                 HouseOwnerContactInformation(houseProvider: houseProvider),
                 Container(
-                  padding: const EdgeInsets.only(bottom: 30),
+                  padding: const EdgeInsets.only(bottom: 15),
                   alignment: Alignment.centerLeft,
                   child: const Text(
                     "Houses",
@@ -95,7 +95,8 @@ class _OwnerPageState extends State<OwnerPage> {
               Spacer(),
               Text("List new house",
                 style: TextStyle(
-                  fontWeight: FontWeight.w600
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
                 ),
               ),
               SizedBox(width: 10,),
