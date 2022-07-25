@@ -24,7 +24,10 @@ class _OwnerPageState extends State<OwnerPage> {
   @override
   Widget build(BuildContext context) {
     final houseProvider = context.watch<CurrentHouseProvider>();
-    return Scaffold(
+
+    return (houseProvider.currentUser == null) 
+    ? const Center(child: CircularProgressIndicator(color: Colors.red)) 
+    : Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(75),
         child: Container(

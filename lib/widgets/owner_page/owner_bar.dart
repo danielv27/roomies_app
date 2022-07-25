@@ -25,66 +25,64 @@ class _OwnerBarState extends State<OwnerBar> {
     final HouseOwner? houseOwner = widget.houseProvider.currentUser;
     String dayTime = getCurrentTime();
 
-    return (houseOwner == null) 
-    ? const Center(child: CircularProgressIndicator(color: Colors.blue))
-    : AppBar(
-        automaticallyImplyLeading: false,
-        systemOverlayStyle: const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
-        backgroundColor: Colors.transparent,
-        shadowColor: Colors.transparent,
-        toolbarHeight: 75,
-        title: Column(
-          children: [
-            Align(
-              alignment: Alignment.topLeft,
-              child: Text(
-                "Good $dayTime,",
-                textAlign: TextAlign.left,
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w400
-                ),
+    return AppBar(
+      automaticallyImplyLeading: false,
+      systemOverlayStyle: const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
+      backgroundColor: Colors.transparent,
+      shadowColor: Colors.transparent,
+      toolbarHeight: 75,
+      title: Column(
+        children: [
+          Align(
+            alignment: Alignment.topLeft,
+            child: Text(
+              "Good $dayTime,",
+              textAlign: TextAlign.left,
+              style: const TextStyle(
+                fontSize: 12,
+                color: Colors.white,
+                fontWeight: FontWeight.w400
               ),
             ),
-            const SizedBox(height: 4,),
-            Align(
-              alignment: Alignment.topLeft,
-              child: Text(
-                "${houseOwner.firstName} ${houseOwner.lastName}",
-                style: const TextStyle(
-                  fontSize: 20,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600
-                ),
-              ),
-            ),
-          ],
-        ),
-        actions: <Widget>[
-          Center(
-            child: SizedBox(
-              width: 50,
-              height: 50,
-              child: TextButton(
-                style: ButtonStyle(
-                  shape: MaterialStateProperty.all(
-                    const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(9.0)),
-                    ),
-                  ),
-                  backgroundColor: MaterialStateProperty.all(Colors.white.withOpacity(0.2))
-                ),
-                onPressed: () async {
-                  await Future.delayed(const Duration(milliseconds: 150));
-                  await FirebaseAuth.instance.signOut();
-                },
-                child: Image.asset('assets/icons/nextroom_icon_white.png', width: 28),
+          ),
+          const SizedBox(height: 4,),
+          Align(
+            alignment: Alignment.topLeft,
+            child: Text(
+              "${houseOwner?.firstName} ${houseOwner?.lastName}",
+              style: const TextStyle(
+                fontSize: 20,
+                color: Colors.white,
+                fontWeight: FontWeight.w600
               ),
             ),
           ),
         ],
-      );
+      ),
+      actions: <Widget>[
+        Center(
+          child: SizedBox(
+            width: 50,
+            height: 50,
+            child: TextButton(
+              style: ButtonStyle(
+                shape: MaterialStateProperty.all(
+                  const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(9.0)),
+                  ),
+                ),
+                backgroundColor: MaterialStateProperty.all(Colors.white.withOpacity(0.2))
+              ),
+              onPressed: () async {
+                await Future.delayed(const Duration(milliseconds: 150));
+                await FirebaseAuth.instance.signOut();
+              },
+              child: Image.asset('assets/icons/nextroom_icon_white.png', width: 28),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   String getCurrentTime() {
