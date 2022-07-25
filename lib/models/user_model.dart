@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:roomies_app/models/user_profile_model.dart';
 
+import 'house_profile_model.dart';
+
 class UserModel {
   final String id;
   final String email;
@@ -35,19 +37,19 @@ class UserModel {
 }
 
 class HouseOwner {
-  String id;
+  final String id;
   final String email;
   final String firstName;
   final String lastName;
-  final DateTime dateOfBirth;
   final bool isHouseOwner;
+  final HouseSignupProfileModel houseSignupProfileModel;
 
   HouseOwner({
-    this.id = '',
+    required this.id,
     required this.email,
     required this.firstName,
     required this.lastName,
-    required this.dateOfBirth,
-    this.isHouseOwner = true
+    this.isHouseOwner = true,
+    required this.houseSignupProfileModel,
   });
 }

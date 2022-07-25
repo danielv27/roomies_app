@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:roomies_app/models/user_profile_images.dart';
 import 'package:roomies_app/models/user_profile_model.dart';
+import '../models/house_profile_model.dart';
 import '../models/message.dart';
 import '../models/user_model.dart';
 
@@ -283,6 +284,58 @@ class FireStoreDataBase {
       });
     return userSignupProfileModel;
   }
+
+  Future<HouseOwner?> getCurrentHouseModel() async {
+    try {
+      HouseOwner? currentUser;
+      await FirebaseFirestore.instance.collection("users")
+      .doc(FirebaseAuth.instance.currentUser?.uid)
+      .get()
+      .then((userDoc) async {
+        HouseSignupProfileModel? houseSignupProfileModel = await getHouseProfile(userDoc.id);
+        currentUser = HouseOwner(
+          id: userDoc.id,
+          email: userDoc['email'],
+          firstName: userDoc['firstName'],
+          lastName: userDoc['lastName'],
+          isHouseOwner: userDoc['isHouseOwner'],
+          houseSignupProfileModel: houseSignupProfileModel,
+        );
+      });
+      return currentUser;
+    } catch (e) {
+      debugPrint("Error - $e");
+      return null;
+    }
+  }
+
+  Future<HouseSignupProfileModel> getHouseProfile(String? currentUserID) async{
+    late HouseSignupProfileModel houseSignupProfileModel;
+    await FirebaseFirestore.instance.collection('users/$currentUserID/house_profile')
+      .get()
+      .then((querySnapshot) {
+        for (var doc in querySnapshot.docs) {
+          houseSignupProfileModel = HouseSignupProfileModel(
+            postalCode: doc['postlCode'],
+            houseNumber: doc['houseNumber'],
+            constructionYear: doc['constructionYear'], 
+            livingSpace: doc['livingSpace'], 
+            plotArea: doc['plotArea'], 
+            propertyCondition: doc['propertyCondition'], 
+            houseDescription: doc['houseDescription'],
+            furnished: doc['isFurnished'],
+            numRoom: doc['numberRooms'],
+            availableRoom: doc['numberAvailableRooms'],
+            pricePerRoom: doc['pricePerRoom'],
+            contactName: doc['contactName'],
+            contactEmail: doc['contactEmail'],
+            contactPhoneNumber: doc['contactPhoneNumber'],
+          );
+        }
+      });
+    return houseSignupProfileModel;
+  }
+
 
   Future<void> addEncounter(bool match, String currentUserID, String otherUserID) async {
     await FirebaseFirestore.instance.collection('users/$currentUserID/encounters')

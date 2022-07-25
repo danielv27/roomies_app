@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:roomies_app/backend/current_house_provider.dart';
 import 'package:roomies_app/widgets/gradients/blue_gradient.dart';
 import 'package:roomies_app/widgets/owner_page/owner_house.dart';
 
 import '../widgets/owner_page/owner_bar.dart';
+import '../widgets/owner_page/owner_info.dart';
 
 class OwnerPage extends StatefulWidget {
   const OwnerPage({Key? key}) : super(key: key);
@@ -13,8 +16,18 @@ class OwnerPage extends StatefulWidget {
 
 class _OwnerPageState extends State<OwnerPage> {
   @override
+  void initState() {
+    Provider.of<CurrentHouseProvider>(context, listen: false).initialize();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    final houseProvider = context.watch<CurrentHouseProvider>();
+
+    return (houseProvider.currentUser == null) 
+    ? const Center(child: CircularProgressIndicator(color: Colors.red)) 
+    : Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(75),
         child: Container(
@@ -22,7 +35,7 @@ class _OwnerPageState extends State<OwnerPage> {
           decoration: BoxDecoration(
             gradient: blueGradient()
           ),
-          child: const OwnerBar(),
+          child: OwnerBar(houseProvider: houseProvider),
         ),
       ),
       body: SingleChildScrollView(
@@ -43,9 +56,9 @@ class _OwnerPageState extends State<OwnerPage> {
                     ),
                   ),
                 ),
-                contentFields("Phone number", const AssetImage('assets/icons/Email.png')),
+                HouseOwnerContactInformation(houseProvider: houseProvider),
                 Container(
-                  padding: const EdgeInsets.only(bottom: 30),
+                  padding: const EdgeInsets.only(bottom: 15),
                   alignment: Alignment.centerLeft,
                   child: const Text(
                     "Houses",
@@ -55,7 +68,7 @@ class _OwnerPageState extends State<OwnerPage> {
                     ),
                   ),
                 ),
-                ListedOwnerHouse(),
+                ListedOwnerHouse(houseProvider: houseProvider),
               ],
             ),
           ),
@@ -85,7 +98,8 @@ class _OwnerPageState extends State<OwnerPage> {
               Spacer(),
               Text("List new house",
                 style: TextStyle(
-                  fontWeight: FontWeight.w600
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
                 ),
               ),
               SizedBox(width: 10,),
@@ -93,43 +107,6 @@ class _OwnerPageState extends State<OwnerPage> {
                 AssetImage("assets/icons/Home-selected.png"),
               ),
               Spacer(),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-
-  Widget contentFields(String hintText, var iconImage,) {
-    return Container(
-      margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 14.0),
-        height: MediaQuery.of(context).size.height * 0.1,
-        decoration: BoxDecoration(
-          color: const Color.fromRGBO(245, 247, 251, 1),
-          borderRadius: BorderRadius.circular(14.0),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Row(
-            children: [
-              Image.asset("assets/icons/Email.png",
-                height: 20,
-                width: 20,
-              ),
-              const SizedBox(
-                width: 14,
-              ),
-              Text(
-                "Test",
-                style: TextStyle(
-                  color:const Color.fromRGBO(101, 101, 107, 1),
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
             ],
           ),
         ),

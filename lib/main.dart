@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:roomies_app/backend/current_house_provider.dart';
 import 'package:roomies_app/backend/current_profile_provider.dart';
 import 'package:roomies_app/backend/database.dart';
 import 'package:roomies_app/backend/matches_provider.dart';
@@ -90,7 +91,14 @@ class _UserTypeSelectorState extends State<UserTypeSelector> {
   Widget build(BuildContext context) {
     final userProvider = context.watch<SetUpCompletionProvider>();
     if (userProvider.houseSetUp) {
-      return const OwnerPage();
+      return MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+            create: (context) => CurrentHouseProvider(),
+          ),
+        ],
+        child: const OwnerPage(),
+      );
     } else if (userProvider.profileSetUp) {
       return MultiProvider(
         providers: [

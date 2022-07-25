@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:roomies_app/backend/current_house_provider.dart';
+
+import '../../models/house_profile_model.dart';
+import '../gradients/blue_gradient.dart';
 
 class ListedOwnerHouse extends StatefulWidget {
-  ListedOwnerHouse({Key? key}) : super(key: key);
+  const ListedOwnerHouse({
+    Key? key,
+    required this.houseProvider
+  }) : super(key: key);
+
+  final CurrentHouseProvider houseProvider;
 
   @override
   State<ListedOwnerHouse> createState() => _OwnerHouseState();
@@ -10,10 +19,12 @@ class ListedOwnerHouse extends StatefulWidget {
 class _OwnerHouseState extends State<ListedOwnerHouse> {
   @override
   Widget build(BuildContext context) {
+    final HouseSignupProfileModel? houseProfile = widget.houseProvider.currentUser?.houseSignupProfileModel;
+
     return Container(
-      margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+      margin: const EdgeInsets.only(bottom: 15.0),
       child: Container(
-        margin: const EdgeInsets.only(bottom: 14.0),
+        margin: const EdgeInsets.only(bottom: 15.0),
         height: 100,
         decoration: BoxDecoration(
           color: const Color.fromRGBO(238, 238, 238, 1),
@@ -39,15 +50,30 @@ class _OwnerHouseState extends State<ListedOwnerHouse> {
               const SizedBox(
                 width: 14,
               ),
-              Text(
-                "Address",
-                style: TextStyle(
-                  color:const Color.fromRGBO(101, 101, 107, 1),
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
+              RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: "${houseProfile?.postalCode}, ${houseProfile?.houseNumber}\n",
+                      style: const TextStyle(
+                        height: 2.0,
+                        color:Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    TextSpan(
+                      text: "Matches", // TODO: Add number of matched houses
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        foreground: Paint()..shader = blueGradient().createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 100.0))
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               const Icon(Icons.arrow_forward_ios)
             ],
           ),
