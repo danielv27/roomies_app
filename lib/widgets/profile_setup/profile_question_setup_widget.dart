@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:roomies_app/models/user_profile_model.dart';
 import 'package:roomies_app/widgets/gradients/blue_gradient.dart';
 
+import 'package:roomies_app/widgets/profile_setup/profile_google_widget.dart';
+
+
 class ProfileQuestionPage extends StatefulWidget {
 
   ProfileQuestionPage({
@@ -64,6 +67,10 @@ class _ProfileQuestionPageState extends State<ProfileQuestionPage> {
                   ),
                   const SizedBox(
                     height: 30,
+                  ),
+                  const GoogleApiContainer(),
+                  const SizedBox(
+                    height: 10,
                   ),
                   textLabel("Radius in KM (optional)"),
                   const SizedBox(
@@ -139,7 +146,6 @@ class _ProfileQuestionPageState extends State<ProfileQuestionPage> {
       bottomSheet: bottomSheet(context),
     );
   }
-
 
   Widget bottomSheet(BuildContext context) {
     return SizedBox(
