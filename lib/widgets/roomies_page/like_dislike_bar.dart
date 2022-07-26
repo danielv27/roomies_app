@@ -6,7 +6,7 @@ import 'package:swipable_stack/swipable_stack.dart';
 import '../../models/user_profile_model.dart';
 
 class LikeDislikeBar extends StatefulWidget {
-  LikeDislikeBar({
+  const LikeDislikeBar({
     Key? key,
     required this.swipeController,
     required this.userProfileModels,
@@ -21,20 +21,16 @@ class LikeDislikeBar extends StatefulWidget {
   State<LikeDislikeBar> createState() => _LikeDislikeBarState();
 }
 
-class _LikeDislikeBarState extends State<LikeDislikeBar> with SingleTickerProviderStateMixin {
-  late AnimationController animationController;
+class _LikeDislikeBarState extends State<LikeDislikeBar> {
   bool buttonInfoPressed = false;
 
   @override
   initState() {
     super.initState();
-    animationController = BottomSheet.createAnimationController(this);
-    animationController.duration = const Duration(milliseconds: 500);
   }
 
   @override
   void dispose() {
-    animationController.dispose();
     super.dispose();
   }
 
@@ -55,7 +51,6 @@ class _LikeDislikeBarState extends State<LikeDislikeBar> with SingleTickerProvid
                 child: InkWell(
                   splashColor: Colors.red[50],
                   onTap: () {
-                    print("Dislike button pressed");
                     widget.swipeController.next(swipeDirection: SwipeDirection.left);
                   },
                   child: Column(
@@ -273,16 +268,6 @@ class _LikeDislikeBarState extends State<LikeDislikeBar> with SingleTickerProvid
         fontWeight: FontWeight.bold, 
         fontSize: 20,
       ),
-    );
-  }
-  
-  Widget makeDissmissable({required DraggableScrollableSheet child}) {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: () {
-        Navigator.of(context).pop();
-      },
-      child: GestureDetector(onTap: () {}, child: child,),
     );
   }
 

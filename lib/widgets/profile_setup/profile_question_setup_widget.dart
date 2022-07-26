@@ -121,7 +121,7 @@ class _ProfileQuestionPageState extends State<ProfileQuestionPage> {
                     textInputAction: TextInputAction.next,
                     decoration: applyInputDecoration(),
                     validator: (value) {
-                    final minimumBudget = widget.minBudgetController.text;
+                      final minimumBudget = widget.minBudgetController.text;
                       if (value!.isEmpty) {
                         return "Please enter your maximum budget";
                       } else if (int.tryParse(value) == null) {
