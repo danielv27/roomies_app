@@ -5,12 +5,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 import 'package:roomies_app/models/user_profile_model.dart';
 import 'package:roomies_app/widgets/gradients/blue_gradient.dart';
+import 'package:intl/intl.dart';
+
 
 import '../../backend/database.dart';
-import '../../backend/matches_provider.dart';
 import '../../models/user_profile_images.dart';
 
 class CompleteProfilePage extends StatefulWidget {
@@ -266,13 +266,14 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                     cursorColor: Colors.grey,
                     textInputAction: TextInputAction.next,
                     decoration: applyInputDecoration(birthDateDescription),
-                    validator: (value) { // TODO: Add a date Regex
+                    validator: (value) {
                       if (value!.isEmpty) {
                         return "Please enter your date of birth";
                       } else {
                         return null;
                       }
                     },
+                    onTap: selectBirthDate,
                   ),
                   const SizedBox(height: 30,),
                 ],
@@ -283,6 +284,24 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
       ),
       bottomSheet: bottomSheet(context),
     );
+  }
+
+  selectBirthDate() async {
+    DateTime dateTime = DateTime.now();
+    DateFormat inputFormat = DateFormat('dd/MM/yyyy');
+
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: dateTime,
+      initialDatePickerMode: DatePickerMode.day,
+      firstDate: DateTime(1900),
+      lastDate: dateTime,
+    );
+
+    if (picked != null) {
+      dateTime = picked;
+      widget.birthDateController.text = inputFormat.format(dateTime);
+    }
   }
 
   SizedBox bottomSheet(BuildContext context) {
@@ -311,7 +330,6 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                 if (formKey2.currentState!.validate()) {
                   if (widget.userProfileImages.imageURLS.isNotEmpty) {
                     User? currentUser = auth.currentUser;
-                    print("test");
                     await FireStoreDataBase().createPersonalProfile(
                       currentUser,
                       widget.userPersonalProfileModel.radius,
