@@ -54,6 +54,8 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
       FireStoreDataBase().goOnline();
     }
   }
+
+  
   
   @override
   Widget build(BuildContext context) {
