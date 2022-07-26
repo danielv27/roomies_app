@@ -1,19 +1,18 @@
   class HouseSignupProfileModel {
-  String postalCode;
-  String houseNumber; 
-  String constructionYear; 
-  String livingSpace;
-  String plotArea;
-  String propertyCondition; 
-  String houseDescription;
-  String furnished;
-  String numRoom;
-  String availableRoom;
-  String pricePerRoom;
-  String contactName;
-  String contactEmail;
-  String contactPhoneNumber;
-
+    String postalCode;
+    String houseNumber; 
+    String constructionYear; 
+    String livingSpace;
+    String plotArea;
+    String propertyCondition; 
+    String houseDescription;
+    String furnished;
+    String numRoom;
+    String availableRoom;
+    String pricePerRoom;
+    String contactName;
+    String contactEmail;
+    String contactPhoneNumber;
 
   HouseSignupProfileModel({
     required this.postalCode, 

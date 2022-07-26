@@ -257,7 +257,7 @@ class FireStoreDataBase {
   Future<bool> checkIfCurrentUserHouseComplete() async{
     bool complete = false;
     final currentUserID = FirebaseAuth.instance.currentUser?.uid;
-    await FirebaseFirestore.instance.collection('users/$currentUserID/house_profile')
+    await FirebaseFirestore.instance.collection('users/$currentUserID/houses_profile')
     .get()
     .then((querySnapshot) => querySnapshot.docs.isNotEmpty ? complete = true: complete = false);
     return complete;
@@ -311,12 +311,12 @@ class FireStoreDataBase {
 
   Future<HouseSignupProfileModel> getHouseProfile(String? currentUserID) async{
     late HouseSignupProfileModel houseSignupProfileModel;
-    await FirebaseFirestore.instance.collection('users/$currentUserID/house_profile')
+    await FirebaseFirestore.instance.collection('users/$currentUserID/houses_profile')
       .get()
       .then((querySnapshot) {
         for (var doc in querySnapshot.docs) {
           houseSignupProfileModel = HouseSignupProfileModel(
-            postalCode: doc['postlCode'],
+            postalCode: doc['postalCode'],
             houseNumber: doc['houseNumber'],
             constructionYear: doc['constructionYear'], 
             livingSpace: doc['livingSpace'], 
@@ -334,6 +334,12 @@ class FireStoreDataBase {
         }
       });
     return houseSignupProfileModel;
+  }
+
+  Future<Stream<QuerySnapshot<Object?>>> getHouses() async {
+    String? currentUserID = FirebaseAuth.instance.currentUser?.uid;
+    final Stream<QuerySnapshot> housesStream = FirebaseFirestore.instance.collection('users/$currentUserID/houses_profile').snapshots();
+    return housesStream;
   }
 
 
@@ -504,9 +510,9 @@ class FireStoreDataBase {
   ) async {
     await FirebaseFirestore.instance.collection('users')
       .doc(currentUser?.uid)
-      .collection('house_profile')
+      .collection('houses_profile')
       .add({ 
-        'postlCode': postalCodeController.text,
+        'postalCode': postalCodeController.text,
         'houseNumber': houseNumberController.text,
         'propertyType': propertyTypeController.text,
         'constructionYear': constructionYearController.text,

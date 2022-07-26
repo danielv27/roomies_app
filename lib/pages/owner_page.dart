@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:roomies_app/backend/current_house_provider.dart';
+import 'package:roomies_app/pages/setup_house_page.dart';
 import 'package:roomies_app/widgets/gradients/blue_gradient.dart';
 import 'package:roomies_app/widgets/owner_page/owner_house.dart';
 
@@ -18,6 +21,7 @@ class _OwnerPageState extends State<OwnerPage> {
   @override
   void initState() {
     Provider.of<CurrentHouseProvider>(context, listen: false).initialize();
+    Provider.of<CurrentHouseProvider>(context, listen: false).getAllHouses();
     super.initState();
   }
 
@@ -86,7 +90,15 @@ class _OwnerPageState extends State<OwnerPage> {
         child: FloatingActionButton(
           splashColor: Colors.white.withOpacity(0.25),
           onPressed: () { 
-            
+            Navigator.push(
+              context,
+              PageTransition(
+                type: PageTransitionType.fade,
+                child: const SetupHousePage(),
+                isIos: true,
+                duration: const Duration(milliseconds: 500),
+              )
+            );
           },
           elevation: 0,
           shape: RoundedRectangleBorder(

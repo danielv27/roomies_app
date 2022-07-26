@@ -258,9 +258,9 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
                 onSurface: Colors.transparent,
               ),
               onPressed: () async {
-                print(widget.furnishedController.text);
                 if (formKey3.currentState!.validate() && !areDropDownControllersEmpty()) {
                   User? currentUser = auth.currentUser;
+                  bool isInitialHouseProfileComplete = await FireStoreDataBase().checkIfCurrentUserHouseComplete();
                   FireStoreDataBase().createHouseProfile(
                     currentUser,
                     widget.postalCodeController,
@@ -279,8 +279,12 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
                     widget.contactEmailControler,
                     widget.contactPhoneNumberControler,
                   );
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop();
+                  if (isInitialHouseProfileComplete == true){
+                    Navigator.of(context).pop();
+                  } else {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
+                  }
                 }
               }, 
               child: const Text(
