@@ -348,6 +348,7 @@ class FireStoreDataBase {
     .doc(otherUserID)
     .set({ 
       'match': match,
+      'timeStamp': FieldValue.serverTimestamp() // maybe need to change to time stamp since epoch
     });
   }
 
@@ -364,7 +365,7 @@ class FireStoreDataBase {
     return encounters;
   }
 
-  Future<List<String>> getMatchesIDs(String currentUserID) async {
+  Future<List<String>> getLikedEncountersIDs(String currentUserID) async {
     List<String> matches = [];
     await FirebaseFirestore.instance.collection('users/$currentUserID/encounters')
     .where('match', isEqualTo: true)

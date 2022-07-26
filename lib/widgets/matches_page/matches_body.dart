@@ -24,10 +24,8 @@ class _MatchesBodyWidgetState extends State<MatchesBodyWidget> {
   @override
   Widget build(BuildContext context){
     List<UserModel>? users = widget.provider.userModels;
-    users?.sort((a, b) => a.lastName.compareTo(b.lastName));
-    return users == null ? CircularProgressIndicator() :
-    
-    Expanded(
+    users.sort((a, b) => a.lastName.compareTo(b.lastName));
+    return Expanded(
       child: Container(
         decoration: const BoxDecoration(
           color: Colors.white,
