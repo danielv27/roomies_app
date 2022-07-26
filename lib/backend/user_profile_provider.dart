@@ -13,7 +13,7 @@ class UserProfileProvider extends ChangeNotifier {
   Future<void> incrementIndex() async {
     pagesSwiped++;
     print('pagesSwiped: $pagesSwiped');
-    await loadUsers(5);
+    await loadUsers(20);
   }
 
   Future<void> loadUsers(int limit) async {

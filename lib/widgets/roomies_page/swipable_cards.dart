@@ -87,9 +87,15 @@ class SwipableCardsState extends State<SwipableCards> {
             }   
           },
           builder: (context, properties) {
-            final currentUserIndex = properties.index + initialIndex; 
+            final currentUserIndex = properties.index + initialIndex;
+            
+            if(currentUserIndex >= userProfileModels.length){
+              return Container();
+            }
+
             final currenUserImages = userProfileModels[currentUserIndex].imageURLS;
             final imgController = PageController();
+            print('building user and index $currentUserIndex');
 
             final images = List.generate(
               currenUserImages.length,
