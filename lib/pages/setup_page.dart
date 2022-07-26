@@ -36,6 +36,24 @@ class _SetupPageState extends State<SetupPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             const Spacer(),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 35.0),
+              child: Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children:<Widget>[
+                    Transform.translate(
+                      child: Image.asset('assets/images/setup-circle.png', width: 120, height : 120),
+                      offset: const Offset(10, 0),
+                    ),                    Transform.translate(
+                      child: Image.asset('assets/images/setup-circle.png', width: 120, height : 120),
+                      offset: const Offset(-10, 0),
+                    ),
+                  ],
+                ),
+              ),
+            ),
             const SizedBox(
               child: Text(
                 "SET UP YOUR PROFILE",
@@ -47,12 +65,6 @@ class _SetupPageState extends State<SetupPage> {
                 ),
                 textAlign: TextAlign.center,
               ),
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: const [
-                
-              ],
             ),
             const SizedBox(height: 20),
             SizedBox(
@@ -67,12 +79,6 @@ class _SetupPageState extends State<SetupPage> {
                 ),
                 textAlign: TextAlign.center,
               ),
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: const [
-                
-              ],
             ),
             const SizedBox(height: 50),
             SizedBox(
@@ -117,7 +123,7 @@ class _SetupPageState extends State<SetupPage> {
                     context,
                     MaterialPageRoute(builder: (context) => const SetupHousePage()),
                   );
-                 },
+                },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children:const [
