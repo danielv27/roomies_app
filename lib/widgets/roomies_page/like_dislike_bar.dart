@@ -174,7 +174,7 @@ class _LikeDislikeBarState extends State<LikeDislikeBar> {
             child: Padding(
               padding: const EdgeInsets.only(bottom: 15.0, top:  25.0),
               child: Text(
-                "${userProfileModel.userModel.firstName}, 22",
+                "${userProfileModel.userModel.firstName}, ${calculateAge(userProfileModel.userModel.userSignupProfileModel.birthdate)}",
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w600
@@ -269,6 +269,28 @@ class _LikeDislikeBarState extends State<LikeDislikeBar> {
         fontSize: 20,
       ),
     );
+  }
+
+  int calculateAge(String birthDate) {
+    DateTime  currentDate = DateTime.now();
+
+    List<String> splittedDate = birthDate.split('/');
+    String birthDateDay = splittedDate[0];
+    String birthDateMonth = splittedDate[1];
+    String birthDateYear = splittedDate[2];
+
+    int age = currentDate.year - int.parse(birthDateYear);
+    int month1 = currentDate.month;
+    int month2 = int.parse(birthDateMonth);
+
+    if (int.parse(birthDateMonth) > currentDate.month) {
+      age--;
+    } else if (month1 == month2) {
+      if (int.parse(birthDateDay) > currentDate.day) {
+        age--;
+      }
+    }
+    return age;
   }
 
 }
