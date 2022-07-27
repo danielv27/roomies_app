@@ -6,7 +6,7 @@ import 'package:swipable_stack/swipable_stack.dart';
 import '../../models/user_profile_model.dart';
 
 class LikeDislikeBar extends StatefulWidget {
-  LikeDislikeBar({
+  const LikeDislikeBar({
     Key? key,
     required this.swipeController,
     required this.userProfileModels,
@@ -21,20 +21,16 @@ class LikeDislikeBar extends StatefulWidget {
   State<LikeDislikeBar> createState() => _LikeDislikeBarState();
 }
 
-class _LikeDislikeBarState extends State<LikeDislikeBar> with SingleTickerProviderStateMixin {
-  late AnimationController animationController;
+class _LikeDislikeBarState extends State<LikeDislikeBar> {
   bool buttonInfoPressed = false;
 
   @override
   initState() {
     super.initState();
-    animationController = BottomSheet.createAnimationController(this);
-    animationController.duration = const Duration(milliseconds: 500);
   }
 
   @override
   void dispose() {
-    animationController.dispose();
     super.dispose();
   }
 
@@ -55,7 +51,6 @@ class _LikeDislikeBarState extends State<LikeDislikeBar> with SingleTickerProvid
                 child: InkWell(
                   splashColor: Colors.red[50],
                   onTap: () {
-                    print("Dislike button pressed");
                     widget.swipeController.next(swipeDirection: SwipeDirection.left);
                   },
                   child: Column(
@@ -179,7 +174,7 @@ class _LikeDislikeBarState extends State<LikeDislikeBar> with SingleTickerProvid
             child: Padding(
               padding: const EdgeInsets.only(bottom: 15.0, top:  25.0),
               child: Text(
-                "${userProfileModel.userModel.firstName}, 22",
+                "${userProfileModel.userModel.firstName}, ${calculateAge(userProfileModel.userModel.userSignupProfileModel.birthdate)}",
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w600
@@ -275,15 +270,27 @@ class _LikeDislikeBarState extends State<LikeDislikeBar> with SingleTickerProvid
       ),
     );
   }
-  
-  Widget makeDissmissable({required DraggableScrollableSheet child}) {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: () {
-        Navigator.of(context).pop();
-      },
-      child: GestureDetector(onTap: () {}, child: child,),
-    );
+
+  int calculateAge(String birthDate) {
+    DateTime  currentDate = DateTime.now();
+
+    List<String> splittedDate = birthDate.split('/');
+    String birthDateDay = splittedDate[0];
+    String birthDateMonth = splittedDate[1];
+    String birthDateYear = splittedDate[2];
+
+    int age = currentDate.year - int.parse(birthDateYear);
+    int month1 = currentDate.month;
+    int month2 = int.parse(birthDateMonth);
+
+    if (int.parse(birthDateMonth) > currentDate.month) {
+      age--;
+    } else if (month1 == month2) {
+      if (int.parse(birthDateDay) > currentDate.day) {
+        age--;
+      }
+    }
+    return age;
   }
 
 }

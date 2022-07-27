@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:roomies_app/pages/setup_house_page.dart';
 import 'package:roomies_app/pages/setup_profile_page.dart';
+import 'package:roomies_app/widgets/gradients/gradient.dart';
 
 class SetupPage extends StatefulWidget {
   const SetupPage({Key? key}) : super(key: key);
@@ -11,48 +12,48 @@ class SetupPage extends StatefulWidget {
 }
 
 class _SetupPageState extends State<SetupPage> {
-
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         width: MediaQuery.of(context).size.height / 2,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color.fromRGBO(239, 85, 100, 1),
-              Color.fromRGBO(195, 46, 66, 1),
-              Color.fromRGBO(190, 40, 62, 1),
-              Color.fromRGBO(210, 66, 78, 1),
-              Color.fromRGBO(244, 130, 114, 1),
-            ],
-          ),
+        decoration: BoxDecoration(
+          gradient: redGradient()
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             const Spacer(),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 35.0),
+              child: Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children:<Widget>[
+                    Transform.translate(
+                      child: Image.asset('assets/images/setup-circle.png', width: 120, height : 120),
+                      offset: const Offset(10, 0),
+                    ),                    
+                    Transform.translate(
+                      child: Image.asset('assets/images/setup-circle.png', width: 120, height : 120),
+                      offset: const Offset(-10, 0),
+                    ),
+                  ],
+                ),
+              ),
+            ),
             const SizedBox(
               child: Text(
                 "SET UP YOUR PROFILE",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 42,
-                  // fontFamily: 'Inter',
                   fontWeight: FontWeight.bold,
                 ),
                 textAlign: TextAlign.center,
               ),
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: const [
-                
-              ],
             ),
             const SizedBox(height: 20),
             SizedBox(
@@ -60,19 +61,11 @@ class _SetupPageState extends State<SetupPage> {
               child: const Text(
                 "Are you looking for a roommate or a house, or do you want to rent/list your houses?",
                 style: TextStyle(
-                  // fontFamily: 'Inter',
-                  // fontWeight: FontWeight.w400,
                   color: Colors.white,
                   fontSize: 16,
                 ),
                 textAlign: TextAlign.center,
               ),
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: const [
-                
-              ],
             ),
             const SizedBox(height: 50),
             SizedBox(
@@ -87,8 +80,6 @@ class _SetupPageState extends State<SetupPage> {
                     Text(
                       "Set up personal profile",
                       style: TextStyle(
-                        // fontFamily: 'Inter',
-                        // fontWeight: FontWeight.w600,
                         fontSize: 16,
                       ),
                     ),
@@ -117,7 +108,7 @@ class _SetupPageState extends State<SetupPage> {
                     context,
                     MaterialPageRoute(builder: (context) => const SetupHousePage()),
                   );
-                 },
+                },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children:const [
