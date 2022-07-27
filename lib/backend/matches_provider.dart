@@ -14,7 +14,8 @@ class MatchesProvider extends ChangeNotifier {
     while(true){
       List<String> newUserIDs = await FireStoreDataBase().getLikedEncountersIDs(FirebaseAuth.instance.currentUser!.uid);
       final List<UserModel> newUserModels = await loadMatches(newUserIDs);
-      if(newUserModels.length > userModels.length){
+      notifyListeners();
+      if(newUserModels.length != userModels.length){
         userModels = newUserModels;
         notifyListeners();
       }

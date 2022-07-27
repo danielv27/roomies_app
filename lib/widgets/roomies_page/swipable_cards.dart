@@ -75,7 +75,6 @@ class SwipableCardsState extends State<SwipableCards> {
           controller: swipeController,
           onSwipeCompleted: (index, direction) async {
             //this is where a swipe is handled
-            Provider.of<UserProfileProvider>(context,listen: false).incrementIndex();
             print('userListLength = ${userProfileModels.length}');
             if(direction == SwipeDirection.right){
               print('liked ${userProfileModels[index].userModel.firstName} ${userProfileModels[index].userModel.lastName}');
@@ -84,7 +83,8 @@ class SwipableCardsState extends State<SwipableCards> {
             if(direction == SwipeDirection.left){
               print('diskliked ${userProfileModels[index].userModel.firstName} ${userProfileModels[index].userModel.lastName}');
               await FireStoreDataBase().addEncounter(false, currentUserID!, userProfileModels[index].userModel.id);
-            }   
+            }
+            await Provider.of<UserProfileProvider>(context,listen: false).incrementIndex();
           },
           builder: (context, properties) {
             final currentUserIndex = properties.index + initialIndex;

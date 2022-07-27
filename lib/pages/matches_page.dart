@@ -10,11 +10,10 @@ import '../widgets/matches_page/matches_header.dart';
 
 class MatchesPage extends StatefulWidget {
   
-  final MatchesProvider matchesProvider;
+
   
   const MatchesPage({
     Key? key,
-    required this.matchesProvider
   }) : super(key: key);
 
   @override
@@ -31,7 +30,7 @@ class _MatchesPageState extends State<MatchesPage> {
 
   @override
   Widget build(BuildContext context) {
-    final matchesProvider = widget.matchesProvider;
+    final MatchesProvider matchesProvider = context.watch<MatchesProvider>();
     return Scaffold(
       body: Container(
           decoration: const BoxDecoration(

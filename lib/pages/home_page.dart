@@ -62,10 +62,10 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
   
   @override
   Widget build(BuildContext context) {
-    final MatchesProvider matchesProvider = context.watch<MatchesProvider>();
+    
     final pages = [
       RoomiesPage(),
-      MatchesPage(matchesProvider: matchesProvider),
+      MatchesPage(),
       const HousesPage()
     ];
 
