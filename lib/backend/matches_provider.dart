@@ -24,7 +24,7 @@ class MatchesProvider extends ChangeNotifier {
   }
 
   Future<List<UserModel>> loadMatches(List<String> newUserIDs) async {
-    final newUserModels = userModels;
+    final List<UserModel> newUserModels = [];
     for(var userID in newUserIDs){
       var otherUserMatchesIDs = await FireStoreDataBase().getLikedEncountersIDs(userID);
       if(otherUserMatchesIDs.contains(FirebaseAuth.instance.currentUser?.uid)){
