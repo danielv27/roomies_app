@@ -4,12 +4,15 @@ import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:roomies_app/backend/current_house_provider.dart';
 import 'package:roomies_app/backend/current_profile_provider.dart';
 import 'package:roomies_app/backend/database.dart';
 import 'package:roomies_app/backend/matches_provider.dart';
 import 'package:roomies_app/backend/user_profile_provider.dart';
+import 'package:roomies_app/models/user_model.dart';
+import 'package:roomies_app/pages/new_match_page.dart';
 import 'package:roomies_app/pages/owner_page.dart';
 import 'backend/setup_completion_provider.dart';
 import 'pages/home_page.dart';
@@ -116,10 +119,12 @@ class _UserTypeSelectorState extends State<UserTypeSelector> {
     } else if (userProvider.profileSetUp) {
         Provider.of<CurrentUserProvider>(context, listen: false).initialize();
         Provider.of<UserProfileProvider>(context, listen: false).loadUsers(10);
-        Provider.of<MatchesProvider>(context, listen: false).listenToMatches().listen((event) {
+        Provider.of<MatchesProvider>(context, listen: false).listenToMatches().listen((otherUser) {
           print('listen event');
+          final UserModel? currentUser = context.read<CurrentUserProvider>().currentUser?.userModel;
+          Navigator.push(context, PageTransition(child: NewMatchPage(currentUser: currentUser ,otherUser: otherUser), type: PageTransitionType.fade));
         });
-        return  const HomePage();
+        return const HomePage();
    
         //child: const HomePage()
     } else {

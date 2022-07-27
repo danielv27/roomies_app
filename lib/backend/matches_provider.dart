@@ -10,13 +10,19 @@ class MatchesProvider extends ChangeNotifier {
   
 
   //probably not the way to do it but we do need to check wether the user matched with anyone in the background
-  Stream<void> listenToMatches() async* {
+  Stream<UserModel> listenToMatches() async* {
     while(true){
       List<String> newUserIDs = await FireStoreDataBase().getLikedEncountersIDs(FirebaseAuth.instance.currentUser!.uid);
       final List<UserModel> newUserModels = await loadMatches(newUserIDs);
       notifyListeners();
       if(newUserModels.length != userModels.length){
+        for(var user in newUserModels){
+          if(!userModels.contains(user)){
+            yield user;
+          }
+        }
         userModels = newUserModels;
+         // should in the future be replace to the currently added user
         notifyListeners();
       }
       await Future.delayed(const Duration(seconds: 2));
