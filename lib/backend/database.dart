@@ -348,7 +348,7 @@ class FireStoreDataBase {
     .doc(otherUserID)
     .set({ 
       'match': match,
-      'timeStamp': FieldValue.serverTimestamp() // maybe need to change to time stamp since epoch
+      'timeStamp': DateTime.now() // maybe need to change to time stamp since epoch
     });
   }
 
@@ -366,16 +366,22 @@ class FireStoreDataBase {
   }
 
   Future<List<String>> getLikedEncountersIDs(String currentUserID) async {
-    List<String> matches = [];
+    List<String> likedEnocounters = [];
     await FirebaseFirestore.instance.collection('users/$currentUserID/encounters')
     .where('match', isEqualTo: true)
+    .orderBy('timeStamp',descending: false)
     .get()
     .then((querySnapshot) {
-      for(var doc in querySnapshot.docs){
-        matches.add(doc.id);
+      var sorted = querySnapshot.docs;
+      // print("before sorting: $sorted");
+      // sorted.sort((a, b) => (a['timeStamp'].toDate().toString()).compareTo(b['timeStamp'].toDate().toString()));
+      // print("after sorting: $sorted");
+      for(var doc in sorted){
+        likedEnocounters.add(doc.id);
       }
     });
-    return matches;
+    
+    return likedEnocounters;
   }  
 
 

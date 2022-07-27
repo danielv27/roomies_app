@@ -58,9 +58,23 @@ class MainPage extends StatelessWidget {
         }
         else if (snapshot.hasData) {
           FireStoreDataBase().goOnline();
-          return ChangeNotifierProvider(
-            create: (context) => SetUpCompletionProvider(),  
-            child: const UserTypeSelector()
+          return MultiProvider(
+            providers: [
+              ChangeNotifierProvider(
+                create: (context) => SetUpCompletionProvider(),  
+                child: const UserTypeSelector()
+              ),
+              ChangeNotifierProvider(
+                create: (context) => UserProfileProvider(),
+              ),
+              ChangeNotifierProvider(
+                create: (context) => CurrentUserProvider()
+              ),
+              ChangeNotifierProvider(
+                create: (context) => MatchesProvider() 
+              ),
+            ],
+            child: const UserTypeSelector(),
           );
         }
         else {
@@ -100,20 +114,14 @@ class _UserTypeSelectorState extends State<UserTypeSelector> {
         child: const OwnerPage(),
       );
     } else if (userProvider.profileSetUp) {
-      return MultiProvider(
-        providers: [
-          ChangeNotifierProvider(
-            create: (context) => UserProfileProvider(),
-          ),
-          ChangeNotifierProvider(
-            create: (context) => CurrentUserProvider()
-          ),
-          ChangeNotifierProvider(
-            create: (context) => MatchesProvider() 
-          ),
-        ],
-        child: const HomePage()
-      );
+        Provider.of<CurrentUserProvider>(context, listen: false).initialize();
+        Provider.of<UserProfileProvider>(context, listen: false).loadUsers(10);
+        Provider.of<MatchesProvider>(context, listen: false).listenToMatches().listen((event) {
+          print('listen event');
+        });
+        return  const HomePage();
+   
+        //child: const HomePage()
     } else {
       return const Center(child: CircularProgressIndicator(color: Colors.red)); 
     }

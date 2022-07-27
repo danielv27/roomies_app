@@ -73,17 +73,17 @@ class SwipableCardsState extends State<SwipableCards> {
             return allowedActions.contains(direction);
           },
           controller: swipeController,
-          onSwipeCompleted: (index, direction) {
+          onSwipeCompleted: (index, direction) async {
             //this is where a swipe is handled
             Provider.of<UserProfileProvider>(context,listen: false).incrementIndex();
             print('userListLength = ${userProfileModels.length}');
             if(direction == SwipeDirection.right){
               print('liked ${userProfileModels[index].userModel.firstName} ${userProfileModels[index].userModel.lastName}');
-              FireStoreDataBase().addEncounter(true, currentUserID!, userProfileModels[index].userModel.id);
+              await FireStoreDataBase().addEncounter(true, currentUserID!, userProfileModels[index].userModel.id);
             }
             if(direction == SwipeDirection.left){
               print('diskliked ${userProfileModels[index].userModel.firstName} ${userProfileModels[index].userModel.lastName}');
-              FireStoreDataBase().addEncounter(false, currentUserID!, userProfileModels[index].userModel.id);
+              await FireStoreDataBase().addEncounter(false, currentUserID!, userProfileModels[index].userModel.id);
             }   
           },
           builder: (context, properties) {
@@ -95,7 +95,6 @@ class SwipableCardsState extends State<SwipableCards> {
 
             final currenUserImages = userProfileModels[currentUserIndex].imageURLS;
             final imgController = PageController();
-            print('building user and index $currentUserIndex');
 
             final images = List.generate(
               currenUserImages.length,

@@ -10,29 +10,29 @@ class MatchesProvider extends ChangeNotifier {
   
 
   //probably not the way to do it but we do need to check wether the user matched with anyone in the background
-  void listenToMatches() async {
+  Stream<void> listenToMatches() async* {
     while(true){
-      Future.delayed(const Duration(seconds: 5));
       List<String> newUserIDs = await FireStoreDataBase().getLikedEncountersIDs(FirebaseAuth.instance.currentUser!.uid);
-      if(newUserIDs.length > userIDs.length){
-        loadMatches();
+      final List<UserModel> newUserModels = await loadMatches(newUserIDs);
+      if(newUserModels.length > userModels.length){
+        userModels = newUserModels;
+        notifyListeners();
       }
+      await Future.delayed(const Duration(seconds: 2));
     }
   }
 
-  Future<void> loadMatches() async {
-    userIDs = await FireStoreDataBase().getLikedEncountersIDs(FirebaseAuth.instance.currentUser!.uid);
-    for(var userID in userIDs){
+  Future<List<UserModel>> loadMatches(List<String> newUserIDs) async {
+    final newUserModels = userModels;
+    for(var userID in newUserIDs){
       var otherUserMatchesIDs = await FireStoreDataBase().getLikedEncountersIDs(userID);
-      
       if(otherUserMatchesIDs.contains(FirebaseAuth.instance.currentUser?.uid)){
         UserModel? currentUser = await FireStoreDataBase().getUserModelByID(userID);
-        if(currentUser != null && !(userModels.contains(currentUser))){
-          lastMatch = currentUser;
-          userModels.add(currentUser);
+        if(currentUser != null && !(newUserModels.contains(currentUser))){
+          newUserModels.add(currentUser);
         }
       }
     }
-    notifyListeners();
+    return newUserModels;
   }
 }

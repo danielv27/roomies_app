@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
@@ -26,14 +28,13 @@ class HomePage extends StatefulWidget {
 class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
   int _previousPage = 0;
   int _currentPage = 0;
+  late StreamSubscription subscription;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    Provider.of<CurrentUserProvider>(context, listen: false).initialize();
-    Provider.of<UserProfileProvider>(context, listen: false).loadUsers(10);
-    
+
     
   }
 
@@ -52,19 +53,25 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
     }
     else{
       FireStoreDataBase().goOnline();
+      
     }
   }
+
 
   
   
   @override
   Widget build(BuildContext context) {
-    
+    final MatchesProvider matchesProvider = context.watch<MatchesProvider>();
     final pages = [
       RoomiesPage(),
-      const MatchesPage(),
+      MatchesPage(matchesProvider: matchesProvider),
       const HousesPage()
     ];
+
+    // subscription = Provider.of<MatchesProvider>(context, listen: false).listenToMatches().listen((event) {
+    //   print('listen event');
+    // });
 
     return Scaffold(
       body: PageTransitionSwitcher(

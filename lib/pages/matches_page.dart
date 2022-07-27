@@ -9,7 +9,13 @@ import '../widgets/matches_page/matches_header.dart';
 
 
 class MatchesPage extends StatefulWidget {
-  const MatchesPage({Key? key}) : super(key: key);
+  
+  final MatchesProvider matchesProvider;
+  
+  const MatchesPage({
+    Key? key,
+    required this.matchesProvider
+  }) : super(key: key);
 
   @override
   State<MatchesPage> createState() => _MatchesPageState();
@@ -20,15 +26,12 @@ class _MatchesPageState extends State<MatchesPage> {
   @override
   void initState() {
     super.initState();
-    Provider.of<MatchesProvider>(context, listen: false).loadMatches();
+    
   }
 
   @override
   Widget build(BuildContext context) {
-    final matchesProvider = context.watch<MatchesProvider>();
-    if(matchesProvider.userModels == null){
-      return const Center(child: CircularProgressIndicator());
-    }
+    final matchesProvider = widget.matchesProvider;
     return Scaffold(
       body: Container(
           decoration: const BoxDecoration(
