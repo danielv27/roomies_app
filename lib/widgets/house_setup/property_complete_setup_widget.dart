@@ -5,9 +5,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:roomies_app/models/house_profile_images.dart';
 
 import '../../backend/database.dart';
+import '../../models/house_profile_images.dart';
 import '../gradients/blue_gradient.dart';
 
 class ProperCompleteSetupPage extends StatefulWidget {
@@ -36,15 +36,11 @@ class ProperCompleteSetupPage extends StatefulWidget {
   final TextEditingController postalCodeController;
   final TextEditingController houseNumberController;
   final TextEditingController apartmentNumberController;
-
   final TextEditingController propertyTypeController;
-
   final TextEditingController constructionYearController;
   final TextEditingController livingSpaceController;
   final TextEditingController plotAreaContoller;
-
   final TextEditingController propertyConditionController;
-
   final TextEditingController houseDescriptionController;
   final TextEditingController furnishedController;
   final TextEditingController numRoomController;
@@ -55,6 +51,7 @@ class ProperCompleteSetupPage extends StatefulWidget {
   final TextEditingController contactPhoneNumberControler;
 
   final PageController pageController;
+
   final HouseProfileImages houseProfileImages;
 
   @override
@@ -83,7 +80,6 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
   String? availableRoomsDropdownValue;
 
   final List<XFile> selectedHouseImages = [];
-  final List<String> arrImageUrls = [];
   int uploadItem = 0;
   bool isUploading = false;
 
@@ -491,13 +487,20 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
     );
   }
 
+  bool areDropDownControllersEmpty() {
+    if (widget.furnishedController.text.isNotEmpty && widget.numRoomController.text.isNotEmpty && widget.availableRoomController.text.isNotEmpty) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   Future<void> uploadFunction(List<XFile> houseImages) async {
     setState(() {
       isUploading = true;
     });
     for (int i = 0; i < houseImages.length; i++) {
       var imageUrl = await uploadFile(houseImages[i]);
-      print(imageUrl);
       widget.houseProfileImages.imageURLS.add(imageUrl);
     }
   }
@@ -544,14 +547,6 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
         });
     } catch (e) {
       debugPrint("Error - $e");
-    }
-  }
-  
-  bool areDropDownControllersEmpty() {
-    if (widget.furnishedController.text.isNotEmpty && widget.numRoomController.text.isNotEmpty && widget.availableRoomController.text.isNotEmpty) {
-      return false;
-    } else {
-      return true;
     }
   }
 

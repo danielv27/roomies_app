@@ -5,13 +5,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:roomies_app/models/user_profile_model.dart';
-import 'package:roomies_app/widgets/gradients/blue_gradient.dart';
 import 'package:intl/intl.dart';
-
 
 import '../../backend/database.dart';
 import '../../models/user_profile_images.dart';
+import '../../models/user_profile_model.dart';
+import '../gradients/blue_gradient.dart';
 
 class CompleteProfilePage extends StatefulWidget {
   const CompleteProfilePage({
@@ -31,7 +30,6 @@ class CompleteProfilePage extends StatefulWidget {
   final TextEditingController minBudgetController;
   final TextEditingController maxBudgetController;
   final UserSignupProfileModel userPersonalProfileModel;
-
   final TextEditingController aboutMeController;
   final TextEditingController workController;
   final TextEditingController studyController;
@@ -39,6 +37,7 @@ class CompleteProfilePage extends StatefulWidget {
   final TextEditingController birthDateController;
 
   final PageController pageController;
+
   final UserProfileImages userProfileImages;
 
   @override
@@ -57,8 +56,6 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
 
   final FirebaseStorage storageRef = FirebaseStorage.instance;
   final FirebaseAuth auth = FirebaseAuth.instance;
-
-  final List<Map> myProfileImage = List.generate(6, (index) => {"profile_image_": index, "name": "ProfileImage $index"}).toList();
 
   final formKey2 = GlobalKey<FormState>();
 
