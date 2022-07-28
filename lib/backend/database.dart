@@ -279,6 +279,7 @@ class FireStoreDataBase {
             minBudget: doc['minimumBudget'], 
             roommate: doc['roommate'],
             radius: doc['radius'],
+            latLng: doc['latLng'],
           );
         }
       });
@@ -497,6 +498,7 @@ class FireStoreDataBase {
   Future createPersonalProfile(
     User ?currentUser, 
     String radius,
+    TextEditingController latLng,
     TextEditingController minBudget, 
     TextEditingController maxBudget, 
     TextEditingController about, 
@@ -510,6 +512,7 @@ class FireStoreDataBase {
       .collection('personal_profile')
       .add({ 
         'radius': radius,
+        'latLng': latLng.text,
         'minimumBudget': minBudget.text,
         'maximumBudget': maxBudget.text,
         'about': about.text,
@@ -555,8 +558,8 @@ class FireStoreDataBase {
         'houseNumber': houseNumberController.text,
         'propertyType': propertyTypeController.text,
         'constructionYear': constructionYearController.text,
-        'livingSpace': livingSpaceController.text+"m2",
-        'plotArea': plotAreaContoller.text+"m2",
+        'livingSpace': "${livingSpaceController.text}m2",
+        'plotArea': "${plotAreaContoller.text}m2",
         'propertyCondition': propertyConditionController.text,
         'houseDescription': houseDescriptionController.text,
         'isFurnished': furnishedController.text,

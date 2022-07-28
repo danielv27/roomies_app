@@ -24,11 +24,13 @@ class CompleteProfilePage extends StatefulWidget {
     required this.pageController, 
     required this.minBudgetController, 
     required this.maxBudgetController, 
+    required this.latLngController,
     required this.userPersonalProfileModel,
   }) : super(key: key);
 
   final TextEditingController minBudgetController;
   final TextEditingController maxBudgetController;
+  final TextEditingController latLngController;
   final UserSignupProfileModel userPersonalProfileModel;
   final TextEditingController aboutMeController;
   final TextEditingController workController;
@@ -52,7 +54,8 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
   String birthDateDescription = "dd/mm/yyyy";
 
   final List<XFile> selectedProfileImages = [];
-  int uploadItem = 0;
+  bool isUploading = false;
+  bool isRemoving = false;
 
   final FirebaseStorage storageRef = FirebaseStorage.instance;
   final FirebaseAuth auth = FirebaseAuth.instance;
@@ -123,6 +126,9 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                                   heroTag: "btn1_$index",
                                   elevation: 0,
                                   onPressed: () async { 
+                                    setState(() {
+                                      isUploading = true;
+                                    });
                                     await selectProfileImage();
                                     uploadFile(selectedProfileImages[index]);
                                   },
@@ -137,7 +143,9 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                       : GridTile(
                         child: Stack(
                           children: [
-                            Container(
+                            (isUploading || isRemoving) 
+                            ? const Center(child: CircularProgressIndicator())
+                            : Container(
                               height: MediaQuery.of(context).size.height,
                               margin: const EdgeInsets.only(bottom: 10, right: 10),
                               child: ClipRRect(
@@ -161,6 +169,9 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                                   heroTag: "btn2_$index",
                                   elevation: 0,
                                   onPressed: () async { 
+                                    setState(() {
+                                      isRemoving = true;
+                                    });
                                     await removeFile(selectedProfileImages[index]);
                                     removeProfileImage(index);
                                   },
@@ -330,6 +341,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                     await FireStoreDataBase().createPersonalProfile(
                       currentUser,
                       widget.userPersonalProfileModel.radius,
+                      widget.latLngController,
                       widget.minBudgetController,
                       widget.maxBudgetController,
                       widget.aboutMeController,
@@ -415,7 +427,11 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
 
   Future<String> uploadFile(XFile _image) async {
     Reference reference = storageRef.ref().child("profile_images").child(auth.currentUser!.uid.toString()).child(_image.name);
-    await reference.putFile(File(_image.path));
+    await reference.putFile(File(_image.path)).whenComplete(() {
+      setState(() {
+        isUploading = false;
+      });
+    });
 
     var url = await reference.getDownloadURL();
     widget.userProfileImages.imageURLS.add(url);
@@ -442,7 +458,11 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
 
   Future removeFile(XFile _image) async {
     Reference reference = storageRef.ref().child("profile_images").child(auth.currentUser!.uid.toString()).child(_image.name);
-    await reference.delete();
+    await reference.delete().whenComplete(() {
+      setState(() {
+        isRemoving = false;
+      });
+    });
   }
 
   removeProfileImage(int index) {

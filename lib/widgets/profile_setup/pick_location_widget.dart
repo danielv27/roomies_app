@@ -11,9 +11,11 @@ class PickLocation extends StatefulWidget {
   const PickLocation({
     Key? key,
     required this.startingLocation,
+    required this.latLngController,
   }) : super(key: key);
 
   final LatLng startingLocation;
+  final TextEditingController latLngController;
 
   @override
   State<PickLocation> createState() => _PickLocationState();
@@ -132,7 +134,7 @@ class _PickLocationState extends State<PickLocation> {
     ));
 
     setState(() {
-      
+      widget.latLngController.text = "$lat, $lng";
     });
 
     googleMapController.animateCamera(CameraUpdate.newLatLngZoom(LatLng(lat, lng), 14.0));
