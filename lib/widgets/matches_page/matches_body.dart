@@ -21,10 +21,11 @@ class MatchesBodyWidget extends StatefulWidget {
 }
 
 class _MatchesBodyWidgetState extends State<MatchesBodyWidget> {
+  late final List<UserModel>? users = widget.provider.userModels;
   @override
   Widget build(BuildContext context){
-    List<UserModel>? users = widget.provider.userModels;
-    users.sort((a, b) => a.lastName.compareTo(b.lastName));
+    
+    users?.sort((a, b) => a.lastName.compareTo(b.lastName));
     return Expanded(
       child: Container(
         decoration: const BoxDecoration(
@@ -34,7 +35,7 @@ class _MatchesBodyWidgetState extends State<MatchesBodyWidget> {
             topRight: Radius.circular(20)
           ),
         ),
-        child: userTileList(users),
+        child: userTileList(users!),
       )
     );
   }

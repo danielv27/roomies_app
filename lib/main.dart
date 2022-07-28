@@ -119,11 +119,7 @@ class _UserTypeSelectorState extends State<UserTypeSelector> {
     } else if (userProvider.profileSetUp) {
         Provider.of<CurrentUserProvider>(context, listen: false).initialize();
         Provider.of<UserProfileProvider>(context, listen: false).loadUsers(10);
-        Provider.of<MatchesProvider>(context, listen: false).listenToMatches().listen((otherUser) {
-          print('listen event');
-          final UserModel? currentUser = context.read<CurrentUserProvider>().currentUser?.userModel;
-          Navigator.push(context, PageTransition(child: NewMatchPage(currentUser: currentUser ,otherUser: otherUser), type: PageTransitionType.fade));
-        });
+
         return const HomePage();
    
         //child: const HomePage()

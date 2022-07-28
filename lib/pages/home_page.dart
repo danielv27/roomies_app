@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:roomies_app/backend/current_profile_provider.dart';
 import 'package:roomies_app/backend/database.dart';
@@ -10,7 +11,10 @@ import 'package:roomies_app/backend/matches_provider.dart';
 import 'package:roomies_app/backend/user_profile_provider.dart';
 import 'package:roomies_app/main.dart';
 import 'package:roomies_app/widgets/bottom_bar.dart';
+import '../models/user_model.dart';
 import '../models/user_profile_model.dart';
+import 'chat_page.dart';
+import 'new_match_page.dart';
 import 'roomies_page.dart';
 import 'houses_page.dart';
 import 'matches_page.dart';
@@ -34,9 +38,11 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-
     
+ 
   }
+
+  
 
   @override
   void dispose() {
@@ -65,13 +71,43 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
     
     final pages = [
       RoomiesPage(),
-      MatchesPage(),
+      const MatchesPage(),
       const HousesPage()
     ];
-
-    // subscription = Provider.of<MatchesProvider>(context, listen: false).listenToMatches().listen((event) {
-    //   print('listen event');
-    // });
+        Provider.of<MatchesProvider>(context, listen: false).listenToMatches().listen((otherUser) {
+          print('new match');
+          final UserModel? currentUser = context.read<CurrentUserProvider>().currentUser?.userModel;
+          Navigator.push(
+            context,
+            PageTransition(
+              alignment: Alignment.center,
+              type: PageTransitionType.size, // or fade
+              child: NewMatchPage(
+                currentUser: currentUser,
+                otherUser: otherUser,
+                startChat: () {
+                  setState(() {
+                    _currentPage = 1;
+                  });
+                  Navigator.pushReplacement(
+                    context,
+                    PageTransition(
+                      child: ChatPage(otherUser: otherUser),
+                      type: PageTransitionType.rightToLeft,
+                      curve: Curves.easeIn,
+                    )
+                  );
+                },
+                keepSwipping: () {
+                  // setState(() {
+                  //   _currentPage = 0;
+                  // });
+                  Navigator.pop(context);
+                },
+              ),
+            )
+          );
+        });
 
     return Scaffold(
       body: PageTransitionSwitcher(
