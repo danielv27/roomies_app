@@ -264,7 +264,7 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
                   if (widget.houseProfileImages.imageURLS.isNotEmpty) {
                     User? currentUser = auth.currentUser;
                     bool isInitialHouseProfileComplete = await FireStoreDataBase().checkIfCurrentUserHouseComplete();
-                    FireStoreDataBase().createHouseProfile(
+                    await FireStoreDataBase().createHouseProfile(
                       currentUser,
                       widget.postalCodeController,
                       widget.houseNumberController,
@@ -408,7 +408,7 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
     return GestureDetector(
       onTap: () async {
         await selectHouseImages();
-        uploadFunction(selectedHouseImages);
+        await uploadFunction(selectedHouseImages);
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 14.0),
