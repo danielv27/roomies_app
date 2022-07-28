@@ -18,6 +18,7 @@ class SetupProfilePage extends StatefulWidget {
 class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerProviderStateMixin {
   final minBudgetController = TextEditingController();
   final maxBudgetController = TextEditingController();
+  final latLngController = TextEditingController();
 
   final aboutMeController = TextEditingController();
   final workController = TextEditingController();
@@ -27,7 +28,7 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
 
   final pageController = PageController();
   
-  UserSignupProfileModel userPersonalProfileModel = UserSignupProfileModel(about: '', birthdate: '', maxBudget: '', minBudget: '', roommate: '', study: '', work: '');
+  UserSignupProfileModel userPersonalProfileModel = UserSignupProfileModel(about: '', birthdate: '', maxBudget: '', minBudget: '', roommate: '', study: '', work: '', latLng: '');
   UserProfileImages userProfileImages = UserProfileImages(imageURLS: []);
 
   bool isLastPage = false;
@@ -79,12 +80,14 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
           ProfileQuestionPage(
             minBudgetController: minBudgetController, 
             maxBudgetController: maxBudgetController,
+            latLngController: latLngController,
             userPersonalProfileModel: userPersonalProfileModel,
             pageController: pageController,
           ),
           CompleteProfilePage(
             minBudgetController: minBudgetController, 
             maxBudgetController: maxBudgetController,
+            latLngController: latLngController,
             userPersonalProfileModel: userPersonalProfileModel,
             aboutMeController: aboutMeController, 
             workController: workController, 

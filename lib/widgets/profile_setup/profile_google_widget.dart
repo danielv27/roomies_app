@@ -7,7 +7,10 @@ import 'pick_location_widget.dart';
 class GoogleApiContainer extends StatefulWidget {
   const GoogleApiContainer({
     Key? key,
+    required this.latLngController,
   }) : super(key: key);
+
+  final TextEditingController latLngController;
 
   @override
   State<GoogleApiContainer> createState() => _GoogleApiContainerState();
@@ -81,7 +84,7 @@ class _GoogleApiContainerState extends State<GoogleApiContainer> {
       context,
       MaterialPageRoute(
         builder: (context) {
-          return PickLocation(startingLocation: startingLocation);
+          return PickLocation(startingLocation: startingLocation, latLngController: widget.latLngController);
         }
       ),
     );

@@ -28,6 +28,7 @@ class UserSignupProfileModel {
   String study; 
   String roommate; 
   String birthdate;
+  String latLng;
 
   UserSignupProfileModel({
     required this.minBudget, 
@@ -38,6 +39,7 @@ class UserSignupProfileModel {
     required this.roommate, 
     required this.birthdate,
     this.radius = "0",
+    required this.latLng,
   });
 
 }

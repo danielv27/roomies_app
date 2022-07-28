@@ -11,12 +11,14 @@ class ProfileQuestionPage extends StatefulWidget {
     Key? key,
     required this.minBudgetController,
     required this.maxBudgetController, 
+    required this.latLngController,
     required this.userPersonalProfileModel, 
     required this.pageController,
   }) : super(key: key);
 
   final TextEditingController minBudgetController;
   final TextEditingController maxBudgetController;
+  final TextEditingController latLngController;
   final PageController pageController;
   UserSignupProfileModel userPersonalProfileModel;
 
@@ -68,7 +70,7 @@ class _ProfileQuestionPageState extends State<ProfileQuestionPage> {
                   const SizedBox(
                     height: 30,
                   ),
-                  const GoogleApiContainer(),
+                  GoogleApiContainer(latLngController: widget.latLngController),
                   const SizedBox(
                     height: 10,
                   ),
