@@ -4,10 +4,25 @@ import '../models/user_model.dart';
 import 'database.dart';
 
 class MatchesProvider extends ChangeNotifier {
-  List<String> userIDs = [];
   List<UserModel> userModels = [];
-  UserModel? lastMatch;
   
+  Future<void> initialize() async {
+    userModels = await FireStoreDataBase().getMatches(FirebaseAuth.instance.currentUser!.uid);
+  }
+
+  Future<List<UserModel>> loadMatches(List<String> newUserIDs) async {
+    final List<UserModel> newUserModels = [];
+    for(var userID in newUserIDs){
+      var otherUserMatchesIDs = await FireStoreDataBase().getLikedEncountersIDs(userID);
+      if(otherUserMatchesIDs.contains(FirebaseAuth.instance.currentUser?.uid)){
+        UserModel? currentUser = await FireStoreDataBase().getUserModelByID(userID);
+        if(currentUser != null && !(newUserModels.contains(currentUser))){
+          newUserModels.add(currentUser);
+        }
+      }
+    }
+    return newUserModels;
+  }
 
   //probably not the way to do it but we do need to check wether the user matched with anyone in the background
   Stream<UserModel> listenToMatches() async* {
@@ -29,17 +44,5 @@ class MatchesProvider extends ChangeNotifier {
     }
   }
 
-  Future<List<UserModel>> loadMatches(List<String> newUserIDs) async {
-    final List<UserModel> newUserModels = [];
-    for(var userID in newUserIDs){
-      var otherUserMatchesIDs = await FireStoreDataBase().getLikedEncountersIDs(userID);
-      if(otherUserMatchesIDs.contains(FirebaseAuth.instance.currentUser?.uid)){
-        UserModel? currentUser = await FireStoreDataBase().getUserModelByID(userID);
-        if(currentUser != null && !(newUserModels.contains(currentUser))){
-          newUserModels.add(currentUser);
-        }
-      }
-    }
-    return newUserModels;
-  }
+
 }

@@ -352,6 +352,32 @@ class FireStoreDataBase {
     });
   }
 
+    Future<void> addMatch(String currentUserID, String otherUserID) async {
+    await FirebaseFirestore.instance.collection('users/$currentUserID/matches')
+    .doc(otherUserID)
+    .set({ 
+      'timeStamp': DateTime.now() // maybe need to change to time stamp since epoch
+    });
+  }
+
+    Future<List<UserModel>> getMatches(String userID) async {
+    List<String> matchesIDs = [];
+    List<UserModel> matches = [];
+    await FirebaseFirestore.instance.collection('users/$userID/matches')
+    .get().then((querySnapShot) {
+      for(var doc in querySnapShot.docs){
+        matchesIDs.add(doc.id);
+      }
+    });
+    for(var id in matchesIDs){
+      UserModel? userModel = await getUserModelByID(id);
+      userModel != null? matches.add(userModel):null;
+    }
+    return matches;
+  }
+
+
+
 
   Future<List<String>?> getEncountersIDs(String? currentUserID) async {
     List<String> encounters = [];
