@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:roomies_app/models/house_profile_images.dart';
 import 'package:roomies_app/widgets/house_setup/property_address_setup_widget.dart';
 import 'package:roomies_app/widgets/house_setup/property_information_setup_widget.dart';
 import 'package:roomies_app/widgets/house_setup/property_type_setup_widget.dart';
@@ -39,6 +40,8 @@ class _SetupHousePageState extends State<SetupHousePage> with SingleTickerProvid
   final contactPhoneNumberControler = TextEditingController();
 
   final pageController = PageController();
+
+  HouseProfileImages houseProfileImages = HouseProfileImages(imageURLS: []);
 
   bool isLastPage = false;
   int houseSetupPages = 5;
@@ -130,6 +133,7 @@ class _SetupHousePageState extends State<SetupHousePage> with SingleTickerProvid
             contactEmailControler: contactEmailControler,
             contactPhoneNumberControler: contactPhoneNumberControler,
 
+            houseProfileImages: houseProfileImages,
             pageController: pageController,
           ),
         ],

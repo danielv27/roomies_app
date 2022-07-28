@@ -1,9 +1,11 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:roomies_app/models/house_profile_images.dart';
 
 import '../../backend/database.dart';
 import '../gradients/blue_gradient.dart';
@@ -28,6 +30,7 @@ class ProperCompleteSetupPage extends StatefulWidget {
     required this.furnishedController,
     required this.numRoomController, 
     required this.availableRoomController,
+    required this.houseProfileImages,
   }) : super(key: key);
 
   final TextEditingController postalCodeController;
@@ -52,6 +55,7 @@ class ProperCompleteSetupPage extends StatefulWidget {
   final TextEditingController contactPhoneNumberControler;
 
   final PageController pageController;
+  final HouseProfileImages houseProfileImages;
 
   @override
   State<ProperCompleteSetupPage> createState() => _ProperCompleteSetupPageState();
@@ -90,7 +94,9 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return isUploading
+    ? const Center(child: CircularProgressIndicator())
+    : Scaffold(
       body: Padding(
         padding: const EdgeInsets.only(bottom: 80),
         child: SingleChildScrollView(
@@ -259,31 +265,37 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
               ),
               onPressed: () async {
                 if (formKey3.currentState!.validate() && !areDropDownControllersEmpty()) {
-                  User? currentUser = auth.currentUser;
-                  bool isInitialHouseProfileComplete = await FireStoreDataBase().checkIfCurrentUserHouseComplete();
-                  FireStoreDataBase().createHouseProfile(
-                    currentUser,
-                    widget.postalCodeController,
-                    widget.houseNumberController,
-                    widget.propertyTypeController,
-                    widget.constructionYearController,
-                    widget.livingSpaceController,
-                    widget.plotAreaContoller,
-                    widget.propertyConditionController,
-                    widget.houseDescriptionController,
-                    widget.furnishedController,
-                    widget.numRoomController,
-                    widget.availableRoomController,
-                    widget.pricePerRoomController,
-                    widget.contactNameController,
-                    widget.contactEmailControler,
-                    widget.contactPhoneNumberControler,
-                  );
-                  if (isInitialHouseProfileComplete == true){
-                    Navigator.of(context).pop();
+                  if (widget.houseProfileImages.imageURLS.isNotEmpty) {
+                    User? currentUser = auth.currentUser;
+                    bool isInitialHouseProfileComplete = await FireStoreDataBase().checkIfCurrentUserHouseComplete();
+                    FireStoreDataBase().createHouseProfile(
+                      currentUser,
+                      widget.postalCodeController,
+                      widget.houseNumberController,
+                      widget.propertyTypeController,
+                      widget.constructionYearController,
+                      widget.livingSpaceController,
+                      widget.plotAreaContoller,
+                      widget.propertyConditionController,
+                      widget.houseDescriptionController,
+                      widget.furnishedController,
+                      widget.numRoomController,
+                      widget.availableRoomController,
+                      widget.pricePerRoomController,
+                      widget.contactNameController,
+                      widget.contactEmailControler,
+                      widget.contactPhoneNumberControler,
+                    );
+                    if (isInitialHouseProfileComplete == true) {
+                      await uploadImageUrls();
+                      Navigator.of(context).pop();
+                    } else {
+                      await uploadImageUrls();
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                    }
                   } else {
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pop();
+                    await alertImageEmpty(context);
                   }
                 }
               }, 
@@ -398,11 +410,9 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
 
   GestureDetector uploadPictures(BuildContext context, String descriptionField, var uploadIcon) {
     return GestureDetector(
-      onTap: () {
-        setState(() {
-          selectHouseImages();
-          uploadFunction(selectedHouseImages);
-        });
+      onTap: () async {
+        await selectHouseImages();
+        uploadFunction(selectedHouseImages);
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 14.0),
@@ -481,19 +491,20 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
     );
   }
 
-  void uploadFunction(List<XFile> _images) {
+  Future<void> uploadFunction(List<XFile> houseImages) async {
     setState(() {
       isUploading = true;
     });
-    for (int i = 0; i < _images.length; i++) {
-      var imageUrl = uploadFile(_images[i]);
-      arrImageUrls.add(imageUrl.toString());
+    for (int i = 0; i < houseImages.length; i++) {
+      var imageUrl = await uploadFile(houseImages[i]);
+      print(imageUrl);
+      widget.houseProfileImages.imageURLS.add(imageUrl);
     }
   }
 
-  Future<String> uploadFile(XFile _image) async {
-    Reference reference = storageRef.ref().child("house_images").child(auth.currentUser!.uid.toString()).child(_image.name);
-    UploadTask uploadTask = reference.putFile(File(_image.path));
+  Future<String> uploadFile(XFile houseImage) async {
+    Reference reference = storageRef.ref().child("house_images").child(auth.currentUser!.uid.toString()).child(houseImage.name);
+    UploadTask uploadTask = reference.putFile(File(houseImage.path));
     await uploadTask.whenComplete(() {
       setState(() {
         uploadItem++;
@@ -503,14 +514,17 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
         }    
       });
     });
-    return await reference.getDownloadURL();
+    var url = await reference.getDownloadURL();
+    return url;
   }
 
   Future selectHouseImages() async{
     try {
-      final List<XFile>? images = await ImagePicker().pickMultiImage();
-      if (images!.isNotEmpty) {
-        selectedHouseImages.addAll(images);
+      final List<XFile>? houseImages = await ImagePicker().pickMultiImage(
+        imageQuality: 50,
+      );
+      if (houseImages != null) {
+        selectedHouseImages.addAll(houseImages);
       }
     } catch (error) {
       debugPrint("ERROR: $error");
@@ -519,6 +533,19 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
       
     });
   }
+
+  Future<void> uploadImageUrls() async {
+    try { 
+      await FirebaseFirestore.instance.collection('users')
+        .doc(auth.currentUser?.uid)
+        .collection("house_images")
+        .add({
+          'urls': widget.houseProfileImages.imageURLS,
+        });
+    } catch (e) {
+      debugPrint("Error - $e");
+    }
+  }
   
   bool areDropDownControllersEmpty() {
     if (widget.furnishedController.text.isNotEmpty && widget.numRoomController.text.isNotEmpty && widget.availableRoomController.text.isNotEmpty) {
@@ -526,6 +553,18 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
     } else {
       return true;
     }
+  }
+
+  Future<dynamic> alertImageEmpty(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context){
+        return const AlertDialog(
+          title: Text("Upload Images"),
+          content: Text("Please Upload at least 1 house image"),
+        );
+      }
+    );
   }
 
 }

@@ -1,18 +1,39 @@
-  class HouseSignupProfileModel {
-    String postalCode;
-    String houseNumber; 
-    String constructionYear; 
-    String livingSpace;
-    String plotArea;
-    String propertyCondition; 
-    String houseDescription;
-    String furnished;
-    String numRoom;
-    String availableRoom;
-    String pricePerRoom;
-    String contactName;
-    String contactEmail;
-    String contactPhoneNumber;
+import 'package:flutter/material.dart';
+
+import 'user_model.dart';
+
+class HouseProfileModel {
+  final HouseOwner houseOwner;
+  final List<dynamic> imageURLS;
+
+  HouseProfileModel({
+    required this.houseOwner,
+    required this.imageURLS,
+  });
+
+  @override
+  bool operator ==(other) => other is HouseProfileModel && houseOwner.id == other.houseOwner.id;
+  
+  @override
+  int get hashCode => hashValues(houseOwner, imageURLS);  
+  
+}
+
+class HouseSignupProfileModel {
+  String postalCode;
+  String houseNumber; 
+  String constructionYear; 
+  String livingSpace;
+  String plotArea;
+  String propertyCondition; 
+  String houseDescription;
+  String furnished;
+  String numRoom;
+  String availableRoom;
+  String pricePerRoom;
+  String contactName;
+  String contactEmail;
+  String contactPhoneNumber;
 
   HouseSignupProfileModel({
     required this.postalCode, 
