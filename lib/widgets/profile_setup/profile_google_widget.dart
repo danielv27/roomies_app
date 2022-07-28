@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+import 'pick_location_widget.dart';
 
 class GoogleApiContainer extends StatefulWidget {
   const GoogleApiContainer({
@@ -10,11 +14,18 @@ class GoogleApiContainer extends StatefulWidget {
 }
 
 class _GoogleApiContainerState extends State<GoogleApiContainer> {
+  LatLng startLocation = const LatLng(52.3676, 4.9041); 
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        print("open google maps");
+      onTap: () async {
+        bool isPremissionGranted = await askPermission();
+        if (isPremissionGranted) {
+          showPlacePicker(startLocation);
+        } else {
+          await askPermission();
+        }
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 15.0),
@@ -64,4 +75,28 @@ class _GoogleApiContainerState extends State<GoogleApiContainer> {
       ),
     );
   }
+
+  void showPlacePicker(startingLocation) async {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) {
+          return PickLocation(startingLocation: startingLocation);
+        }
+      ),
+    );
+  }
+
+  Future<bool> askPermission() async{
+    PermissionStatus status = await Permission.location.request();
+    if(status.isDenied) {
+      if (await Permission.location.isPermanentlyDenied) {
+        openAppSettings();
+      }
+      return false;
+    } else {
+      return true;
+    }
+  }
+
 }

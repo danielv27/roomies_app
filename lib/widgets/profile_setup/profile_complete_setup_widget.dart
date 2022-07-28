@@ -343,7 +343,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                     Navigator.of(context).pop();
                   } 
                   else {
-                    alertImageEmpty(context);
+                    await alertImageEmpty(context);
                   }
                 }
               },
