@@ -38,8 +38,6 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    
- 
   }
 
   
@@ -64,50 +62,51 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
   }
 
 
-  
-  
   @override
   Widget build(BuildContext context) {
     
+
     final pages = [
       RoomiesPage(),
       const MatchesPage(),
       const HousesPage()
     ];
-        Provider.of<MatchesProvider>(context, listen: false).listenToMatches().listen((otherUser) {
-          print('new match');
-          final UserModel? currentUser = context.read<CurrentUserProvider>().currentUser?.userModel;
-          Navigator.push(
-            context,
-            PageTransition(
-              alignment: Alignment.center,
-              type: PageTransitionType.size, // or fade
-              child: NewMatchPage(
-                currentUser: currentUser,
-                otherUser: otherUser,
-                startChat: () {
-                  setState(() {
-                    _currentPage = 1;
-                  });
-                  Navigator.pushReplacement(
-                    context,
-                    PageTransition(
-                      child: ChatPage(otherUser: otherUser),
-                      type: PageTransitionType.rightToLeft,
-                      curve: Curves.easeIn,
-                    )
-                  );
-                },
-                keepSwipping: () {
-                  // setState(() {
-                  //   _currentPage = 0;
-                  // });
-                  Navigator.pop(context);
-                },
-              ),
-            )
-          );
-        });
+
+    Provider.of<MatchesProvider>(context, listen: false).listenToMatches().listen((otherUser) {
+      print('new match');
+      final UserModel? currentUser = context.read<CurrentUserProvider>().currentUser?.userModel;
+      FireStoreDataBase().addMatch(currentUser!.id, otherUser.id);
+      Navigator.push(
+        context,
+        PageTransition(
+          alignment: Alignment.center,
+          type: PageTransitionType.size,
+          child: NewMatchPage(
+            currentUser: currentUser,
+            otherUser: otherUser,
+            startChat: () {
+              setState(() {
+                _currentPage = 1;
+              });
+              Navigator.pushReplacement(
+                context,
+                PageTransition(
+                  child: ChatPage(otherUser: otherUser),
+                  type: PageTransitionType.rightToLeft,
+                  curve: Curves.easeIn,
+                )
+              );
+            },
+            keepSwipping: () {
+              // setState(() {
+              //   _currentPage = 0;
+              // });
+              Navigator.pop(context);
+            },
+          ),
+        )
+      );
+    });
 
     return Scaffold(
       body: PageTransitionSwitcher(

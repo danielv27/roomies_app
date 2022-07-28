@@ -118,6 +118,7 @@ class _UserTypeSelectorState extends State<UserTypeSelector> {
       );
     } else if (userProvider.profileSetUp) {
         Provider.of<CurrentUserProvider>(context, listen: false).initialize();
+        Provider.of<MatchesProvider>(context, listen: false).initialize();
         Provider.of<UserProfileProvider>(context, listen: false).loadUsers(10);
 
         return const HomePage();
