@@ -33,6 +33,7 @@ class _PickLocationState extends State<PickLocation> {
     CameraPosition initialCameraPosition = CameraPosition(target: widget.startingLocation, zoom: 14.0);
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(75),
         child: Container(
@@ -93,7 +94,7 @@ class _PickLocationState extends State<PickLocation> {
                 height: 50,
                 width: MediaQuery.of(context).size.width * 0.4,
                 decoration: BoxDecoration(
-                  gradient: blueGradient(),
+                  gradient: widget.markerList!.isNotEmpty? blueGradient() : null,
                   borderRadius: BorderRadius.circular(30.0),
                 ),
                 child: ElevatedButton(
@@ -105,8 +106,8 @@ class _PickLocationState extends State<PickLocation> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.transparent,
-                    shadowColor: Colors.transparent,
+                    primary: widget.markerList!.isNotEmpty? Colors.transparent : Colors.grey,
+                    shadowColor: widget.markerList!.isNotEmpty? Colors.transparent : Colors.grey,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30.0),
                     ),
@@ -126,7 +127,8 @@ class _PickLocationState extends State<PickLocation> {
       context: context, 
       apiKey: googleApikey, 
       mode: mode, 
-      language: 'en', 
+      language: 'en',
+      logo: const Text(""),
       onError: _onError,
       types: [""],
       strictbounds: false,
@@ -139,7 +141,6 @@ class _PickLocationState extends State<PickLocation> {
       ),
       components: [Component(Component.country, "nl")],
     );
-
     displayPrediction(p!);
   }
 
@@ -162,7 +163,6 @@ class _PickLocationState extends State<PickLocation> {
     widget.markerList!.add(Marker(
       markerId: const MarkerId("0"), 
       position: LatLng(lat, lng), 
-      infoWindow: InfoWindow(title: detail.result.name),
     ));
 
     setState(() {
