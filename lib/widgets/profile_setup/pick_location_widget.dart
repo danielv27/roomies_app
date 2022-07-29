@@ -8,14 +8,16 @@ import 'package:google_api_headers/google_api_headers.dart';
 import '../gradients/blue_gradient.dart';
 
 class PickLocation extends StatefulWidget {
-  const PickLocation({
+  PickLocation({
     Key? key,
     required this.startingLocation,
     required this.latLngController,
+    required this.markerList,
   }) : super(key: key);
 
   final LatLng startingLocation;
   final TextEditingController latLngController;
+  late final Set<Marker>? markerList;
 
   @override
   State<PickLocation> createState() => _PickLocationState();
@@ -25,7 +27,6 @@ class _PickLocationState extends State<PickLocation> {
   final String googleApikey = "AIzaSyAINUiOOUSfO2E1yyYIENrDnzHwWlwgLpI";
   final Mode mode = Mode.overlay;
   late GoogleMapController googleMapController;
-  Set<Marker> markerList = {};
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +53,7 @@ class _PickLocationState extends State<PickLocation> {
           GoogleMap(
             initialCameraPosition: initialCameraPosition, 
             mapType: MapType.normal, 
-            markers: markerList,
+            markers: widget.markerList!,
             onMapCreated: (GoogleMapController controller) {
               googleMapController = controller;
             },
@@ -97,7 +98,7 @@ class _PickLocationState extends State<PickLocation> {
                 ),
                 child: ElevatedButton(
                   onPressed: () async {
-                    if (markerList.isNotEmpty) {
+                    if (widget.markerList!.isNotEmpty) {
                       Navigator.of(context).pop();
                     } else {
                       await alertLocationNotPicked(context);
@@ -157,8 +158,8 @@ class _PickLocationState extends State<PickLocation> {
     final lat = detail.result.geometry!.location.lat;
     final lng = detail.result.geometry!.location.lng;
 
-    markerList.clear();
-    markerList.add(Marker(
+    widget.markerList!.clear();
+    widget.markerList!.add(Marker(
       markerId: const MarkerId("0"), 
       position: LatLng(lat, lng), 
       infoWindow: InfoWindow(title: detail.result.name),
@@ -172,8 +173,8 @@ class _PickLocationState extends State<PickLocation> {
   }
 
   void addMarker(LatLng argument) {
-    markerList.clear();
-    markerList.add(Marker(
+    widget.markerList!.clear();
+    widget.markerList!.add(Marker(
       markerId: const MarkerId("0"), 
       position: LatLng(argument.latitude, argument.longitude), 
     ));

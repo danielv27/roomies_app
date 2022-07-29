@@ -18,6 +18,7 @@ class GoogleApiContainer extends StatefulWidget {
 
 class _GoogleApiContainerState extends State<GoogleApiContainer> {
   LatLng startLocation = const LatLng(52.3676, 4.9041); 
+  Set<Marker> markerList = {};
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +85,7 @@ class _GoogleApiContainerState extends State<GoogleApiContainer> {
       context,
       MaterialPageRoute(
         builder: (context) {
-          return PickLocation(startingLocation: startingLocation, latLngController: widget.latLngController);
+          return PickLocation(startingLocation: startingLocation, latLngController: widget.latLngController, markerList: markerList);
         }
       ),
     );
