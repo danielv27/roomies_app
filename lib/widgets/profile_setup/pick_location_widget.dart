@@ -56,14 +56,16 @@ class _PickLocationState extends State<PickLocation> {
             onMapCreated: (GoogleMapController controller) {
               googleMapController = controller;
             },
+            onTap: addMarker,
+            onLongPress: addMarker,
           ),
           Padding(
-            padding: const EdgeInsets.only(bottom: 75.0),
+            padding: const EdgeInsets.only(bottom: 130.0),
             child: Align(
               alignment: Alignment.bottomCenter,
               child: Container(
                 height: 50,
-                width: MediaQuery.of(context).size.width * 0.6,
+                width: MediaQuery.of(context).size.width * 0.4,
                 decoration: BoxDecoration(
                   gradient: blueGradient(),
                   borderRadius: BorderRadius.circular(30.0),
@@ -77,7 +79,38 @@ class _PickLocationState extends State<PickLocation> {
                       borderRadius: BorderRadius.circular(30.0),
                     ),
                   ), 
-                  child: const Text("Search a neighborhood"),
+                  child: const Text("Pick a location"),
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 75.0),
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                height: 50,
+                width: MediaQuery.of(context).size.width * 0.4,
+                decoration: BoxDecoration(
+                  gradient: blueGradient(),
+                  borderRadius: BorderRadius.circular(30.0),
+                ),
+                child: ElevatedButton(
+                  onPressed: () async {
+                    if (markerList.isNotEmpty) {
+                      Navigator.of(context).pop();
+                    } else {
+                      await alertLocationNotPicked(context);
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
+                  ), 
+                  child: const Text("Continue"),
                 ),
               ),
             ),
@@ -136,6 +169,32 @@ class _PickLocationState extends State<PickLocation> {
     });
 
     googleMapController.animateCamera(CameraUpdate.newLatLngZoom(LatLng(lat, lng), 14.0));
+  }
+
+  void addMarker(LatLng argument) {
+    markerList.clear();
+    markerList.add(Marker(
+      markerId: const MarkerId("0"), 
+      position: LatLng(argument.latitude, argument.longitude), 
+    ));
+
+    setState(() {
+      widget.latLngController.text = "${argument.latitude}, ${argument.longitude}";
+    });
+
+    googleMapController.animateCamera(CameraUpdate.newLatLngZoom(LatLng(argument.latitude, argument.longitude), 14.0));
+  }
+
+  Future<dynamic> alertLocationNotPicked(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context){
+        return const AlertDialog(
+          title: Text("Location not picked"),
+          content: Text("Please pick a location to continue"),
+        );
+      }
+    );
   }
 
 }
