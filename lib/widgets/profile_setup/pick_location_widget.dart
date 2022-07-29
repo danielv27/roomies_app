@@ -22,7 +22,6 @@ class PickLocation extends StatefulWidget {
 }
 
 class _PickLocationState extends State<PickLocation> {
-  final homeScaffoldKey = GlobalKey<ScaffoldState>();
   final String googleApikey = "AIzaSyAINUiOOUSfO2E1yyYIENrDnzHwWlwgLpI";
   final Mode mode = Mode.overlay;
   late GoogleMapController googleMapController;
@@ -33,7 +32,6 @@ class _PickLocationState extends State<PickLocation> {
     CameraPosition initialCameraPosition = CameraPosition(target: widget.startingLocation, zoom: 14.0);
 
     return Scaffold(
-      key: homeScaffoldKey,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(75),
         child: Container(
@@ -108,14 +106,14 @@ class _PickLocationState extends State<PickLocation> {
       components: [Component(Component.country, "nl")],
     );
 
-    displayPrediction(p!, homeScaffoldKey.currentState);
+    displayPrediction(p!);
   }
 
   void _onError(PlacesAutocompleteResponse response) {
-    homeScaffoldKey.currentState!.showSnackBar(SnackBar(content: Text(response.errorMessage!)));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(response.errorMessage!)));
   }
 
-  Future<void> displayPrediction(Prediction p, ScaffoldState? currentState) async {
+  Future<void> displayPrediction(Prediction p) async {
     GoogleMapsPlaces places = GoogleMapsPlaces(
       apiKey: googleApikey,
       apiHeaders: await const GoogleApiHeaders().getHeaders()

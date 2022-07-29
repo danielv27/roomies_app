@@ -284,9 +284,11 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
                     );
                     if (isInitialHouseProfileComplete == true) {
                       await uploadImageUrls();
+                      if (!mounted) return;
                       Navigator.of(context).pop();
                     } else {
                       await uploadImageUrls();
+                      if (!mounted) return;
                       Navigator.of(context).pop();
                       Navigator.of(context).pop();
                     }

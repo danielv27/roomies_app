@@ -337,9 +337,9 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
               onPressed: () async {
                 if (formKey2.currentState!.validate()) {
                   if (widget.userProfileImages.imageURLS.isNotEmpty) {
-                    User? currentUser = auth.currentUser;
+                    await uploadImageUrls();
                     await FireStoreDataBase().createPersonalProfile(
-                      currentUser,
+                      auth.currentUser,
                       widget.userPersonalProfileModel.radius,
                       widget.latLngController,
                       widget.minBudgetController,
@@ -350,7 +350,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                       widget.roomMateController,
                       widget.birthDateController,
                     );
-                    await uploadImageUrls();
+                    if (!mounted) return;
                     Navigator.of(context).pop();
                     Navigator.of(context).pop();
                   } 
