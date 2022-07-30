@@ -79,8 +79,9 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
       Navigator.push(
         context,
         PageTransition(
-          alignment: Alignment.center,
-          type: PageTransitionType.size,
+          type: PageTransitionType.fade,
+          duration: const Duration(milliseconds: 500),
+          reverseDuration: const Duration(milliseconds: 150),
           child: NewMatchPage(
             currentUser: currentUser,
             otherUser: otherUser,
