@@ -6,7 +6,7 @@ import '../../backend/database.dart';
 
 class OnlineIndicator extends StatefulWidget {
   final String userID;
-  OnlineIndicator({
+  const OnlineIndicator({
     Key? key,
     required this.userID
     }) : super(key: key);
