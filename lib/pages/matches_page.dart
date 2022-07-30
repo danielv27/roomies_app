@@ -10,8 +10,6 @@ import '../widgets/matches_page/matches_header.dart';
 
 class MatchesPage extends StatefulWidget {
   
-
-  
   const MatchesPage({
     Key? key,
   }) : super(key: key);

@@ -33,8 +33,8 @@ class _UserTileState extends State<UserTile> {
           List<Message> messages = snapshot.data as List<Message>;
           messages.sort((a, b) => b.timeStamp.toString().compareTo(a.timeStamp.toString()));
           messages.isNotEmpty ? lastMessage = messages[0].message : null;
-          if(lastMessage.length > 50){
-            lastMessage = lastMessage.substring(0, 50) + '...';
+          if(lastMessage.length > 40){
+            lastMessage = '${lastMessage.substring(0, 40)}...';
           }
         }
         return Padding(
@@ -44,7 +44,7 @@ class _UserTileState extends State<UserTile> {
               PageTransition(type: PageTransitionType.rightToLeft,
                 child: ChatPage(
                   otherUser: widget.user,
-                  wentBack: () => setState(() {})
+                  //wentBack: () => setState(() {})
                 )
               )
             ),

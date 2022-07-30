@@ -49,42 +49,5 @@ Widget userTileList(List<UserModel> users){
   );
 }
 
-      //need to add to an instance of a statefull class
-      // bool isOnline = false;
-      // FireStoreDataBase().checkIfOnline(users[index].id).listen(
-      //   (event) {
-      //     isOnline = event;
-      //     isOnline ?
-      //     print('${users[index].firstName} ${users[index].lastName} is online'):
-      //     null;
-      //   }
-      // );
 
       
-    
-
-
-
-// Widget avatarWithOnlineIndicator(ImageProvider image,bool isOnline){
-//   return !isOnline ? Stack(
-//     children: [
-      // CircleAvatar(
-      //   radius: 30,
-      //   backgroundColor: Colors.red[700],
-      //   //backgroundImage: image,
-      // ),
-//       Container(
-//         alignment: Alignment.bottomRight,
-//         color: Colors.green,
-//         width: 5,
-//         height: 5,
-//       )
-//     ],
-//   ):
-//   CircleAvatar(
-//     radius: 30,
-//     backgroundColor: Colors.red[700],
-//     backgroundImage: image,
-//   );
-// }
-

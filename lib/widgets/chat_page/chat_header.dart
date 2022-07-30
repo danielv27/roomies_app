@@ -5,12 +5,11 @@ import 'package:roomies_app/widgets/gradients/gradient.dart';
 
 class ChatHeader extends StatelessWidget {
   final UserModel otherUser;
-  VoidCallback? wentBack;
+  
   
   ChatHeader({
     Key? key,
     required this.otherUser,
-    this.wentBack
     }) : super(key: key);
 
   @override
@@ -26,7 +25,6 @@ class ChatHeader extends StatelessWidget {
           leading: GestureDetector(
             onTap:() { 
               Navigator.pop(context);
-              wentBack!();
             },
             child:  Center(
               child: Container(

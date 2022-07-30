@@ -49,7 +49,6 @@ class _ChatPageState extends State<ChatPage> {
         children: [
           ChatHeader(
             otherUser: widget.otherUser,
-            wentBack:() => widget.wentBack != null? widget.wentBack!():null,
           ),
           Expanded(
             child: FutureBuilder(
