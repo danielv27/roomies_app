@@ -60,6 +60,7 @@ dependencies:
   google_maps_flutter: ^2.1.10
   flutter_google_places: ^0.3.0
   permission_handler: ^10.0.0
+  confetti: ^0.7.0
 
 dev_dependencies:
   flutter_test:
@@ -111,6 +112,11 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
+    - family: bergenText
+      fonts:
+        - asset: assets/fonts/BergenText-Regular.ttf
+        - asset: assets/fonts/BergenText-Bold.ttf
+          weight: 700
     - family: Shink
       fonts:
         - asset: assets/fonts/Shink-Regular.ttf

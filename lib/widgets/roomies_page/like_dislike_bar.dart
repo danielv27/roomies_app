@@ -1,5 +1,7 @@
 import 'package:bottom_sheet/bottom_sheet.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:roomies_app/backend/user_profile_provider.dart';
 import 'package:roomies_app/widgets/gradients/gradient.dart';
 import 'package:swipable_stack/swipable_stack.dart';
 
@@ -37,7 +39,7 @@ class _LikeDislikeBarState extends State<LikeDislikeBar> {
   @override
   Widget build(BuildContext context) {
     var modalSheetHeight = buttonInfoPressed ? 0.8 : 0.5;
-
+    
     return Padding(
       padding: const EdgeInsets.only(bottom: 23.0),
       child: Row(
@@ -107,7 +109,8 @@ class _LikeDislikeBarState extends State<LikeDislikeBar> {
                 child: InkWell(
                   splashColor: Colors.red[50],
                   onTap: () {
-                    showUserInfo(context, widget.userProfileModels![widget.currentUserIndex], modalSheetHeight);
+                    final currentUserIndex = context.read<UserProfileProvider>().pagesSwiped;
+                    showUserInfo(context, widget.userProfileModels![currentUserIndex], modalSheetHeight);
                   },
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,

@@ -98,7 +98,7 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
                 )
               );
             },
-            keepSwipping: () {
+            keepSwiping: () {
               // setState(() {
               //   _currentPage = 0;
               // });
@@ -172,10 +172,10 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
 }
 
 
-dynamic pageTransition(BuildContext context,Animation animation,Widget child, int _currentPage, int _previousPage){
+dynamic pageTransition(BuildContext context,Animation animation,Widget child, int currentPage, int previousPage){
   
   var begin = const Offset(1.0, 0.0);
-  if(_currentPage < _previousPage){
+  if(currentPage < previousPage){
     begin = const Offset(-1.0, 0.0);
   }
   const end = Offset.zero;
