@@ -7,7 +7,8 @@ class MatchesProvider extends ChangeNotifier {
   List<UserModel> userModels = [];
   
   Future<void> initialize() async {
-    userModels = await UsersAPI().getMatches(FirebaseAuth.instance.currentUser!.uid);
+    final currentUser = FirebaseAuth.instance.currentUser?.uid;
+    currentUser != null? userModels = await UsersAPI().getMatches(currentUser):null;
   }
 
   Future<List<UserModel>> loadMatches(List<String> newUserIDs) async {
@@ -26,8 +27,10 @@ class MatchesProvider extends ChangeNotifier {
 
   //probably not the way to do it but we do need to check wether the user matched with anyone in the background
   Stream<UserModel> listenToMatches() async* {
+    final currentUser = FirebaseAuth.instance.currentUser?.uid;
     while(true){
-      List<String> newUserIDs = await UsersAPI().getLikedEncountersIDs(FirebaseAuth.instance.currentUser!.uid);
+      List<String> newUserIDs = [];
+      currentUser != null? newUserIDs = await UsersAPI().getLikedEncountersIDs(currentUser):null;
       final List<UserModel> newUserModels = await loadMatches(newUserIDs);
       notifyListeners();
       if(newUserModels.length != userModels.length){
