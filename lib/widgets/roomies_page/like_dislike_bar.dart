@@ -1,10 +1,10 @@
 import 'package:bottom_sheet/bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:roomies_app/backend/user_profile_provider.dart';
 import 'package:roomies_app/widgets/gradients/gradient.dart';
 import 'package:swipable_stack/swipable_stack.dart';
 
+import '../../backend/providers/user_profile_provider.dart';
 import '../../models/user_profile_model.dart';
 
 class LikeDislikeBar extends StatefulWidget {

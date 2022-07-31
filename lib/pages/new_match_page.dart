@@ -42,7 +42,7 @@ class NewMatchPage extends StatelessWidget {
                 )
               ),
               PopInAnimation(
-                delay: const Duration(milliseconds: 380),
+                delay: const Duration(milliseconds: 290),
                 duration: const Duration(milliseconds: 1200),
                 explodeLeft: false,
                 child: AvatarWithGradientBorder(image: NetworkImage(otherUser!.firstImgUrl),radius: 66,backgroundColor: Colors.red,borderWidth: 5.5,),

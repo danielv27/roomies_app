@@ -42,10 +42,9 @@ class OnlineIndicatorState extends State<OnlineIndicator> {
   Widget build(BuildContext context) {
     checkIfOnline();
     return AnimatedScale(
-      
-      scale: onlineStatus ? 1 : 0,
-      duration: const Duration(milliseconds: 600),
-      curve: Curves.elasticInOut,
+      scale: onlineStatus? 1 : 0,
+      duration: onlineStatus? const Duration(milliseconds: 750) : const Duration(milliseconds: 600),
+      curve: onlineStatus? Curves.elasticOut : Curves.elasticIn,
       child: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

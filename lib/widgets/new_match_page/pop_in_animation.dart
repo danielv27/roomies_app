@@ -95,7 +95,7 @@ class _PopInAnimationState extends State<PopInAnimation> {
   Widget build(BuildContext context) {
     popIn();
     if(scale == 0){
-      Timer(Duration(milliseconds: widget.delay.inMilliseconds + 700),(){
+      Timer(Duration(milliseconds: widget.delay.inMilliseconds + 190),(){
         _controller.play();
       });
     } else {
@@ -104,11 +104,14 @@ class _PopInAnimationState extends State<PopInAnimation> {
     return Stack(
       children: [
         ConfettiWidget(
-          minimumSize: const Size(10,5),
-          maximumSize: const Size(40,20),
-          numberOfParticles: 8,
+          emissionFrequency: 0.9,
+          minimumSize: const Size(30,15),
+          maximumSize: const Size(50,25),
+          numberOfParticles: 3,
           minBlastForce: 12,
-          maxBlastForce: 18,
+          maxBlastForce: 16,
+          gravity: 0.1,
+          particleDrag: 0.15,
           confettiController: _controller,
           blastDirectionality: BlastDirectionality.explosive,
           colors: const [
@@ -121,7 +124,7 @@ class _PopInAnimationState extends State<PopInAnimation> {
         AnimatedScale(
           scale: scale,
           duration: widget.duration,
-          curve: Curves.elasticInOut,
+          curve: Curves.elasticOut,
           child: widget.child,
         ),
       ]
