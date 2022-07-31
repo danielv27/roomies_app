@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:roomies_app/models/user_model.dart';
 import 'package:roomies_app/widgets/gradients/gradient.dart';
+import 'package:roomies_app/widgets/gradients/gradient_text.dart';
 import 'package:roomies_app/widgets/matches_page/avatar_with_gradient_border.dart';
 
 class NewMatchPage extends StatelessWidget {
@@ -36,8 +37,8 @@ class NewMatchPage extends StatelessWidget {
                     scale: 1,
                     duration: const Duration(microseconds: 30000),
                     curve: Curves.elasticInOut,
-                    child: AvatarWithGradientBorder(image: NetworkImage(currentUser!.firstImgUrl),radius: 66,backgroundColor: Colors.red,))),
-                AvatarWithGradientBorder(image: NetworkImage(otherUser!.firstImgUrl),radius: 66,backgroundColor: Colors.red,)
+                    child: AvatarWithGradientBorder(image: NetworkImage(currentUser!.firstImgUrl),radius: 66,backgroundColor: Colors.red,borderWidth: 5.5,))),
+                AvatarWithGradientBorder(image: NetworkImage(otherUser!.firstImgUrl),radius: 66,backgroundColor: Colors.red,borderWidth: 5.5,)
               ]
             ),
           ),
@@ -67,9 +68,10 @@ class NewMatchPage extends StatelessWidget {
               ),
               backgroundColor: MaterialStateProperty.all<Color>(Colors.white)
             ),
-            child: const Text(
+            child: GradientText(
               'Start Chat',
-              style: TextStyle(color: Colors.red),
+              gradient: redGradient(),
+              // style: const TextStyle(), TODO
             )
           ),
           const SizedBox(height: 20),

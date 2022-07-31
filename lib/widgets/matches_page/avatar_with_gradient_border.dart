@@ -5,13 +5,15 @@ class AvatarWithGradientBorder extends StatelessWidget {
   final Color? backgroundColor;
   final double radius;
   final ImageProvider<Object>? image;
+  final double borderWidth;
   
 
   const AvatarWithGradientBorder({
     Key? key,
     this.backgroundColor,
     required this.radius,
-    this.image
+    this.image,
+    required this.borderWidth
   }) : super(key: key);
 
   @override
@@ -31,7 +33,7 @@ class AvatarWithGradientBorder extends StatelessWidget {
         ),
         shape: BoxShape.circle
       ),
-      padding: const EdgeInsets.all(3.5),
+      padding: EdgeInsets.all(borderWidth),
       child: CircleAvatar(
         backgroundColor: backgroundColor,
         radius: radius,
