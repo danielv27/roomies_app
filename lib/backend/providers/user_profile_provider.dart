@@ -6,13 +6,15 @@ class UserProfileProvider extends ChangeNotifier {
   List<UserProfileModel>? userProfileModels;
   int pagesSwiped = 0;
   
-  void trimList(){
-    //remove elements from beggining of array depending on how many page were swiped
-  }
+  //not sure if we will actually implement this...
+  // void trimList(){
+  //   //remove elements from beggining of array depending on how many page were swiped
+  // }
 
   Future<void> incrementIndex() async {
     pagesSwiped++;
     print('pagesSwiped: $pagesSwiped');
+    print('total users loaded: ${userProfileModels?.length}');
     await loadUsers(20);
   }
 
