@@ -43,14 +43,14 @@ class OnlineIndicatorState extends State<OnlineIndicator> {
     checkIfOnline();
     return AnimatedScale(
       scale: onlineStatus? 1 : 0,
-      duration: onlineStatus? const Duration(milliseconds: 750) : const Duration(milliseconds: 600),
+      duration: onlineStatus? const Duration(milliseconds: 800) : const Duration(milliseconds: 650),
       curve: onlineStatus? Curves.elasticOut : Curves.elasticIn,
       child: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [ 
             Container(
-              margin: EdgeInsets.only(right: 3,top: 1),
+              margin: const EdgeInsets.only(right: 3,top: 1),
               height: 9,
               width: 9,
               decoration: const BoxDecoration(
