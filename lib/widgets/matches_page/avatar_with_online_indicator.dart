@@ -1,10 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:roomies_app/backend/users_api.dart';
 
-import '../../backend/database.dart';
 import '../../models/user_model.dart';
-
 
 class AvatarWithOnlineIndicator extends StatefulWidget {
   final UserModel user;
@@ -25,7 +24,7 @@ class AvatarWithOnlineIndicatorState extends State<AvatarWithOnlineIndicator> {
 
   void checkIfOnline() async {
     bool newOnlineStatus = false;
-    subscription = FireStoreDataBase().checkIfOnline(widget.user.id).listen(
+    subscription = UsersAPI().checkIfOnline(widget.user.id).listen(
         (event) {
           newOnlineStatus = event;
           bool onlineStatusChanged = newOnlineStatus != onlineStatus;
@@ -41,7 +40,7 @@ class AvatarWithOnlineIndicatorState extends State<AvatarWithOnlineIndicator> {
   @override
   void initState() {
     super.initState();
-    subscription = FireStoreDataBase().checkIfOnline(widget.user.id).listen((event) { });
+    subscription = UsersAPI().checkIfOnline(widget.user.id).listen((event) { });
   }
 
   @override

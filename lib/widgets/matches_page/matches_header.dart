@@ -1,17 +1,13 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:roomies_app/backend/current_profile_provider.dart';
-import 'package:roomies_app/backend/database.dart';
+import 'package:roomies_app/backend/providers/current_profile_provider.dart';
+import 'package:roomies_app/backend/providers/matches_provider.dart';
 import 'package:roomies_app/widgets/matches_page/avatar_with_gradient_border.dart';
 import 'package:roomies_app/widgets/matches_page/matches_body.dart';
-import '../../backend/matches_provider.dart';
 import '../../models/user_model.dart';
 import '../../pages/chat_page.dart';
 import 'package:provider/provider.dart';
 
-import '../gradients/gradient.dart';
 
 class MatchesHeaderWidget extends StatefulWidget {
   final MatchesProvider provider;

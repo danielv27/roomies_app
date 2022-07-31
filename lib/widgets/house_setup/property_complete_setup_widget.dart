@@ -5,8 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:roomies_app/backend/auth_api.dart';
 
-import '../../backend/database.dart';
 import '../../models/house_profile_images.dart';
 import '../gradients/blue_gradient.dart';
 
@@ -263,8 +263,8 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
                 if (formKey3.currentState!.validate() && !areDropDownControllersEmpty()) {
                   if (widget.houseProfileImages.imageURLS.isNotEmpty) {
                     User? currentUser = auth.currentUser;
-                    bool isInitialHouseProfileComplete = await FireStoreDataBase().checkIfCurrentUserHouseComplete();
-                    await FireStoreDataBase().createHouseProfile(
+                    bool isInitialHouseProfileComplete = await AuthAPI().checkIfCurrentUserHouseComplete();
+                    await AuthAPI().createHouseProfile(
                       currentUser,
                       widget.postalCodeController,
                       widget.houseNumberController,

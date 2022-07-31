@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:roomies_app/backend/database.dart';
-import 'package:roomies_app/backend/matches_provider.dart';
-import 'package:roomies_app/widgets/gradients/gradient.dart';
-import '../models/user_model.dart';
+import 'package:roomies_app/backend/providers/matches_provider.dart';
 import '../widgets/matches_page/matches_body.dart';
 import '../widgets/matches_page/matches_header.dart';
-
 
 class MatchesPage extends StatefulWidget {
   

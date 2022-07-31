@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:roomies_app/backend/current_profile_provider.dart';
-import 'package:roomies_app/backend/matches_provider.dart';
+import 'package:roomies_app/backend/providers/current_profile_provider.dart';
+import 'package:roomies_app/backend/providers/matches_provider.dart';
 import 'package:roomies_app/models/user_model.dart';
 import 'package:roomies_app/models/user_profile_model.dart';
-
-import '../backend/database.dart';
 
 class HousesPage extends StatelessWidget {
   const HousesPage({Key? key}) : super(key: key);

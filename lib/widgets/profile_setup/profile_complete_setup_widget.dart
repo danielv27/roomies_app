@@ -6,8 +6,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:roomies_app/backend/auth_api.dart';
 
-import '../../backend/database.dart';
 import '../../models/user_profile_images.dart';
 import '../../models/user_profile_model.dart';
 import '../gradients/blue_gradient.dart';
@@ -338,7 +338,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                 if (formKey2.currentState!.validate()) {
                   if (widget.userProfileImages.imageURLS.isNotEmpty) {
                     await uploadImageUrls();
-                    await FireStoreDataBase().createPersonalProfile(
+                    await AuthAPI().createPersonalProfile(
                       auth.currentUser,
                       widget.userPersonalProfileModel.radius,
                       widget.latLngController,

@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:roomies_app/backend/database.dart';
+import 'package:roomies_app/backend/auth_api.dart';
 import 'package:roomies_app/pages/setup_page.dart';
 
 import '../widgets/gradients/gradient.dart';
@@ -482,11 +482,11 @@ class AuthPageState extends State<AuthPage> {
   }
 
   Future signUp() async {
-    FireStoreDataBase().createUser(emailController, passwordController, firstNameController, lastNameController);
+    AuthAPI().createUser(emailController, passwordController, firstNameController, lastNameController);
   }
 
   Future signIn() async {
-    FireStoreDataBase().signinUser(emailController, passwordController, context);
+    AuthAPI().signinUser(emailController, passwordController, context);
   }
 
   void _togglePasswordView() {

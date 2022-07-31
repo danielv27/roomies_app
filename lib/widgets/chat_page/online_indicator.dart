@@ -1,8 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-
-import '../../backend/database.dart';
+import 'package:roomies_app/backend/users_api.dart';
 
 class OnlineIndicator extends StatefulWidget {
   final String userID;
@@ -24,7 +23,7 @@ class OnlineIndicatorState extends State<OnlineIndicator> {
 
   void checkIfOnline() async {
     bool newOnlineStatus = false;
-    subscription = FireStoreDataBase().checkIfOnline(widget.userID).listen(
+    subscription = UsersAPI().checkIfOnline(widget.userID).listen(
         (event) {
           newOnlineStatus = event;
           bool onlineStatusChanged = newOnlineStatus != onlineStatus;

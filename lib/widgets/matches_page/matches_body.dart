@@ -1,11 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:roomies_app/backend/database.dart';
-import 'package:roomies_app/pages/chat_page.dart';
+import 'package:roomies_app/backend/providers/matches_provider.dart';
 import 'package:roomies_app/widgets/matches_page/user_tile.dart';
-import '../../backend/matches_provider.dart';
-import '../../models/message.dart';
 import '../../models/user_model.dart';
 
 class MatchesBodyWidget extends StatefulWidget {

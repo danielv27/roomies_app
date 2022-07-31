@@ -1,19 +1,12 @@
-import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:roomies_app/models/user_model.dart';
 import 'package:roomies_app/models/user_profile_images.dart';
 import 'package:roomies_app/models/user_profile_model.dart';
-import '../models/house_profile_model.dart';
-import '../models/message.dart';
-import '../models/user_model.dart';
 
+class UsersAPI {
 
-class FireStoreDataBase {
-
-  ///////////////////////////////////// Users ///////////////////////////////
-  
   Future<UserModel?> getCurrentUserModel() async {
     try {
       UserModel? currentUser;
@@ -245,25 +238,6 @@ class FireStoreDataBase {
     }
   }
 
-  Future<bool> checkIfCurrentUserProfileComplete() async{
-    bool complete = false;
-    final currentUserID = FirebaseAuth.instance.currentUser?.uid;
-    await FirebaseFirestore.instance.collection('users/$currentUserID/personal_profile')
-    .get()
-    .then((querySnapshot) => querySnapshot.docs.isNotEmpty ? complete = true: complete = false);
-    return complete;
-  }
-
-  Future<bool> checkIfCurrentUserHouseComplete() async{
-    bool complete = false;
-    final currentUserID = FirebaseAuth.instance.currentUser?.uid;
-    await FirebaseFirestore.instance.collection('users/$currentUserID/houses_profile')
-    .get()
-    .then((querySnapshot) => querySnapshot.docs.isNotEmpty ? complete = true: complete = false);
-    return complete;
-  }
-
-
   Future<UserSignupProfileModel> getUserProfile(String? currentUserID) async{
     late UserSignupProfileModel userSignupProfileModel;
     await FirebaseFirestore.instance.collection('users/$currentUserID/personal_profile')
@@ -285,64 +259,6 @@ class FireStoreDataBase {
       });
     return userSignupProfileModel;
   }
-
-  Future<HouseOwner?> getCurrentHouseModel() async {
-    try {
-      HouseOwner? currentUser;
-      await FirebaseFirestore.instance.collection("users")
-      .doc(FirebaseAuth.instance.currentUser?.uid)
-      .get()
-      .then((userDoc) async {
-        HouseSignupProfileModel? houseSignupProfileModel = await getHouseProfile(userDoc.id);
-        currentUser = HouseOwner(
-          id: userDoc.id,
-          email: userDoc['email'],
-          firstName: userDoc['firstName'],
-          lastName: userDoc['lastName'],
-          isHouseOwner: userDoc['isHouseOwner'],
-          houseSignupProfileModel: houseSignupProfileModel,
-        );
-      });
-      return currentUser;
-    } catch (e) {
-      debugPrint("Error - $e");
-      return null;
-    }
-  }
-
-  Future<HouseSignupProfileModel> getHouseProfile(String? currentUserID) async{
-    late HouseSignupProfileModel houseSignupProfileModel;
-    await FirebaseFirestore.instance.collection('users/$currentUserID/houses_profile')
-      .get()
-      .then((querySnapshot) {
-        for (var doc in querySnapshot.docs) {
-          houseSignupProfileModel = HouseSignupProfileModel(
-            postalCode: doc['postalCode'],
-            houseNumber: doc['houseNumber'],
-            constructionYear: doc['constructionYear'], 
-            livingSpace: doc['livingSpace'], 
-            plotArea: doc['plotArea'], 
-            propertyCondition: doc['propertyCondition'], 
-            houseDescription: doc['houseDescription'],
-            furnished: doc['isFurnished'],
-            numRoom: doc['numberRooms'],
-            availableRoom: doc['numberAvailableRooms'],
-            pricePerRoom: doc['pricePerRoom'],
-            contactName: doc['contactName'],
-            contactEmail: doc['contactEmail'],
-            contactPhoneNumber: doc['contactPhoneNumber'],
-          );
-        }
-      });
-    return houseSignupProfileModel;
-  }
-
-  Future<Stream<QuerySnapshot<Object?>>> getHouses() async {
-    String? currentUserID = FirebaseAuth.instance.currentUser?.uid;
-    final Stream<QuerySnapshot> housesStream = FirebaseFirestore.instance.collection('users/$currentUserID/houses_profile').snapshots();
-    return housesStream;
-  }
-
 
   Future<void> addEncounter(bool match, String currentUserID, String otherUserID) async {
     await FirebaseFirestore.instance.collection('users/$currentUserID/encounters')
@@ -376,9 +292,6 @@ class FireStoreDataBase {
     }
     return matches;
   }
-
-
-
 
   Future<List<String>?> getEncountersIDs(String? currentUserID) async {
     List<String> encounters = [];
@@ -416,170 +329,6 @@ class FireStoreDataBase {
     
     return likedEnocounters;
   }  
-
-
-  ////////////////////// sign-in sign-up //////////////////////
-  
-  Future signinUser(TextEditingController emailController, TextEditingController passwordController, context) async {
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      );
-    } on FirebaseAuthException catch (err) {
-      switch (err.code.toString()) {
-        case "invalid-email":
-          print("\nemail address is not valid\n");
-          break;
-        case "user-disabled":
-          print("if the user corresponding to the given email has been disabled");
-          break;
-        case "user-not-found":
-          print("there is no user corresponding to the given email");
-          break;
-        case "wrong-password":
-          print(" the password is invalid for the given email, or the account corresponding to the email does not have a password set");
-          break;
-        default:
-          print("\nunhandeled error\n");
-      }
-      return throw err.code.toString();
-    } catch (err) {
-      ("\nERROR: $err");
-    }
-  }
-
-  Future createUser(
-    TextEditingController emailController, 
-    TextEditingController passwordController, 
-    TextEditingController firstNameController, 
-    TextEditingController lastNameController,
-  ) async {
-    late UserCredential result;
-    try {
-      result = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      );
-    } on FirebaseAuthException catch (err) {
-      switch (err.code.toString()) {
-        case "email-already-in-use":
-          print("there already exists an account with the given email address");
-          break;
-        case "invalid-email":
-          print("the email address is not valid");
-          break;
-        case "operation-not-allowed":
-          print("email/password accounts are not enabled");
-          break;
-        case "weak-password":
-          print("the password is not strong enough");
-          break;
-        default:
-          print("\nunhandeled error\n");
-      }
-      rethrow;
-    } catch (err) {
-      print("\nERROR: $err");
-      rethrow;
-    }
-
-    User? newUser = result.user;
-    
-    await FirebaseFirestore.instance.collection('users')
-      .doc(newUser?.uid)
-      .set({
-        'firstName': firstNameController.text,
-        'lastName': lastNameController.text,
-        'email': emailController.text,
-      });
-  }
-
-  Future createPersonalProfile(
-    User ?currentUser, 
-    String radius,
-    TextEditingController latLng,
-    TextEditingController minBudget, 
-    TextEditingController maxBudget, 
-    TextEditingController about, 
-    TextEditingController work, 
-    TextEditingController study, 
-    TextEditingController roommate, 
-    TextEditingController birthdate,
-  ) async {
-    await FirebaseFirestore.instance.collection('users')
-      .doc(currentUser?.uid)
-      .collection('personal_profile')
-      .add({ 
-        'radius': radius,
-        'latLng': latLng.text,
-        'minimumBudget': minBudget.text,
-        'maximumBudget': maxBudget.text,
-        'about': about.text,
-        'work': work.text,
-        'study': study.text,
-        'roommate': roommate.text,
-        'birthdate': birthdate.text,
-      });
-    await FirebaseFirestore.instance.collection('users')
-      .doc(currentUser?.uid)
-      .update({ 
-        'isHouseOwner': false,
-      });
-  }
-
-  Future createHouseProfile(
-    User ?currentUser,
-    TextEditingController postalCodeController, 
-    TextEditingController houseNumberController, 
-    
-    TextEditingController propertyTypeController, 
-
-    TextEditingController constructionYearController, 
-    TextEditingController livingSpaceController, 
-    TextEditingController plotAreaContoller, 
-
-    TextEditingController propertyConditionController,
-
-    TextEditingController houseDescriptionController,
-    TextEditingController furnishedController,
-    TextEditingController numRoomController,
-    TextEditingController availableRoomController,
-    TextEditingController pricePerRoomController,
-    TextEditingController contactNameController,
-    TextEditingController contactEmailControler,
-    TextEditingController contactPhoneNumberControler,
-  ) async {
-    await FirebaseFirestore.instance.collection('users')
-      .doc(currentUser?.uid)
-      .collection('houses_profile')
-      .add({ 
-        'postalCode': postalCodeController.text,
-        'houseNumber': houseNumberController.text,
-        'propertyType': propertyTypeController.text,
-        'constructionYear': constructionYearController.text,
-        'livingSpace': "${livingSpaceController.text}m2",
-        'plotArea': "${plotAreaContoller.text}m2",
-        'propertyCondition': propertyConditionController.text,
-        'houseDescription': houseDescriptionController.text,
-        'isFurnished': furnishedController.text,
-        'numberRooms': numRoomController.text,
-        'numberAvailableRooms': availableRoomController.text,
-        'pricePerRoom': pricePerRoomController.text,
-        'contactName': contactNameController.text,
-        'contactEmail': contactEmailControler.text,
-        'contactPhoneNumber': contactPhoneNumberControler.text
-      });
-    await FirebaseFirestore.instance.collection('users')
-      .doc(currentUser?.uid)
-      .update({
-        'isHouseOwner': true,
-      });
-  }
-
-
-
-  //////////////////////////////////////////////Online Offline///////////////////////////////////////////////
 
   void goOffline(String? uid) async{
     await FirebaseFirestore.instance.collection('users')
@@ -626,75 +375,5 @@ class FireStoreDataBase {
       debugPrint("Error - $e");
     }
   }
-
-
-  ////////////////////////////////////////////////////Messaging///////////////////////////////////////////////////////
-
-  Future uploadMessage(String message, String? fromID, String? toID) async {
-    final fromRef = FirebaseFirestore.instance.collection('users/$fromID/messages');
-    final toRef = FirebaseFirestore.instance.collection('users/$toID/messages');
-    try{
-      await fromRef.add({
-        'message': message,
-        'otherUserID': toID,
-        'sentByCurrent': true,
-        'timeStamp': DateTime.now()
-      });
-
-      await toRef.add({
-        'message': message,
-        'otherUserID': fromID,
-        'sentByCurrent': false,
-        'timeStamp': DateTime.now()
-      });
-      print('message sent to firebase\n');
-    } catch (e) {
-      debugPrint("Error - $e");
-      return null;
-    }
-
-  }
-
-  Future<List<Message>?> getMessages(String? currentUserID, String? otherUserID) async {
-    try {
-      List<Message>? messages = [];
-      await FirebaseFirestore.instance.collection('users/$currentUserID/messages')
-      .where('otherUserID', isEqualTo: otherUserID)
-      .get()
-      .then((querySnapshot) {
-        for (var messageDoc in querySnapshot.docs) {
-          Message currentMessage = Message(
-            message: messageDoc['message'],
-            otherUserID: messageDoc['otherUserID'],
-            sentByCurrent: messageDoc['sentByCurrent'],
-            timeStamp: messageDoc['timeStamp'].toDate()
-            );
-          messages.add(currentMessage);
-        }
-      });
-      return messages;
-    } catch (e) {
-      debugPrint("Error - $e");
-      return null;  
-    }
-  }
-
-  Stream<List<Message>?> listenToMessages(String? currentUserID, String? otherUserID) async* {
-    try {
-      List<Message>? messages = await getMessages(currentUserID, otherUserID);
-      while(true){
-        await Future.delayed(const Duration(seconds: 2));
-        List<Message>? newMessages = await getMessages(currentUserID, otherUserID);
-        if(newMessages!.length > messages!.length){
-          messages = newMessages;
-          yield newMessages;
-        } 
-      }
-    } catch (e) {
-      debugPrint("Error - $e");
-    }
-  }
-
-
 
 }

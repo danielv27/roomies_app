@@ -1,8 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
-import 'package:roomies_app/backend/current_house_provider.dart';
+import 'package:roomies_app/backend/providers/current_house_provider.dart';
 import 'package:roomies_app/pages/setup_house_page.dart';
 import 'package:roomies_app/widgets/gradients/blue_gradient.dart';
 import 'package:roomies_app/widgets/owner_page/owner_house.dart';

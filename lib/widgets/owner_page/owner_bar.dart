@@ -1,10 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
-import 'package:roomies_app/backend/current_house_provider.dart';
+import 'package:roomies_app/backend/providers/current_house_provider.dart';
 
-import '../../models/house_profile_model.dart';
 import '../../models/user_model.dart';
 
 class OwnerBar extends StatefulWidget {

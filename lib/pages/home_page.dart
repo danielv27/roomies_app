@@ -5,14 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
-import 'package:roomies_app/backend/current_profile_provider.dart';
-import 'package:roomies_app/backend/database.dart';
-import 'package:roomies_app/backend/matches_provider.dart';
-import 'package:roomies_app/backend/user_profile_provider.dart';
-import 'package:roomies_app/main.dart';
+import 'package:roomies_app/backend/providers/current_profile_provider.dart';
+import 'package:roomies_app/backend/providers/matches_provider.dart';
+import 'package:roomies_app/backend/users_api.dart';
 import 'package:roomies_app/widgets/bottom_bar.dart';
 import '../models/user_model.dart';
-import '../models/user_profile_model.dart';
 import 'chat_page.dart';
 import 'new_match_page.dart';
 import 'roomies_page.dart';
@@ -53,10 +50,10 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
     super.didChangeAppLifecycleState(state);
 
     if(state == AppLifecycleState.detached || state == AppLifecycleState.paused){
-      FireStoreDataBase().goOffline(FirebaseAuth.instance.currentUser?.uid);
+      UsersAPI().goOffline(FirebaseAuth.instance.currentUser?.uid);
     }
     else{
-      FireStoreDataBase().goOnline();
+      UsersAPI().goOnline();
       
     }
   }
@@ -75,7 +72,7 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
     Provider.of<MatchesProvider>(context, listen: false).listenToMatches().listen((otherUser) {
       print('new match');
       final UserModel? currentUser = context.read<CurrentUserProvider>().currentUser?.userModel;
-      FireStoreDataBase().addMatch(currentUser!.id, otherUser.id);
+      UsersAPI().addMatch(currentUser!.id, otherUser.id);
       Navigator.push(
         context,
         PageTransition(

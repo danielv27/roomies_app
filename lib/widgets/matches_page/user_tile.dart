@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:roomies_app/backend/database.dart';
+import 'package:roomies_app/backend/messages_api.dart';
 import 'package:roomies_app/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:roomies_app/widgets/gradients/gradient.dart';
 import 'package:roomies_app/widgets/matches_page/avatar_with_online_indicator.dart';
 
 import '../../models/message.dart';
@@ -26,7 +25,7 @@ class _UserTileState extends State<UserTile> {
   Widget build(BuildContext context) {
     
     return FutureBuilder(
-      future: FireStoreDataBase().getMessages(FirebaseAuth.instance.currentUser?.uid, widget.user.id),
+      future: MessagesAPI().getMessages(FirebaseAuth.instance.currentUser?.uid, widget.user.id),
       builder: (context, snapshot) {
         String lastMessage = '';
         if(snapshot.hasData){

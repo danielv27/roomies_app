@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:roomies_app/backend/current_house_provider.dart';
+import 'package:roomies_app/backend/providers/current_house_provider.dart';
 
 import '../gradients/blue_gradient.dart';
 

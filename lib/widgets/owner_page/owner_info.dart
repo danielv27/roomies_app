@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:roomies_app/backend/current_house_provider.dart';
-import 'package:roomies_app/backend/current_profile_provider.dart';
+import 'package:roomies_app/backend/providers/current_house_provider.dart';
 
 import '../../models/house_profile_model.dart';
 

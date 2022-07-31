@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:roomies_app/backend/current_profile_provider.dart';
-import 'package:roomies_app/backend/database.dart';
-import 'package:roomies_app/backend/user_profile_provider.dart';
+import 'package:roomies_app/backend/providers/current_profile_provider.dart';
+import 'package:roomies_app/backend/providers/user_profile_provider.dart';
+import 'package:roomies_app/backend/users_api.dart';
 import 'package:swipable_stack/swipable_stack.dart';
 import '../../models/user_profile_model.dart';
 import 'like_dislike_bar.dart';
@@ -78,11 +78,11 @@ class SwipableCardsState extends State<SwipableCards> {
             print('userListLength = ${userProfileModels.length}');
             if(direction == SwipeDirection.right){
               print('liked ${userProfileModels[index].userModel.firstName} ${userProfileModels[index].userModel.lastName}');
-              await FireStoreDataBase().addEncounter(true, currentUserID!, userProfileModels[index].userModel.id);
+              await UsersAPI().addEncounter(true, currentUserID!, userProfileModels[index].userModel.id);
             }
             if(direction == SwipeDirection.left){
               print('diskliked ${userProfileModels[index].userModel.firstName} ${userProfileModels[index].userModel.lastName}');
-              await FireStoreDataBase().addEncounter(false, currentUserID!, userProfileModels[index].userModel.id);
+              await UsersAPI().addEncounter(false, currentUserID!, userProfileModels[index].userModel.id);
             }
             await Provider.of<UserProfileProvider>(context,listen: false).incrementIndex();
           },

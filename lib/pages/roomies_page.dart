@@ -3,9 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart'; //breaks ios add font manually
 import 'package:provider/provider.dart';
-import '../backend/database.dart';
+import 'package:roomies_app/backend/providers/user_profile_provider.dart';
+import 'package:roomies_app/backend/users_api.dart';
 
-import '../backend/user_profile_provider.dart';
 import '../widgets/gradients/gradient.dart';
 import '../widgets/roomies_page/swipable_cards.dart';
 
@@ -65,7 +65,7 @@ class RoomiesPage extends StatelessWidget {
                         backgroundColor: MaterialStateProperty.all(Colors.white.withOpacity(0.2))
                       ),
                       onPressed: () async {
-                        FireStoreDataBase().goOffline(FirebaseAuth.instance.currentUser?.uid);
+                        UsersAPI().goOffline(FirebaseAuth.instance.currentUser?.uid);
                         await Future.delayed(const Duration(milliseconds: 150));
                         FirebaseAuth.instance.signOut();
                       },

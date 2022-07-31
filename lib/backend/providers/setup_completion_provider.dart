@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:roomies_app/backend/database.dart';
+import 'package:roomies_app/backend/auth_api.dart';
 
 class SetUpCompletionProvider extends ChangeNotifier {
   bool profileSetUp = false;
@@ -11,12 +11,12 @@ class SetUpCompletionProvider extends ChangeNotifier {
       await Future.delayed(const Duration(milliseconds: 200));
       print('checking if setup complete');
       notifyListeners();
-      bool newProfileStatus = await FireStoreDataBase().checkIfCurrentUserProfileComplete();
+      bool newProfileStatus = await AuthAPI().checkIfCurrentUserProfileComplete();
       if(profileSetUp != newProfileStatus){
         profileSetUp = newProfileStatus;
         notifyListeners();
       }
-      bool newHouseStatus = await FireStoreDataBase().checkIfCurrentUserHouseComplete();
+      bool newHouseStatus = await AuthAPI().checkIfCurrentUserHouseComplete();
       if(houseSetUp != newHouseStatus){
         houseSetUp = newHouseStatus;
         notifyListeners();

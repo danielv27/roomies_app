@@ -1,14 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:roomies_app/backend/messages_api.dart';
 import 'package:roomies_app/models/user_model.dart';
-
-import '../../backend/database.dart';
   
   class NewMessageWidget extends StatefulWidget {
     final UserModel otherUser;
     final Function(String) onMessageSent;
     
-     NewMessageWidget({
+    NewMessageWidget({
       Key? key,
       required this.otherUser,
       required this.onMessageSent
@@ -24,7 +23,7 @@ import '../../backend/database.dart';
     String message = ''; 
 
     void sendMessage() async {
-      await FireStoreDataBase().uploadMessage(message, FirebaseAuth.instance.currentUser?.uid, widget.otherUser.id);
+      await MessagesAPI().uploadMessage(message, FirebaseAuth.instance.currentUser?.uid, widget.otherUser.id);
       setState(() {
         widget.onMessageSent(message); 
       });
