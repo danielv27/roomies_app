@@ -66,15 +66,17 @@ class UsersAPI {
     try {
       List<UserModel> userList = [];
       List<String?>? encounters = await getEncountersIDs(FirebaseAuth.instance.currentUser?.uid);
-      encounters!.add(FirebaseAuth.instance.currentUser?.uid);
       await FirebaseFirestore.instance.collection("users")
       .limit(limit)
       .where('isHouseOwner',isEqualTo: false)
-      .where(FieldPath.documentId, whereNotIn: encounters)
+      .where(FieldPath.documentId, isNotEqualTo: FirebaseAuth.instance.currentUser?.uid)
       .get()
       .then(
         (querySnapshot) async {
           for (var userDoc in querySnapshot.docs) {
+            if(encounters!.contains(userDoc.id)){
+              continue;
+            }
             UserProfileImages? usersProfileImages = await getUsersImagesById(userDoc.id);
             UserSignupProfileModel userSignupProfileModel = await getUserProfile(userDoc.id);
             UserModel newUser = UserModel(
