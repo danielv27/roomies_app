@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:roomies_app/backend/providers/current_profile_provider.dart';
 import 'package:roomies_app/backend/providers/house_profile_provider.dart';
-import 'package:roomies_app/backend/providers/user_profile_provider.dart';
 import 'package:roomies_app/backend/users_api.dart';
 import 'package:roomies_app/models/house_profile_model.dart';
 import 'package:roomies_app/widgets/houses_page/like_dislike_bar.dart';
@@ -54,7 +53,7 @@ class SwipableCardsState extends State<SwipableCards> {
   Widget build(BuildContext context) {
     
     final String? currentUserID = context.read<CurrentUserProvider>().currentUser?.userModel.id;
-    final List<HouseProfileModel>? houseProfileModels = widget.houseProvider.houseProfileModels;
+    final List<HouseProfileModel>? houseProfileModels = widget.houseProvider.houseProfileModelsTest;
     int currentHouseIndex = widget.houseProvider.pagesSwiped;
 
     if(houseProfileModels != null && (currentHouseIndex >= houseProfileModels.length || houseProfileModels.isEmpty)){

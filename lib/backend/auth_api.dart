@@ -163,6 +163,12 @@ class AuthAPI {
       .add({
         'urls': imageURLS,
       });
+    await FirebaseFirestore.instance.collection('houses')
+      .add({
+        'userID': currentUser?.uid,
+        'houseRef': storageRef.path,
+        'ImagesRef': storageRef.collection("house_images").path
+      });
   }
 
   Future<bool> checkIfCurrentUserProfileComplete() async{
