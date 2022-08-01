@@ -85,7 +85,7 @@ class SwipableCardsState extends State<SwipableCards> {
               print('diskliked ${houseProfileModels[index].houseOwner.firstName} ${houseProfileModels[index].houseOwner.lastName}');
               await UsersAPI().addEncounter(false, currentUserID!, houseProfileModels[index].houseOwner.id);
             }
-            await Provider.of<UserProfileProvider>(context,listen: false).incrementIndex();
+            await Provider.of<HouseProfileProvider>(context,listen: false).incrementIndex();
           },
           builder: (context, properties) {
             final currentHouseIndex = properties.index + initialIndex;

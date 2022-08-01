@@ -23,9 +23,9 @@ class HouseProfileProvider extends ChangeNotifier {
     {
       await HousesAPI().getNewHouseProfileModels(limit).then((newHouse) {
         if(newHouse != null){
-          for(var user in newHouse){
-            if(!houseProfileModels!.contains(user)){
-              houseProfileModels?.add(user);
+          for(var house in newHouse){
+            if(!houseProfileModels!.contains(house)){
+              houseProfileModels?.add(house);
             }
           }
         }

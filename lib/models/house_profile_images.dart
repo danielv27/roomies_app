@@ -1,5 +1,5 @@
 class HouseProfileImages {
-  final List<dynamic> imageURLS;
+  late final List<dynamic> imageURLS;
 
   HouseProfileImages({
     required this.imageURLS,

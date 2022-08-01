@@ -34,6 +34,7 @@ class HouseSignupProfileModel {
   String contactName;
   String contactEmail;
   String contactPhoneNumber;
+  List<dynamic> houseProfileImages;
 
   HouseSignupProfileModel({
     required this.postalCode, 
@@ -50,6 +51,7 @@ class HouseSignupProfileModel {
     required this.contactName, 
     required this.contactEmail, 
     required this.contactPhoneNumber, 
+    required this.houseProfileImages,
   });
 
 }

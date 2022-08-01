@@ -156,6 +156,8 @@ class _LikeDislikeBarState extends State<LikeDislikeBar> {
   }
 
   Widget headerInfo(HouseProfileModel houseProfileModel) {
+    var houseProfile = houseProfileModel.houseOwner.houseSignupProfileModel;
+
     return Padding(
       padding: const EdgeInsets.only(left: 15.0, right: 15.0, top: 15.0),
       child: Column(
@@ -175,7 +177,7 @@ class _LikeDislikeBarState extends State<LikeDislikeBar> {
             child: Padding(
               padding: const EdgeInsets.only(bottom: 15.0, top:  25.0),
               child: Text(
-                "${houseProfileModel.houseOwner.firstName}",
+                "${houseProfile.postalCode}, ",
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w600
@@ -201,7 +203,7 @@ class _LikeDislikeBarState extends State<LikeDislikeBar> {
               Padding(
                 padding: const EdgeInsets.only(left: 8.0),
                 child: Text(
-                  "\u{20AC}${houseProfileModel.houseOwner.houseSignupProfileModel.pricePerRoom}",
+                  "\u{20AC}${houseProfile.pricePerRoom}",
                   style: const TextStyle(
                     color: Colors.grey,
                     fontWeight: FontWeight.w600,
@@ -223,6 +225,8 @@ class _LikeDislikeBarState extends State<LikeDislikeBar> {
   }
 
   SliverChildListDelegate bodyInfo(HouseProfileModel houseProfileModel) {
+    var houseProfile = houseProfileModel.houseOwner.houseSignupProfileModel;
+
     return SliverChildListDelegate(
       <Widget> [
         Padding(
