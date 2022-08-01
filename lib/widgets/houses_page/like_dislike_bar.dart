@@ -180,7 +180,7 @@ class _LikeDislikeBarState extends State<LikeDislikeBar> {
             child: Padding(
               padding: const EdgeInsets.only(bottom: 15.0, top:  25.0),
               child: Text(
-                "${houseProfile.postalCode}, ",
+                "Ceintuurbaan ${houseProfile.houseNumber}",
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w600
@@ -190,19 +190,71 @@ class _LikeDislikeBarState extends State<LikeDislikeBar> {
           ),
           Row(
             children: [
-              Image.asset("assets/icons/Location.png", width: 20, height: 20,),
-              const Padding(
-                padding: EdgeInsets.only(left: 8.0),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
                 child: Text(
-                  "Amsterdam, De Pijp",
-                  style: TextStyle(
+                  "${houseProfile.postalCode}, Amsterdam",
+                  style: const TextStyle(
                     color: Color.fromRGBO(128, 128, 128, 1),
                     fontSize: 16,
                   ),
                 ),
               ),
               const Spacer(),
-              Image.asset("assets/icons/coin.png", width: 20, height: 20,),
+              Image.asset("assets/icons/apartment-size.png", width: 18, height: 18,),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Text(
+                  "${houseProfile.livingSpace}m\u00B2",
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              const Spacer(),
+              Image.asset("assets/icons/number-rooms.png", width: 18, height: 18,),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Text(
+                  "${houseProfile.numRoom} Rooms",
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10,),
+          Row(
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(left: 8.0),
+                child: Text(
+                  "Nog vrij: ",
+                  style: TextStyle(
+                    color: Color.fromRGBO(128, 128, 128, 1),
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              Image.asset("assets/icons/green-bed.png", width: 18, height: 18,),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Text(
+                  "${houseProfile.availableRoom} kamers",
+                  style: const TextStyle(
+                    color: Color.fromRGBO(34, 197, 94, 1),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              const Spacer(),
+              Image.asset("assets/icons/coin.png", width: 18, height: 18,),
               Padding(
                 padding: const EdgeInsets.only(left: 8.0),
                 child: Text(
@@ -217,7 +269,7 @@ class _LikeDislikeBarState extends State<LikeDislikeBar> {
             ],
           ),
           const Padding(
-            padding: EdgeInsets.only(top: 15.0),
+            padding: EdgeInsets.only(top: 10.0),
             child: Divider(
               color: Color.fromARGB(255, 163, 163, 163),
             ),
