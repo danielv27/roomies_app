@@ -126,7 +126,55 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    uploadPictures(context, uploadDescriptionFields[0], uploadIcon[0],),
+                    GestureDetector(
+                      onTap: () async {
+                        await selectHouseImages();
+                        await uploadFunction(selectedHouseImages);
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(bottom: 14.0),
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        decoration: BoxDecoration(
+                          color: const Color.fromRGBO(245, 247, 251, 1),
+                          borderRadius: BorderRadius.circular(14.0),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 30, top: 30, bottom: 30, right: 30),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                flex: 5,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      "Upload",
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w300
+                                      ),
+                                    ),
+                                    const SizedBox(height: 6,),
+                                    Text(
+                                      uploadDescriptionFields[0],
+                                      style: const TextStyle(
+                                        color: Color.fromRGBO(51, 51, 51, 1),
+                                        fontSize: 23,
+                                        fontWeight: FontWeight.w600
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              const Spacer(),
+                              (uploadIcon[0]),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                     uploadPictures(context, uploadDescriptionFields[1], uploadIcon[1],),
                     textDescription("Description"),
                     Container(
@@ -281,13 +329,12 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
                       widget.contactNameController,
                       widget.contactEmailControler,
                       widget.contactPhoneNumberControler,
+                      widget.houseProfileImages.imageURLS,
                     );
                     if (isInitialHouseProfileComplete == true) {
-                      await uploadImageUrls();
                       if (!mounted) return;
                       Navigator.of(context).pop();
                     } else {
-                      await uploadImageUrls();
                       if (!mounted) return;
                       Navigator.of(context).pop();
                       Navigator.of(context).pop();
@@ -409,8 +456,8 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
   GestureDetector uploadPictures(BuildContext context, String descriptionField, var uploadIcon) {
     return GestureDetector(
       onTap: () async {
-        await selectHouseImages();
-        await uploadFunction(selectedHouseImages);
+        //await selectHouseImages();
+        //await uploadFunction(selectedHouseImages);
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 14.0),
