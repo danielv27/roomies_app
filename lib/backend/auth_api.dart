@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AuthAPI {
 
@@ -114,17 +115,14 @@ class AuthAPI {
 
   Future createHouseProfile(
     User ?currentUser,
+
     TextEditingController postalCodeController, 
     TextEditingController houseNumberController, 
-    
     TextEditingController propertyTypeController, 
-
     TextEditingController constructionYearController, 
     TextEditingController livingSpaceController, 
     TextEditingController plotAreaContoller, 
-
     TextEditingController propertyConditionController,
-
     TextEditingController houseDescriptionController,
     TextEditingController furnishedController,
     TextEditingController numRoomController,
@@ -133,11 +131,12 @@ class AuthAPI {
     TextEditingController contactNameController,
     TextEditingController contactEmailControler,
     TextEditingController contactPhoneNumberControler,
+
+    List<dynamic> imageURLS,
   ) async {
-    await FirebaseFirestore.instance.collection('users')
-      .doc(currentUser?.uid)
-      .collection('houses_profile')
-      .add({ 
+    var storageRef = FirebaseFirestore.instance.collection('users').doc(currentUser?.uid).collection('houses_profile').doc();
+    await storageRef
+      .set({ 
         'postalCode': postalCodeController.text,
         'houseNumber': houseNumberController.text,
         'propertyType': propertyTypeController.text,
@@ -158,6 +157,11 @@ class AuthAPI {
       .doc(currentUser?.uid)
       .update({
         'isHouseOwner': true,
+      });
+    await storageRef
+      .collection("house_images")
+      .add({
+        'urls': imageURLS,
       });
   }
 
