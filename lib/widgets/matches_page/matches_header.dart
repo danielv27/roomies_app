@@ -139,7 +139,7 @@ Widget circularUserList(BuildContext context, List<UserModel>? users){
         return Padding(
           padding: const EdgeInsets.only(top: 11,left: 15,right: 4),
           child: GestureDetector(
-            onTap: () => {print('chat with user $index'), Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: ChatPage(otherUser: users![index],)))},
+            onTap: () => {print('chat with user $index'), Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: PrivateChatPage(otherUser: users![index],)))},
             child: Column(
               children: [
                 AvatarWithGradientBorder(
@@ -148,7 +148,7 @@ Widget circularUserList(BuildContext context, List<UserModel>? users){
                   image: NetworkImage(users![index].firstImgUrl),
                   borderWidth: 4,
                 ),
-                Text(users[index].firstName, style: TextStyle(color: Colors.white),)
+                Text(users[index].firstName, style: const TextStyle(color: Colors.white),)
               ],
             ),
           ),
@@ -189,7 +189,7 @@ class MatchesSearchDelegate extends SearchDelegate {
   @override
   Widget buildResults(BuildContext context) {
     List<UserModel> results = users.where((user){
-      final fullName = user.firstName.toLowerCase() + " " + user.lastName.toLowerCase();
+      final fullName = "${user.firstName.toLowerCase()} ${user.lastName.toLowerCase()}";
       final input = query.toLowerCase();
       return fullName.contains(input);
     }).toList();
@@ -201,7 +201,7 @@ class MatchesSearchDelegate extends SearchDelegate {
   @override
   Widget buildSuggestions(BuildContext context) {
     List<UserModel> suggestions = users.where((user){
-      final fullName = user.firstName.toLowerCase() + " " + user.lastName.toLowerCase();
+      final fullName = "${user.firstName.toLowerCase()} ${user.lastName.toLowerCase()}";
       final input = query.toLowerCase();
       return fullName.contains(input);
     }).toList();

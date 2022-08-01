@@ -89,7 +89,7 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
               Navigator.pushReplacement(
                 context,
                 PageTransition(
-                  child: ChatPage(otherUser: otherUser),
+                  child: PrivateChatPage(otherUser: otherUser),
                   type: PageTransitionType.rightToLeft,
                   curve: Curves.easeIn,
                 )

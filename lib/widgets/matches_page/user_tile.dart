@@ -41,7 +41,7 @@ class _UserTileState extends State<UserTile> {
           child: GestureDetector(
             onTap: () => Navigator.push(context,
               PageTransition(type: PageTransitionType.rightToLeft,
-                child: ChatPage(
+                child: PrivateChatPage(
                   otherUser: widget.user,
                   //wentBack: () => setState(() {})
                 )

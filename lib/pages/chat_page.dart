@@ -7,21 +7,19 @@ import 'package:roomies_app/widgets/chat_page/message_bubble_widget.dart';
 import '../models/message.dart';
 import '../widgets/chat_page/new_message_widget.dart';
 
-class ChatPage extends StatefulWidget {
+class PrivateChatPage extends StatefulWidget {
   final UserModel otherUser;
-  VoidCallback? wentBack;
   
-  ChatPage({
+  const PrivateChatPage({
       Key? key,
       required this.otherUser,
-      this.wentBack
     }) : super(key: key);  
 
   @override
-  State<ChatPage> createState() => _ChatPageState();
+  State<PrivateChatPage> createState() => _PrivateChatPageState();
 }
 
-class _ChatPageState extends State<ChatPage> {
+class _PrivateChatPageState extends State<PrivateChatPage> {
   List<Message> messages = [];
   late final GlobalKey<AnimatedListState> _key = GlobalKey();
   
