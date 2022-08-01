@@ -190,20 +190,17 @@ class _LikeDislikeBarState extends State<LikeDislikeBar> {
           ),
           Row(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: Text(
-                  "${houseProfile.postalCode}, Amsterdam",
-                  style: const TextStyle(
-                    color: Color.fromRGBO(128, 128, 128, 1),
-                    fontSize: 16,
-                  ),
+              Text(
+                "${houseProfile.postalCode}, Amsterdam",
+                style: const TextStyle(
+                  color: Color.fromRGBO(128, 128, 128, 1),
+                  fontSize: 16,
                 ),
               ),
               const Spacer(),
               Image.asset("assets/icons/apartment-size.png", width: 18, height: 18,),
               Padding(
-                padding: const EdgeInsets.only(left: 8.0),
+                padding: const EdgeInsets.only(left: 5.0),
                 child: Text(
                   "${houseProfile.livingSpace}m\u00B2",
                   style: const TextStyle(
@@ -216,7 +213,7 @@ class _LikeDislikeBarState extends State<LikeDislikeBar> {
               const Spacer(),
               Image.asset("assets/icons/number-rooms.png", width: 18, height: 18,),
               Padding(
-                padding: const EdgeInsets.only(left: 8.0),
+                padding: const EdgeInsets.only(left: 5.0),
                 child: Text(
                   "${houseProfile.numRoom} Rooms",
                   style: const TextStyle(
@@ -231,26 +228,20 @@ class _LikeDislikeBarState extends State<LikeDislikeBar> {
           const SizedBox(height: 10,),
           Row(
             children: [
-              const Padding(
-                padding: EdgeInsets.only(left: 8.0),
-                child: Text(
-                  "Nog vrij: ",
-                  style: TextStyle(
-                    color: Color.fromRGBO(128, 128, 128, 1),
-                    fontSize: 16,
-                  ),
+              const Text(
+                "Nog vrij: ",
+                style: TextStyle(
+                  color: Color.fromRGBO(128, 128, 128, 1),
+                  fontSize: 16,
                 ),
               ),
               Image.asset("assets/icons/green-bed.png", width: 18, height: 18,),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: Text(
-                  "${houseProfile.availableRoom} kamers",
-                  style: const TextStyle(
-                    color: Color.fromRGBO(34, 197, 94, 1),
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
+              Text(
+                "${houseProfile.availableRoom} kamers",
+                style: const TextStyle(
+                  color: Color.fromRGBO(34, 197, 94, 1),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
               const Spacer(),
@@ -268,12 +259,6 @@ class _LikeDislikeBarState extends State<LikeDislikeBar> {
               ),
             ],
           ),
-          const Padding(
-            padding: EdgeInsets.only(top: 10.0),
-            child: Divider(
-              color: Color.fromARGB(255, 163, 163, 163),
-            ),
-          ),
         ],
       ),
     );
@@ -281,6 +266,33 @@ class _LikeDislikeBarState extends State<LikeDislikeBar> {
 
   SliverChildListDelegate bodyInfo(HouseProfileModel houseProfileModel) {
     var houseProfile = houseProfileModel.houseOwner.houseSignupProfileModel;
+
+    const List<Choice> choices = <Choice>[  
+      Choice(
+        title: 'Pattleground', 
+        icon: ImageIcon(
+          AssetImage("assets/icons/ground.png"), 
+          size: 30, 
+          color: Color.fromRGBO(128, 128, 128, 1),
+        ),
+      ),  
+      Choice(
+        title: '360', 
+        icon: ImageIcon(
+          AssetImage("assets/icons/360.png"), 
+          size: 36, 
+          color: Color.fromRGBO(128, 128, 128, 1)
+        ),
+      ),  
+      Choice(
+        title: 'Video', 
+        icon: ImageIcon(
+          AssetImage("assets/icons/play.png"), 
+          size: 30, 
+          color: Color.fromRGBO(128, 128, 128, 1),
+        ),
+      ),  
+    ];  
 
     return SliverChildListDelegate(
       <Widget> [
@@ -291,7 +303,21 @@ class _LikeDislikeBarState extends State<LikeDislikeBar> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                SizedBox(
+                  height: 90,
+                  width: MediaQuery.of(context).size.width,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Expanded(child: SelectCard(choice: choices[0], borderRadius: const BorderRadius.only(topLeft: Radius.circular(15.0), bottomLeft: Radius.circular(15.0)))), 
+                      Expanded(child: SelectCard(choice: choices[1], borderRadius: const BorderRadius.only())), 
+                      Expanded(child: SelectCard(choice: choices[2], borderRadius: const BorderRadius.only(topRight: Radius.circular(15.0), bottomRight: Radius.circular(15.0)))), 
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 15,),
                 textTitle("Omschrijving"),
+                textDescription(houseProfile.houseDescription),
                 const SizedBox(height: 12,),
                 textTitle("Kenmerken"),
                 const SizedBox(height: 12,),
@@ -330,3 +356,56 @@ class _LikeDislikeBarState extends State<LikeDislikeBar> {
   }
 
 }
+
+class Choice {  
+  const Choice({
+    required this.title, 
+    required this.icon
+  });  
+
+  final String title;  
+  final ImageIcon icon;  
+} 
+  
+class SelectCard extends StatelessWidget {  
+  const SelectCard({
+    Key? key, 
+    required this.choice,
+    required this.borderRadius,
+  }) : super(key: key);  
+
+  final Choice choice;  
+  final BorderRadius borderRadius;
+  
+  @override  
+  Widget build(BuildContext context) {  
+    return Card(  
+      elevation: 0,
+      margin: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(
+        side: const BorderSide(
+          color: Color.fromRGBO(238, 238, 238, 1),
+        ),
+        borderRadius: borderRadius,
+      ),
+      child: Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,  
+          children: <Widget>[  
+            Expanded(child: Container(child: choice.icon)),  
+            Padding(
+              padding: const EdgeInsets.only(bottom: 5.0),
+              child: Text(
+                choice.title, 
+                style: const TextStyle(
+                  color: Color.fromRGBO(128, 128, 128, 1),
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+          ]  
+        ),  
+      ),  
+    );
+  }
+}  
