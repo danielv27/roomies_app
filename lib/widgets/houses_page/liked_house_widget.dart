@@ -2,6 +2,7 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
@@ -57,9 +58,11 @@ class _HousesLikedState extends State<HousesLiked> {
                     borderRadius: BorderRadius.circular(20),
                     child: ImageFiltered(
                       imageFilter: ImageFilter.blur(sigmaX: 0.5, sigmaY: 0.5, tileMode: TileMode.mirror),
-                      child: Image.network(
-                        houses![index].imageURLS[0], 
+                      child: CachedNetworkImage(
+                        placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+                        imageUrl: houses![index].imageURLS[0],
                         fit: BoxFit.cover,
+                        filterQuality: FilterQuality.medium,
                       ),
                     ),
                   ),

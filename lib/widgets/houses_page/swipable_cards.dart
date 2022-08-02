@@ -1,9 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:roomies_app/backend/houses_api.dart';
 import 'package:roomies_app/backend/providers/current_profile_provider.dart';
 import 'package:roomies_app/backend/providers/house_profile_provider.dart';
-import 'package:roomies_app/backend/users_api.dart';
 import 'package:roomies_app/models/house_profile_model.dart';
 import 'package:roomies_app/widgets/houses_page/like_dislike_bar.dart';
 import 'package:swipable_stack/swipable_stack.dart';
@@ -102,7 +102,22 @@ class SwipableCardsState extends State<SwipableCards> {
 
             final images = List.generate(
               currenUserImages.length,
-              (index) =>  Image.network(currenUserImages[index],fit: BoxFit.fill,)
+              (index) {
+                return Image.network(
+                  currenUserImages[index],
+                  fit: BoxFit.cover,
+                  loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Center(
+                      child: CircularProgressIndicator(
+                        value: loadingProgress.expectedTotalBytes != null
+                          ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                          : null,
+                      ),
+                    );
+                  },
+                );
+              }
             );
 
             return Stack(
