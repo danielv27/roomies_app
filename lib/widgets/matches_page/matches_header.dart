@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:roomies_app/backend/providers/current_profile_provider.dart';
@@ -92,10 +93,16 @@ Widget searchBar(BuildContext context,List<UserModel>? users){
           shape: BoxShape.circle
           ),
           padding: const EdgeInsets.all(3.5),
-          child: CircleAvatar(
-            backgroundColor: Colors.red[700],
-            radius: 28,
-            backgroundImage: NetworkImage(currentUser!.firstImgUrl),
+          child: CachedNetworkImage(
+            imageUrl: currentUser!.firstImgUrl,
+            placeholder: (context, url) => const Center(child: CircularProgressIndicator(),),
+            fit: BoxFit.cover,
+            filterQuality: FilterQuality.medium,
+            imageBuilder: (context, imageProvider) => CircleAvatar(
+              backgroundColor: Colors.red[700],
+              radius: 28,
+              backgroundImage: imageProvider,
+            ),
           ),
         ),
       ),
@@ -146,11 +153,17 @@ Widget circularUserList(BuildContext context, List<UserModel>? users){
             onTap: () => {print('chat with user $index'), Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: PrivateChatPage(otherUser: usersSortedByName[index],)))},
             child: Column(
               children: [
-                AvatarWithGradientBorder(
-                  backgroundColor: Colors.red[700],
-                  radius: 26,
-                  image: NetworkImage(usersSortedByName[index].firstImgUrl),
-                  borderWidth: 4,
+                CachedNetworkImage(
+                  imageUrl: usersSortedByName[index].firstImgUrl,
+                  placeholder: (context, url) => const Center(child: CircularProgressIndicator(),),
+                  fit: BoxFit.cover,
+                  filterQuality: FilterQuality.medium,
+                  imageBuilder: (context, imageProvider) => AvatarWithGradientBorder(
+                    backgroundColor: Colors.red[700],
+                    radius: 26,
+                    image: imageProvider,
+                    borderWidth: 4,
+                  ),
                 ),
                 Text(usersSortedByName[index].firstName, style: const TextStyle(color: Colors.white),)
               ],
