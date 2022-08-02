@@ -135,14 +135,42 @@ class HousesAPI {
     return housesStream;
   }
 
+  Future<List<HouseProfileModel>?> getNewHousesModels(int limit) async {
+    List<HouseProfileModel>? houses = await getHouses(limit);
+    List<HouseProfileModel>? houseProfileModels = [];
 
+    try{  
+      for (var house in houses!) {
+        late List<dynamic> userProfileImages = [];
+        late HouseProfileModel houseProfileModel;
+        await FirebaseFirestore.instance.collection('users/${house.houseOwner.id}/houses_profile')
+          .doc(house.houseRef)
+          .collection('house_images')
+          .get()
+          .then((querySnapshot) {
+            for (var doc in querySnapshot.docs) {
+              userProfileImages = doc.data()['urls'];
+            }
+            houseProfileModel = HouseProfileModel(
+              houseOwner: house.houseOwner,
+              imageURLS: userProfileImages,
+              houseRef: house.houseRef,
+            );
+          });
+        houseProfileModels.add(houseProfileModel);
+      }
+      return houseProfileModels;
+    } catch (e) {
+      debugPrint("Error - $e");
+      return null;
+    }
+  }
 
   Future<List<HouseProfileModel>?> getHouses(int limit) async {
     List<HouseProfileModel> housesProfileModel = [];
-    List<HouseSignupProfileModel> housesSignupProfileModel = [];
-    List<HouseOwner> houseList = [];
-
     List<String>? likedHouses = await getLikedHousesIDs(FirebaseAuth.instance.currentUser!.uid);
+    likedHouses!.add(FirebaseAuth.instance.currentUser!.uid);
+
     await FirebaseFirestore.instance.collection('houses')
       .limit(limit)
       .where(FieldPath.documentId, whereNotIn: likedHouses)
@@ -152,16 +180,14 @@ class HousesAPI {
           List<dynamic>? houseProfileImages = await getHouseImages(house.data()['ImagesRef']);
 
           HouseSignupProfileModel? houseSignupProfileModel = await getHouseSignupProfileModel(house.data()['houseRef'], houseProfileImages);
-          housesSignupProfileModel.add(houseSignupProfileModel!);
 
           HouseOwner? houseOwnerHouse = await getHouseOwnerModel(house.data()['houseRef'], houseSignupProfileModel);
-          houseList.add(houseOwnerHouse!);
 
           String houseRef = house.data()['houseRef'];
           final splittedHouseRef = houseRef.split('/');
 
           HouseProfileModel houseProfileModel = HouseProfileModel(
-            houseOwner: houseOwnerHouse,
+            houseOwner: houseOwnerHouse!,
             imageURLS: houseProfileImages,
             houseRef: splittedHouseRef.last
           );
@@ -172,26 +198,26 @@ class HousesAPI {
   }
   
   Future<List> getHouseImages(imagesRef) async {
-      final splitImagesRef = imagesRef.split('/');
-      String users = splitImagesRef[0];
-      String userID = splitImagesRef[1];
-      String housesProfile = splitImagesRef[2];
-      String docID = splitImagesRef[3];
-      String houseImages = splitImagesRef[4];
+    final splitImagesRef = imagesRef.split('/');
+    String users = splitImagesRef[0];
+    String userID = splitImagesRef[1];
+    String housesProfile = splitImagesRef[2];
+    String docID = splitImagesRef[3];
+    String houseImages = splitImagesRef[4];
 
-      List<dynamic> houseProfileImages = [];
-      await FirebaseFirestore.instance.collection(users)
-        .doc(userID)
-        .collection(housesProfile)
-        .doc(docID)
-        .collection(houseImages)
-        .get()
-        .then((houseImgaesQuery) {
-          for (var images in houseImgaesQuery.docs) {
-            houseProfileImages = images['urls'];
-          }
-        });
-      return houseProfileImages;
+    List<dynamic> houseProfileImages = [];
+    await FirebaseFirestore.instance.collection(users)
+      .doc(userID)
+      .collection(housesProfile)
+      .doc(docID)
+      .collection(houseImages)
+      .get()
+      .then((houseImgaesQuery) {
+        for (var images in houseImgaesQuery.docs) {
+          houseProfileImages = images['urls'];
+        }
+      });
+    return houseProfileImages;
   }
   
   Future<HouseSignupProfileModel?> getHouseSignupProfileModel(houseRef, houseProfileImages) async {
@@ -199,32 +225,32 @@ class HousesAPI {
     String users = splitHouseRef[0];
     String userID = splitHouseRef[1];
     String housesProfile = splitHouseRef[2];
+    String houseID = splitHouseRef[3];
 
     HouseSignupProfileModel? houseSignupProfileModel;
     await FirebaseFirestore.instance.collection(users)
       .doc(userID)
       .collection(housesProfile)
+      .doc(houseID)
       .get()
-      .then((querySnapshot) {
-        for (var house in querySnapshot.docs) {
-          houseSignupProfileModel = HouseSignupProfileModel(
-            postalCode: house['postalCode'],
-            houseNumber: house['houseNumber'],
-            constructionYear: house['constructionYear'], 
-            livingSpace: house['livingSpace'], 
-            plotArea: house['plotArea'], 
-            propertyCondition: house['propertyCondition'], 
-            houseDescription: house['houseDescription'],
-            furnished: house['isFurnished'],
-            numRoom: house['numberRooms'],
-            availableRoom: house['numberAvailableRooms'],
-            pricePerRoom: house['pricePerRoom'],
-            contactName: house['contactName'],
-            contactEmail: house['contactEmail'],
-            contactPhoneNumber: house['contactPhoneNumber'],
-            houseProfileImages: houseProfileImages,
-          );
-        }
+      .then((house) {
+        houseSignupProfileModel = HouseSignupProfileModel(
+          postalCode: house['postalCode'],
+          houseNumber: house['houseNumber'],
+          constructionYear: house['constructionYear'], 
+          livingSpace: house['livingSpace'], 
+          plotArea: house['plotArea'], 
+          propertyCondition: house['propertyCondition'], 
+          houseDescription: house['houseDescription'],
+          furnished: house['isFurnished'],
+          numRoom: house['numberRooms'],
+          availableRoom: house['numberAvailableRooms'],
+          pricePerRoom: house['pricePerRoom'],
+          contactName: house['contactName'],
+          contactEmail: house['contactEmail'],
+          contactPhoneNumber: house['contactPhoneNumber'],
+          houseProfileImages: houseProfileImages,
+        );
       });
     return houseSignupProfileModel;
   }
@@ -274,8 +300,6 @@ class HousesAPI {
 
   Future<List<HouseProfileModel>> getLikedHouses(String? currentUser) async {
     List<HouseProfileModel> housesProfileModel = [];
-    List<HouseSignupProfileModel> housesSignupProfileModel = [];
-    List<HouseOwner> houseList = [];
 
     List<String>? likedHouses = await getLikedHousesIDs(currentUser);
     await FirebaseFirestore.instance.collection('houses')
@@ -286,14 +310,16 @@ class HousesAPI {
         List<dynamic>? houseProfileImages = await getHouseImages(house.data()['ImagesRef']);
 
         HouseSignupProfileModel? houseSignupProfileModel = await getHouseSignupProfileModel(house.data()['houseRef'], houseProfileImages);
-        housesSignupProfileModel.add(houseSignupProfileModel!);
 
         HouseOwner? houseOwnerHouse = await getHouseOwnerModel(house.data()['houseRef'], houseSignupProfileModel);
-        houseList.add(houseOwnerHouse!);
+
+        String houseRef = house.data()['houseRef'];
+        final splittedHouseRef = houseRef.split('/');
 
         HouseProfileModel houseProfileModel = HouseProfileModel(
-          houseOwner: houseOwnerHouse,
+          houseOwner: houseOwnerHouse!,
           imageURLS: houseProfileImages,
+          houseRef: splittedHouseRef.last,
         );
         housesProfileModel.add(houseProfileModel);
       }

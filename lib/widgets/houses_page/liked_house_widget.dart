@@ -39,7 +39,7 @@ class _HousesLikedState extends State<HousesLiked> {
         return ListView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(), 
-          itemCount: snapshot.data!.length,
+          itemCount: houses!.length,
           itemBuilder: (BuildContext context, int index) { 
             return Stack(
               children: [
@@ -55,21 +55,46 @@ class _HousesLikedState extends State<HousesLiked> {
                     ),
                   ),
                 ),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: Container(
-                    height: 30,
-                    width: 30,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
+                Transform.translate(
+                  offset: const Offset(-13, 21),
+                  child: Align(
+                    alignment: Alignment.bottomRight,
+                    child: Container(
+                      height: 56,
+                      width: 56,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        color:Color.fromRGBO(163, 178, 186, 0.5),
+                      ),
+                      child: FloatingActionButton(
+                        heroTag: "btn1_$index",
+                        elevation: 0,
+                        onPressed: () async { 
+                
+                        },
+                        backgroundColor: Colors.transparent,
+                        child: const ImageIcon(AssetImage("assets/icons/Info.png"), color: Color.fromRGBO(116, 201, 176, 1), size: 25,),
+                      ),
                     ),
-                    child: FloatingActionButton(
-                      heroTag: "btn1_$index",
-                      elevation: 0,
-                      onPressed: () async { 
-                      },
-                      backgroundColor: Colors.transparent,
-                      child: const Icon(Icons.add),
+                  ),
+                ),
+                Positioned(
+                  left: 0,
+                  bottom: 30,
+                  child: SizedBox(
+                    height: 56,
+                    width: MediaQuery.of(context).size.width,
+                    child: Column(
+                      children: [
+                        Text(
+                          "Ceintuurbaan ${houses![index].houseOwner.houseSignupProfileModel.houseNumber}",
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),

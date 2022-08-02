@@ -5,12 +5,12 @@ import 'user_model.dart';
 class HouseProfileModel {
   final HouseOwner houseOwner;
   final List<dynamic> imageURLS;
-  final String? houseRef;
+  final String houseRef;
 
   HouseProfileModel({
     required this.houseOwner,
     required this.imageURLS,
-    this.houseRef,
+    required this.houseRef,
   });
 
   @override

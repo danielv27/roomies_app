@@ -76,15 +76,18 @@ class SwipableCardsState extends State<SwipableCards> {
           controller: swipeController,
           onSwipeCompleted: (index, direction) async {
             //this is where a swipe is handled
-            print('userListLength = ${houseProfileModels.length}');
+            print('houseListLength = ${houseProfileModels.length}');
             if(direction == SwipeDirection.right){
               print('liked ${houseProfileModels[index].houseOwner.firstName} ${houseProfileModels[index].houseOwner.lastName}');
+              print(houseProfileModels[index].houseRef);
               await HousesAPI().addHouseEncounter(true, currentUserID!, houseProfileModels[index].houseRef);
             }
             if(direction == SwipeDirection.left){
               print('diskliked ${houseProfileModels[index].houseOwner.firstName} ${houseProfileModels[index].houseOwner.lastName}');
+              print(houseProfileModels[index].houseRef);
               await HousesAPI().addHouseEncounter(false, currentUserID!, houseProfileModels[index].houseRef);
             }
+            if (!mounted) return;
             await Provider.of<HouseProfileProvider>(context,listen: false).incrementIndex();
           },
           builder: (context, properties) {
@@ -158,7 +161,7 @@ class SwipableCardsState extends State<SwipableCards> {
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 120),
                     child: Text(
-                      '${houseProfileModels[currentHouseIndex].houseOwner.firstName} $currentHouseIndex', 
+                      '${houseProfileModels[currentHouseIndex].houseOwner.houseSignupProfileModel.houseNumber} $currentHouseIndex', 
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 32

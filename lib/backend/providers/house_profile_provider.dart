@@ -19,8 +19,8 @@ class HouseProfileProvider extends ChangeNotifier {
 
   Future<void> loadHouses(int limit) async {
     houseProfileModels == null 
-    ? houseProfileModels = await HousesAPI().getHouses(limit)
-    : await HousesAPI().getHouses(limit).then((newHouse) {
+    ? houseProfileModels = await HousesAPI().getNewHousesModels(limit)
+    : await HousesAPI().getNewHousesModels(limit).then((newHouse) {
         if(newHouse != null){
           for(var house in newHouse){
             if(!houseProfileModels!.contains(house)){
