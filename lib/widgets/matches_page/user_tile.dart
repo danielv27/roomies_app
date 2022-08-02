@@ -13,7 +13,7 @@ class UserTile extends StatefulWidget {
   
   const UserTile({
       Key? key,
-      required this.user
+      required this.user,
     }) : super(key: key);
 
   @override
@@ -56,13 +56,16 @@ class _UserTileState extends State<UserTile> {
     return Padding(
       padding: const EdgeInsets.only(left:18.0,bottom: 23),
       child: GestureDetector(
-        onTap: () => Navigator.push(context,
-          PageTransition(type: PageTransitionType.rightToLeft,
-            child: PrivateChatPage(
-              otherUser: widget.user,
+        onTap: () {
+          Navigator.push(
+            context,
+            PageTransition(type: PageTransitionType.rightToLeft,
+              child: PrivateChatPage(
+                otherUser: widget.user,
+              )
             )
-          )
-        ),
+          );
+        },
         child: Row(
           children: [
             AvatarWithOnlineIndicator(user: widget.user),

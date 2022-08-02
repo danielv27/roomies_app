@@ -34,6 +34,8 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
     messages.insert(0, message);
     if(_key.currentState != null){
       _key.currentState?.insertItem(0, duration: const Duration(milliseconds: 130));
+      widget.otherUser.setLastMessage(message.message);
+      widget.otherUser.setTimeStamp(message.timeStamp);
     }
   }
 

@@ -30,7 +30,6 @@ class AvatarWithOnlineIndicatorState extends State<AvatarWithOnlineIndicator> {
         (event) {
           newOnlineStatus = event;
           bool onlineStatusChanged = newOnlineStatus != onlineStatus;
-          
           onlineStatusChanged && mounted ?
           setState(() {
             onlineStatus = newOnlineStatus;
@@ -54,8 +53,7 @@ class AvatarWithOnlineIndicatorState extends State<AvatarWithOnlineIndicator> {
 
   @override
   Widget build(BuildContext context) {
-    final String currentUserID = widget.user.id;
-    checkIfOnline(currentUserID);
+    checkIfOnline(widget.user.id);
     return Stack(
       alignment: Alignment.bottomRight,
       children: [
@@ -64,18 +62,23 @@ class AvatarWithOnlineIndicatorState extends State<AvatarWithOnlineIndicator> {
           backgroundColor: Colors.red[700],
           backgroundImage: NetworkImage(widget.user.firstImgUrl),
         ),
-        onlineStatus ? Container(
-          margin: const EdgeInsets.only(bottom: 2,right: 2),
-          height: 13,
-          width: 13,
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: Colors.white
+        AnimatedScale(
+          scale: onlineStatus? 1:0,
+          duration: onlineStatus? const Duration(milliseconds: 200):const Duration(milliseconds: 900),
+          curve: Curves.easeIn,
+          child: Container(
+            margin: const EdgeInsets.only(bottom: 2,right: 2),
+            height: 13,
+            width: 13,
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.white
+              ),
+              color: Colors.green,
+              shape: BoxShape.circle
             ),
-            color: Colors.green,
-            shape: BoxShape.circle
           ),
-        ):Container(),
+        )
       ],
     );
     
