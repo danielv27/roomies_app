@@ -4,8 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:roomies_app/backend/providers/house_profile_provider.dart';
-import 'package:roomies_app/backend/users_api.dart';
 import 'package:roomies_app/widgets/gradients/gradient.dart';
+import 'package:roomies_app/widgets/houses_page/liked_houses.dart';
 import 'package:roomies_app/widgets/houses_page/swipable_cards.dart';
 
 class HousesPage extends StatelessWidget {
@@ -62,9 +62,10 @@ class HousesPage extends StatelessWidget {
                         backgroundColor: MaterialStateProperty.all(Colors.white.withOpacity(0.2))
                       ),
                       onPressed: () async {
-                        UsersAPI().goOffline(FirebaseAuth.instance.currentUser?.uid);
-                        await Future.delayed(const Duration(milliseconds: 150));
-                        FirebaseAuth.instance.signOut();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => LikedHouses(houseProvider: houseProvider, user: user)),
+                        );
                       },
                       child: Image.asset('assets/icons/nextroom_icon_white.png', width: 28),
                     ),

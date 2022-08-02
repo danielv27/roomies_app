@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:roomies_app/backend/houses_api.dart';
 import 'package:roomies_app/backend/providers/current_profile_provider.dart';
 import 'package:roomies_app/backend/providers/house_profile_provider.dart';
 import 'package:roomies_app/backend/users_api.dart';
@@ -53,7 +54,7 @@ class SwipableCardsState extends State<SwipableCards> {
   Widget build(BuildContext context) {
     
     final String? currentUserID = context.read<CurrentUserProvider>().currentUser?.userModel.id;
-    final List<HouseProfileModel>? houseProfileModels = widget.houseProvider.houseProfileModelsTest;
+    final List<HouseProfileModel>? houseProfileModels = widget.houseProvider.houseProfileModels;
     int currentHouseIndex = widget.houseProvider.pagesSwiped;
 
     if(houseProfileModels != null && (currentHouseIndex >= houseProfileModels.length || houseProfileModels.isEmpty)){
@@ -78,11 +79,11 @@ class SwipableCardsState extends State<SwipableCards> {
             print('userListLength = ${houseProfileModels.length}');
             if(direction == SwipeDirection.right){
               print('liked ${houseProfileModels[index].houseOwner.firstName} ${houseProfileModels[index].houseOwner.lastName}');
-              await UsersAPI().addEncounter(true, currentUserID!, houseProfileModels[index].houseOwner.id);
+              await HousesAPI().addHouseEncounter(true, currentUserID!, houseProfileModels[index].houseRef);
             }
             if(direction == SwipeDirection.left){
               print('diskliked ${houseProfileModels[index].houseOwner.firstName} ${houseProfileModels[index].houseOwner.lastName}');
-              await UsersAPI().addEncounter(false, currentUserID!, houseProfileModels[index].houseOwner.id);
+              await HousesAPI().addHouseEncounter(false, currentUserID!, houseProfileModels[index].houseRef);
             }
             await Provider.of<HouseProfileProvider>(context,listen: false).incrementIndex();
           },

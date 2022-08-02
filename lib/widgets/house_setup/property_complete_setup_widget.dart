@@ -456,8 +456,7 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
   GestureDetector uploadPictures(BuildContext context, String descriptionField, var uploadIcon) {
     return GestureDetector(
       onTap: () async {
-        //await selectHouseImages();
-        //await uploadFunction(selectedHouseImages);
+
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 14.0),
@@ -555,7 +554,7 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
   }
 
   Future<String> uploadFile(XFile houseImage) async {
-    Reference reference = storageRef.ref().child("house_images").child(auth.currentUser!.uid.toString()).child(houseImage.name);
+    Reference reference = FirebaseStorage.instance.ref().child("house_images").child(auth.currentUser!.uid).child(houseImage.name);
     UploadTask uploadTask = reference.putFile(File(houseImage.path));
     await uploadTask.whenComplete(() {
       setState(() {
@@ -584,19 +583,6 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
     setState(() {
       
     });
-  }
-
-  Future<void> uploadImageUrls() async {
-    try { 
-      await FirebaseFirestore.instance.collection('users')
-        .doc(auth.currentUser?.uid)
-        .collection("house_images")
-        .add({
-          'urls': widget.houseProfileImages.imageURLS,
-        });
-    } catch (e) {
-      debugPrint("Error - $e");
-    }
   }
 
   Future<dynamic> alertImageEmpty(BuildContext context) {

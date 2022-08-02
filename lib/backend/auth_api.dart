@@ -153,18 +153,23 @@ class AuthAPI {
         'contactEmail': contactEmailControler.text,
         'contactPhoneNumber': contactPhoneNumberControler.text
       });
+
     await FirebaseFirestore.instance.collection('users')
       .doc(currentUser?.uid)
       .update({
         'isHouseOwner': true,
       });
+
     await storageRef
       .collection("house_images")
       .add({
         'urls': imageURLS,
       });
+
+    final splittedStorageRed = storageRef.path.split('/');
     await FirebaseFirestore.instance.collection('houses')
-      .add({
+      .doc(splittedStorageRed.last)
+      .set({
         'userID': currentUser?.uid,
         'houseRef': storageRef.path,
         'ImagesRef': storageRef.collection("house_images").path
