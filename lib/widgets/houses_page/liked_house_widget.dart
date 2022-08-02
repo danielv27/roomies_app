@@ -1,5 +1,6 @@
 
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -51,9 +52,12 @@ class _HousesLikedState extends State<HousesLiked> {
                   margin: const EdgeInsets.only(top: 10, bottom: 10),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(20),
-                    child: Image.network(
-                      houses![index].imageURLS[0], 
-                      fit: BoxFit.cover,
+                    child: ImageFiltered(
+                      imageFilter: ImageFilter.blur(sigmaX: 0.5, sigmaY: 0.5, tileMode: TileMode.mirror),
+                      child: Image.network(
+                        houses![index].imageURLS[0], 
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),
@@ -66,15 +70,14 @@ class _HousesLikedState extends State<HousesLiked> {
                       width: 56,
                       decoration: const BoxDecoration(
                         shape: BoxShape.circle,
-                        color:Color.fromRGBO(163, 178, 186, 0.5),
                       ),
                       child: FloatingActionButton(
                         heroTag: "btn1_$index",
                         elevation: 0,
                         onPressed: () async { 
-
+                          print("Clicked on: ${houseProfile.postalCode}");
                         },
-                        backgroundColor: Colors.transparent,
+                        backgroundColor: const Color.fromRGBO(163, 178, 186, 0.5),
                         child: const ImageIcon(AssetImage("assets/icons/Info.png"), color: Color.fromRGBO(116, 201, 176, 1), size: 25,),
                       ),
                     ),
@@ -99,8 +102,8 @@ class _HousesLikedState extends State<HousesLiked> {
                           Text(
                             "${houseProfile.postalCode}, Amsterdam",
                             style: const TextStyle(
-                              color: Color.fromRGBO(238, 238, 238, 1),
-                              fontSize: 16,
+                              color: Colors.white,
+                              fontSize: 18,
                             ),
                           ),
                         ],
@@ -109,15 +112,15 @@ class _HousesLikedState extends State<HousesLiked> {
                       Text(
                         "${houseProfile.livingSpace}m\u00B2, ${int.parse(houseProfile.numRoom) - int.parse(houseProfile.availableRoom)} People",
                         style: const TextStyle(
-                          color: Color.fromRGBO(238, 238, 238, 1),
-                          fontSize: 16,
+                          color: Colors.white,
+                          fontSize: 18,
                         ),
                       ),
                       Text(
                         "Nog vrij: ${houseProfile.availableRoom}",
                         style: const TextStyle(
-                          color: Color.fromRGBO(238, 238, 238, 1),
-                          fontSize: 16,
+                          color: Colors.white,
+                          fontSize: 18,
                         ),
                       ),
                     ],
