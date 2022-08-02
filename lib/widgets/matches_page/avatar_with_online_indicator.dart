@@ -19,12 +19,14 @@ class AvatarWithOnlineIndicator extends StatefulWidget {
 
 class AvatarWithOnlineIndicatorState extends State<AvatarWithOnlineIndicator> {
   
-   bool onlineStatus = false;
-  late StreamSubscription<bool>? subscription;
+  bool onlineStatus = false;
+  StreamSubscription<bool>? subscription;
+  
 
-  void checkIfOnline() async {
+  Future<void> checkIfOnline(String currentUserID) async {
+    
     bool newOnlineStatus = false;
-    subscription = UsersAPI().checkIfOnline(widget.user.id).listen(
+    subscription = UsersAPI().checkIfOnline(currentUserID).listen(
         (event) {
           newOnlineStatus = event;
           bool onlineStatusChanged = newOnlineStatus != onlineStatus;
@@ -40,7 +42,6 @@ class AvatarWithOnlineIndicatorState extends State<AvatarWithOnlineIndicator> {
   @override
   void initState() {
     super.initState();
-    subscription = UsersAPI().checkIfOnline(widget.user.id).listen((event) { });
   }
 
   @override
@@ -53,7 +54,8 @@ class AvatarWithOnlineIndicatorState extends State<AvatarWithOnlineIndicator> {
 
   @override
   Widget build(BuildContext context) {
-    checkIfOnline();
+    final String currentUserID = widget.user.id;
+    checkIfOnline(currentUserID);
     return Stack(
       alignment: Alignment.bottomRight,
       children: [
@@ -63,7 +65,7 @@ class AvatarWithOnlineIndicatorState extends State<AvatarWithOnlineIndicator> {
           backgroundImage: NetworkImage(widget.user.firstImgUrl),
         ),
         onlineStatus ? Container(
-          margin: EdgeInsets.only(bottom: 2,right: 2),
+          margin: const EdgeInsets.only(bottom: 2,right: 2),
           height: 13,
           width: 13,
           decoration: BoxDecoration(

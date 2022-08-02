@@ -68,9 +68,10 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
       const MatchesPage(),
       const HousesPage()
     ];
-
+    
     Provider.of<MatchesProvider>(context, listen: false).listenToMatches().listen((otherUser) {
       print('new match');
+      otherUser.setTimeStamp(DateTime.now());
       final UserModel? currentUser = context.read<CurrentUserProvider>().currentUser?.userModel;
       UsersAPI().addMatch(currentUser!.id, otherUser.id);
       Navigator.push(

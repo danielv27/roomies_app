@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:roomies_app/backend/messages_api.dart';
 import 'package:roomies_app/backend/users_api.dart';
 import 'package:roomies_app/models/user_model.dart';
 
@@ -7,8 +8,42 @@ class MatchesProvider extends ChangeNotifier {
   List<UserModel> userModels = [];
   
   Future<void> initialize() async {
-    final currentUser = FirebaseAuth.instance.currentUser?.uid;
-    currentUser != null? userModels = await UsersAPI().getMatches(currentUser):null;
+    final currentUserID = FirebaseAuth.instance.currentUser?.uid;
+    currentUserID != null? userModels = await UsersAPI().getMatches(currentUserID):null;
+    for(var userModel in userModels){
+      final DateTime? timeStamp = await MessagesAPI().getLastPrivateMessageTimeStamp(currentUserID, userModel.id);
+      final String message = await MessagesAPI().getLastPrivateMessage(currentUserID, userModel.id);
+      userModel.setTimeStamp(timeStamp);
+      userModel.setLastMessage(message);
+      sortByTimeStamp();
+      notifyListeners();
+    }
+  }
+
+  Stream<List<UserModel>> checkForChanges() async* {
+    List<UserModel> initialUserModels = List.from(userModels);
+    while(true){
+      await Future.delayed(Duration(seconds: 3));
+      if(userModels.isNotEmpty && userModels[0] != initialUserModels[0]){
+        yield userModels;
+        initialUserModels = userModels;
+      }
+    }
+  }
+
+  void sortByTimeStamp(){
+    userModels.sort((a, b) {
+    if(a.timeStamp == null && b.timeStamp == null){
+      return 0;
+    }
+    if(a.timeStamp == null){
+      return 1;
+    }
+    if(b.timeStamp == null){
+      return -1;
+    }
+    return b.timeStamp.toString().compareTo(a.timeStamp.toString());
+    });
   }
 
   Future<List<UserModel>> loadMatches(List<String> newUserIDs) async {

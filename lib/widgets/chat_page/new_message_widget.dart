@@ -7,7 +7,7 @@ import 'package:roomies_app/models/user_model.dart';
     final UserModel otherUser;
     final Function(String) onMessageSent;
     
-    NewMessageWidget({
+    const NewMessageWidget({
       Key? key,
       required this.otherUser,
       required this.onMessageSent
@@ -23,7 +23,7 @@ import 'package:roomies_app/models/user_model.dart';
     String message = ''; 
 
     void sendMessage() async {
-      await MessagesAPI().uploadMessage(message, FirebaseAuth.instance.currentUser?.uid, widget.otherUser.id);
+      await MessagesAPI().sendPrivateMessage(message, FirebaseAuth.instance.currentUser?.uid, widget.otherUser.id);
       setState(() {
         widget.onMessageSent(message); 
       });
@@ -50,7 +50,7 @@ import 'package:roomies_app/models/user_model.dart';
           ],
         ),
         margin: const EdgeInsets.only(left: 15,right:15,bottom: 22),
-        padding: EdgeInsets.only(top:9.0,bottom: 9,right: 9,left: 20),
+        padding: const EdgeInsets.only(top:9.0,bottom: 9,right: 9,left: 20),
         child: Row(
           children: [
             Expanded(

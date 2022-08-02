@@ -10,11 +10,11 @@ import 'package:provider/provider.dart';
 
 
 class MatchesHeaderWidget extends StatefulWidget {
-  final MatchesProvider provider;
+  //final MatchesProvider provider;
 
   const MatchesHeaderWidget({
       Key? key,
-      required this.provider
+      //required this.provider
     }) : super(key: key);
 
   @override
@@ -22,11 +22,12 @@ class MatchesHeaderWidget extends StatefulWidget {
 }
 
 class _MatchesHeaderWidgetState extends State<MatchesHeaderWidget> {
-  late final List<UserModel>? users = widget.provider.userModels;
+  
   @override
   Widget build(BuildContext context){
-    return users == null ? const CircularProgressIndicator() :
-    Padding(
+    final MatchesProvider matchesProvider = context.watch<MatchesProvider>();
+    final List<UserModel> users = matchesProvider.userModels;
+    return Padding(
       padding: const EdgeInsets.only(top:32),
       child: Column(
         children: [
@@ -130,25 +131,28 @@ Widget searchBar(BuildContext context,List<UserModel>? users){
 }
 
 Widget circularUserList(BuildContext context, List<UserModel>? users){
+  List<UserModel> usersSortedByName = [];
+  users != null? usersSortedByName = List.from(users):null;
+  usersSortedByName.sort((a, b) => a.firstName.toLowerCase().compareTo(b.firstName.toLowerCase()));
   return SizedBox(
     height: MediaQuery.of(context).size.height *0.13,
     child: ListView.builder(
       scrollDirection: Axis.horizontal,
-      itemCount: users?.length,
+      itemCount: usersSortedByName.length,
       itemBuilder: (context, index){
         return Padding(
           padding: const EdgeInsets.only(top: 11,left: 15,right: 4),
           child: GestureDetector(
-            onTap: () => {print('chat with user $index'), Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: PrivateChatPage(otherUser: users![index],)))},
+            onTap: () => {print('chat with user $index'), Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: PrivateChatPage(otherUser: usersSortedByName[index],)))},
             child: Column(
               children: [
                 AvatarWithGradientBorder(
                   backgroundColor: Colors.red[700],
                   radius: 26,
-                  image: NetworkImage(users![index].firstImgUrl),
+                  image: NetworkImage(usersSortedByName[index].firstImgUrl),
                   borderWidth: 4,
                 ),
-                Text(users[index].firstName, style: const TextStyle(color: Colors.white),)
+                Text(usersSortedByName[index].firstName, style: const TextStyle(color: Colors.white),)
               ],
             ),
           ),
@@ -195,7 +199,7 @@ class MatchesSearchDelegate extends SearchDelegate {
     }).toList();
     return GestureDetector( //this is for now might remove
       onTap:() => close(context, null),
-      child: userTileList(results));
+      child: chatTileList(results, []));
   }
 
   @override
@@ -205,6 +209,6 @@ class MatchesSearchDelegate extends SearchDelegate {
       final input = query.toLowerCase();
       return fullName.contains(input);
     }).toList();
-    return userTileList(suggestions);
+    return chatTileList(suggestions ,[]);
   }
 }

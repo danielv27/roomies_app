@@ -4,23 +4,33 @@ import 'package:roomies_app/models/message.dart';
 
 class MessagesAPI {
 
-  Future uploadMessage(String message, String? fromID, String? toID) async {
-    final fromRef = FirebaseFirestore.instance.collection('users/$fromID/messages');
-    final toRef = FirebaseFirestore.instance.collection('users/$toID/messages');
+  Future sendPrivateMessage(String message, String? fromID, String? toID) async {
+    final fromRef = FirebaseFirestore.instance.collection('users/$fromID/private_chats').doc(toID);
+    final toRef = FirebaseFirestore.instance.collection('users/$toID/private_chats').doc(fromID);
     try{
-      await fromRef.add({
+      final currentTime = DateTime.now();
+      await fromRef.collection('messages').add({
         'message': message,
         'otherUserID': toID,
         'sentByCurrent': true,
-        'timeStamp': DateTime.now()
+        'timeStamp': currentTime
+      });
+      await fromRef.set({
+        'last_message': message,
+        'last_message_timestamp': currentTime
       });
 
-      await toRef.add({
+      await toRef.collection('messages').add({
         'message': message,
         'otherUserID': fromID,
         'sentByCurrent': false,
-        'timeStamp': DateTime.now()
+        'timeStamp': currentTime
       });
+      await toRef.set({
+        'last_message': message,
+        'last_message_timestamp': currentTime
+      });
+
       print('message sent to firebase\n');
     } catch (e) {
       debugPrint("Error - $e");
@@ -29,11 +39,10 @@ class MessagesAPI {
 
   }
 
-  Future<List<Message>?> getMessages(String? currentUserID, String? otherUserID) async {
+  Future<List<Message>?> getPrivateMessages(String? currentUserID, String? otherUserID) async {
     try {
       List<Message>? messages = [];
-      await FirebaseFirestore.instance.collection('users/$currentUserID/messages')
-      .where('otherUserID', isEqualTo: otherUserID)
+      await FirebaseFirestore.instance.collection('users/$currentUserID/private_chats/$otherUserID/messages')
       .get()
       .then((querySnapshot) {
         for (var messageDoc in querySnapshot.docs) {
@@ -53,12 +62,12 @@ class MessagesAPI {
     }
   }
 
-  Stream<List<Message>?> listenToMessages(String? currentUserID, String? otherUserID) async* {
+  Stream<List<Message>?> listenToPrivateChat(String? currentUserID, String? otherUserID) async* {
     try {
-      List<Message>? messages = await getMessages(currentUserID, otherUserID);
+      List<Message>? messages = await getPrivateMessages(currentUserID, otherUserID);
       while(true){
         await Future.delayed(const Duration(seconds: 2));
-        List<Message>? newMessages = await getMessages(currentUserID, otherUserID);
+        List<Message>? newMessages = await getPrivateMessages(currentUserID, otherUserID);
         if(newMessages!.length > messages!.length){
           messages = newMessages;
           yield newMessages;
@@ -69,4 +78,28 @@ class MessagesAPI {
     }
   }
 
+  Future<String> getLastPrivateMessage(String? currentUserID, String? otherUserID) async {
+    String lastMessage = '';
+    await FirebaseFirestore.instance.doc('users/$currentUserID/private_chats/$otherUserID')
+    .get()
+    .then((documentSnapShot) {
+      if(documentSnapShot.exists && documentSnapShot.data()!.containsKey('last_message')){
+        lastMessage = documentSnapShot['last_message'];
+      }
+    });
+    return lastMessage;
+    
+  }
+
+  Future<DateTime?> getLastPrivateMessageTimeStamp(String? currentUserID, String? otherUserID) async {
+    DateTime? timeStamp;
+    await FirebaseFirestore.instance.doc('users/$currentUserID/private_chats/$otherUserID')
+    .get()
+    .then((documentSnapShot) {
+      if(documentSnapShot.exists && documentSnapShot.data()!.containsKey('last_message_timestamp')){
+        timeStamp = documentSnapShot['last_message_timestamp'].toDate();
+      }
+    });
+    return timeStamp;
+  }
 }

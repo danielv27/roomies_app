@@ -116,6 +116,7 @@ class _UserTypeSelectorState extends State<UserTypeSelector> {
     } else if (userProvider.profileSetUp) {
         Provider.of<CurrentUserProvider>(context, listen: false).initialize();
         Provider.of<MatchesProvider>(context, listen: false).initialize(); //uncomment to make old matches not pop on screen
+        Provider.of<MatchesProvider>(context, listen: false).sortByTimeStamp();
         Provider.of<UserProfileProvider>(context, listen: false).loadUsers(10);
         return const HomePage();
     } else {

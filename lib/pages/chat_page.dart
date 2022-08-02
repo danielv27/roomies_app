@@ -48,13 +48,13 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
           ),
           Expanded(
             child: FutureBuilder(
-              future: MessagesAPI().getMessages(FirebaseAuth.instance.currentUser?.uid, widget.otherUser.id),
+              future: MessagesAPI().getPrivateMessages(FirebaseAuth.instance.currentUser?.uid, widget.otherUser.id),
               builder:(context, snapshot) {
                 if(snapshot.connectionState == ConnectionState.done){
                   if(snapshot.hasData){
                     messages = snapshot.data as List<Message>;
                     messages.sort((a, b) => b.timeStamp.toString().compareTo(a.timeStamp.toString()));
-                    MessagesAPI().listenToMessages(FirebaseAuth.instance.currentUser?.uid, widget.otherUser.id)
+                    MessagesAPI().listenToPrivateChat(FirebaseAuth.instance.currentUser?.uid, widget.otherUser.id)
                     .listen(
                       (event) {
                         List<Message>? newMessages = event;
