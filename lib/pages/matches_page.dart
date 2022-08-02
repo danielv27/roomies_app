@@ -24,8 +24,6 @@ class _MatchesPageState extends State<MatchesPage> {
 
   @override
   Widget build(BuildContext context) {
-    // final MatchesProvider matchesProvider = context.watch<MatchesProvider>();
-    // matchesProvider.sortByTimeStamp();
     return Scaffold(
       body: Container(
           decoration: const BoxDecoration(
