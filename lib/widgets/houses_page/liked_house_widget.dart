@@ -4,9 +4,11 @@ import 'dart:ui';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:roomies_app/backend/houses_api.dart';
 import 'package:roomies_app/backend/providers/house_profile_provider.dart';
 import 'package:roomies_app/models/house_profile_model.dart';
+import 'package:roomies_app/widgets/houses_page/users_houses_matched_page.dart';
 
 class HousesLiked extends StatefulWidget {
   const HousesLiked({
@@ -41,7 +43,8 @@ class _HousesLikedState extends State<HousesLiked> {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(), 
           itemCount: houses!.length,
-          itemBuilder: (BuildContext context, int index) { 
+          itemBuilder: (BuildContext context, int index) {
+            var house = houses![index];
             var houseProfile = houses![index].houseOwner.houseSignupProfileModel;
             return Stack(
               alignment: Alignment.topLeft,
@@ -75,7 +78,15 @@ class _HousesLikedState extends State<HousesLiked> {
                         heroTag: "btn1_$index",
                         elevation: 0,
                         onPressed: () async { 
-                          print("Clicked on: ${houseProfile.postalCode}");
+                          Navigator.push(
+                            context,
+                            PageTransition(
+                              type: PageTransitionType.fade,
+                              child: UsersHousesMatched(house: house),
+                              inheritTheme: true,
+                              ctx: context,
+                            ),
+                          );
                         },
                         backgroundColor: const Color.fromRGBO(163, 178, 186, 0.5),
                         child: const ImageIcon(AssetImage("assets/icons/Info.png"), color: Color.fromRGBO(116, 201, 176, 1), size: 25,),

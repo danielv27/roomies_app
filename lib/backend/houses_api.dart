@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:roomies_app/backend/users_api.dart';
 import 'package:roomies_app/models/house_profile_model.dart';
 import 'package:roomies_app/models/user_model.dart';
 
@@ -284,6 +285,41 @@ class HousesAPI {
       'liked': liked,
       'timeStamp': DateTime.now(),
     });
+  }
+
+  Future<void> addUserEncounter(String houseOwnerID, String? houseID, String currentUserID) async {
+    await FirebaseFirestore.instance.collection('users')
+    .doc(houseOwnerID)
+    .collection('houses_profile')
+    .doc(houseID)
+    .collection('liked')
+    .doc(currentUserID)
+    .set({ 
+      'user': currentUserID,
+      'timeStamp': DateTime.now(),
+    });
+  }
+
+  Future<List<UserModel>> getUserEncounters(String houseOwnerID, String? houseID) async {
+    List<String> matchesIDs = [];
+    List<UserModel> housemMatches = [];
+
+    await FirebaseFirestore.instance.collection('users')
+    .doc(houseOwnerID)
+    .collection('houses_profile')
+    .doc(houseID)
+    .collection('liked')
+    .get()
+    .then((usersID) {
+      for (var user in usersID.docs) {
+        matchesIDs.add(user['user']);
+      }
+    });
+    for(var id in matchesIDs){
+      UserModel? userModel = await UsersAPI().getUserModelByID(id);
+      userModel != null ? housemMatches.add(userModel) : null;
+    }
+    return housemMatches;
   }
 
   Future<List<String>?> getLikedHousesIDs(String? currentUserID) async {
