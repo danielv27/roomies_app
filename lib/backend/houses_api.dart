@@ -142,8 +142,10 @@ class HousesAPI {
     List<HouseSignupProfileModel> housesSignupProfileModel = [];
     List<HouseOwner> houseList = [];
 
+    List<String>? likedHouses = await getLikedHousesIDs(FirebaseAuth.instance.currentUser!.uid);
     await FirebaseFirestore.instance.collection('houses')
       .limit(limit)
+      .where(FieldPath.documentId, whereNotIn: likedHouses)
       .get()
       .then((housesQuery) async {
         for (var house in housesQuery.docs) { 
