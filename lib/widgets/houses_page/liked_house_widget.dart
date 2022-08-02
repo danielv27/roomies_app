@@ -41,7 +41,9 @@ class _HousesLikedState extends State<HousesLiked> {
           physics: const NeverScrollableScrollPhysics(), 
           itemCount: houses!.length,
           itemBuilder: (BuildContext context, int index) { 
+            var houseProfile = houses![index].houseOwner.houseSignupProfileModel;
             return Stack(
+              alignment: Alignment.topLeft,
               children: [
                 Container(
                   height: MediaQuery.of(context).size.height / 4,
@@ -70,7 +72,7 @@ class _HousesLikedState extends State<HousesLiked> {
                         heroTag: "btn1_$index",
                         elevation: 0,
                         onPressed: () async { 
-                
+
                         },
                         backgroundColor: Colors.transparent,
                         child: const ImageIcon(AssetImage("assets/icons/Info.png"), color: Color.fromRGBO(116, 201, 176, 1), size: 25,),
@@ -78,24 +80,47 @@ class _HousesLikedState extends State<HousesLiked> {
                     ),
                   ),
                 ),
-                Positioned(
-                  left: 0,
-                  bottom: 30,
-                  child: SizedBox(
-                    height: 56,
-                    width: MediaQuery.of(context).size.width,
-                    child: Column(
-                      children: [
-                        Text(
-                          "Ceintuurbaan ${houses![index].houseOwner.houseSignupProfileModel.houseNumber}",
-                          style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 15.0, top: 75),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start, 
+                    children: [
+                      Text(
+                        "Ceintuurbaan ${houseProfile.houseNumber}",
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
                         ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(height: 5,),
+                      Row(
+                        children: [
+                          Text(
+                            "${houseProfile.postalCode}, Amsterdam",
+                            style: const TextStyle(
+                              color: Color.fromRGBO(238, 238, 238, 1),
+                              fontSize: 16,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10,),
+                      Text(
+                        "${houseProfile.livingSpace}m\u00B2, ${int.parse(houseProfile.numRoom) - int.parse(houseProfile.availableRoom)} People",
+                        style: const TextStyle(
+                          color: Color.fromRGBO(238, 238, 238, 1),
+                          fontSize: 16,
+                        ),
+                      ),
+                      Text(
+                        "Nog vrij: ${houseProfile.availableRoom}",
+                        style: const TextStyle(
+                          color: Color.fromRGBO(238, 238, 238, 1),
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
