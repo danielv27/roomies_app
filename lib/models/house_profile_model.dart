@@ -5,10 +5,12 @@ import 'user_model.dart';
 class HouseProfileModel {
   final HouseOwner houseOwner;
   final List<dynamic> imageURLS;
+  final String houseRef;
 
   HouseProfileModel({
     required this.houseOwner,
     required this.imageURLS,
+    required this.houseRef,
   });
 
   @override
@@ -34,6 +36,7 @@ class HouseSignupProfileModel {
   String contactName;
   String contactEmail;
   String contactPhoneNumber;
+  List<dynamic> houseProfileImages;
 
   HouseSignupProfileModel({
     required this.postalCode, 
@@ -50,6 +53,7 @@ class HouseSignupProfileModel {
     required this.contactName, 
     required this.contactEmail, 
     required this.contactPhoneNumber, 
+    required this.houseProfileImages,
   });
 
 }

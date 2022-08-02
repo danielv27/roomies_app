@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AuthAPI {
 
@@ -114,17 +115,14 @@ class AuthAPI {
 
   Future createHouseProfile(
     User ?currentUser,
+
     TextEditingController postalCodeController, 
     TextEditingController houseNumberController, 
-    
     TextEditingController propertyTypeController, 
-
     TextEditingController constructionYearController, 
     TextEditingController livingSpaceController, 
     TextEditingController plotAreaContoller, 
-
     TextEditingController propertyConditionController,
-
     TextEditingController houseDescriptionController,
     TextEditingController furnishedController,
     TextEditingController numRoomController,
@@ -133,17 +131,18 @@ class AuthAPI {
     TextEditingController contactNameController,
     TextEditingController contactEmailControler,
     TextEditingController contactPhoneNumberControler,
+
+    List<dynamic> imageURLS,
   ) async {
-    await FirebaseFirestore.instance.collection('users')
-      .doc(currentUser?.uid)
-      .collection('houses_profile')
-      .add({ 
+    var storageRef = FirebaseFirestore.instance.collection('users').doc(currentUser?.uid).collection('houses_profile').doc();
+    await storageRef
+      .set({ 
         'postalCode': postalCodeController.text,
         'houseNumber': houseNumberController.text,
         'propertyType': propertyTypeController.text,
         'constructionYear': constructionYearController.text,
-        'livingSpace': "${livingSpaceController.text}m2",
-        'plotArea': "${plotAreaContoller.text}m2",
+        'livingSpace': livingSpaceController.text,
+        'plotArea': plotAreaContoller.text,
         'propertyCondition': propertyConditionController.text,
         'houseDescription': houseDescriptionController.text,
         'isFurnished': furnishedController.text,
@@ -154,10 +153,26 @@ class AuthAPI {
         'contactEmail': contactEmailControler.text,
         'contactPhoneNumber': contactPhoneNumberControler.text
       });
+
     await FirebaseFirestore.instance.collection('users')
       .doc(currentUser?.uid)
       .update({
         'isHouseOwner': true,
+      });
+
+    await storageRef
+      .collection("house_images")
+      .add({
+        'urls': imageURLS,
+      });
+
+    final splittedStorageRed = storageRef.path.split('/');
+    await FirebaseFirestore.instance.collection('houses')
+      .doc(splittedStorageRed.last)
+      .set({
+        'userID': currentUser?.uid,
+        'houseRef': storageRef.path,
+        'ImagesRef': storageRef.collection("house_images").path
       });
   }
 

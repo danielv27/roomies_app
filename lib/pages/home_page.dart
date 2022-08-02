@@ -66,7 +66,7 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
     final pages = [
       RoomiesPage(),
       const MatchesPage(),
-      const HousesPage()
+      HousesPage()
     ];
 
     Provider.of<MatchesProvider>(context, listen: false).listenToMatches().listen((otherUser) {

@@ -12,8 +12,8 @@ class CurrentHouseProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getAllHouses() async {
-    houses = await HousesAPI().getHouses();
+  Future<void> getHouseOwnerHouses() async {
+    houses = await HousesAPI().getUserHouses();
     notifyListeners();
   }
 }

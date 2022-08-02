@@ -20,7 +20,7 @@ class _OwnerPageState extends State<OwnerPage> {
   @override
   void initState() {
     Provider.of<CurrentHouseProvider>(context, listen: false).initialize();
-    Provider.of<CurrentHouseProvider>(context, listen: false).getAllHouses();
+    Provider.of<CurrentHouseProvider>(context, listen: false).getHouseOwnerHouses();
     super.initState();
   }
 

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:roomies_app/backend/providers/current_house_provider.dart';
 import 'package:roomies_app/backend/providers/current_profile_provider.dart';
+import 'package:roomies_app/backend/providers/house_profile_provider.dart';
 import 'package:roomies_app/backend/providers/matches_provider.dart';
 import 'package:roomies_app/backend/providers/setup_completion_provider.dart';
 import 'package:roomies_app/backend/providers/user_profile_provider.dart';
@@ -73,6 +74,9 @@ class MainPage extends StatelessWidget {
               ChangeNotifierProvider(
                 create: (context) => MatchesProvider() 
               ),
+              ChangeNotifierProvider(
+                create: (context) => HouseProfileProvider() 
+              ),
             ],
             child: const UserTypeSelector(),
           );
@@ -117,6 +121,7 @@ class _UserTypeSelectorState extends State<UserTypeSelector> {
         Provider.of<CurrentUserProvider>(context, listen: false).initialize();
         Provider.of<MatchesProvider>(context, listen: false).initialize(); //uncomment to make old matches not pop on screen
         Provider.of<UserProfileProvider>(context, listen: false).loadUsers(10);
+        Provider.of<HouseProfileProvider>(context, listen: false).loadHouses(10);
 
         return const HomePage();
   

@@ -99,7 +99,6 @@ class UsersAPI {
     }
   }
 
-
   Future<List<UserProfileModel>?> getNewUserProfileModels(int limit) async {
     List<UserModel>? users = await getNewUsers(limit, null);
     List<UserProfileModel>? usersProfileModel = [];
@@ -129,7 +128,7 @@ class UsersAPI {
     }
   }
 
-    Future<UserProfileModel?> getCurrentUserProfile() async {
+  Future<UserProfileModel?> getCurrentUserProfile() async {
     try {
       UserModel? userModel = await getCurrentUserModel();  
       UserProfileModel? userProfileModel;
@@ -152,7 +151,6 @@ class UsersAPI {
       return null;
     }
   }
-
 
   Future<UserProfileModel?> getUserProfileByID(String uid) async {
     try {
@@ -177,8 +175,6 @@ class UsersAPI {
       return null;
     }
   }
-
-  
 
   Future<UserProfileImages?> getUsersImagesById(String? currentUserID) async{
     try{ 
@@ -218,25 +214,6 @@ class UsersAPI {
     } catch (e) {
       debugPrint("Error - $e");
       return "http://www.classicaloasis.com/wp-content/uploads/2014/03/profile-square.jpg";
-    }
-  }
-
-
-
-  Future<String?> getCurrentUserType() async {
-    try {
-      bool? isHouseOwner;
-      await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser?.uid)
-      .get()
-      .then((value) {
-        isHouseOwner = value.data()!['isHouseOwner'];  
-        isHouseOwner = (isHouseOwner.toString() == "true") ? true : false;
-        print(isHouseOwner);
-      });
-      return isHouseOwner.toString();
-    } catch (e) {
-      debugPrint("Error - $e");
-      return null;
     }
   }
 

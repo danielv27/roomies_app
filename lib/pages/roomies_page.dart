@@ -11,7 +11,6 @@ import '../widgets/roomies_page/swipable_cards.dart';
 
 class RoomiesPage extends StatelessWidget {
   final user = FirebaseAuth.instance.currentUser!;
-  final List dataList = [];  
 
   RoomiesPage({
     Key? key,
