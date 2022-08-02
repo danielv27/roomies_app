@@ -13,7 +13,7 @@ class UserTile extends StatefulWidget {
   
   const UserTile({
       Key? key,
-      required this.user
+      required this.user,
     }) : super(key: key);
 
   @override
@@ -21,51 +21,73 @@ class UserTile extends StatefulWidget {
 }
 
 class _UserTileState extends State<UserTile> {
+
+  Stream<void> updateLastMessage() async* {
+    String? lastMessage = widget.user.lastMessage;
+    while(true){
+      lastMessage = await MessagesAPI().getLastPrivateMessage(FirebaseAuth.instance.currentUser?.uid, widget.user.id);
+      if(lastMessage.isNotEmpty && lastMessage != widget.user.lastMessage){
+        DateTime? timeStamp = await MessagesAPI().getLastPrivateMessageTimeStamp(FirebaseAuth.instance.currentUser?.uid, widget.user.id);
+        widget.user.setLastMessage(lastMessage);
+        widget.user.setTimeStamp(timeStamp);
+      }
+      await Future.delayed(const Duration(seconds: 2));
+    }
+  } 
+  @override
+  void initState() {
+    super.initState();
+    updateLastMessage().listen((event){});
+  }
+
   @override
   Widget build(BuildContext context) {
     
-    return FutureBuilder(
-      future: MessagesAPI().getMessages(FirebaseAuth.instance.currentUser?.uid, widget.user.id),
-      builder: (context, snapshot) {
-        String lastMessage = '';
-        if(snapshot.hasData){
-          List<Message> messages = snapshot.data as List<Message>;
-          messages.sort((a, b) => b.timeStamp.toString().compareTo(a.timeStamp.toString()));
-          messages.isNotEmpty ? lastMessage = messages[0].message : null;
-          if(lastMessage.length > 40){
-            lastMessage = '${lastMessage.substring(0, 40)}...';
-          }
-        }
-        return Padding(
-          padding: const EdgeInsets.only(left:18.0,bottom: 23),
-          child: GestureDetector(
-            onTap: () => Navigator.push(context,
-              PageTransition(type: PageTransitionType.rightToLeft,
-                child: ChatPage(
-                  otherUser: widget.user,
-                  //wentBack: () => setState(() {})
-                )
+    
+    String lastMessage = '';
+    if(widget.user.lastMessage != null){
+      lastMessage = widget.user.lastMessage!;
+    }
+
+    if(lastMessage.length > 35){
+      lastMessage = '${lastMessage.substring(0, 35)}...';
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(left:18.0,bottom: 23),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            PageTransition(type: PageTransitionType.rightToLeft,
+              child: PrivateChatPage(
+                otherUser: widget.user,
               )
+            )
+          );
+        },
+        child: Row(
+          children: [
+            AvatarWithOnlineIndicator(user: widget.user),
+            SizedBox(width: MediaQuery.of(context).size.width*0.04,),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children:[
+                Text(
+                  "${widget.user.firstName} ${widget.user.lastName}",
+                  textAlign: TextAlign.left,
+                ),
+                Text(lastMessage),
+
+              ]
             ),
-            child: Row(
-              children: [
-                AvatarWithOnlineIndicator(user: widget.user),
-                SizedBox(width: MediaQuery.of(context).size.width*0.04,),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children:[
-                    Text(
-                      "${widget.user.firstName} ${widget.user.lastName}",
-                      textAlign: TextAlign.left,
-                    ),
-                    Text(lastMessage)
-                  ]
-                )
-              ],
-            ),
-          ),
-        );
-      }
+            const Spacer(),
+            Container(
+              margin: EdgeInsets.only(right: 20),
+              color: Colors.green,width: 5,height: 5,)
+          ],
+        ),
+      ),
     );
   }
 }

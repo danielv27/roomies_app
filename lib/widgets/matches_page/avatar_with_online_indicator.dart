@@ -19,16 +19,17 @@ class AvatarWithOnlineIndicator extends StatefulWidget {
 
 class AvatarWithOnlineIndicatorState extends State<AvatarWithOnlineIndicator> {
   
-   bool onlineStatus = false;
-  late StreamSubscription<bool>? subscription;
+  bool onlineStatus = false;
+  StreamSubscription<bool>? subscription;
+  
 
-  void checkIfOnline() async {
+  Future<void> checkIfOnline(String currentUserID) async {
+    
     bool newOnlineStatus = false;
-    subscription = UsersAPI().checkIfOnline(widget.user.id).listen(
+    subscription = UsersAPI().checkIfOnline(currentUserID).listen(
         (event) {
           newOnlineStatus = event;
           bool onlineStatusChanged = newOnlineStatus != onlineStatus;
-          
           onlineStatusChanged && mounted ?
           setState(() {
             onlineStatus = newOnlineStatus;
@@ -40,7 +41,6 @@ class AvatarWithOnlineIndicatorState extends State<AvatarWithOnlineIndicator> {
   @override
   void initState() {
     super.initState();
-    subscription = UsersAPI().checkIfOnline(widget.user.id).listen((event) { });
   }
 
   @override
@@ -53,7 +53,7 @@ class AvatarWithOnlineIndicatorState extends State<AvatarWithOnlineIndicator> {
 
   @override
   Widget build(BuildContext context) {
-    checkIfOnline();
+    checkIfOnline(widget.user.id);
     return Stack(
       alignment: Alignment.bottomRight,
       children: [
@@ -62,18 +62,23 @@ class AvatarWithOnlineIndicatorState extends State<AvatarWithOnlineIndicator> {
           backgroundColor: Colors.red[700],
           backgroundImage: NetworkImage(widget.user.firstImgUrl),
         ),
-        onlineStatus ? Container(
-          margin: EdgeInsets.only(bottom: 2,right: 2),
-          height: 13,
-          width: 13,
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: Colors.white
+        AnimatedScale(
+          scale: onlineStatus? 1:0,
+          duration: onlineStatus? const Duration(milliseconds: 200):const Duration(milliseconds: 900),
+          curve: Curves.easeIn,
+          child: Container(
+            margin: const EdgeInsets.only(bottom: 2,right: 2),
+            height: 13,
+            width: 13,
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.white
+              ),
+              color: Colors.green,
+              shape: BoxShape.circle
             ),
-            color: Colors.green,
-            shape: BoxShape.circle
           ),
-        ):Container(),
+        )
       ],
     );
     

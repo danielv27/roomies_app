@@ -24,7 +24,8 @@ class _MatchesPageState extends State<MatchesPage> {
 
   @override
   Widget build(BuildContext context) {
-    final MatchesProvider matchesProvider = context.watch<MatchesProvider>();
+    // final MatchesProvider matchesProvider = context.watch<MatchesProvider>();
+    // matchesProvider.sortByTimeStamp();
     return Scaffold(
       body: Container(
           decoration: const BoxDecoration(
@@ -41,9 +42,9 @@ class _MatchesPageState extends State<MatchesPage> {
             ),
           ),
           child: Column(
-            children: [
-              MatchesHeaderWidget(provider: matchesProvider),
-              MatchesBodyWidget(provider: matchesProvider)
+            children: const [
+              MatchesHeaderWidget(),
+              MatchesBodyWidget()
             ] 
           ),          
         ),

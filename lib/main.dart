@@ -124,7 +124,6 @@ class _UserTypeSelectorState extends State<UserTypeSelector> {
         Provider.of<HouseProfileProvider>(context, listen: false).loadHouses(10);
 
         return const HomePage();
-  
     } else {
       return const Center(child: CircularProgressIndicator(color: Colors.red)); 
     }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:roomies_app/models/message.dart';
 import 'package:roomies_app/models/user_profile_model.dart';
 
 import 'house_profile_model.dart';
@@ -11,6 +12,8 @@ class UserModel {
   final bool isHouseOwner;
   final String firstImgUrl; 
   final UserSignupProfileModel userSignupProfileModel;
+  DateTime? timeStamp;
+  String? lastMessage;
 
   UserModel({
     required this.id,
@@ -20,6 +23,8 @@ class UserModel {
     required this.isHouseOwner,
     required this.firstImgUrl, 
     required this.userSignupProfileModel,
+    this.timeStamp,
+    this.lastMessage
   });
 
   @override
@@ -27,6 +32,14 @@ class UserModel {
   
   @override
   int get hashCode => hashValues(id, email);
+
+  void setLastMessage(String? message){
+    lastMessage = message;
+  }
+
+  void setTimeStamp(DateTime? timeStamp){
+    this.timeStamp = timeStamp;
+  }
 }
 
 class HouseOwner {

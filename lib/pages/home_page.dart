@@ -68,9 +68,10 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
       const MatchesPage(),
       HousesPage()
     ];
-
+    
     Provider.of<MatchesProvider>(context, listen: false).listenToMatches().listen((otherUser) {
       print('new match');
+      otherUser.setTimeStamp(DateTime.now());
       final UserModel? currentUser = context.read<CurrentUserProvider>().currentUser?.userModel;
       UsersAPI().addMatch(currentUser!.id, otherUser.id);
       Navigator.push(
@@ -89,7 +90,7 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
               Navigator.pushReplacement(
                 context,
                 PageTransition(
-                  child: ChatPage(otherUser: otherUser),
+                  child: PrivateChatPage(otherUser: otherUser),
                   type: PageTransitionType.rightToLeft,
                   curve: Curves.easeIn,
                 )

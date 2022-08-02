@@ -260,6 +260,7 @@ class UsersAPI {
     List<String> matchesIDs = [];
     List<UserModel> matches = [];
     await FirebaseFirestore.instance.collection('users/$userID/matches')
+    .orderBy('timeStamp', descending: true)
     .get().then((querySnapShot) {
       for(var doc in querySnapShot.docs){
         matchesIDs.add(doc.id);

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_bubble/bubble_type.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
 import 'package:flutter_chat_bubble/clippers/chat_bubble_clipper_5.dart';
+import 'package:roomies_app/widgets/gradients/blue_gradient.dart';
 
 import '../../models/message.dart';
 
@@ -26,6 +27,7 @@ class MessageBubbleWidget extends StatelessWidget {
     margin: EdgeInsets.only(top: 10,right: 18,bottom: 10),
     backGroundColor: Colors.blue,
     child: Container(
+      
       padding: EdgeInsets.only(right: 5,left: 5),
       constraints: BoxConstraints(
         maxWidth: MediaQuery.of(context).size.width * 0.7,

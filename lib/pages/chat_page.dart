@@ -7,21 +7,19 @@ import 'package:roomies_app/widgets/chat_page/message_bubble_widget.dart';
 import '../models/message.dart';
 import '../widgets/chat_page/new_message_widget.dart';
 
-class ChatPage extends StatefulWidget {
+class PrivateChatPage extends StatefulWidget {
   final UserModel otherUser;
-  VoidCallback? wentBack;
   
-  ChatPage({
+  const PrivateChatPage({
       Key? key,
       required this.otherUser,
-      this.wentBack
     }) : super(key: key);  
 
   @override
-  State<ChatPage> createState() => _ChatPageState();
+  State<PrivateChatPage> createState() => _PrivateChatPageState();
 }
 
-class _ChatPageState extends State<ChatPage> {
+class _PrivateChatPageState extends State<PrivateChatPage> {
   List<Message> messages = [];
   late final GlobalKey<AnimatedListState> _key = GlobalKey();
   
@@ -36,6 +34,8 @@ class _ChatPageState extends State<ChatPage> {
     messages.insert(0, message);
     if(_key.currentState != null){
       _key.currentState?.insertItem(0, duration: const Duration(milliseconds: 130));
+      widget.otherUser.setLastMessage(message.message);
+      widget.otherUser.setTimeStamp(message.timeStamp);
     }
   }
 
@@ -50,13 +50,13 @@ class _ChatPageState extends State<ChatPage> {
           ),
           Expanded(
             child: FutureBuilder(
-              future: MessagesAPI().getMessages(FirebaseAuth.instance.currentUser?.uid, widget.otherUser.id),
+              future: MessagesAPI().getPrivateMessages(FirebaseAuth.instance.currentUser?.uid, widget.otherUser.id),
               builder:(context, snapshot) {
                 if(snapshot.connectionState == ConnectionState.done){
                   if(snapshot.hasData){
                     messages = snapshot.data as List<Message>;
                     messages.sort((a, b) => b.timeStamp.toString().compareTo(a.timeStamp.toString()));
-                    MessagesAPI().listenToMessages(FirebaseAuth.instance.currentUser?.uid, widget.otherUser.id)
+                    MessagesAPI().listenToPrivateChat(FirebaseAuth.instance.currentUser?.uid, widget.otherUser.id)
                     .listen(
                       (event) {
                         List<Message>? newMessages = event;
