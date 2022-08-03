@@ -1,10 +1,13 @@
 
 import 'dart:io';
+import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:roomies_app/backend/houses_api.dart';
 import 'package:roomies_app/backend/providers/house_profile_provider.dart';
@@ -27,6 +30,11 @@ class HousesLiked extends StatefulWidget {
 
 class _HousesLikedState extends State<HousesLiked> {
   List<HouseProfileModel>? houses;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,10 +67,17 @@ class _HousesLikedState extends State<HousesLiked> {
                     child: ImageFiltered(
                       imageFilter: ImageFilter.blur(sigmaX: 0.5, sigmaY: 0.5, tileMode: TileMode.mirror),
                       child: CachedNetworkImage(
+                        key: UniqueKey(),
                         placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
                         imageUrl: houses![index].imageURLS[0],
                         fit: BoxFit.cover,
                         filterQuality: FilterQuality.medium,
+                        cacheManager: CacheManager(
+                          Config(
+                            "likedHouse",
+                            stalePeriod: const Duration(days: 2),
+                          ),
+                        ),
                       ),
                     ),
                   ),

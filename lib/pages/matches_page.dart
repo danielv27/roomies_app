@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:roomies_app/backend/providers/current_profile_provider.dart';
 import 'package:roomies_app/backend/providers/matches_provider.dart';
+import 'package:roomies_app/models/user_model.dart';
 import '../widgets/matches_page/matches_body.dart';
 import '../widgets/matches_page/matches_header.dart';
 
@@ -24,7 +26,8 @@ class _MatchesPageState extends State<MatchesPage> {
 
   @override
   Widget build(BuildContext context) {
-    // final MatchesProvider matchesProvider = context.watch<MatchesProvider>();
+    final MatchesProvider matchesProvider = context.watch<MatchesProvider>();
+    UserModel? currentUser = context.read<CurrentUserProvider>().currentUser?.userModel;
     // matchesProvider.sortByTimeStamp();
     return Scaffold(
       body: Container(
@@ -42,9 +45,9 @@ class _MatchesPageState extends State<MatchesPage> {
             ),
           ),
           child: Column(
-            children: const [
-              MatchesHeaderWidget(),
-              MatchesBodyWidget()
+            children: [
+              MatchesHeaderWidget(provider: matchesProvider, currentUser: currentUser),
+              const MatchesBodyWidget()
             ] 
           ),          
         ),
