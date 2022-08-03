@@ -21,14 +21,12 @@ class _MatchesPageState extends State<MatchesPage> {
   @override
   void initState() {
     super.initState();
-    
   }
 
   @override
   Widget build(BuildContext context) {
     final MatchesProvider matchesProvider = context.watch<MatchesProvider>();
     UserModel? currentUser = context.read<CurrentUserProvider>().currentUser?.userModel;
-    // matchesProvider.sortByTimeStamp();
     return Scaffold(
       body: Container(
           decoration: const BoxDecoration(

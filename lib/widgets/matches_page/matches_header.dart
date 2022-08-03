@@ -97,7 +97,7 @@ Widget searchBar(BuildContext context,List<UserModel>? users){
           child: CachedNetworkImage(
             imageUrl: currentUser!.firstImgUrl,
             fit: BoxFit.cover,
-            filterQuality: FilterQuality.medium,
+            filterQuality: FilterQuality.low,
             placeholder: (context, url) => const CircleAvatar(
               backgroundColor: Colors.white,
               radius: 28,
@@ -110,7 +110,7 @@ Widget searchBar(BuildContext context,List<UserModel>? users){
             cacheManager: CacheManager(
               Config(
                 'currentUserImageKey',
-                stalePeriod: const Duration(days: 1),
+                stalePeriod: const Duration(days : 1),
                 maxNrOfCacheObjects: 5,
               )
             ),
@@ -167,7 +167,7 @@ Widget circularUserList(BuildContext context, List<UserModel>? users){
                 CachedNetworkImage(
                   imageUrl: usersSortedByName[index].firstImgUrl,
                   fit: BoxFit.cover,
-                  filterQuality: FilterQuality.medium,
+                  filterQuality: FilterQuality.low,
                   placeholder: (context, url) => const AvatarWithGradientBorder(
                     backgroundColor: Colors.white,
                     radius: 26,
@@ -182,7 +182,7 @@ Widget circularUserList(BuildContext context, List<UserModel>? users){
                   cacheManager: CacheManager(
                     Config(
                       'userListImagesKey',
-                      stalePeriod: const Duration(days: 1),
+                      stalePeriod: const Duration(days : 1),
                       maxNrOfCacheObjects: 100,
                     )
                   ),

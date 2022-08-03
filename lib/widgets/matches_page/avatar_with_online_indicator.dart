@@ -67,7 +67,7 @@ class AvatarWithOnlineIndicatorState extends State<AvatarWithOnlineIndicator> {
             radius: 28,
           ),
           fit: BoxFit.cover,
-          filterQuality: FilterQuality.medium,
+          filterQuality: FilterQuality.low,
           imageBuilder: (context, imageProvider) => CircleAvatar(
             backgroundColor: Colors.red[700],
             radius: 28,
@@ -76,7 +76,7 @@ class AvatarWithOnlineIndicatorState extends State<AvatarWithOnlineIndicator> {
           cacheManager: CacheManager(
             Config(
               'customKey',
-              stalePeriod: const Duration(days: 1),
+              stalePeriod: const Duration(milliseconds : 100),
               maxNrOfCacheObjects: 100,
             ),
           ),
