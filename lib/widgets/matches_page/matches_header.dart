@@ -151,6 +151,7 @@ Widget circularUserList(BuildContext context, List<UserModel>? users){
                   radius: 26,
                   image: NetworkImage(usersSortedByName[index].firstImgUrl),
                   borderWidth: 4,
+                  isBlue: false,
                 ),
                 Text(usersSortedByName[index].firstName, style: const TextStyle(color: Colors.white),)
               ],
