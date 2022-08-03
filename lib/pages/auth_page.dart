@@ -36,7 +36,7 @@ class AuthPageState extends State<AuthPage> {
 
   bool invalidEmail = false;
   bool invalidPassword = false;
-  String? errorMessage;
+  String errorMessage = "";
 
   @override
   Widget build(BuildContext context) {
@@ -150,7 +150,7 @@ class AuthPageState extends State<AuthPage> {
                 setState(() {
                   
                 });
-                if (errorMessage!.isNotEmpty) {
+                if (errorMessage.isNotEmpty) {
                   return errorMessage;
                 }
                 return null;
@@ -189,9 +189,10 @@ class AuthPageState extends State<AuthPage> {
                   onSurface: Colors.transparent,
                   minimumSize: const Size.fromHeight(42),
                 ),
-                onPressed: () {
+                onPressed: () async {
                   if (signKey.currentState!.validate()) {
-                    signIn();
+                    errorMessage =  await AuthAPI().signIn(emailController, passwordController, errorMessage);
+                    setState(() { });
                   }
                 }, 
                 child: const Text(
@@ -280,9 +281,6 @@ class AuthPageState extends State<AuthPage> {
                 if (email!.isEmpty) {
                   return "Please fill email";
                 }
-                if (errorMessage!.isNotEmpty) {
-                  return errorMessage;
-                }
                 return null;
               },
             ),
@@ -298,7 +296,7 @@ class AuthPageState extends State<AuthPage> {
                 if (password!.isEmpty) {
                   return "Please fill password";
                 }
-                if (errorMessage!.isNotEmpty) {
+                if (errorMessage.isNotEmpty) {
                   return errorMessage;
                 }
                 return null;
@@ -332,16 +330,13 @@ class AuthPageState extends State<AuthPage> {
                   onSurface: Colors.transparent,
                   minimumSize: const Size.fromHeight(42),
                 ),
-                onPressed: () {
+                onPressed: () async {
                   if (signupKey.currentState!.validate()) {
-                    setState(() {
-                      errorMessage = "";
-                    });
                     signUp();
-                    // Navigator.push(
-                    //   context, 
-                    //   PageTransition(type: PageTransitionType.fade, child: const SetupPage()),
-                    // );
+                    Navigator.push(
+                      context, 
+                      PageTransition(type: PageTransitionType.fade, child: const SetupPage()),
+                    );
                   }
                 },
                 child: const Text(
@@ -374,6 +369,10 @@ class AuthPageState extends State<AuthPage> {
         ),
       ),
     );
+  }
+
+  void signUp() async {
+    errorMessage = await AuthAPI().signUp(emailController, passwordController, firstNameController, lastNameController, errorMessage);
   }
 
   GestureDetector rememberMeGestureDetector() {
@@ -484,76 +483,6 @@ class AuthPageState extends State<AuthPage> {
         ),
       ),
     );
-  }
-
-  Future signUp() async {
-    try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      ).then((currentUser) async {
-        await FirebaseFirestore.instance.collection('users')
-          .doc(currentUser.user!.uid)
-          .set({
-            'firstName': firstNameController.text,
-            'lastName': lastNameController.text,
-            'email': emailController.text,
-          });
-      });
-    } on FirebaseAuthException catch (err) {
-      errorMessage = "";
-      switch (err.code) {
-        case "email-already-in-use":
-          errorMessage = "email already in use";
-          break;
-        case "invalid-email":
-          errorMessage = "the email address is not valid" ;
-          break;
-        case "operation-not-allowed":
-          errorMessage = "email/password accounts are not enabled";
-          break;
-        case "weak-password":
-          errorMessage = "the password is not strong enough";
-          break;
-        default:
-          errorMessage = "\nunhandeled error\n";
-      }
-      setState(() { });
-    } catch (err) {
-      errorMessage = "\nERROR: $err";
-      setState(() { });
-    }
-  }
-
-  Future signIn() async {
-    try {
-      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      );
-    } on FirebaseAuthException catch (err) {
-      errorMessage = "";
-      switch (err.code) {
-        case "invalid-email":
-          errorMessage = "email address is not valid";
-          break;
-        case "user-disabled":
-          errorMessage = "email has been disabled";
-          break;
-        case "user-not-found":
-          errorMessage = "there is no user corresponding to the given email";
-          break;
-        case "wrong-password":
-          errorMessage = "the password is invalid for the given email";
-          break;
-        default:
-          errorMessage = "\nunhandeled error\n";
-      }
-      setState(() { });
-    } catch (err) {
-      errorMessage = "\nERROR: $err";
-      setState(() { });
-    }
   }
 
   void _togglePasswordView() {
