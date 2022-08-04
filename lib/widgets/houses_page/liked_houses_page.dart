@@ -51,17 +51,10 @@ class _LikedHousesState extends State<LikedHouses> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.only(left: 30.0, right: 30, top: 5),
-          height: MediaQuery.of(context).size.height * 0.72,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                HousesLiked(houseProvider: widget.houseProvider, user: widget.user),
-              ],
-            ),
-          ),
+      body: Container(
+        padding: const EdgeInsets.only(left: 30.0, right: 30, top: 5),
+        child: HousesLiked(
+          houseProvider: widget.houseProvider, user: widget.user
         ),
       ),
     );
