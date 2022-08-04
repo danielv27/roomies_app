@@ -63,6 +63,7 @@ class _UsersHousesMatchedState extends State<UsersHousesMatched> {
             child: HouseInformationTile(house: widget.house, index: 0, infoButtonEnabled: false)),
           SizedBox(height: MediaQuery.of(context).size.height * 0.025),
           const Text('Create Group Chat with the users you matched with'),
+          SizedBox(height: MediaQuery.of(context).size.height * 0.025),
           FutureBuilder(
             future: Future.wait([
                 UsersAPI().getMatches(FirebaseAuth.instance.currentUser!.uid),

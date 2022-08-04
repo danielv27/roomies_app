@@ -28,8 +28,6 @@ class SelectableUserTileList extends StatelessWidget {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            
-            SizedBox(height: MediaQuery.of(context).size.height * 0.02),
             ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(), 
