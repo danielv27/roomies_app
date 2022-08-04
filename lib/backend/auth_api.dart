@@ -5,79 +5,82 @@ import 'package:image_picker/image_picker.dart';
 
 class AuthAPI {
 
-  Future signinUser(TextEditingController emailController, TextEditingController passwordController, context) async {
+  Future<String> signIn(
+    TextEditingController emailController, 
+    TextEditingController passwordController, 
+    String errorMessage
+  ) async {
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
     } on FirebaseAuthException catch (err) {
-      switch (err.code.toString()) {
+      errorMessage = "";
+      switch (err.code) {
         case "invalid-email":
-          print("\nemail address is not valid\n");
+          errorMessage = "email address is not valid";
           break;
         case "user-disabled":
-          print("if the user corresponding to the given email has been disabled");
+          errorMessage = "email has been disabled";
           break;
         case "user-not-found":
-          print("there is no user corresponding to the given email");
+          errorMessage = "there is no user corresponding to the given email";
           break;
         case "wrong-password":
-          print(" the password is invalid for the given email, or the account corresponding to the email does not have a password set");
+          errorMessage = "the password is invalid for the given email";
           break;
         default:
-          print("\nunhandeled error\n");
+          errorMessage = "";
       }
-      return throw err.code.toString();
     } catch (err) {
-      ("\nERROR: $err");
+      errorMessage = "ERROR: $err";
     }
+    return errorMessage;
   }
 
-  Future createUser(
+  Future<String> signUp(
     TextEditingController emailController, 
     TextEditingController passwordController, 
     TextEditingController firstNameController, 
-    TextEditingController lastNameController,
+    TextEditingController lastNameController, 
+    String errorMessage
   ) async {
-    late UserCredential result;
     try {
-      result = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
-      );
+      ).then((currentUser) async {
+        await FirebaseFirestore.instance.collection('users')
+          .doc(currentUser.user!.uid)
+          .set({
+            'firstName': firstNameController.text,
+            'lastName': lastNameController.text,
+            'email': emailController.text,
+          });
+      });
     } on FirebaseAuthException catch (err) {
-      switch (err.code.toString()) {
+      errorMessage = "";
+      switch (err.code) {
         case "email-already-in-use":
-          print("there already exists an account with the given email address");
+          errorMessage = "email already in use";
           break;
         case "invalid-email":
-          print("the email address is not valid");
+          errorMessage = "the email address is not valid" ;
           break;
         case "operation-not-allowed":
-          print("email/password accounts are not enabled");
+          errorMessage = "email/password accounts are not enabled";
           break;
         case "weak-password":
-          print("the password is not strong enough");
+          errorMessage = "the password is not strong enough";
           break;
         default:
-          print("\nunhandeled error\n");
+          errorMessage = "";
       }
-      rethrow;
     } catch (err) {
-      print("\nERROR: $err");
-      rethrow;
+      errorMessage = "ERROR: $err";
     }
-
-    User? newUser = result.user;
-    
-    await FirebaseFirestore.instance.collection('users')
-      .doc(newUser?.uid)
-      .set({
-        'firstName': firstNameController.text,
-        'lastName': lastNameController.text,
-        'email': emailController.text,
-      });
+    return errorMessage;
   }
 
   Future createPersonalProfile(

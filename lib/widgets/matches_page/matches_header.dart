@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:roomies_app/backend/providers/current_profile_provider.dart';
 import 'package:roomies_app/backend/providers/matches_provider.dart';
@@ -10,11 +12,13 @@ import 'package:provider/provider.dart';
 
 
 class MatchesHeaderWidget extends StatefulWidget {
-  //final MatchesProvider provider;
+  final MatchesProvider provider;
+  final UserModel? currentUser;
 
   const MatchesHeaderWidget({
       Key? key,
-      //required this.provider
+      required this.provider,
+      required this.currentUser,
     }) : super(key: key);
 
   @override
@@ -25,15 +29,13 @@ class _MatchesHeaderWidgetState extends State<MatchesHeaderWidget> {
   
   @override
   Widget build(BuildContext context){
-    final MatchesProvider matchesProvider = context.watch<MatchesProvider>();
-    final List<UserModel> users = matchesProvider.userModels;
     return Padding(
       padding: const EdgeInsets.only(top:32),
       child: Column(
         children: [
-          searchBar(context, users),
+          searchBar(context, widget.provider.userModels),
           SizedBox(height: MediaQuery.of(context).size.height*0.02),
-          circularUserList(context, users),
+          circularUserList(context, widget.provider.userModels),
         ],
       ),
     );
@@ -92,10 +94,26 @@ Widget searchBar(BuildContext context,List<UserModel>? users){
           shape: BoxShape.circle
           ),
           padding: const EdgeInsets.all(3.5),
-          child: CircleAvatar(
-            backgroundColor: Colors.red[700],
-            radius: 28,
-            backgroundImage: NetworkImage(currentUser!.firstImgUrl),
+          child: CachedNetworkImage(
+            imageUrl: currentUser!.firstImgUrl,
+            fit: BoxFit.cover,
+            filterQuality: FilterQuality.low,
+            placeholder: (context, url) => const CircleAvatar(
+              backgroundColor: Colors.white,
+              radius: 28,
+            ),
+            imageBuilder: (context, imageProvider) => CircleAvatar(
+              backgroundColor: Colors.red[700],
+              radius: 28,
+              backgroundImage: imageProvider,
+            ),
+            cacheManager: CacheManager(
+              Config(
+                'currentUserImageKey',
+                stalePeriod: const Duration(days : 1),
+                maxNrOfCacheObjects: 5,
+              )
+            ),
           ),
         ),
       ),
@@ -146,11 +164,28 @@ Widget circularUserList(BuildContext context, List<UserModel>? users){
             onTap: () => {print('chat with user $index'), Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: PrivateChatPage(otherUser: usersSortedByName[index],)))},
             child: Column(
               children: [
-                AvatarWithGradientBorder(
-                  backgroundColor: Colors.red[700],
-                  radius: 26,
-                  image: NetworkImage(usersSortedByName[index].firstImgUrl),
-                  borderWidth: 4,
+                CachedNetworkImage(
+                  imageUrl: usersSortedByName[index].firstImgUrl,
+                  fit: BoxFit.cover,
+                  filterQuality: FilterQuality.low,
+                  placeholder: (context, url) => const AvatarWithGradientBorder(
+                    backgroundColor: Colors.white,
+                    radius: 26,
+                    borderWidth: 4,
+                  ),
+                  imageBuilder: (context, imageProvider) => AvatarWithGradientBorder(
+                    backgroundColor: Colors.red[700],
+                    radius: 26,
+                    image: imageProvider,
+                    borderWidth: 4,
+                  ),
+                  cacheManager: CacheManager(
+                    Config(
+                      'userListImagesKey',
+                      stalePeriod: const Duration(days : 1),
+                      maxNrOfCacheObjects: 100,
+                    )
+                  ),
                 ),
                 Text(usersSortedByName[index].firstName, style: const TextStyle(color: Colors.white),)
               ],

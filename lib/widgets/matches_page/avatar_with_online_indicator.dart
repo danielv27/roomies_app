@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:roomies_app/backend/users_api.dart';
 
 import '../../models/user_model.dart';
@@ -57,10 +59,27 @@ class AvatarWithOnlineIndicatorState extends State<AvatarWithOnlineIndicator> {
     return Stack(
       alignment: Alignment.bottomRight,
       children: [
-        CircleAvatar(
-          radius: 30,
-          backgroundColor: Colors.red[700],
-          backgroundImage: NetworkImage(widget.user.firstImgUrl),
+        CachedNetworkImage(
+          key: UniqueKey(),
+          imageUrl: widget.user.firstImgUrl,
+          placeholder: (context, url) => const CircleAvatar(
+            backgroundColor: Colors.white,
+            radius: 28,
+          ),
+          fit: BoxFit.cover,
+          filterQuality: FilterQuality.low,
+          imageBuilder: (context, imageProvider) => CircleAvatar(
+            backgroundColor: Colors.red[700],
+            radius: 28,
+            backgroundImage: imageProvider,
+          ),
+          cacheManager: CacheManager(
+            Config(
+              'customKey',
+              stalePeriod: const Duration(milliseconds : 100),
+              maxNrOfCacheObjects: 100,
+            ),
+          ),
         ),
         AnimatedScale(
           scale: onlineStatus? 1:0,

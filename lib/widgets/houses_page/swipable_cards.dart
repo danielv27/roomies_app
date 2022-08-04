@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:roomies_app/backend/houses_api.dart';
 import 'package:roomies_app/backend/providers/current_profile_provider.dart';
@@ -103,19 +104,21 @@ class SwipableCardsState extends State<SwipableCards> {
             final images = List.generate(
               currenUserImages.length,
               (index) {
-                return Image.network(
-                  currenUserImages[index],
+                return CachedNetworkImage(
+                  key: UniqueKey(),
+                  imageUrl: currenUserImages[index],
                   fit: BoxFit.cover,
-                  loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return Center(
-                      child: CircularProgressIndicator(
-                        value: loadingProgress.expectedTotalBytes != null
-                          ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                          : null,
-                      ),
-                    );
-                  },
+                  filterQuality: FilterQuality.medium,
+                  placeholder: (context, url) => const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                  cacheManager: CacheManager(
+                    Config(
+                      'swipableCardHouseImages',
+                      stalePeriod: const Duration(days : 1),
+                      maxNrOfCacheObjects: 50,
+                    )
+                  ),
                 );
               }
             );
