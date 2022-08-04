@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -25,18 +26,18 @@ class AuthPageState extends State<AuthPage> {
   bool _isHiddrenPassword = true;
   bool _isSignupPage = false;
 
-
   @override
   void dispose() {
     emailController.dispose();
     passwordController.dispose();
-
     super.dispose();
   }
 
-  bool invalidEmail = false;
-  bool invalidPassword = false;
-  String errorMessage = "";
+
+  final errorMessage = TextEditingController();
+
+  final signKey = GlobalKey<FormState>();
+  final signupKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +107,6 @@ class AuthPageState extends State<AuthPage> {
   }
 
   Widget showLogin() {
-    final GlobalKey<FormState> signKey = GlobalKey<FormState>();
     return Container(
       padding: const EdgeInsets.all(30),
       child: Form(
@@ -130,9 +130,8 @@ class AuthPageState extends State<AuthPage> {
               validator: (email) {
                 if (email!.isEmpty) {
                   return "Please fill Email";
-                } else {
-                  return null;
                 }
+                return null;
               },
             ),
             const SizedBox(height: 20),
@@ -146,12 +145,6 @@ class AuthPageState extends State<AuthPage> {
               validator: (password) {
                 if (password!.isEmpty) {
                   return "Please fill Password";
-                }
-                setState(() {
-                  
-                });
-                if (errorMessage.isNotEmpty) {
-                  return errorMessage;
                 }
                 return null;
               },
@@ -189,10 +182,9 @@ class AuthPageState extends State<AuthPage> {
                   onSurface: Colors.transparent,
                   minimumSize: const Size.fromHeight(42),
                 ),
-                onPressed: () async {
+                onPressed: () {
                   if (signKey.currentState!.validate()) {
-                    errorMessage =  await AuthAPI().signIn(emailController, passwordController, errorMessage);
-                    setState(() { });
+                    signIn();
                   }
                 }, 
                 child: const Text(
@@ -227,8 +219,11 @@ class AuthPageState extends State<AuthPage> {
     );
   }
 
+  void signIn() async {
+    await AuthAPI().signIn(emailController, passwordController, errorMessage, context);
+  }
+
   Widget showSignup() {
-    final GlobalKey<FormState> signupKey = GlobalKey<FormState>();
     return Container(
       padding: const EdgeInsets.all(30),
       child: Form(
@@ -296,9 +291,6 @@ class AuthPageState extends State<AuthPage> {
                 if (password!.isEmpty) {
                   return "Please fill password";
                 }
-                if (errorMessage.isNotEmpty) {
-                  return errorMessage;
-                }
                 return null;
               },
             ),
@@ -333,10 +325,6 @@ class AuthPageState extends State<AuthPage> {
                 onPressed: () async {
                   if (signupKey.currentState!.validate()) {
                     signUp();
-                    Navigator.push(
-                      context, 
-                      PageTransition(type: PageTransitionType.fade, child: const SetupPage()),
-                    );
                   }
                 },
                 child: const Text(
@@ -372,7 +360,17 @@ class AuthPageState extends State<AuthPage> {
   }
 
   void signUp() async {
-    errorMessage = await AuthAPI().signUp(emailController, passwordController, firstNameController, lastNameController, errorMessage);
+    setState(() {
+      errorMessage.text = "";
+    }); 
+    errorMessage.text = await AuthAPI().signUp(emailController, passwordController, firstNameController, lastNameController, errorMessage, context);
+    if (!mounted) return;
+    if (errorMessage.text.isEmpty) {
+      Navigator.push(
+        context, 
+        PageTransition(type: PageTransitionType.fade, child: const SetupPage()),
+      );
+    }
   }
 
   GestureDetector rememberMeGestureDetector() {
@@ -494,8 +492,8 @@ class AuthPageState extends State<AuthPage> {
   void _toggleSignup() {
     setState(() {
       _isSignupPage = !_isSignupPage;
-      invalidEmail = false;
-      invalidPassword = false;
+      emailController.text = "";
+      passwordController.text = "";
     });
   }
 

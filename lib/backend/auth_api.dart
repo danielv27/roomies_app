@@ -1,42 +1,57 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 
 class AuthAPI {
 
   Future<String> signIn(
     TextEditingController emailController, 
     TextEditingController passwordController, 
-    String errorMessage
+    TextEditingController errorMessage,
+    BuildContext context,
   ) async {
     try {
-      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
     } on FirebaseAuthException catch (err) {
-      errorMessage = "";
       switch (err.code) {
         case "invalid-email":
-          errorMessage = "email address is not valid";
+          errorMessage.text = "email address is not valid";
           break;
         case "user-disabled":
-          errorMessage = "email has been disabled";
+          errorMessage.text = "email has been disabled";
           break;
         case "user-not-found":
-          errorMessage = "there is no user corresponding to the given email";
+          errorMessage.text = "there is no user corresponding to the given email";
           break;
         case "wrong-password":
-          errorMessage = "the password is invalid for the given email";
+          errorMessage.text = "the password is invalid for the given email";
+          break;
+        case "too-many-requests":
+          errorMessage.text = "too many signin attempts";
           break;
         default:
-          errorMessage = "";
+          errorMessage.text = "";
       }
+      showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: const Text('Error'),
+          content: Text(errorMessage.text),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.pop(context, 'OK'),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
     } catch (err) {
-      errorMessage = "ERROR: $err";
+      errorMessage.text = "ERROR: $err";
     }
-    return errorMessage;
+    return errorMessage.text;
   }
 
   Future<String> signUp(
@@ -44,7 +59,8 @@ class AuthAPI {
     TextEditingController passwordController, 
     TextEditingController firstNameController, 
     TextEditingController lastNameController, 
-    String errorMessage
+    TextEditingController errorMessage,
+    BuildContext context,
   ) async {
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -60,27 +76,39 @@ class AuthAPI {
           });
       });
     } on FirebaseAuthException catch (err) {
-      errorMessage = "";
       switch (err.code) {
         case "email-already-in-use":
-          errorMessage = "email already in use";
+          errorMessage.text = "email already in use";
           break;
         case "invalid-email":
-          errorMessage = "the email address is not valid" ;
+          errorMessage.text = "the email address is not valid" ;
           break;
         case "operation-not-allowed":
-          errorMessage = "email/password accounts are not enabled";
+          errorMessage.text = "email/password accounts are not enabled";
           break;
         case "weak-password":
-          errorMessage = "the password is not strong enough";
+          errorMessage.text = "the password is not strong enough";
           break;
         default:
-          errorMessage = "";
+          errorMessage.text = "Unknown Error";
       }
+      showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: const Text('Error'),
+          content: Text(errorMessage.text),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.pop(context, 'OK'),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
     } catch (err) {
-      errorMessage = "ERROR: $err";
+      errorMessage.text = "ERROR: $err";
     }
-    return errorMessage;
+    return errorMessage.text;
   }
 
   Future createPersonalProfile(
