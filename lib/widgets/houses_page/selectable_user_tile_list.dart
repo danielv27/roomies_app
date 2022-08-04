@@ -24,42 +24,47 @@ class SelectableUserTileList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<bool> selectedUsersByIndex = List.generate(users.length, (index) => false);
-    return Column(
-      children: [
-        Text('Create Group Chat with the users you matched with'),
-        ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(), 
-          itemCount: users.length,
-          itemBuilder: (BuildContext context, int index) { 
-            return SelectableUserTile(
-              user: users[index],
-              onTileClick: ((selected) => selectedUsersByIndex[index] = selected),
-            );
-          }
-        ),
-        Container(
-          margin: const EdgeInsets.only(top: 10,bottom: 20),
-          width: MediaQuery.of(context).size.width * 0.6,
-          height: 40,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(30)),
-            gradient: redGradient()
-          ),
-          child: ElevatedButton(
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Colors.transparent),
-              shadowColor: MaterialStateProperty.all(Colors.transparent)
-            ),
-            onPressed: () {
-              List<UserModel> selectedUsers = getSelectedUsers(selectedUsersByIndex);
-              for (var user in selectedUsers) {
-                print(user.firstName);
+    return Expanded(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            
+            SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(), 
+              itemCount: users.length,
+              itemBuilder: (BuildContext context, int index) { 
+                return SelectableUserTile(
+                  user: users[index],
+                  onTileClick: ((selected) => selectedUsersByIndex[index] = selected),
+                );
               }
-            },
-            child: const Text('Create Group Chat')),
-        )
-      ]
+            ),
+            Container(
+              margin: const EdgeInsets.only(top: 10,bottom: 20),
+              width: MediaQuery.of(context).size.width * 0.6,
+              height: 40,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(30)),
+                gradient: redGradient()
+              ),
+              child: ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Colors.transparent),
+                  shadowColor: MaterialStateProperty.all(Colors.transparent)
+                ),
+                onPressed: () {
+                  List<UserModel> selectedUsers = getSelectedUsers(selectedUsersByIndex);
+                  for (var user in selectedUsers) {
+                    print(user.firstName);
+                  }
+                },
+                child: const Text('Create Group Chat')),
+            )
+          ]
+        ),
+      ),
     );
   }
 }
