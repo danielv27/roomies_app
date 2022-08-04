@@ -328,7 +328,9 @@ class HousesAPI {
     .get()
     .then((querySnapshot) {
       for(var doc in querySnapshot.docs){
-        likedHouses.add(doc.id);
+        if (doc['liked']) {
+          likedHouses.add(doc.id);
+        }
       }
     });
     return likedHouses;
