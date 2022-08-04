@@ -59,26 +59,9 @@ class MainPage extends StatelessWidget {
         }
         else if (snapshot.hasData) {
           UsersAPI().goOnline();
-          return MultiProvider(
-            providers: [
-              ChangeNotifierProvider(
-                create: (context) => SetUpCompletionProvider(),  
-                child: const UserTypeSelector()
-              ),
-              ChangeNotifierProvider(
-                create: (context) => UserProfileProvider(),
-              ),
-              ChangeNotifierProvider(
-                create: (context) => CurrentUserProvider()
-              ),
-              ChangeNotifierProvider(
-                create: (context) => MatchesProvider() 
-              ),
-              ChangeNotifierProvider(
-                create: (context) => HouseProfileProvider() 
-              ),
-            ],
-            child: const UserTypeSelector(),
+          return ChangeNotifierProvider(
+            create: (context) => SetUpCompletionProvider(),  
+            child: const UserTypeSelector()
           );
         }
         else {
@@ -118,12 +101,30 @@ class _UserTypeSelectorState extends State<UserTypeSelector> {
         child: const OwnerPage(),
       );
     } else if (userProvider.profileSetUp) {
-        Provider.of<CurrentUserProvider>(context, listen: false).initialize();
-        Provider.of<MatchesProvider>(context, listen: false).initialize(); //uncomment to make old matches not pop on screen
-        Provider.of<UserProfileProvider>(context, listen: false).loadUsers(10);
-        Provider.of<HouseProfileProvider>(context, listen: false).loadHouses(10);
+        return MultiProvider(
+          providers: [
+            ChangeNotifierProvider(
+              create: (context) => UserProfileProvider(),
+            ),
+            ChangeNotifierProvider(
+              create: (context) => CurrentUserProvider()
+            ),
+            ChangeNotifierProvider(
+              create: (context) => MatchesProvider() 
+            ),
+            ChangeNotifierProvider(
+              create: (context) => HouseProfileProvider() 
+            ),
+          ],
+          builder: ((context, child) {
+            Provider.of<CurrentUserProvider>(context, listen: false).initialize();
+            Provider.of<MatchesProvider>(context, listen: false).initialize(); //uncomment to make old matches not pop on screen
+            Provider.of<UserProfileProvider>(context, listen: false).loadUsers(10);
+            Provider.of<HouseProfileProvider>(context, listen: false).loadHouses(10);
 
-        return const HomePage();
+            return const HomePage();
+          }),
+        );
     } else {
       return const Center(child: CircularProgressIndicator(color: Colors.red)); 
     }

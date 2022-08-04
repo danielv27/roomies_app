@@ -42,7 +42,7 @@ class MessageBubbleWidget extends StatelessWidget {
                 textAlign: TextAlign.right,
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 15
+                  fontSize: 17
                 ),
               ),
             ),
@@ -53,7 +53,7 @@ class MessageBubbleWidget extends StatelessWidget {
                 textAlign: TextAlign.right,
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 11
+                  fontSize: 12
                 ),
               ),
             ),
@@ -81,7 +81,7 @@ class MessageBubbleWidget extends StatelessWidget {
                 message.message,
                 style: TextStyle(
                   color: Colors.black,
-                  fontSize: 15
+                  fontSize: 17
                 ),
               ),
             ),
@@ -92,7 +92,7 @@ class MessageBubbleWidget extends StatelessWidget {
                 textAlign: TextAlign.right,
                 style: TextStyle(
                   color: Colors.grey,
-                  fontSize: 10
+                  fontSize: 12
                 ),
               ),
             ),

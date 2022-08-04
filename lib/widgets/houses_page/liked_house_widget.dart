@@ -47,7 +47,7 @@ class _HousesLikedState extends State<HousesLiked> {
           return const Text('Something went wrong');
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Expanded(child: Center(child: CircularProgressIndicator(color: Colors.red)));
+          return const Center(child: CircularProgressIndicator(color: Colors.red));
         }
         if(snapshot.hasData){
           houses = snapshot.data as List<HouseProfileModel>;
