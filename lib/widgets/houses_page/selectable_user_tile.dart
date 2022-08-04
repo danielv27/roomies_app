@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:roomies_app/models/user_model.dart';
-import 'package:roomies_app/widgets/gradients/blue_gradient.dart';
 import 'package:roomies_app/widgets/gradients/gradient.dart';
 import 'package:roomies_app/widgets/matches_page/avatar_with_gradient_border.dart';
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
@@ -56,7 +55,7 @@ class _SelectableUserTileState extends State<SelectableUserTile> {
         margin: const EdgeInsets.only(right: 20,left: 20, top: 10,bottom: 10),
         child: Row(
           children: [
-            AvatarWithGradientBorder(radius: 18, borderWidth: 3,image: NetworkImage(widget.user.firstImgUrl),isBlue: false),
+            AvatarWithGradientBorder(radius: 18, borderWidth: 3,image: NetworkImage(widget.user.firstImgUrl)),
             const SizedBox(width: 10),
             Text(
               "${widget.user.firstName} ${widget.user.lastName}",
