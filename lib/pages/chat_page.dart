@@ -23,7 +23,6 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
   List<Message> messages = [];
   late final GlobalKey<AnimatedListState> _key = GlobalKey();
   
-
   @override
   void initState(){
     super.initState();
@@ -76,7 +75,6 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
                       shrinkWrap: true,
                       reverse: true,
                       itemBuilder: (context,index, animation) {
-                        //the item builders animation only animates for elements beyond the initial messages length
                         return SizeTransition(
                           sizeFactor: animation,
                           child: MessageBubbleWidget(message: messages[index]));
@@ -89,7 +87,6 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
                 }
                 return const Center(child: CircularProgressIndicator(color: Colors.red));
               } 
-              
             ),
           ),
           NewMessageWidget(

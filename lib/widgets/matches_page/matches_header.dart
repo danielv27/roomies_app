@@ -1,6 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:roomies_app/backend/providers/current_profile_provider.dart';
 import 'package:roomies_app/backend/providers/matches_provider.dart';
@@ -33,7 +31,7 @@ class _MatchesHeaderWidgetState extends State<MatchesHeaderWidget> {
       padding: const EdgeInsets.only(top:32),
       child: Column(
         children: [
-          searchBar(context, widget.provider.userModels),
+          searchBar(context, widget.provider.userModels, widget.currentUser),
           SizedBox(height: MediaQuery.of(context).size.height*0.02),
           circularUserList(context, widget.provider.userModels),
         ],
@@ -42,7 +40,7 @@ class _MatchesHeaderWidgetState extends State<MatchesHeaderWidget> {
   }
 }
 
-Widget searchBar(BuildContext context,List<UserModel>? users){
+Widget searchBar(BuildContext context,List<UserModel>? users, UserModel? currentUser){
   DateTime now = DateTime.now();
   String dayTime = "morning";
   if(now.hour >= 21){
@@ -55,6 +53,7 @@ Widget searchBar(BuildContext context,List<UserModel>? users){
     dayTime = "afternoon";
   }
   UserModel? currentUser = context.read<CurrentUserProvider>().currentUser?.userModel;
+
   return AppBar(
     centerTitle: false,
     backgroundColor: Colors.transparent,
@@ -63,9 +62,9 @@ Widget searchBar(BuildContext context,List<UserModel>? users){
       GestureDetector(
         onTap: () { 
           print('search pressed');
-            showSearch(
-              context: context,
-              delegate: MatchesSearchDelegate(users)
+          showSearch(
+            context: context,
+            delegate: MatchesSearchDelegate(users),
           );
         },
         child: CircleAvatar(
@@ -94,31 +93,15 @@ Widget searchBar(BuildContext context,List<UserModel>? users){
           shape: BoxShape.circle
           ),
           padding: const EdgeInsets.all(3.5),
-          child: CachedNetworkImage(
-            imageUrl: currentUser!.firstImgUrl,
-            fit: BoxFit.cover,
-            filterQuality: FilterQuality.low,
-            placeholder: (context, url) => const CircleAvatar(
-              backgroundColor: Colors.white,
-              radius: 28,
-            ),
-            imageBuilder: (context, imageProvider) => CircleAvatar(
-              backgroundColor: Colors.red[700],
-              radius: 28,
-              backgroundImage: imageProvider,
-            ),
-            cacheManager: CacheManager(
-              Config(
-                'currentUserImageKey',
-                stalePeriod: const Duration(days : 1),
-                maxNrOfCacheObjects: 5,
-              )
-            ),
+          child: 
+          CircleAvatar(
+            backgroundColor: Colors.red[700],
+            radius: 28,
+            backgroundImage: currentUser!.firstImageProvider,
           ),
         ),
       ),
-      const Padding(padding: EdgeInsets.only(right: 16))
-
+      const Padding(padding: EdgeInsets.only(right: 16)),
     ],
     title: Column(
       children: [
@@ -138,7 +121,6 @@ Widget searchBar(BuildContext context,List<UserModel>? users){
           child: Text(
             "${currentUser.firstName} ${currentUser.lastName}",
             style: const TextStyle(
-              //fontSize: 16,
               color: Colors.white
             ),
           ),
@@ -161,32 +143,13 @@ Widget circularUserList(BuildContext context, List<UserModel>? users){
         return Padding(
           padding: const EdgeInsets.only(top: 11,left: 15,right: 4),
           child: GestureDetector(
-            onTap: () => {print('chat with user $index'), Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: PrivateChatPage(otherUser: usersSortedByName[index],)))},
+            onTap: () {
+              print('chat with user $index'); 
+              Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: PrivateChatPage(otherUser: usersSortedByName[index],)));
+            },
             child: Column(
               children: [
-                CachedNetworkImage(
-                  imageUrl: usersSortedByName[index].firstImgUrl,
-                  fit: BoxFit.cover,
-                  filterQuality: FilterQuality.low,
-                  placeholder: (context, url) => const AvatarWithGradientBorder(
-                    backgroundColor: Colors.white,
-                    radius: 26,
-                    borderWidth: 4,
-                  ),
-                  imageBuilder: (context, imageProvider) => AvatarWithGradientBorder(
-                    backgroundColor: Colors.red[700],
-                    radius: 26,
-                    image: imageProvider,
-                    borderWidth: 4,
-                  ),
-                  cacheManager: CacheManager(
-                    Config(
-                      'userListImagesKey',
-                      stalePeriod: const Duration(days : 1),
-                      maxNrOfCacheObjects: 100,
-                    )
-                  ),
-                ),
+                AvatarWithGradientBorder(radius: 26, borderWidth: 4, image: usersSortedByName[index].firstImageProvider, backgroundColor: Colors.red[700],),
                 Text(usersSortedByName[index].firstName, style: const TextStyle(color: Colors.white),)
               ],
             ),

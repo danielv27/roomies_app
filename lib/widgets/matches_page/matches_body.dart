@@ -49,6 +49,3 @@ Widget chatTileList(List<UserModel> users, List<GroupChat> groupChats){
     addAutomaticKeepAlives: false,
   );
 }
-
-
-      

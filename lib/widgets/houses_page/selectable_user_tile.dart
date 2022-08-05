@@ -55,7 +55,7 @@ class _SelectableUserTileState extends State<SelectableUserTile> {
         margin: const EdgeInsets.only(right: 20,left: 20, top: 10,bottom: 10),
         child: Row(
           children: [
-            AvatarWithGradientBorder(radius: 18, borderWidth: 3,image: NetworkImage(widget.user.firstImgUrl)),
+            AvatarWithGradientBorder(radius: 18, borderWidth: 3, image: widget.user.firstImageProvider),
             const SizedBox(width: 10),
             Text(
               "${widget.user.firstName} ${widget.user.lastName}",

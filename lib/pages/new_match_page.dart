@@ -38,14 +38,14 @@ class NewMatchPage extends StatelessWidget {
                   delay: const Duration(milliseconds: 230),
                   duration: const Duration(milliseconds: 1200),
                   explodeLeft: true,
-                  child: AvatarWithGradientBorder(image: NetworkImage(currentUser!.firstImgUrl),radius: 66,backgroundColor: Colors.red,borderWidth: 5.5),
+                  child: AvatarWithGradientBorder(image: currentUser!.firstImageProvider,radius: 66,backgroundColor: Colors.red,borderWidth: 5.5),
                 )
               ),
               PopInAnimation(
                 delay: const Duration(milliseconds: 290),
                 duration: const Duration(milliseconds: 1200),
                 explodeLeft: false,
-                child: AvatarWithGradientBorder(image: NetworkImage(otherUser!.firstImgUrl),radius: 66,backgroundColor: Colors.red,borderWidth: 5.5),
+                child: AvatarWithGradientBorder(image: otherUser!.firstImageProvider ,radius: 66,backgroundColor: Colors.red,borderWidth: 5.5),
               )
             ]
           ),

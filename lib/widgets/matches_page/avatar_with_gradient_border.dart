@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:roomies_app/widgets/gradients/blue_gradient.dart';
-import 'package:roomies_app/widgets/gradients/gradient.dart';
 
 class AvatarWithGradientBorder extends StatelessWidget {
   final Color? backgroundColor;
   final double radius;
   final ImageProvider<Object>? image;
   final double borderWidth;
-  
 
   const AvatarWithGradientBorder({
     Key? key,
@@ -20,20 +17,20 @@ class AvatarWithGradientBorder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const gradient = LinearGradient(
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-          colors: [
-          Color.fromARGB(255, 255, 113, 127),
-          Color.fromARGB(255, 180, 54, 64),
-          Color.fromARGB(255, 160, 36, 54),
-          Color.fromARGB(255, 243, 55, 80),
-          Color.fromRGBO(244, 130, 114, 1),
-          ]
-        );
+      begin: Alignment.centerLeft,
+      end: Alignment.centerRight,
+      colors: [
+      Color.fromARGB(255, 255, 113, 127),
+      Color.fromARGB(255, 180, 54, 64),
+      Color.fromARGB(255, 160, 36, 54),
+      Color.fromARGB(255, 243, 55, 80),
+      Color.fromRGBO(244, 130, 114, 1),
+      ]
+    );
     return Container(
       decoration: const BoxDecoration(
         gradient: gradient,
-        shape: BoxShape.circle
+        shape: BoxShape.circle,
       ),
       padding: EdgeInsets.all(borderWidth),
       child: CircleAvatar(

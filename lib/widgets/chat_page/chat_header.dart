@@ -6,7 +6,6 @@ import 'package:roomies_app/widgets/gradients/gradient.dart';
 class ChatHeader extends StatelessWidget {
   final UserModel otherUser;
   
-  
   ChatHeader({
     Key? key,
     required this.otherUser,
@@ -15,7 +14,6 @@ class ChatHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      //height: MediaQuery.of(context).size.height *0.14,
       decoration: BoxDecoration(
       gradient: redGradient(),
       ),
@@ -50,7 +48,7 @@ class ChatHeader extends StatelessWidget {
           actions: [
             CircleAvatar(
               backgroundColor: Colors.red,
-              backgroundImage: NetworkImage(otherUser.firstImgUrl,scale: 0.8),
+              backgroundImage: otherUser.firstImageProvider,
               radius: 26,
             ),
           ],

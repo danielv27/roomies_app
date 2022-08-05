@@ -1,5 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:roomies_app/models/message.dart';
 import 'package:roomies_app/models/user_profile_model.dart';
 
 import 'house_profile_model.dart';
@@ -10,8 +10,8 @@ class UserModel {
   final String firstName;
   final String lastName;
   final bool isHouseOwner;
-  final String firstImgUrl; 
   final UserSignupProfileModel userSignupProfileModel;
+  final CachedNetworkImageProvider firstImageProvider;
   DateTime? timeStamp;
   String? lastMessage;
 
@@ -21,10 +21,10 @@ class UserModel {
     required this.firstName,
     required this.lastName,
     required this.isHouseOwner,
-    required this.firstImgUrl, 
     required this.userSignupProfileModel,
     this.timeStamp,
-    this.lastMessage
+    this.lastMessage,
+    required this.firstImageProvider,
   });
 
   @override

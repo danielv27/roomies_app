@@ -1,11 +1,27 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:roomies_app/models/user_model.dart';
 import 'package:roomies_app/models/user_profile_images.dart';
 import 'package:roomies_app/models/user_profile_model.dart';
 
 class UsersAPI {
+
+  CachedNetworkImageProvider setCachedNetworkImageProvider(String image) {
+    return CachedNetworkImageProvider(
+      image,
+      scale: 1.0,
+      cacheManager: CacheManager(
+        Config(
+          'usersFirstImage',
+          stalePeriod: const Duration(days : 10),
+          maxNrOfCacheObjects: 1000,
+        )
+      ),
+    );
+  }
 
   Future<UserModel?> getCurrentUserModel() async {
     try {
@@ -23,8 +39,8 @@ class UsersAPI {
           firstName: userDoc['firstName'],
           lastName: userDoc['lastName'],
           isHouseOwner: userDoc['isHouseOwner'],
-          firstImgUrl: usersProfileImages!.imageURLS[0], 
           userSignupProfileModel: userSignupProfileModel,
+          firstImageProvider: setCachedNetworkImageProvider(usersProfileImages!.imageURLS[0])
         );
       });
       return currentUser;
@@ -50,8 +66,8 @@ class UsersAPI {
           firstName: userDoc['firstName'],
           lastName: userDoc['lastName'],
           isHouseOwner: userDoc['isHouseOwner'],
-          firstImgUrl: usersProfileImages!.imageURLS[0], 
           userSignupProfileModel: userSignupProfileModel,
+          firstImageProvider: setCachedNetworkImageProvider(usersProfileImages!.imageURLS[0]),
         );
       });
       return newUser;
@@ -85,8 +101,8 @@ class UsersAPI {
               firstName: userDoc['firstName'],
               lastName: userDoc['lastName'],
               isHouseOwner: userDoc['isHouseOwner'],
-              firstImgUrl: usersProfileImages!.imageURLS[0],
               userSignupProfileModel: userSignupProfileModel,
+              firstImageProvider: setCachedNetworkImageProvider(usersProfileImages!.imageURLS[0]),
             );
             userList.add(newUser);
           }

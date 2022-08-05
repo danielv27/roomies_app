@@ -27,6 +27,7 @@ class _MatchesPageState extends State<MatchesPage> {
   Widget build(BuildContext context) {
     final MatchesProvider matchesProvider = context.watch<MatchesProvider>();
     UserModel? currentUser = context.read<CurrentUserProvider>().currentUser?.userModel;
+
     return Scaffold(
       body: Container(
           decoration: const BoxDecoration(
@@ -46,10 +47,9 @@ class _MatchesPageState extends State<MatchesPage> {
             children: [
               MatchesHeaderWidget(provider: matchesProvider, currentUser: currentUser),
               const MatchesBodyWidget()
-            ] 
+            ],
           ),          
         ),
-      
     );
   }
 }

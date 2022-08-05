@@ -5,7 +5,6 @@ import 'package:roomies_app/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:roomies_app/widgets/matches_page/avatar_with_online_indicator.dart';
 
-import '../../models/message.dart';
 import '../../pages/chat_page.dart';
 
 class UserTile extends StatefulWidget {
@@ -34,6 +33,7 @@ class _UserTileState extends State<UserTile> {
       await Future.delayed(const Duration(seconds: 2));
     }
   } 
+
   @override
   void initState() {
     super.initState();
@@ -42,7 +42,6 @@ class _UserTileState extends State<UserTile> {
 
   @override
   Widget build(BuildContext context) {
-    
     
     String lastMessage = '';
     if(widget.user.lastMessage != null){
@@ -68,8 +67,8 @@ class _UserTileState extends State<UserTile> {
         },
         child: Row(
           children: [
-            AvatarWithOnlineIndicator(user: widget.user),
-            SizedBox(width: MediaQuery.of(context).size.width*0.04,),
+            AvatarWithOnlineIndicator(user: widget.user, userProfileImage: widget.user.firstImageProvider),
+            SizedBox(width: MediaQuery.of(context).size.width * 0.04),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children:[
@@ -78,13 +77,13 @@ class _UserTileState extends State<UserTile> {
                   textAlign: TextAlign.left,
                 ),
                 Text(lastMessage),
-
-              ]
+              ],
             ),
             const Spacer(),
             Container(
-              margin: EdgeInsets.only(right: 20),
-              color: Colors.green,width: 5,height: 5,)
+              margin: const EdgeInsets.only(right: 20),
+              color: Colors.green, width: 5, height: 5,
+            ),
           ],
         ),
       ),
