@@ -359,17 +359,7 @@ class AuthPageState extends State<AuthPage> {
   }
 
   void signUp() async {
-    setState(() {
-      errorMessage.text = "";
-    }); 
-    errorMessage.text = await AuthAPI().signUp(emailController, passwordController, firstNameController, lastNameController, errorMessage, context);
-    if (!mounted) return;
-    if (errorMessage.text.isEmpty) {
-      Navigator.push(
-        context, 
-        PageTransition(type: PageTransitionType.fade, child: const SetupPage()),
-      );
-    }
+    await AuthAPI().signUp(emailController, passwordController, firstNameController, lastNameController, errorMessage, context);
   }
 
   GestureDetector rememberMeGestureDetector() {

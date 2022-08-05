@@ -126,8 +126,10 @@ class _UserTypeSelectorState extends State<UserTypeSelector> {
             return const HomePage();
           }),
         );
-    } else {
+    } else if (!userProvider.profileSetUp && !userProvider.houseSetUp){
       return const SetupPage(); 
+    } else {
+      return const Center(child: CircularProgressIndicator(color: Colors.red,),);
     }
   }
 }
