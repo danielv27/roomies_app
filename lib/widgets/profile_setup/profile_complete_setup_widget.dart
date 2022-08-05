@@ -352,8 +352,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                     );
                     if (!mounted) return;
                     Navigator.of(context).pop();
-                    Navigator.of(context).pop();
-                  } 
+                  }
                   else {
                     await alertImageEmpty(context);
                   }

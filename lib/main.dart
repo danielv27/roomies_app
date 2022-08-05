@@ -13,6 +13,7 @@ import 'package:roomies_app/backend/providers/setup_completion_provider.dart';
 import 'package:roomies_app/backend/providers/user_profile_provider.dart';
 import 'package:roomies_app/backend/users_api.dart';
 import 'package:roomies_app/pages/owner_page.dart';
+import 'package:roomies_app/pages/setup_page.dart';
 import 'pages/home_page.dart';
 import 'pages/auth_page.dart';
 
@@ -126,7 +127,7 @@ class _UserTypeSelectorState extends State<UserTypeSelector> {
           }),
         );
     } else {
-      return const Center(child: CircularProgressIndicator(color: Colors.red)); 
+      return const SetupPage(); 
     }
   }
 }
