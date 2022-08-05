@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:roomies_app/widgets/houses_page/users_houses_matched_page.dart';
+import 'package:roomies_app/pages/houses_matched_page.dart';
 
 import '../../models/house_profile_model.dart';
 

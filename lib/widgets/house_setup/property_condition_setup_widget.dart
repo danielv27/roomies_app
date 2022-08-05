@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../gradients/blue_gradient.dart';
 
 class PropertyConditionSetupPage extends StatefulWidget {
-  PropertyConditionSetupPage({
+  const PropertyConditionSetupPage({
     Key? key, 
     required this.propertyConditionController,
     required this.pageController,

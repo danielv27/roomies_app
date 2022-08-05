@@ -12,7 +12,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:roomies_app/backend/houses_api.dart';
 import 'package:roomies_app/backend/providers/house_profile_provider.dart';
 import 'package:roomies_app/models/house_profile_model.dart';
-import 'package:roomies_app/widgets/houses_page/users_houses_matched_page.dart';
+import 'package:roomies_app/pages/houses_matched_page.dart';
 
 import 'house_information_tile.dart';
 

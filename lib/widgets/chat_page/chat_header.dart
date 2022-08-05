@@ -6,7 +6,7 @@ import 'package:roomies_app/widgets/gradients/gradient.dart';
 class ChatHeader extends StatelessWidget {
   final UserModel otherUser;
   
-  ChatHeader({
+  const ChatHeader({
     Key? key,
     required this.otherUser,
     }) : super(key: key);

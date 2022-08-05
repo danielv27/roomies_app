@@ -1,6 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:email_validator/email_validator.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
@@ -11,6 +8,8 @@ import 'package:roomies_app/widgets/gradients/blue_gradient.dart';
 import '../widgets/gradients/gradient.dart';
 
 class AuthPage extends StatefulWidget {
+  const AuthPage({Key? key}) : super(key: key);
+
   @override
   AuthPageState createState() => AuthPageState();
 }

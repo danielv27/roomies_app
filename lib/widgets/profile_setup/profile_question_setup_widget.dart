@@ -4,9 +4,7 @@ import 'package:roomies_app/widgets/gradients/blue_gradient.dart';
 
 import 'package:roomies_app/widgets/profile_setup/profile_google_widget.dart';
 
-
 class ProfileQuestionPage extends StatefulWidget {
-
   ProfileQuestionPage({
     Key? key,
     required this.minBudgetController,

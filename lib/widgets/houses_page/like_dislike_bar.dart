@@ -6,7 +6,6 @@ import 'package:roomies_app/models/house_profile_model.dart';
 import 'package:roomies_app/widgets/gradients/gradient.dart';
 import 'package:swipable_stack/swipable_stack.dart';
 
-import '../../models/user_profile_model.dart';
 
 class LikeDislikeBar extends StatefulWidget {
   const LikeDislikeBar({

@@ -23,7 +23,7 @@ class MatchesProvider extends ChangeNotifier {
   Stream<List<UserModel>> checkForChanges() async* {
     List<UserModel> initialUserModels = List.from(userModels);
     while(true){
-      await Future.delayed(Duration(seconds: 3));
+      await Future.delayed(const Duration(seconds: 3));
       if(userModels.isNotEmpty && userModels[0] != initialUserModels[0]){
         yield userModels;
         initialUserModels = userModels;

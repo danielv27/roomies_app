@@ -84,6 +84,7 @@ class SwipableCardsState extends State<SwipableCards> {
               print('diskliked ${userProfileModels[index].userModel.firstName} ${userProfileModels[index].userModel.lastName}');
               await UsersAPI().addEncounter(false, currentUserID!, userProfileModels[index].userModel.id);
             }
+            if (!mounted) return;
             await Provider.of<UserProfileProvider>(context,listen: false).incrementIndex();
           },
           builder: (context, properties) {

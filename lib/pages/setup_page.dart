@@ -33,12 +33,12 @@ class _SetupPageState extends State<SetupPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children:<Widget>[
                     Transform.translate(
-                      child: Image.asset('assets/images/setup-circle.png', width: 120, height : 120),
                       offset: const Offset(10, 0),
+                      child: Image.asset('assets/images/setup-circle.png', width: 120, height : 120),
                     ),                    
                     Transform.translate(
-                      child: Image.asset('assets/images/setup-circle.png', width: 120, height : 120),
                       offset: const Offset(-10, 0),
+                      child: Image.asset('assets/images/setup-circle.png', width: 120, height : 120),
                     ),
                   ],
                 ),
@@ -74,6 +74,14 @@ class _SetupPageState extends State<SetupPage> {
                 onPressed: () { 
                   Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: const SetupProfilePage()));
                 },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.white,
+                  onPrimary: Colors.red,
+                  padding: const EdgeInsets.only(left: 40, bottom: 20, top: 20, right: 40),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children:const [
@@ -89,14 +97,6 @@ class _SetupPageState extends State<SetupPage> {
                     ),
                   ],
                 ),
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.white,
-                  onPrimary: Colors.red,
-                  padding: const EdgeInsets.only(left: 40, bottom: 20, top: 20, right: 40),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                  ),
-                ),
               )
             ),
             const SizedBox(height: 20),
@@ -109,6 +109,14 @@ class _SetupPageState extends State<SetupPage> {
                     MaterialPageRoute(builder: (context) => const SetupHousePage()),
                   );
                 },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.white.withOpacity(0.4),
+                  onPrimary: Colors.white,
+                  padding: const EdgeInsets.only(left: 40, bottom: 20, top: 20, right: 40),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children:const [
@@ -126,14 +134,6 @@ class _SetupPageState extends State<SetupPage> {
                       Icons.add_home_rounded
                     ),
                   ],
-                ),
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.white.withOpacity(0.4),
-                  onPrimary: Colors.white,
-                  padding: const EdgeInsets.only(left: 40, bottom: 20, top: 20, right: 40),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                  ),
                 ),
               )
             ),

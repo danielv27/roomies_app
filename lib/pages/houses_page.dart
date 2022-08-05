@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:roomies_app/backend/providers/house_profile_provider.dart';
 import 'package:roomies_app/widgets/gradients/gradient.dart';
-import 'package:roomies_app/widgets/houses_page/liked_houses_page.dart';
+import 'package:roomies_app/pages/liked_houses_page.dart';
 import 'package:roomies_app/widgets/houses_page/swipable_cards.dart';
 
 class HousesPage extends StatelessWidget {

@@ -10,7 +10,7 @@ class PopInAnimation extends StatefulWidget {
   final Duration duration;
   final bool explodeLeft; //if set to false explodes right
 
-  PopInAnimation({
+  const PopInAnimation({
     Key? key,
     required this.child,
     required this.delay,
