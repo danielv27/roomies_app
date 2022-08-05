@@ -4,9 +4,12 @@ import 'package:provider/provider.dart';
 import 'package:roomies_app/backend/providers/house_profile_provider.dart';
 import 'package:roomies_app/models/house_profile_model.dart';
 import 'package:roomies_app/widgets/gradients/gradient.dart';
+import 'package:roomies_app/widgets/houses_page/house_info_button/header_house_info.dart';
+import 'package:roomies_app/widgets/houses_page/house_info_button/house_description.dart';
 import 'package:roomies_app/widgets/houses_page/house_info_button/house_features.dart';
 import 'package:roomies_app/widgets/houses_page/house_info_button/house_media_tiles.dart';
 import 'package:roomies_app/widgets/houses_page/house_info_button/house_activity_tiles.dart';
+import 'package:roomies_app/widgets/houses_page/house_info_button/map_house_location.dart';
 import 'package:roomies_app/widgets/houses_page/house_info_button/neighborhood_tile.dart';
 import 'package:swipable_stack/swipable_stack.dart';
 
@@ -161,113 +164,11 @@ class _LikeDislikeBarState extends State<LikeDislikeBar> {
 
   Widget headerInfo(HouseProfileModel houseProfileModel) {
     var houseProfile = houseProfileModel.houseOwner.houseSignupProfileModel;
-
-    return Padding(
-      padding: const EdgeInsets.only(left: 15.0, right: 15.0, top: 15.0),
-      child: Column(
-        children: [
-          Center(
-            child: Container(
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(15.0)),
-                color: Color.fromRGBO(238, 238, 238, 1),
-              ),
-              height: 5,
-              width: 80,
-            ),
-          ),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 15.0, top:  25.0),
-              child: Text(
-                "Ceintuurbaan ${houseProfile.houseNumber}",
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w600
-                ),
-              ),
-            ),
-          ),
-          Row(
-            children: [
-              Text(
-                "${houseProfile.postalCode}, Amsterdam",
-                style: const TextStyle(
-                  color: Color.fromRGBO(128, 128, 128, 1),
-                  fontSize: 16,
-                ),
-              ),
-              const Spacer(),
-              Image.asset("assets/icons/apartment-size.png", width: 18, height: 18,),
-              Padding(
-                padding: const EdgeInsets.only(left: 5.0),
-                child: Text(
-                  "${houseProfile.livingSpace}m\u00B2",
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-              const Spacer(),
-              Image.asset("assets/icons/number-rooms.png", width: 18, height: 18,),
-              Padding(
-                padding: const EdgeInsets.only(left: 5.0),
-                child: Text(
-                  "${houseProfile.numRoom} Rooms",
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10,),
-          Row(
-            children: [
-              const Text(
-                "Nog vrij: ",
-                style: TextStyle(
-                  color: Color.fromRGBO(128, 128, 128, 1),
-                  fontSize: 16,
-                ),
-              ),
-              Image.asset("assets/icons/green-bed.png", width: 18, height: 18,),
-              Text(
-                "${houseProfile.availableRoom} kamers",
-                style: const TextStyle(
-                  color: Color.fromRGBO(34, 197, 94, 1),
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const Spacer(),
-              Image.asset("assets/icons/coin.png", width: 18, height: 18,),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: Text(
-                  "\u{20AC}${houseProfile.pricePerRoom}",
-                  style: const TextStyle(
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
+    return HeaderHouseInformation(houseProfile: houseProfile);
   }
 
   SliverChildListDelegate bodyInfo(HouseProfileModel houseProfileModel) {
     var houseProfile = houseProfileModel.houseOwner.houseSignupProfileModel;
-
     return SliverChildListDelegate(
       <Widget> [
         Padding(
@@ -277,42 +178,15 @@ class _LikeDislikeBarState extends State<LikeDislikeBar> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               HouseMediaTiles(context: context),
-              textTitle("Description"),
-              textDescription(houseProfile.houseDescription),
-              const SizedBox(height: 12,),
+              HouseDescription(houseProfile: houseProfile),
               HouseFeatures(context: context, houseProfile: houseProfile),
               HouseActivityTiles(context: context),
-              const SizedBox(height: 12,),
               const NeighborhoodTile(),
-              textTitle("Location"),
-              const SizedBox(height: 12,),
+              const MapHouseLocation(),
             ],
           ),
         )
       ],
-    );
-  }
-
-  Widget textDescription(String description) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 5.0),
-      child: Text(
-        description,
-        style: const TextStyle(
-          color: Color.fromRGBO(128, 128, 128, 1),
-          fontSize: 16,
-        ),
-      ),
-    );
-  }
-
-  Text textTitle(String title) {
-    return Text(
-      title,
-      style: const TextStyle(
-        fontWeight: FontWeight.bold, 
-        fontSize: 20,
-      ),
     );
   }
 }

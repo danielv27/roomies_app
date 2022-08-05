@@ -39,24 +39,27 @@ class HouseActivityTiles extends StatelessWidget {
       ),  
     ];  
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        textTitle("Activity"),
-        const SizedBox(height: 12,),
-        SizedBox(
-          height: 100,
-          width: MediaQuery.of(context).size.width,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Expanded(child: DisplayActivityTile(activityTile: activityTiles[0], borderRadius: const BorderRadius.only(topLeft: Radius.circular(15.0), bottomLeft: Radius.circular(15.0)))), 
-              Expanded(child: DisplayActivityTile(activityTile: activityTiles[1], borderRadius: const BorderRadius.only())), 
-              Expanded(child: DisplayActivityTile(activityTile: activityTiles[2], borderRadius: const BorderRadius.only(topRight: Radius.circular(15.0), bottomRight: Radius.circular(15.0)))), 
-            ],
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          textTitle("Activity"),
+          const SizedBox(height: 12,),
+          SizedBox(
+            height: 100,
+            width: MediaQuery.of(context).size.width,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(child: DisplayActivityTile(activityTile: activityTiles[0], borderRadius: const BorderRadius.only(topLeft: Radius.circular(15.0), bottomLeft: Radius.circular(15.0)))), 
+                Expanded(child: DisplayActivityTile(activityTile: activityTiles[1], borderRadius: const BorderRadius.only())), 
+                Expanded(child: DisplayActivityTile(activityTile: activityTiles[2], borderRadius: const BorderRadius.only(topRight: Radius.circular(15.0), bottomRight: Radius.circular(15.0)))), 
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
