@@ -6,6 +6,7 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:roomies_app/models/user_model.dart';
 import 'package:roomies_app/models/user_profile_images.dart';
 import 'package:roomies_app/models/user_profile_model.dart';
+import 'package:roomies_app/widgets/helper_functions.dart';
 
 class UsersAPI {
 
@@ -32,6 +33,7 @@ class UsersAPI {
       .then((userDoc) async {
         UserProfileImages? usersProfileImages = await getUsersImagesById(userDoc.id);
         UserSignupProfileModel? userSignupProfileModel = await getUserProfile(userDoc.id);
+        String? userlocation = await HelperWidget().convertLatLngToPlace(userSignupProfileModel.latLng);
 
         currentUser = UserModel(
           id: userDoc.id,
@@ -40,7 +42,8 @@ class UsersAPI {
           lastName: userDoc['lastName'],
           isHouseOwner: userDoc['isHouseOwner'],
           userSignupProfileModel: userSignupProfileModel,
-          firstImageProvider: setCachedNetworkImageProvider(usersProfileImages!.imageURLS[0])
+          firstImageProvider: setCachedNetworkImageProvider(usersProfileImages!.imageURLS[0]),
+          location: userlocation,
         );
       });
       return currentUser;
@@ -55,6 +58,7 @@ class UsersAPI {
       UserModel? newUser;
       UserProfileImages? usersProfileImages = await getUsersImagesById(userID);
       UserSignupProfileModel? userSignupProfileModel = await getUserProfile(userID);
+      String? userlocation = await HelperWidget().convertLatLngToPlace(userSignupProfileModel.latLng);
 
       await FirebaseFirestore.instance.collection("users")
       .doc(userID)
@@ -68,6 +72,7 @@ class UsersAPI {
           isHouseOwner: userDoc['isHouseOwner'],
           userSignupProfileModel: userSignupProfileModel,
           firstImageProvider: setCachedNetworkImageProvider(usersProfileImages!.imageURLS[0]),
+          location: userlocation,
         );
       });
       return newUser;
@@ -95,6 +100,8 @@ class UsersAPI {
             }
             UserProfileImages? usersProfileImages = await getUsersImagesById(userDoc.id);
             UserSignupProfileModel userSignupProfileModel = await getUserProfile(userDoc.id);
+            String? userlocation = await HelperWidget().convertLatLngToPlace(userSignupProfileModel.latLng);
+
             UserModel newUser = UserModel(
               id: userDoc.id,
               email: userDoc['email'],
@@ -103,6 +110,7 @@ class UsersAPI {
               isHouseOwner: userDoc['isHouseOwner'],
               userSignupProfileModel: userSignupProfileModel,
               firstImageProvider: setCachedNetworkImageProvider(usersProfileImages!.imageURLS[0]),
+              location: userlocation,
             );
             userList.add(newUser);
           }

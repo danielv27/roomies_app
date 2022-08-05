@@ -14,6 +14,7 @@ class UserModel {
   final CachedNetworkImageProvider firstImageProvider;
   DateTime? timeStamp;
   String? lastMessage;
+  final String location;
 
   UserModel({
     required this.id,
@@ -24,6 +25,7 @@ class UserModel {
     required this.userSignupProfileModel,
     this.timeStamp,
     this.lastMessage,
+    required this.location,
     required this.firstImageProvider,
   });
 
