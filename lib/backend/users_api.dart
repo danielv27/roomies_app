@@ -342,18 +342,10 @@ class UsersAPI {
     return onlineStatus;
   }
 
-  Stream<bool> checkIfOnline(String? uid) async* {
-    try {
-      while(true) {
-        bool? isOnline = await getOnlineStatus(uid);
-        if(isOnline != null){
-          yield (isOnline) ? true : false;
-        }
-        await Future.delayed(const Duration(seconds: 2));
-      }
-    } catch (e) {
-      debugPrint("Error - $e");
-    }
+  Stream<bool> listenIfOnline(String? uid){
+    return FirebaseFirestore.instance.collection('users').doc(uid)
+    .snapshots()
+    .map((userDoc) => (userDoc.data()!.containsKey('online') && userDoc['online'])? true:false);
   }
 
 }

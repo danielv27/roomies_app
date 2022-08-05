@@ -28,7 +28,7 @@ class AvatarWithOnlineIndicatorState extends State<AvatarWithOnlineIndicator> {
   Future<void> checkIfOnline(String currentUserID) async {
     
     bool newOnlineStatus = false;
-    subscription = UsersAPI().checkIfOnline(currentUserID).listen(
+    subscription = UsersAPI().listenIfOnline(currentUserID).listen(
         (event) {
           newOnlineStatus = event;
           bool onlineStatusChanged = newOnlineStatus != onlineStatus;
@@ -83,8 +83,8 @@ class AvatarWithOnlineIndicatorState extends State<AvatarWithOnlineIndicator> {
         ),
         AnimatedScale(
           scale: onlineStatus? 1:0,
-          duration: onlineStatus? const Duration(milliseconds: 200):const Duration(milliseconds: 900),
-          curve: Curves.easeIn,
+          duration: const Duration(milliseconds: 200),
+          curve: onlineStatus? Curves.easeIn:Curves.easeOut,
           child: Container(
             margin: const EdgeInsets.only(bottom: 2,right: 2),
             height: 13,

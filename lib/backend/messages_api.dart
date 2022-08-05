@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:roomies_app/models/message.dart';
 
@@ -62,20 +63,20 @@ class MessagesAPI {
     }
   }
 
-  Stream<List<Message>?> listenToPrivateChat(String? currentUserID, String? otherUserID) async* {
+  Stream<List<Message>?>? listenToPrivateChat(String? currentUserID, String? otherUserID) {
     try {
-      List<Message>? messages = await getPrivateMessages(currentUserID, otherUserID);
-      while(true){
-        await Future.delayed(const Duration(seconds: 2));
-        List<Message>? newMessages = await getPrivateMessages(currentUserID, otherUserID);
-        if(newMessages!.length > messages!.length){
-          messages = newMessages;
-          yield newMessages;
-        } 
-      }
+      return FirebaseFirestore.instance.collection('users/$currentUserID/private_chats/$otherUserID/messages')
+      .snapshots()
+      .map((querySanpshot) => querySanpshot.docs.map((messageDoc) => Message(
+        message: messageDoc['message'],
+        otherUserID: messageDoc['otherUserID'],
+        sentByCurrent: messageDoc['sentByCurrent'],
+        timeStamp: messageDoc['timeStamp'].toDate()
+        )).toList());
     } catch (e) {
       debugPrint("Error - $e");
     }
+    return null;
   }
 
   Future<String> getLastPrivateMessage(String? currentUserID, String? otherUserID) async {

@@ -23,7 +23,7 @@ class OnlineIndicatorState extends State<OnlineIndicator> {
 
   void checkIfOnline() async {
     bool newOnlineStatus = false;
-    subscription = UsersAPI().checkIfOnline(widget.userID).listen(
+    subscription = UsersAPI().listenIfOnline(widget.userID).listen(
         (event) {
           newOnlineStatus = event;
           bool onlineStatusChanged = newOnlineStatus != onlineStatus;

@@ -64,6 +64,7 @@ class MatchesProvider extends ChangeNotifier {
   Stream<UserModel> listenToMatches() async* {
     final currentUser = FirebaseAuth.instance.currentUser?.uid;
     while(true){
+      print('listening..');
       List<String> newUserIDs = [];
       currentUser != null? newUserIDs = await UsersAPI().getLikedEncountersIDs(currentUser):null;
       final List<UserModel> newUserModels = await loadMatches(newUserIDs);

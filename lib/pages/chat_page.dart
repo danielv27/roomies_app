@@ -57,8 +57,9 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
                     messages = snapshot.data as List<Message>;
                     messages.sort((a, b) => b.timeStamp.toString().compareTo(a.timeStamp.toString()));
                     MessagesAPI().listenToPrivateChat(FirebaseAuth.instance.currentUser?.uid, widget.otherUser.id)
-                    .listen(
+                    ?.listen(
                       (event) {
+                        print('listening');
                         List<Message>? newMessages = event;
                         if(newMessages != null && newMessages.length > messages.length){
                           newMessages.sort((a, b) => b.timeStamp.toString().compareTo(a.timeStamp.toString()));
