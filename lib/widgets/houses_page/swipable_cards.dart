@@ -50,10 +50,8 @@ class SwipableCardsState extends State<SwipableCards> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
-    
     final String? currentUserID = context.read<CurrentUserProvider>().currentUser?.userModel.id;
     final List<HouseProfileModel>? houseProfileModels = widget.houseProvider.houseProfileModels;
     int currentHouseIndex = widget.houseProvider.pagesSwiped;
@@ -76,7 +74,6 @@ class SwipableCardsState extends State<SwipableCards> {
           },
           controller: swipeController,
           onSwipeCompleted: (index, direction) async {
-            //this is where a swipe is handled
             print('houseListLength = ${houseProfileModels.length}');
             if(direction == SwipeDirection.right){
               print('liked ${houseProfileModels[index].houseOwner.firstName} ${houseProfileModels[index].houseOwner.lastName}');
@@ -85,7 +82,6 @@ class SwipableCardsState extends State<SwipableCards> {
             }
             if(direction == SwipeDirection.left){
               print('diskliked ${houseProfileModels[index].houseOwner.firstName} ${houseProfileModels[index].houseOwner.lastName}');
-              print(houseProfileModels[index].houseRef);
               await HousesAPI().addHouseEncounter(false, currentUserID!, houseProfileModels[index].houseRef);
             }
             if (!mounted) return;
@@ -100,7 +96,6 @@ class SwipableCardsState extends State<SwipableCards> {
 
             final currenUserImages = houseProfileModels[currentHouseIndex].imageURLS;
             final imgController = PageController();
-
             final images = List.generate(
               currenUserImages.length,
               (index) {
@@ -122,7 +117,6 @@ class SwipableCardsState extends State<SwipableCards> {
                 );
               }
             );
-
             return Stack(
               children: [
                 PageView.builder(
@@ -141,14 +135,12 @@ class SwipableCardsState extends State<SwipableCards> {
                         if(index < currenUserImages.length - 1 && xPos > deviceWidth * 0.65){
                             imgController.nextPage(duration: const Duration(milliseconds: 200),curve: Curves.easeInOut);
                             print("current image index: ${index + 1}");
-                          
                         }
 
                         if(index >= 1 && xPos < deviceWidth * 0.35){
                             imgController.previousPage(duration: const Duration(milliseconds: 200),curve: Curves.easeInOut);
                             print("current image index: ${index - 1}");
                         }
-                        
                       },                        
                     ); 
                   },
@@ -162,7 +154,6 @@ class SwipableCardsState extends State<SwipableCards> {
                       onDotClicked: ((index) {
                         imgController.jumpToPage(index);
                       }),
-                      
                       count: houseProfileModels[currentHouseIndex].imageURLS.length,
                       effect: const ScrollingDotsEffect(
                         dotHeight: 3,
@@ -174,19 +165,7 @@ class SwipableCardsState extends State<SwipableCards> {
                     ),
                   ),
                 ),
-                Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 120),
-                    child: Text(
-                      '${houseProfileModels[currentHouseIndex].houseOwner.houseSignupProfileModel.houseNumber} $currentHouseIndex', 
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 32
-                      )
-                    ),
-                  )
-                ),
+                HouseInformation(houseProfileModels: houseProfileModels, currentHouseIndex: currentHouseIndex),
               ],
             );
           },
@@ -196,6 +175,81 @@ class SwipableCardsState extends State<SwipableCards> {
           child: LikeDislikeBar(swipeController: swipeController, houseProfileModels: houseProfileModels, currentHouseIndex: currentHouseIndex),
         ),
       ]
+    );
+  }
+}
+
+class HouseInformation extends StatelessWidget {
+  const HouseInformation({
+    Key? key,
+    required this.houseProfileModels,
+    required this.currentHouseIndex,
+  }) : super(key: key);
+
+  final List<HouseProfileModel>? houseProfileModels;
+  final int currentHouseIndex;
+
+  @override
+  Widget build(BuildContext context) {
+    final houseProfile = houseProfileModels![currentHouseIndex].houseOwner.houseSignupProfileModel;
+    final occupiedRoomes = int.parse(houseProfile.numRoom) - int.parse(houseProfile.availableRoom);
+
+    return Padding(
+      padding: const EdgeInsets.only(left: 25, bottom: 125.0, right: 25),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start, 
+        children: [
+          Text(
+            "Ceintuurbaan ${houseProfile.houseNumber}",
+            style: const TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(height: 5,),
+          Text(
+            "${houseProfile.postalCode}, Amsterdam",
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+            ),
+          ),
+          const SizedBox(height: 30,),
+          Row(
+            children: [
+              Text(
+                "${houseProfile.livingSpace}m\u00B2, $occupiedRoomes People",
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                ),
+              ),
+              const Spacer(),
+              Image.asset("assets/icons/coin.png", width: 18, height: 18,),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Text(
+                  "\u{20AC}${houseProfile.pricePerRoom}",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Text(
+            "Nog vrij: ${houseProfile.availableRoom}",
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
