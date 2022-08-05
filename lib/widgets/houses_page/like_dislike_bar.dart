@@ -4,8 +4,11 @@ import 'package:provider/provider.dart';
 import 'package:roomies_app/backend/providers/house_profile_provider.dart';
 import 'package:roomies_app/models/house_profile_model.dart';
 import 'package:roomies_app/widgets/gradients/gradient.dart';
+import 'package:roomies_app/widgets/houses_page/house_info_button/house_features.dart';
+import 'package:roomies_app/widgets/houses_page/house_info_button/house_media_tiles.dart';
+import 'package:roomies_app/widgets/houses_page/house_info_button/house_activity_tiles.dart';
+import 'package:roomies_app/widgets/houses_page/house_info_button/neighborhood_tile.dart';
 import 'package:swipable_stack/swipable_stack.dart';
-
 
 class LikeDislikeBar extends StatefulWidget {
   const LikeDislikeBar({
@@ -265,80 +268,40 @@ class _LikeDislikeBarState extends State<LikeDislikeBar> {
   SliverChildListDelegate bodyInfo(HouseProfileModel houseProfileModel) {
     var houseProfile = houseProfileModel.houseOwner.houseSignupProfileModel;
 
-    const List<Choice> choices = <Choice>[  
-      Choice(
-        title: 'Pattleground', 
-        icon: ImageIcon(
-          AssetImage("assets/icons/ground.png"), 
-          size: 30, 
-          color: Color.fromRGBO(128, 128, 128, 1),
-        ),
-      ),  
-      Choice(
-        title: '360', 
-        icon: ImageIcon(
-          AssetImage("assets/icons/360.png"), 
-          size: 36, 
-          color: Color.fromRGBO(128, 128, 128, 1)
-        ),
-      ),  
-      Choice(
-        title: 'Video', 
-        icon: ImageIcon(
-          AssetImage("assets/icons/play.png"), 
-          size: 30, 
-          color: Color.fromRGBO(128, 128, 128, 1),
-        ),
-      ),  
-    ];  
-
     return SliverChildListDelegate(
       <Widget> [
         Padding(
           padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: 90,
-                  width: MediaQuery.of(context).size.width,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Expanded(child: SelectCard(choice: choices[0], borderRadius: const BorderRadius.only(topLeft: Radius.circular(15.0), bottomLeft: Radius.circular(15.0)))), 
-                      Expanded(child: SelectCard(choice: choices[1], borderRadius: const BorderRadius.only())), 
-                      Expanded(child: SelectCard(choice: choices[2], borderRadius: const BorderRadius.only(topRight: Radius.circular(15.0), bottomRight: Radius.circular(15.0)))), 
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 15,),
-                textTitle("Omschrijving"),
-                textDescription(houseProfile.houseDescription),
-                const SizedBox(height: 12,),
-                textTitle("Kenmerken"),
-                const SizedBox(height: 12,),
-                textTitle("Activity"),
-                const SizedBox(height: 12,),
-                textTitle("Buurt"),
-                const SizedBox(height: 12,),
-                textTitle("Locatie"),
-                const SizedBox(height: 12,),
-              ],
-            ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              HouseMediaTiles(context: context),
+              textTitle("Description"),
+              textDescription(houseProfile.houseDescription),
+              const SizedBox(height: 12,),
+              HouseFeatures(context: context, houseProfile: houseProfile),
+              HouseActivityTiles(context: context),
+              const SizedBox(height: 12,),
+              const NeighborhoodTile(),
+              textTitle("Location"),
+              const SizedBox(height: 12,),
+            ],
           ),
         )
-      ]
+      ],
     );
   }
 
-  Text textDescription(String description) {
-    return Text(
-      description,
-      style: const TextStyle(
-        color: Color.fromRGBO(128, 128, 128, 1),
-        fontSize: 16,
+  Widget textDescription(String description) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 5.0),
+      child: Text(
+        description,
+        style: const TextStyle(
+          color: Color.fromRGBO(128, 128, 128, 1),
+          fontSize: 16,
+        ),
       ),
     );
   }
@@ -352,58 +315,4 @@ class _LikeDislikeBarState extends State<LikeDislikeBar> {
       ),
     );
   }
-
 }
-
-class Choice {  
-  const Choice({
-    required this.title, 
-    required this.icon
-  });  
-
-  final String title;  
-  final ImageIcon icon;  
-} 
-  
-class SelectCard extends StatelessWidget {  
-  const SelectCard({
-    Key? key, 
-    required this.choice,
-    required this.borderRadius,
-  }) : super(key: key);  
-
-  final Choice choice;  
-  final BorderRadius borderRadius;
-  
-  @override  
-  Widget build(BuildContext context) {  
-    return Card(  
-      elevation: 0,
-      margin: EdgeInsets.zero,
-      shape: RoundedRectangleBorder(
-        side: const BorderSide(
-          color: Color.fromRGBO(238, 238, 238, 1),
-        ),
-        borderRadius: borderRadius,
-      ),
-      child: Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,  
-          children: <Widget>[  
-            Expanded(child: Container(child: choice.icon)),  
-            Padding(
-              padding: const EdgeInsets.only(bottom: 5.0),
-              child: Text(
-                choice.title, 
-                style: const TextStyle(
-                  color: Color.fromRGBO(128, 128, 128, 1),
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-          ]  
-        ),  
-      ),  
-    );
-  }
-}  
