@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:roomies_app/backend/auth_api.dart';
 
 class SetUpCompletionProvider extends ChangeNotifier {
+  bool userExists = false;
   bool profileSetUp = false;
   bool houseSetUp = false;
   
@@ -21,6 +22,7 @@ class SetUpCompletionProvider extends ChangeNotifier {
         houseSetUp = newHouseStatus;
         notifyListeners();
       }
+      userExists = await AuthAPI().checkIfCurrentUserExists();
       await Future.delayed(const Duration(seconds: 1));
     }
     

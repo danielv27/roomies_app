@@ -207,6 +207,15 @@ class AuthAPI {
       });
   }
 
+    Future<bool> checkIfCurrentUserExists() async{
+    bool exists = false;
+    final currentUserID = FirebaseAuth.instance.currentUser?.uid;
+    await FirebaseFirestore.instance.doc('users/$currentUserID')
+    .get()
+    .then((documentSnapShot) => exists = documentSnapShot.exists? true:false);
+    return exists;
+  }
+
   Future<bool> checkIfCurrentUserProfileComplete() async{
     bool complete = false;
     final currentUserID = FirebaseAuth.instance.currentUser?.uid;

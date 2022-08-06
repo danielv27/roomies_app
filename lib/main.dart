@@ -125,7 +125,10 @@ class _UserTypeSelectorState extends State<UserTypeSelector> {
             return const HomePage();
           }),
         );
-    } 
+    } else if(userProvider.userExists){
+
+        return const SetupPage();
+    }
     return const Center(child: CircularProgressIndicator(color: Colors.red,),);
   }
 }
