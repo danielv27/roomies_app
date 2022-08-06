@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:roomies_app/models/user_profile_model.dart';
 
 import 'house_profile_model.dart';
@@ -51,6 +52,7 @@ class HouseOwner {
   final String lastName;
   final bool isHouseOwner;
   final HouseSignupProfileModel houseSignupProfileModel;
+  final LatLng? location;
 
   HouseOwner({
     required this.id,
@@ -59,5 +61,6 @@ class HouseOwner {
     required this.lastName,
     this.isHouseOwner = true,
     required this.houseSignupProfileModel,
+    this.location,
   });
 }

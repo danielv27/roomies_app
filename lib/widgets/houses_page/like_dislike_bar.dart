@@ -182,7 +182,7 @@ class _LikeDislikeBarState extends State<LikeDislikeBar> {
               HouseFeatures(context: context, houseProfile: houseProfile),
               HouseActivityTiles(context: context),
               const NeighborhoodTile(),
-              const MapHouseLocation(),
+              MapHouseLocation(houseOwner: houseProfileModel.houseOwner),
             ],
           ),
         )
