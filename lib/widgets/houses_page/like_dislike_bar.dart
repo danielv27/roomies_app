@@ -142,19 +142,19 @@ class _LikeDislikeBarState extends State<LikeDislikeBar> {
       minHeight: 0,
       initHeight: 0.5,
       maxHeight: 0.95,
-      headerHeight: 165,
+      headerHeight: 0,
       anchors: [0, 0.5, 0.95],
       bottomSheetColor: Colors.transparent,
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(30.0), 
-          topRight: Radius.circular(30.0)
+          topLeft: Radius.circular(25.0), 
+          topRight: Radius.circular(25.0)
         ),
         shape: BoxShape.rectangle,
         color: Colors.white,
       ),
       headerBuilder: (BuildContext context, double bottomSheetOffset) {
-        return headerInfo(houseProfileModel); 
+        return headerInfo(); 
       },
       bodyBuilder: (BuildContext context, double offset) {
         return bodyInfo(houseProfileModel);
@@ -162,9 +162,8 @@ class _LikeDislikeBarState extends State<LikeDislikeBar> {
     );
   }
 
-  Widget headerInfo(HouseProfileModel houseProfileModel) {
-    var houseProfile = houseProfileModel.houseOwner.houseSignupProfileModel;
-    return HeaderHouseInformation(houseProfile: houseProfile);
+  Widget headerInfo() {
+    return Container();
   }
 
   SliverChildListDelegate bodyInfo(HouseProfileModel houseProfileModel) {
@@ -172,11 +171,12 @@ class _LikeDislikeBarState extends State<LikeDislikeBar> {
     return SliverChildListDelegate(
       <Widget> [
         Padding(
-          padding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
+          padding: const EdgeInsets.only(left: 17, right: 17, bottom: 15),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              HeaderHouseInformation(houseProfile: houseProfile),
               HouseMediaTiles(context: context),
               HouseDescription(houseProfile: houseProfile),
               HouseFeatures(context: context, houseProfile: houseProfile),
