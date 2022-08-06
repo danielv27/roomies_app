@@ -42,10 +42,23 @@ class _PickLocationState extends State<PickLocation> {
           ),
           child: AppBar(
             title: const Text("Pick a location"),
+            titleSpacing: 0,
             systemOverlayStyle: const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
             backgroundColor: Colors.transparent,
             shadowColor: Colors.transparent,
             toolbarHeight: 75,
+            actions: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(right: 10.0),
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.search,
+                    size: 40,
+                  ),
+                  onPressed: pickPlace,
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -60,31 +73,6 @@ class _PickLocationState extends State<PickLocation> {
             },
             onTap: addMarker,
             onLongPress: addMarker,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 130.0),
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                height: 50,
-                width: MediaQuery.of(context).size.width * 0.4,
-                decoration: BoxDecoration(
-                  gradient: blueGradient(),
-                  borderRadius: BorderRadius.circular(30.0),
-                ),
-                child: ElevatedButton(
-                  onPressed: pickPlace,
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.transparent,
-                    shadowColor: Colors.transparent,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                  ), 
-                  child: const Text("Pick a location"),
-                ),
-              ),
-            ),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 75.0),
