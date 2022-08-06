@@ -104,10 +104,7 @@ class _SetupPageState extends State<SetupPage> {
               width: MediaQuery.of(context).size.width * 0.8,
               child: ElevatedButton (
                 onPressed: () { 
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const SetupHousePage()),
-                  );
+                  Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: const SetupHousePage()));
                 },
                 style: ElevatedButton.styleFrom(
                   primary: Colors.white.withOpacity(0.4),
@@ -124,8 +121,6 @@ class _SetupPageState extends State<SetupPage> {
                       "List houses",
                       style: TextStyle(
                         fontSize: 16,
-                        // fontFamily: 'Inter',
-                        // fontWeight: FontWeight.w600,
                         color: Colors.white,
                       ),
                     ),

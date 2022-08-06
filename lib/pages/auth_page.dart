@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:roomies_app/backend/auth_api.dart';
 import 'package:roomies_app/pages/setup_page.dart';
 import 'package:roomies_app/widgets/gradients/blue_gradient.dart';
@@ -323,10 +324,7 @@ class AuthPageState extends State<AuthPage> {
                 onPressed: () async {
                   if (signupKey.currentState!.validate()) {
                     signUp();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const SetupPage()),
-                    );
+                    Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: const SetupPage()));
                   }
                 },
                 child: const Text(
