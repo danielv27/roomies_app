@@ -8,7 +8,7 @@ import 'package:google_api_headers/google_api_headers.dart';
 import '../gradients/blue_gradient.dart';
 
 class PickLocation extends StatefulWidget {
-  PickLocation({
+  const PickLocation({
     Key? key,
     required this.startingLocation,
     required this.latLngController,
@@ -17,7 +17,7 @@ class PickLocation extends StatefulWidget {
 
   final LatLng startingLocation;
   final TextEditingController latLngController;
-  late final Set<Marker>? markerList;
+  final Set<Marker>? markerList;
 
   @override
   State<PickLocation> createState() => _PickLocationState();

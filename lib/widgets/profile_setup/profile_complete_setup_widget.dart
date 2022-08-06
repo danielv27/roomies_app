@@ -424,9 +424,9 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
     );
   }
 
-  Future<String> uploadFile(XFile _image) async {
-    Reference reference = storageRef.ref().child("profile_images").child(auth.currentUser!.uid.toString()).child(_image.name);
-    await reference.putFile(File(_image.path)).whenComplete(() {
+  Future<String> uploadFile(XFile image) async {
+    Reference reference = storageRef.ref().child("profile_images").child(auth.currentUser!.uid.toString()).child(image.name);
+    await reference.putFile(File(image.path)).whenComplete(() {
       setState(() {
         isUploading = false;
       });
@@ -455,8 +455,8 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
     });
   }
 
-  Future removeFile(XFile _image) async {
-    Reference reference = storageRef.ref().child("profile_images").child(auth.currentUser!.uid.toString()).child(_image.name);
+  Future removeFile(XFile image) async {
+    Reference reference = storageRef.ref().child("profile_images").child(auth.currentUser!.uid.toString()).child(image.name);
     await reference.delete().whenComplete(() {
       setState(() {
         isRemoving = false;

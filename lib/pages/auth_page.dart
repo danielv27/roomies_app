@@ -1,8 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:roomies_app/backend/auth_api.dart';
-import 'package:roomies_app/pages/setup_page.dart';
 import 'package:roomies_app/widgets/gradients/blue_gradient.dart';
 
 import '../widgets/gradients/gradient.dart';

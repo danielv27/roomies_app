@@ -44,7 +44,7 @@ class SelectableUserTileList extends StatelessWidget {
               width: MediaQuery.of(context).size.width * 0.6,
               height: 40,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(30)),
+                borderRadius: const BorderRadius.all(Radius.circular(30)),
                 gradient: redGradient()
               ),
               child: ElevatedButton(

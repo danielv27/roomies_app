@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:roomies_app/models/user_model.dart';
 
 class DisplayNeighborhoodLocation extends StatefulWidget {
-  DisplayNeighborhoodLocation({
+  const DisplayNeighborhoodLocation({
     Key? key,
     required this.houseOwner,
   }) : super(key: key);

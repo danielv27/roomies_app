@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -188,7 +187,7 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
                         decoration: contentFieldsDecoration("Write a complete description about the house with at least 100 words...", const AssetImage('assets/icons/person.png')),
                         validator: (value) {
                           if (value!.isEmpty) {
-                            return "Please write a description above 100 words"; // TODO: Check that the user typed at least 100 words
+                            return "Please write a description above 100 words";
                           } else {
                             return null;
                           }

@@ -1,18 +1,8 @@
-
-import 'dart:io';
-import 'dart:typed_data';
-import 'dart:ui';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:roomies_app/backend/houses_api.dart';
 import 'package:roomies_app/backend/providers/house_profile_provider.dart';
 import 'package:roomies_app/models/house_profile_model.dart';
-import 'package:roomies_app/pages/houses_matched_page.dart';
 
 import 'house_information_tile.dart';
 
@@ -60,7 +50,7 @@ class _HousesLikedState extends State<HousesLiked> {
             },
           );
         }
-        return Text('No houses have been liked');
+        return const Text('No houses have been liked');
       },
     );
   }

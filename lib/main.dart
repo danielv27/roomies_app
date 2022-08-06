@@ -53,7 +53,6 @@ class MainPage extends StatelessWidget {
   Widget build(BuildContext context) => Scaffold(
     body: StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),
-     
       builder: (context, snapshot) {
         if(snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -66,7 +65,7 @@ class MainPage extends StatelessWidget {
           );
         }
         else {
-          return AuthPage();
+          return const AuthPage();
         }
       }
     ),
@@ -119,7 +118,7 @@ class _UserTypeSelectorState extends State<UserTypeSelector> {
           ],
           builder: ((context, child) {
             Provider.of<CurrentUserProvider>(context, listen: false).initialize();
-            Provider.of<MatchesProvider>(context, listen: false).initialize(); //uncomment to make old matches not pop on screen
+            Provider.of<MatchesProvider>(context, listen: false).initialize();
             Provider.of<UserProfileProvider>(context, listen: false).loadUsers(10);
             Provider.of<HouseProfileProvider>(context, listen: false).loadHouses(10);
 
