@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:roomies_app/backend/messages_api.dart';
+import 'package:roomies_app/backend/chat_api.dart';
 import 'package:roomies_app/backend/users_api.dart';
 import 'package:roomies_app/models/user_model.dart';
 
@@ -11,8 +11,8 @@ class MatchesProvider extends ChangeNotifier {
     final currentUserID = FirebaseAuth.instance.currentUser?.uid;
     currentUserID != null? userModels = await UsersAPI().getMatches(currentUserID):null;
     for(var userModel in userModels){
-      final DateTime? timeStamp = await MessagesAPI().getLastPrivateMessageTimeStamp(currentUserID, userModel.id);
-      final String message = await MessagesAPI().getLastPrivateMessage(currentUserID, userModel.id);
+      final DateTime? timeStamp = await ChatAPI().getLastPrivateMessageTimeStamp(currentUserID, userModel.id);
+      final String message = await ChatAPI().getLastPrivateMessage(currentUserID, userModel.id);
       userModel.setTimeStamp(timeStamp);
       userModel.setLastMessage(message);
       sortByTimeStamp();

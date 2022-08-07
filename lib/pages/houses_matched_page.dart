@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:roomies_app/backend/houses_api.dart';
+import 'package:roomies_app/backend/chat_api.dart';
 import 'package:roomies_app/backend/users_api.dart';
 import 'package:roomies_app/models/house_profile_model.dart';
 import 'package:roomies_app/models/user_model.dart';
@@ -85,7 +86,12 @@ class _UsersHousesMatchedState extends State<UsersHousesMatched> {
                   }
                 }
               }
-              return SelectableUserTileList(users: matched);
+              return SelectableUserTileList(
+                users: matched,
+                onPressed: ((selectedUserIDs) async {
+                  await ChatAPI().createGroupChat(widget.house.houseRef, selectedUserIDs, selectedUserIDs[0]);
+                }),
+                );
             }
           ),
         ],

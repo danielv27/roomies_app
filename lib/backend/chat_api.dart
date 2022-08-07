@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:roomies_app/models/group_chat.dart';
 import 'package:roomies_app/models/message.dart';
 
-class MessagesAPI {
+class ChatAPI {
 
   Future sendPrivateMessage(String message, String? fromID, String? toID) async {
     final fromRef = FirebaseFirestore.instance.collection('users/$fromID/private_chats').doc(toID);
@@ -101,5 +103,56 @@ class MessagesAPI {
       }
     });
     return timeStamp;
+  }
+
+  Future createGroupChat(String houseID,List<String> participants, String creatorID) async {
+    try{
+      if(participants.length > 1){
+        print('creating');
+        await FirebaseFirestore.instance.collection('group_chats').add({
+          'houseID': houseID,
+          'participants': participants,
+          'madeBy': creatorID
+        });
+      }
+    } catch (e) {
+      debugPrint("Error - $e");
+      return null;
+    }
+  }
+
+  Future sendGroupMessage(String groupChatID, String senderID, String message) async {
+    await FirebaseFirestore.instance.collection('group_chats/$groupChatID/messages').add({
+      'meesage': message,
+      'senderID': senderID,
+      'timeStamp': DateTime.now()
+    });
+  }
+
+  // this funtcion was tested it extracts the chats correctly for a given user corrently logged in
+  Future<List<GroupChat>> getGroupChats() async {
+    List<GroupChat> groupChats = [];
+    String? currentUserID = FirebaseAuth.instance.currentUser?.uid;
+    await FirebaseFirestore.instance.collection('group_chats')
+    .where('participants', arrayContains: currentUserID)
+    .get()
+    .then(
+      (querySnapShot) {
+        for(var groupChatDoc in querySnapShot.docs){
+          // DateTime this = ''
+          // String lastMessageSent = 
+          // groupChatDoc.data().containsKey('lastMessageSent')?
+          // groupChatDoc['lastMessageSent'] : '';
+          // DateTime lastMessageTime = groupChatDoc
+          // .data()
+          // .containsKey('lastMessageTimeStamp')? groupChatDoc['lastMessageTimeStamp'] : '';
+          // GroupChat chat = GroupChat(
+          //   groupID: groupChatDoc.id,
+
+          // );
+        }
+      }
+    );
+    return groupChats;
   }
 }

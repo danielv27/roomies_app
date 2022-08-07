@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:roomies_app/backend/messages_api.dart';
+import 'package:roomies_app/backend/chat_api.dart';
 import 'package:roomies_app/models/user_model.dart';
   
   class NewMessageWidget extends StatefulWidget {
@@ -23,7 +23,7 @@ import 'package:roomies_app/models/user_model.dart';
     String message = ''; 
 
     void sendMessage() async {
-      await MessagesAPI().sendPrivateMessage(message, FirebaseAuth.instance.currentUser?.uid, widget.otherUser.id);
+      await ChatAPI().sendPrivateMessage(message, FirebaseAuth.instance.currentUser?.uid, widget.otherUser.id);
       setState(() {
         widget.onMessageSent(message); 
       });

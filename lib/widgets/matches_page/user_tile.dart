@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:roomies_app/backend/messages_api.dart';
+import 'package:roomies_app/backend/chat_api.dart';
 import 'package:roomies_app/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:roomies_app/widgets/matches_page/avatar_with_online_indicator.dart';
@@ -24,9 +24,9 @@ class _UserTileState extends State<UserTile> {
   Stream<void> updateLastMessage() async* {
     String? lastMessage = widget.user.lastMessage;
     while(true){
-      lastMessage = await MessagesAPI().getLastPrivateMessage(FirebaseAuth.instance.currentUser?.uid, widget.user.id);
+      lastMessage = await ChatAPI().getLastPrivateMessage(FirebaseAuth.instance.currentUser?.uid, widget.user.id);
       if(lastMessage.isNotEmpty && lastMessage != widget.user.lastMessage){
-        DateTime? timeStamp = await MessagesAPI().getLastPrivateMessageTimeStamp(FirebaseAuth.instance.currentUser?.uid, widget.user.id);
+        DateTime? timeStamp = await ChatAPI().getLastPrivateMessageTimeStamp(FirebaseAuth.instance.currentUser?.uid, widget.user.id);
         widget.user.setLastMessage(lastMessage);
         widget.user.setTimeStamp(timeStamp);
       }

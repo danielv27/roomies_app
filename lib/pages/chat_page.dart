@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:roomies_app/backend/messages_api.dart';
+import 'package:roomies_app/backend/chat_api.dart';
 import 'package:roomies_app/models/user_model.dart';
 import 'package:roomies_app/widgets/chat_page/chat_header.dart';
 import 'package:roomies_app/widgets/chat_page/message_bubble_widget.dart';
@@ -49,13 +49,13 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
           ),
           Expanded(
             child: FutureBuilder(
-              future: MessagesAPI().getPrivateMessages(FirebaseAuth.instance.currentUser?.uid, widget.otherUser.id),
+              future: ChatAPI().getPrivateMessages(FirebaseAuth.instance.currentUser?.uid, widget.otherUser.id),
               builder:(context, snapshot) {
                 if(snapshot.connectionState == ConnectionState.done){
                   if(snapshot.hasData){
                     messages = snapshot.data as List<Message>;
                     messages.sort((a, b) => b.timeStamp.toString().compareTo(a.timeStamp.toString()));
-                    MessagesAPI().listenToPrivateChat(FirebaseAuth.instance.currentUser?.uid, widget.otherUser.id)
+                    ChatAPI().listenToPrivateChat(FirebaseAuth.instance.currentUser?.uid, widget.otherUser.id)
                     ?.listen(
                       (event) {
                         print('listening');
