@@ -324,7 +324,6 @@ class AuthPageState extends State<AuthPage> {
                 onPressed: () async {
                   if (signupKey.currentState!.validate()) {
                     signUp();
-                    Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: const SetupPage()));
                   }
                 },
                 child: const Text(
@@ -360,7 +359,11 @@ class AuthPageState extends State<AuthPage> {
   }
 
   void signUp() async {
-    await AuthAPI().signUp(emailController, passwordController, firstNameController, lastNameController, errorMessage, context);
+    String error = await AuthAPI().signUp(emailController, passwordController, firstNameController, lastNameController, errorMessage, context);
+    if (error.isEmpty) {
+      if (!mounted) return;
+      Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: const SetupPage()));
+    }
   }
 
   GestureDetector rememberMeGestureDetector() {
