@@ -59,23 +59,7 @@ class ProperCompleteSetupPage extends StatefulWidget {
 }
 
 class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
-  final List uploadIcon = [
-    Image.asset("assets/icons/upload-house-images.png", width: 42, height: 42.77),
-    Image.asset("assets/icons/upload-building-map.png", width: 43.2, height: 37.8),
-    Image.asset("assets/icons/upload-building-map.png", width: 43.2, height: 37.8),
-  ];
-
-  final List uploadDescriptionFields = [
-    "Pictures",
-    "Building map",
-    "Features",
-  ];
-
   final List<String> furnishedList = ['yes', 'no'];
-
-  String? furnishedDropdownValue;
-  String? amountRoomsDropdownValue;
-  String? availableRoomsDropdownValue;
 
   final List<XFile> selectedHouseImages = [];
   int uploadItem = 0;
@@ -153,7 +137,6 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
                       dropDownList: furnishedList, 
                       furnishedController: widget.furnishedController, 
                       iconImage: const AssetImage('assets/icons/person.png'),
-                      dropDownChoice: furnishedDropdownValue,
                     ),
                     textDescription("Total Number Rooms"),
                     Container(

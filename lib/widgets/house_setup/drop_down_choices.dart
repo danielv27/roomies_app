@@ -2,17 +2,15 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 
 class DropDownChoices extends StatefulWidget {
-  DropDownChoices({
+  const DropDownChoices({
     Key? key,
     required this.furnishedController,
     required this.iconImage,
     required this.dropDownList,
-    required this.dropDownChoice,
   }) : super(key: key);
 
   final TextEditingController furnishedController;
   final List<String> dropDownList;
-  String? dropDownChoice;
   final AssetImage iconImage;
 
   @override
@@ -52,7 +50,7 @@ class _DropDownChoicesState extends State<DropDownChoices> {
             ],
           ),
           validator: (value) => value == null ? "Please select if the place is furnished" : null,
-          value: widget.dropDownChoice,
+          value: widget.furnishedController.text,
           items: widget.dropDownList
             .map<DropdownMenuItem<String>>((String value) => DropdownMenuItem<String>(
               value: value,
@@ -64,7 +62,6 @@ class _DropDownChoicesState extends State<DropDownChoices> {
           onChanged: (String? newValue) {
             setState(() {
               widget.furnishedController.text = newValue!;
-              widget.dropDownChoice = widget.furnishedController.text;
             });
           },
           icon: const Icon(Icons.keyboard_arrow_down_sharp),
