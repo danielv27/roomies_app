@@ -321,7 +321,6 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
                 if (formKey3.currentState!.validate()) {
                   if (widget.houseProfileImages.imageURLS.isNotEmpty) {
                     User? currentUser = auth.currentUser;
-                    bool isInitialHouseProfileComplete = await AuthAPI().checkIfCurrentUserHouseComplete();
                     await AuthAPI().createHouseProfile(
                       currentUser,
                       widget.postalCodeController,
@@ -342,14 +341,9 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
                       widget.contactPhoneNumberControler,
                       widget.houseProfileImages.imageURLS,
                     );
-                    if (isInitialHouseProfileComplete == true) {
-                      if (!mounted) return;
-                      Navigator.of(context).pop();
-                    } else {
-                      if (!mounted) return;
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pop();
-                    }
+                    if (!mounted) return;
+                    Navigator.of(context).pop();
+                    Navigator.of(context).maybePop();
                   } else {
                     await alertImageEmpty(context);
                   }

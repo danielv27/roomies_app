@@ -73,6 +73,7 @@ class _DropDownChoicesState extends State<DropDownChoices> {
           dropdownElevation: 8,
           buttonPadding: const EdgeInsets.only(right: 20, left: 20, bottom: 20, top: 20),
           buttonHeight: 65,
+          buttonWidth: MediaQuery.of(context).size.width * 0.8,
           buttonDecoration: BoxDecoration(
             color: const Color.fromARGB(73, 160, 160, 160),
             borderRadius: BorderRadius.circular(14.0),
