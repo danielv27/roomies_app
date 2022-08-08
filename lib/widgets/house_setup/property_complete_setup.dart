@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:roomies_app/backend/auth_api.dart';
 import 'package:roomies_app/widgets/gradients/gradient.dart';
 import 'package:roomies_app/widgets/house_setup/drop_down_choices.dart';
+import 'package:roomies_app/widgets/house_setup/house_input_decorations.dart';
 import 'package:roomies_app/widgets/house_setup/upload_building_map.dart';
 import 'package:roomies_app/widgets/house_setup/upload_house_pictures.dart';
 
@@ -60,6 +61,7 @@ class ProperCompleteSetupPage extends StatefulWidget {
 
 class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
   final List<String> furnishedList = ['yes', 'no'];
+  String? furnishedDropdownValue;
 
   final List<XFile> selectedHouseImages = [];
   int uploadItem = 0;
@@ -110,7 +112,7 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
                   children: [
                     UploadHousePictures(houseProfileImages: widget.houseProfileImages, currentUserID: auth.currentUser!.uid),
                     UploadBuildingMap(houseProfileImages: widget.houseProfileImages, currentUserID: auth.currentUser!.uid),
-                    textDescription("Description"),
+                    CustomHouseDecorations().textDescription("Description"),
                     Container(
                       margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
                       width: MediaQuery.of(context).size.width * 0.8,
@@ -122,7 +124,7 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
                         controller: widget.houseDescriptionController,
                         style: const TextStyle(color: Colors.grey),
                         cursorColor: Colors.grey,
-                        decoration: contentFieldsDecoration("Write a complete description about the house", const AssetImage('assets/icons/person.png')),
+                        decoration: CustomHouseDecorations().lastSetupPageDecoration("Write a complete description about the house", const AssetImage('assets/icons/person.png')),
                         validator: (value) {
                           if (value!.isEmpty) {
                             return "Please write a description above 100 words";
@@ -132,13 +134,14 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
                         },
                       ),
                     ),
-                    textDescription("Furnished"),
+                    CustomHouseDecorations().textDescription("Furnished"),
                     DropDownChoices(
                       dropDownList: furnishedList, 
                       furnishedController: widget.furnishedController, 
                       iconImage: const AssetImage('assets/icons/person.png'),
+                      dropDownChoice: furnishedDropdownValue,
                     ),
-                    textDescription("Total Number Rooms"),
+                    CustomHouseDecorations().textDescription("Total Number Rooms"),
                     Container(
                       margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
                       width: MediaQuery.of(context).size.width * 0.8,
@@ -147,7 +150,7 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
                         style: const TextStyle(color: Colors.grey),
                         cursorColor: Colors.grey,
                         textInputAction: TextInputAction.next,
-                        decoration: contentFieldsDecoration("0", const AssetImage('assets/icons/rooms.png')),
+                        decoration: CustomHouseDecorations().lastSetupPageDecoration("0", const AssetImage('assets/icons/rooms.png')),
                         validator: (value) {
                           final availableNumberRoomes = widget.availableRoomController.text;
                           if (value!.isEmpty) {
@@ -163,7 +166,7 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
                         },
                       ),
                     ),
-                    textDescription("Available Number Rooms"),
+                    CustomHouseDecorations().textDescription("Available Number Rooms"),
                     Container(
                       margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
                       width: MediaQuery.of(context).size.width * 0.8,
@@ -172,7 +175,7 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
                         style: const TextStyle(color: Colors.grey),
                         cursorColor: Colors.grey,
                         textInputAction: TextInputAction.next,
-                        decoration: contentFieldsDecoration("0", const AssetImage('assets/icons/rooms.png')),
+                        decoration: CustomHouseDecorations().lastSetupPageDecoration("0", const AssetImage('assets/icons/rooms.png')),
                         validator: (value) {
                           final totalNumberRoomes = widget.numRoomController.text;
                           if (value!.isEmpty) {
@@ -188,7 +191,7 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
                         },
                       ),
                     ),
-                    textDescription("Price per room"),
+                    CustomHouseDecorations().textDescription("Price per room"),
                     Container(
                       margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
                       width: MediaQuery.of(context).size.width * 0.8,
@@ -197,7 +200,7 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
                         style: const TextStyle(color: Colors.grey),
                         cursorColor: Colors.grey,
                         textInputAction: TextInputAction.next,
-                        decoration: contentFieldsDecoration("0", const AssetImage('assets/icons/coin.png')),
+                        decoration: CustomHouseDecorations().lastSetupPageDecoration("0", const AssetImage('assets/icons/coin.png')),
                         validator: (value) {
                           if (value!.isEmpty) {
                             return "Please fill the price per room";
@@ -210,7 +213,7 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
                       ),
                     ),
                     const SizedBox(height: 20,),
-                    textDescription("Contact info"),
+                    CustomHouseDecorations().textDescription("Contact info"),
                     Container(
                       margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
                       width: MediaQuery.of(context).size.width * 0.8,
@@ -219,7 +222,7 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
                         style: const TextStyle(color: Colors.grey),
                         cursorColor: Colors.grey,
                         textInputAction: TextInputAction.next,
-                        decoration: contentFieldsDecoration("Name contact person", const AssetImage('assets/icons/Email.png')),
+                        decoration: CustomHouseDecorations().lastSetupPageDecoration("Name contact person", const AssetImage('assets/icons/Email.png')),
                         validator: (value) {
                           if (value!.isEmpty) {
                             return "Please fill the name of the contact person";
@@ -237,7 +240,7 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
                         style: const TextStyle(color: Colors.grey),
                         cursorColor: Colors.grey,
                         textInputAction: TextInputAction.next,
-                        decoration: contentFieldsDecoration("Email", const AssetImage('assets/icons/Email.png')),
+                        decoration: CustomHouseDecorations().lastSetupPageDecoration("Email", const AssetImage('assets/icons/Email.png')),
                         validator: (value) {
                           if (value!.isEmpty) {
                             return "Please fill the email of the contact person";
@@ -255,7 +258,7 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
                         style: const TextStyle(color: Colors.grey),
                         cursorColor: Colors.grey,
                         textInputAction: TextInputAction.next,
-                        decoration: contentFieldsDecoration("Phone number", const AssetImage('assets/icons/Email.png')),
+                        decoration: CustomHouseDecorations().lastSetupPageDecoration("Phone number", const AssetImage('assets/icons/Email.png')),
                         validator: (value) {
                           if (value!.isEmpty) {
                             return "Please fill the phone number of the contact person";
@@ -340,48 +343,6 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
           ),
         ],
       ),
-    );
-  }
-
-  Text textDescription(String text) {
-    return Text(
-      text,
-      style: const TextStyle(
-        fontSize: 14,
-        fontWeight: FontWeight.w600,
-        color: Color.fromRGBO(101, 101, 107, 1),
-      ),
-    );
-  }
-
-  InputDecoration contentFieldsDecoration(String hintText, var imageIcon) {
-    return InputDecoration(
-      filled: true,
-      fillColor: const Color.fromRGBO(245, 247, 251, 1),
-      border: OutlineInputBorder(
-        borderSide: const BorderSide(
-          width: 0,
-          style: BorderStyle.none,
-        ),
-        borderRadius: BorderRadius.circular(15),
-      ),
-      focusedBorder: const UnderlineInputBorder(
-        borderSide: BorderSide(color: Colors.grey),
-      ),
-      prefixIcon: Padding(
-        padding: const EdgeInsets.only(left: 10),
-        child: Align(
-          widthFactor: 1.0,
-          heightFactor: 1.0,
-          child: Image(
-            image: imageIcon,
-            height: 15,
-            width: 15,
-          ),
-        ),
-      ),
-      hintText: hintText,
-      hintStyle: const TextStyle(color: Colors.grey, fontSize: 18, fontWeight: FontWeight.w300),
     );
   }
 

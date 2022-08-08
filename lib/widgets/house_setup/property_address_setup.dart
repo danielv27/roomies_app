@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:roomies_app/widgets/gradients/gradient.dart';
+import 'package:roomies_app/widgets/house_setup/house_input_decorations.dart';
 
 class PropertyAddressSetupPage extends StatefulWidget {
   const PropertyAddressSetupPage({
@@ -65,7 +66,7 @@ class _PropertyAddressSetupPageState extends State<PropertyAddressSetupPage> {
                     style: const TextStyle(color: Colors.grey),
                     cursorColor: Colors.grey,
                     textInputAction: TextInputAction.next,
-                    decoration: applyInputDecoration("Postal code"),
+                    decoration: CustomHouseDecorations().setupFormDecoration("Postal code"),
                     validator: (value) {
                       if (value!.isEmpty || !postCodeRegex.hasMatch(value)) {
                         return "example 1234 AB or 1234AB";
@@ -82,7 +83,7 @@ class _PropertyAddressSetupPageState extends State<PropertyAddressSetupPage> {
                     style: const TextStyle(color: Colors.grey),
                     cursorColor: Colors.grey,
                     textInputAction: TextInputAction.next,
-                    decoration: applyInputDecoration("House number"),
+                    decoration: CustomHouseDecorations().setupFormDecoration("House number"),
                     validator: (value) {
                       if (value!.isEmpty || !houseNumberRegex.hasMatch(value)) {
                         return "Enter only numbers or alphabet letters";
@@ -99,7 +100,7 @@ class _PropertyAddressSetupPageState extends State<PropertyAddressSetupPage> {
                     style: const TextStyle(color: Colors.grey),
                     cursorColor: Colors.grey,
                     textInputAction: TextInputAction.done,
-                    decoration: applyInputDecoration("Apartment Number (Optional)")
+                    decoration: CustomHouseDecorations().setupFormDecoration("Apartment Number (Optional)")
                   ),
                 ),
               ],
@@ -152,31 +153,4 @@ class _PropertyAddressSetupPageState extends State<PropertyAddressSetupPage> {
     );
   }
 
-  InputDecoration applyInputDecoration(String labelText) {
-    return InputDecoration(
-      filled: true,
-      fillColor: const Color.fromRGBO(245, 247, 251, 1),
-      border: OutlineInputBorder(
-        borderSide: const BorderSide(
-          width: 0,
-          style: BorderStyle.none,
-        ),
-        borderRadius: BorderRadius.circular(14),
-      ),
-      focusedBorder: const UnderlineInputBorder(
-        borderSide: BorderSide(color: Colors.grey),
-      ),
-      prefixIcon: const Align(
-        widthFactor: 1.0,
-        heightFactor: 1.0,
-        child: Image(
-          image: AssetImage('assets/icons/person.png'),
-          height: 15,
-          width: 15,
-        ),
-      ),
-      labelText: labelText,
-      labelStyle: const TextStyle(color: Colors.grey),
-    );
-  }
 }

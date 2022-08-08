@@ -182,6 +182,7 @@ class HousesAPI {
         houseSignupProfileModel = HouseSignupProfileModel(
           postalCode: house['postalCode'],
           houseNumber: house['houseNumber'],
+          apartmentNumber: house['apartmentNumber'],
           constructionYear: house['constructionYear'], 
           livingSpace: house['livingSpace'], 
           plotArea: house['plotArea'], 

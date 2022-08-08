@@ -84,7 +84,7 @@ class _OwnerPageState extends State<OwnerPage> {
         margin: const EdgeInsets.only(bottom: 10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          gradient: CustomGradient().redGradient(),
+          gradient: CustomGradient().blueGradient(),
         ),
         child: FloatingActionButton(
           splashColor: Colors.white.withOpacity(0.25),

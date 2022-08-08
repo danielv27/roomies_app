@@ -1,13 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:roomies_app/models/house_profile_images.dart';
-import 'package:roomies_app/widgets/house_setup/property_address_setup_widget.dart';
-import 'package:roomies_app/widgets/house_setup/property_information_setup_widget.dart';
-import 'package:roomies_app/widgets/house_setup/property_type_setup_widget.dart';
+import 'package:roomies_app/widgets/house_setup/property_address_setup.dart';
+import 'package:roomies_app/widgets/house_setup/property_information_setup.dart';
+import 'package:roomies_app/widgets/house_setup/property_type_setup.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-import '../widgets/house_setup/property_condition_setup_widget.dart';
-import '../widgets/house_setup/property_complete_setup_widget.dart';
+import '../widgets/house_setup/property_condition_setup.dart';
+import '../widgets/house_setup/property_complete_setup.dart';
 
 class SetupHousePage extends StatefulWidget {
   const SetupHousePage({Key? key}) : super(key: key);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:roomies_app/widgets/gradients/gradient.dart';
+import 'package:roomies_app/widgets/house_setup/house_input_decorations.dart';
 
 class PropertyInformationSetupPage extends StatefulWidget {
   const PropertyInformationSetupPage({
@@ -63,7 +64,7 @@ class _PropertyInformationSetupPageState extends State<PropertyInformationSetupP
                     controller: widget.constructionYearController,
                     style: const TextStyle(color: Colors.grey),
                     cursorColor: Colors.grey,
-                    decoration: applyInputDecoration("Year of contruction"),
+                    decoration: CustomHouseDecorations().setupFormDecoration("Year of contruction"),
                     textInputAction: TextInputAction.next,
                     validator: (value) {
                       if (value!.isEmpty) {
@@ -83,7 +84,7 @@ class _PropertyInformationSetupPageState extends State<PropertyInformationSetupP
                     style: const TextStyle(color: Colors.grey),
                     cursorColor: Colors.grey,
                     textInputAction: TextInputAction.next,
-                    decoration: applyInputDecoration("Living Space (m\u00B2)"),
+                    decoration: CustomHouseDecorations().setupFormDecoration("Living Space (m\u00B2)"),
                     validator: (value) {
                       if (value!.isEmpty) {
                         return "Please fill the size of living space";
@@ -102,7 +103,7 @@ class _PropertyInformationSetupPageState extends State<PropertyInformationSetupP
                     style: const TextStyle(color: Colors.grey),
                     cursorColor: Colors.grey,
                     textInputAction: TextInputAction.done,
-                    decoration: applyInputDecoration("Plot Area (m\u00B2)"),
+                    decoration: CustomHouseDecorations().setupFormDecoration("Plot Area (m\u00B2)"),
                     validator: (value) {
                       if (value!.isEmpty) {
                         return "Please fill the plot area";
@@ -164,31 +165,4 @@ class _PropertyInformationSetupPageState extends State<PropertyInformationSetupP
     );
   }
 
-  InputDecoration applyInputDecoration(String labelText) {
-    return InputDecoration(
-      filled: true,
-      fillColor: const Color.fromRGBO(245, 247, 251, 1),
-      border: OutlineInputBorder(
-        borderSide: const BorderSide(
-          width: 0,
-          style: BorderStyle.none,
-        ),
-        borderRadius: BorderRadius.circular(14),
-      ),
-      focusedBorder: const UnderlineInputBorder(
-        borderSide: BorderSide(color: Colors.grey),
-      ),
-      prefixIcon: const Align(
-        widthFactor: 1.0,
-        heightFactor: 1.0,
-        child: Image(
-          image: AssetImage('assets/icons/person.png'),
-          height: 15,
-          width: 15,
-        ),
-      ),
-      labelText: labelText,
-      labelStyle: const TextStyle(color: Colors.grey),
-    );
-  }
 }
