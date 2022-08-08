@@ -4,9 +4,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:roomies_app/backend/auth_api.dart';
 import 'package:roomies_app/pages/setup_page.dart';
 import 'package:roomies_app/widgets/auth_page/custom_input_decorations.dart';
-import 'package:roomies_app/widgets/gradients/blue_gradient.dart';
-
-import '../widgets/gradients/gradient.dart';
+import 'package:roomies_app/widgets/gradients/gradient.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({Key? key}) : super(key: key);
@@ -42,7 +40,7 @@ class AuthPageState extends State<AuthPage> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        gradient: redGradient(),
+        gradient: CustomGradient().redGradient()
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -53,7 +51,7 @@ class AuthPageState extends State<AuthPage> {
             width: 100,
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.all(Radius.circular(20)),
-              gradient: redGradient(),
+              gradient: CustomGradient().redGradient(),
               boxShadow: [
                 BoxShadow(
                   color: Colors.transparent.withOpacity(0.2),
@@ -169,7 +167,7 @@ class AuthPageState extends State<AuthPage> {
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                gradient: blueGradient()
+                gradient: CustomGradient().blueGradient()
               ),
               height: 50,
               margin: const EdgeInsets.only(bottom: 10),
@@ -309,7 +307,7 @@ class AuthPageState extends State<AuthPage> {
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                gradient: blueGradient()
+                gradient: CustomGradient().blueGradient()
               ),
               height: 50,
               margin: const EdgeInsets.only(bottom: 10),
@@ -380,7 +378,7 @@ class AuthPageState extends State<AuthPage> {
         width: 20.0,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
-          gradient: _isChecked ? blueGradient() : null,
+          gradient: _isChecked ? CustomGradient().blueGradient() : null,
           border: _isChecked ? null : Border.all(color: const Color.fromRGBO(101, 101, 107, 1), width: 1.5,),
         ),
         child: _isChecked ? const Icon(

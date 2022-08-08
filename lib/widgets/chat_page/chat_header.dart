@@ -15,7 +15,7 @@ class ChatHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-      gradient: redGradient(),
+      gradient: CustomGradient().redGradient(),
       ),
       child: Padding(
         padding: const EdgeInsets.only(left:14.0,right: 14.0,top: 10,bottom: 10),

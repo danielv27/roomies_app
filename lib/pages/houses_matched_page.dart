@@ -32,7 +32,7 @@ class _UsersHousesMatchedState extends State<UsersHousesMatched> {
         preferredSize: const Size.fromHeight(75),
         child: Container(
           decoration: BoxDecoration(
-            gradient: redGradient()
+            gradient: CustomGradient().redGradient()
           ),
           child: AppBar(
             centerTitle: true,

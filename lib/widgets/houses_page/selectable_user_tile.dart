@@ -73,7 +73,7 @@ class _SelectableUserTileState extends State<SelectableUserTile> {
               padding: const EdgeInsets.all(2),
               child: Container(
                 decoration: BoxDecoration(
-                  gradient: _isSelected? redGradient():null,
+                  gradient: _isSelected? CustomGradient().redGradient() : null,
                   shape: BoxShape.circle,
                 ),
                 padding: const EdgeInsets.all(7),

@@ -76,7 +76,7 @@ class _LikeDislikeBarState extends State<LikeDislikeBar> {
             child: ClipOval(
               child: Container(
                 decoration: BoxDecoration(
-                  gradient: redGradient(),
+                  gradient: CustomGradient().redGradient(),
                 ),
                 child: Material(
                   color: Colors.transparent,

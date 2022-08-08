@@ -18,7 +18,7 @@ class _SetupPageState extends State<SetupPage> {
       body: Container(
         width: MediaQuery.of(context).size.height / 2,
         decoration: BoxDecoration(
-          gradient: redGradient()
+          gradient: CustomGradient().redGradient(),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,

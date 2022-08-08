@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:roomies_app/models/user_profile_model.dart';
-import 'package:roomies_app/widgets/gradients/blue_gradient.dart';
-
+import 'package:roomies_app/widgets/gradients/gradient.dart';
 import 'package:roomies_app/widgets/profile_setup/profile_google_widget.dart';
 
 class ProfileQuestionPage extends StatefulWidget {
@@ -161,7 +160,7 @@ class _ProfileQuestionPageState extends State<ProfileQuestionPage> {
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              gradient: blueGradient(),
+              gradient: CustomGradient().blueGradient(),
             ),
             height: 50,
             width: MediaQuery.of(context).size.width * 0.75,
@@ -223,7 +222,7 @@ class _ProfileQuestionPageState extends State<ProfileQuestionPage> {
                       leadingDistribution: TextLeadingDistribution.even,
                       foreground: (widget.userPersonalProfileModel.radius != radius)
                           ? (Paint()..color = const Color.fromRGBO(101, 101, 107, 1))
-                          : (Paint()..shader = blueGradient().createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 100.0))),
+                          : (Paint()..shader = CustomGradient().blueGradient().createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 100.0))),
                     ),
                   ),
                 ),

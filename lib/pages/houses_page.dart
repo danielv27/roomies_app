@@ -24,7 +24,7 @@ class HousesPage extends StatelessWidget {
         preferredSize: const Size.fromHeight(75),
         child: Container(
           decoration: BoxDecoration(
-            gradient: redGradient()
+            gradient: CustomGradient().redGradient()
           ),
           child: AppBar(
             centerTitle: false,

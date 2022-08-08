@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../gradients/blue_gradient.dart';
+import 'package:roomies_app/widgets/gradients/gradient.dart';
 
 class PropertyInformationSetupPage extends StatefulWidget {
   const PropertyInformationSetupPage({
@@ -134,7 +133,7 @@ class _PropertyInformationSetupPageState extends State<PropertyInformationSetupP
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              gradient: blueGradient(),
+              gradient: CustomGradient().blueGradient(),
             ),
             height: 50,
             width: MediaQuery.of(context).size.width * 0.75,

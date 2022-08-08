@@ -57,7 +57,7 @@ class SelectableUserTileList extends StatelessWidget {
               height: 40,
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.all(Radius.circular(30)),
-                gradient: redGradient()
+                gradient: CustomGradient().redGradient(),
               ),
               child: ElevatedButton(
                 style: ButtonStyle(

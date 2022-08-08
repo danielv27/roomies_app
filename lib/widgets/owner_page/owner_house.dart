@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:roomies_app/backend/providers/current_house_provider.dart';
-
-import '../gradients/blue_gradient.dart';
+import 'package:roomies_app/widgets/gradients/gradient.dart';
 
 class ListedOwnerHouse extends StatefulWidget {
   const ListedOwnerHouse({
@@ -77,11 +76,11 @@ class _OwnerHouseState extends State<ListedOwnerHouse> {
                               ),
                             ),
                             TextSpan(
-                              text: "Matches", // TODO: Add number of matched houses
+                              text: "Matches",
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w700,
-                                foreground: Paint()..shader = blueGradient().createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 100.0))
+                                foreground: Paint()..shader = CustomGradient().blueGradient().createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 100.0))
                               ),
                             ),
                           ],

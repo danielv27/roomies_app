@@ -4,8 +4,7 @@ import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:google_api_headers/google_api_headers.dart';
-
-import '../gradients/blue_gradient.dart';
+import 'package:roomies_app/widgets/gradients/gradient.dart';
 
 class PickLocation extends StatefulWidget {
   const PickLocation({
@@ -38,7 +37,7 @@ class _PickLocationState extends State<PickLocation> {
         preferredSize: const Size.fromHeight(75),
         child: Container(
           decoration: BoxDecoration(
-            gradient: blueGradient()
+            gradient: CustomGradient().blueGradient(),
           ),
           child: AppBar(
             title: const Text("Pick a location"),
@@ -82,7 +81,7 @@ class _PickLocationState extends State<PickLocation> {
                 height: 50,
                 width: MediaQuery.of(context).size.width * 0.4,
                 decoration: BoxDecoration(
-                  gradient: widget.markerList!.isNotEmpty? blueGradient() : null,
+                  gradient: widget.markerList!.isNotEmpty? CustomGradient().blueGradient() : null,
                   borderRadius: BorderRadius.circular(30.0),
                 ),
                 child: ElevatedButton(
