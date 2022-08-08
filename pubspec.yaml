@@ -64,6 +64,7 @@ dependencies:
   cached_network_image: ^3.2.1
   flutter_cache_manager: ^3.3.0
   flutter_inset_box_shadow: ^1.0.8
+  dropdown_button2: ^1.7.1
 
 dev_dependencies:
   flutter_test:

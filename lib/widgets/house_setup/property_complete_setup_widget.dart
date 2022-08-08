@@ -318,7 +318,7 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
                 onSurface: Colors.transparent,
               ),
               onPressed: () async {
-                if (formKey3.currentState!.validate() && widget.furnishedController.text.isNotEmpty) {
+                if (formKey3.currentState!.validate()) {
                   if (widget.houseProfileImages.imageURLS.isNotEmpty) {
                     User? currentUser = auth.currentUser;
                     bool isInitialHouseProfileComplete = await AuthAPI().checkIfCurrentUserHouseComplete();
