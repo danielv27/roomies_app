@@ -4,7 +4,7 @@ import 'package:roomies_app/models/user_model.dart';
 class GroupChat{
   final String groupID;
   final String houseID;
-  final List<String> participants;
+  final List<dynamic> participants;
   final DateTime lastMessageTime;
   final String lastMessage;
 

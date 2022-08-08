@@ -110,16 +110,11 @@ class ChatAPI {
       if(participants.length > 1){
         print('creating');
         await FirebaseFirestore.instance.collection('group_chats').add({
-          'house_id': houseID,
-          'participants': participants,
-          'made_by': creatorID
-        }).then((newGroupChat) async {
-          await FirebaseFirestore.instance.collection('group_chats')
-          .doc(newGroupChat.id)
-          .set({
+              'house_id': houseID,
+            'participants': participants,
+            'made_by': creatorID,
             'last_message': "__NEW_GROUP_CHAT__",
             'last_message_timestamp': DateTime.now()
-          });
         });
         
       }
@@ -151,7 +146,7 @@ class ChatAPI {
     groupID: groupChatDoc.id,
     houseID: groupChatDoc['house_id'],
     participants: groupChatDoc['participants'],
-    lastMessageTime: groupChatDoc['last_message_timestamp'],
+    lastMessageTime: groupChatDoc['last_message_timestamp'].toDate(),
     lastMessage: groupChatDoc['last_message'],
     )).toList());
   }

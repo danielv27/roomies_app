@@ -6,7 +6,10 @@ class GroupChatProvider extends ChangeNotifier {
   List<GroupChat>? groupChats;
 
   Future<void> initialize() async {
-    groupChats = await ChatAPI().getGroupChats();
+    groupChats = await ChatAPI().getGroupChats().then(((groupChats) {
+      print(groupChats[0].participants);
+    }));
+    
   }
   Stream<List<GroupChat>> streamChanges(){
     return ChatAPI().streamGroupChatChanges();
