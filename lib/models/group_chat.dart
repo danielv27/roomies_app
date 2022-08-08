@@ -3,16 +3,16 @@ import 'package:roomies_app/models/user_model.dart';
 
 class GroupChat{
   final String groupID;
-  final List<UserModel> otherUsers;
+  final String houseID;
+  final List<String> participants;
   final DateTime lastMessageTime;
-  final int unreadMessages;
-  final List<Message> messages;
+  final String lastMessage;
 
   GroupChat({
     required this.groupID,
-    required this.otherUsers,
+    required this.houseID,
+    required this.participants,
     required this.lastMessageTime,
-    required this.unreadMessages,
-    required this.messages
+    required this.lastMessage,
   });
 }

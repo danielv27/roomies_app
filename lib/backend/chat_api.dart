@@ -110,10 +110,18 @@ class ChatAPI {
       if(participants.length > 1){
         print('creating');
         await FirebaseFirestore.instance.collection('group_chats').add({
-          'houseID': houseID,
+          'house_id': houseID,
           'participants': participants,
-          'madeBy': creatorID
+          'made_by': creatorID
+        }).then((newGroupChat) async {
+          await FirebaseFirestore.instance.collection('group_chats')
+          .doc(newGroupChat.id)
+          .set({
+            'last_message': "__NEW_GROUP_CHAT__",
+            'last_message_timestamp': DateTime.now()
+          });
         });
+        
       }
     } catch (e) {
       debugPrint("Error - $e");
@@ -125,34 +133,41 @@ class ChatAPI {
     await FirebaseFirestore.instance.collection('group_chats/$groupChatID/messages').add({
       'meesage': message,
       'senderID': senderID,
-      'timeStamp': DateTime.now()
+      'timeStamp': DateTime.now(),
+    });
+    await FirebaseFirestore.instance.doc('group_chats/$groupChatID').set({
+      'last_message': DateTime.now(),
+      'last_message_timestamp': message
     });
   }
 
   // this funtcion was tested it extracts the chats correctly for a given user corrently logged in
   Future<List<GroupChat>> getGroupChats() async {
-    List<GroupChat> groupChats = [];
     String? currentUserID = FirebaseAuth.instance.currentUser?.uid;
-    await FirebaseFirestore.instance.collection('group_chats')
+    return FirebaseFirestore.instance.collection('group_chats')
     .where('participants', arrayContains: currentUserID)
     .get()
-    .then(
-      (querySnapShot) {
-        for(var groupChatDoc in querySnapShot.docs){
-          // DateTime this = ''
-          // String lastMessageSent = 
-          // groupChatDoc.data().containsKey('lastMessageSent')?
-          // groupChatDoc['lastMessageSent'] : '';
-          // DateTime lastMessageTime = groupChatDoc
-          // .data()
-          // .containsKey('lastMessageTimeStamp')? groupChatDoc['lastMessageTimeStamp'] : '';
-          // GroupChat chat = GroupChat(
-          //   groupID: groupChatDoc.id,
-
-          // );
-        }
-      }
-    );
-    return groupChats;
+    .then((querySnapShot) => querySnapShot.docs.map((groupChatDoc) => GroupChat(
+    groupID: groupChatDoc.id,
+    houseID: groupChatDoc['house_id'],
+    participants: groupChatDoc['participants'],
+    lastMessageTime: groupChatDoc['last_message_timestamp'],
+    lastMessage: groupChatDoc['last_message'],
+    )).toList());
   }
+
+  Stream<List<GroupChat>> streamGroupChatChanges() {
+  String? currentUserID = FirebaseAuth.instance.currentUser?.uid;
+  return FirebaseFirestore.instance.collection('group_chats')
+  .where('participants', arrayContains: currentUserID)
+  .snapshots()
+  .map((querySnapShot) => querySnapShot.docs.map((groupChatDoc) => GroupChat(
+    groupID: groupChatDoc.id,
+    houseID: groupChatDoc['house_id'],
+    participants: groupChatDoc['participants'],
+    lastMessageTime: groupChatDoc['last_message_timestamp'],
+    lastMessage: groupChatDoc['last_message'],
+    )).toList());
+}
+
 }
