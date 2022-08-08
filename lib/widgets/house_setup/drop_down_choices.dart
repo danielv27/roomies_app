@@ -19,8 +19,6 @@ class DropDownChoices extends StatefulWidget {
 }
 
 class _DropDownChoicesState extends State<DropDownChoices> {
-  final List<String> dropDownDescription = ["Furnished", "Total amount of rooms", "Available rooms"];
-
   @override
   Widget build(BuildContext context) {
     return Container(
