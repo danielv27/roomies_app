@@ -100,7 +100,7 @@ class _PropertyAddressSetupPageState extends State<PropertyAddressSetupPage> {
                     style: const TextStyle(color: Colors.grey),
                     cursorColor: Colors.grey,
                     textInputAction: TextInputAction.done,
-                    decoration: applyInputDecoration("Apartment Number")
+                    decoration: applyInputDecoration("Apartment Number (Optional)")
                   ),
                 ),
               ],

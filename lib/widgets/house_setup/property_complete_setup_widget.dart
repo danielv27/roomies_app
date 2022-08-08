@@ -5,6 +5,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:roomies_app/backend/auth_api.dart';
+import 'package:roomies_app/widgets/helper_functions.dart';
+import 'package:roomies_app/widgets/house_setup/drop_down_choices.dart';
+import 'package:roomies_app/widgets/house_setup/upload_building_map.dart';
+import 'package:roomies_app/widgets/house_setup/upload_house_pictures.dart';
 
 import '../../models/house_profile_images.dart';
 import '../gradients/blue_gradient.dart';
@@ -71,8 +75,6 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
   ];
 
   final List<String> furnishedList = ['yes', 'no'];
-  final List<String> amountRoomsList = ['0', '1', '2', '3', '4'];
-  final List<String> availableRooms = ['0', '1', '2', '3', '4'];
 
   String? furnishedDropdownValue;
   String? amountRoomsDropdownValue;
@@ -102,9 +104,9 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
                 Container(
                   padding: const EdgeInsets.only(left: 30.0, right: 30, top: 5),
                   alignment: Alignment.centerLeft,
-                  child: const Text(
-                    "Cannenburgh 1, 1018 LG Amsterdam", // TODO: take information from the controllers and display it here
-                    style: TextStyle(
+                  child: Text(
+                    "${widget.postalCodeController.text}, ${widget.apartmentNumberController.text}",
+                    style: const TextStyle(
                       fontWeight: FontWeight.w600,
                       color: Colors.grey,
                     ),
@@ -125,66 +127,21 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    GestureDetector(
-                      onTap: () async {
-                        await selectHouseImages();
-                        await uploadFunction(selectedHouseImages);
-                      },
-                      child: Container(
-                        margin: const EdgeInsets.only(bottom: 14.0),
-                        width: MediaQuery.of(context).size.width * 0.8,
-                        decoration: BoxDecoration(
-                          color: const Color.fromRGBO(245, 247, 251, 1),
-                          borderRadius: BorderRadius.circular(14.0),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 30, top: 30, bottom: 30, right: 30),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                flex: 5,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text(
-                                      "Upload",
-                                      style: TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w300
-                                      ),
-                                    ),
-                                    const SizedBox(height: 6,),
-                                    Text(
-                                      uploadDescriptionFields[0],
-                                      style: const TextStyle(
-                                        color: Color.fromRGBO(51, 51, 51, 1),
-                                        fontSize: 23,
-                                        fontWeight: FontWeight.w600
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              const Spacer(),
-                              (uploadIcon[0]),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    uploadPictures(context, uploadDescriptionFields[1], uploadIcon[1],),
+                    UploadHousePictures(houseProfileImages: widget.houseProfileImages, currentUserID: auth.currentUser!.uid),
+                    UploadBuildingMap(houseProfileImages: widget.houseProfileImages, currentUserID: auth.currentUser!.uid),
                     textDescription("Description"),
                     Container(
                       margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
                       width: MediaQuery.of(context).size.width * 0.8,
                       child: TextFormField(
+                        textInputAction: TextInputAction.newline,
+                        keyboardType: TextInputType.multiline,
+                        minLines: 1,
+                        maxLines: 10,
                         controller: widget.houseDescriptionController,
                         style: const TextStyle(color: Colors.grey),
                         cursorColor: Colors.grey,
-                        textInputAction: TextInputAction.next,
-                        decoration: contentFieldsDecoration("Write a complete description about the house with at least 100 words...", const AssetImage('assets/icons/person.png')),
+                        decoration: contentFieldsDecoration("Write a complete description about the house", const AssetImage('assets/icons/person.png')),
                         validator: (value) {
                           if (value!.isEmpty) {
                             return "Please write a description above 100 words";
@@ -194,10 +151,63 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
                         },
                       ),
                     ),
-                    dropDownHouseChoices(context, "Furnished", furnishedList, furnishedDropdownValue, const AssetImage('assets/icons/person.png')),
-                    dropDownHouseChoices(context, "Total amount of rooms", amountRoomsList, amountRoomsDropdownValue, const AssetImage('assets/icons/rooms.png')),
-                    dropDownHouseChoices(context, "Available rooms", availableRooms, availableRoomsDropdownValue, const AssetImage('assets/icons/rooms.png')),
-                    uploadPictures(context, uploadDescriptionFields[2], uploadIcon[2],),
+                    textDescription("Furnished"),
+                    DropDownChoices(
+                      dropDownList: furnishedList, 
+                      furnishedController: widget.furnishedController, 
+                      iconImage: const AssetImage('assets/icons/person.png'),
+                      dropDownChoice: furnishedDropdownValue,
+                    ),
+                    textDescription("Total Number Rooms"),
+                    Container(
+                      margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      child: TextFormField(
+                        controller: widget.numRoomController,
+                        style: const TextStyle(color: Colors.grey),
+                        cursorColor: Colors.grey,
+                        textInputAction: TextInputAction.next,
+                        decoration: contentFieldsDecoration("0", const AssetImage('assets/icons/rooms.png')),
+                        validator: (value) {
+                          final availableNumberRoomes = widget.availableRoomController.text;
+                          if (value!.isEmpty) {
+                            return "Please fill the number of rooms";
+                          } else if (int.tryParse(value) == null) {
+                            return "Please enter only numbers";
+                          } else if (availableNumberRoomes.isNotEmpty) {
+                            if (int.tryParse(availableNumberRoomes)! > int.parse(value)) {
+                              return "total can't be less than available";
+                            }
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                    textDescription("Available Number Rooms"),
+                    Container(
+                      margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      child: TextFormField(
+                        controller: widget.availableRoomController,
+                        style: const TextStyle(color: Colors.grey),
+                        cursorColor: Colors.grey,
+                        textInputAction: TextInputAction.next,
+                        decoration: contentFieldsDecoration("0", const AssetImage('assets/icons/rooms.png')),
+                        validator: (value) {
+                          final totalNumberRoomes = widget.numRoomController.text;
+                          if (value!.isEmpty) {
+                            return "Please fill the number of available rooms";
+                          } else if (int.tryParse(value) == null) {
+                            return "Please enter only numbers";
+                          } else if (totalNumberRoomes.isNotEmpty) {
+                            if (int.tryParse(totalNumberRoomes)! < int.parse(value)) {
+                              return "available can't be more than total";
+                            }
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
                     textDescription("Price per room"),
                     Container(
                       margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
@@ -211,6 +221,8 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
                         validator: (value) {
                           if (value!.isEmpty) {
                             return "Please fill the price per room";
+                          } else if (int.tryParse(value) == null) {
+                            return "Please enter only numbers";
                           } else {
                             return null;
                           }
@@ -267,6 +279,8 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
                         validator: (value) {
                           if (value!.isEmpty) {
                             return "Please fill the phone number of the contact person";
+                          }  else if (!isMobileNumberValid(value)) {
+                            return "Please input a valid phone number";
                           } else {
                             return null;
                           }
@@ -307,7 +321,7 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
                 onSurface: Colors.transparent,
               ),
               onPressed: () async {
-                if (formKey3.currentState!.validate() && !areDropDownControllersEmpty()) {
+                if (formKey3.currentState!.validate() && widget.furnishedController.text.isNotEmpty) {
                   if (widget.houseProfileImages.imageURLS.isNotEmpty) {
                     User? currentUser = auth.currentUser;
                     bool isInitialHouseProfileComplete = await AuthAPI().checkIfCurrentUserHouseComplete();
@@ -315,6 +329,7 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
                       currentUser,
                       widget.postalCodeController,
                       widget.houseNumberController,
+                      widget.apartmentNumberController,
                       widget.propertyTypeController,
                       widget.constructionYearController,
                       widget.livingSpaceController,
@@ -365,144 +380,6 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
     );
   }
 
-  Widget contentFields(String hintText, var iconImage, var controller) {
-    return Container(
-      margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-      width: MediaQuery.of(context).size.width * 0.8,
-      child: TextFormField(
-        controller: controller,
-        style: const TextStyle(color: Colors.grey),
-        cursorColor: Colors.grey,
-        textInputAction: TextInputAction.next,
-        decoration: contentFieldsDecoration(hintText, iconImage),
-      ),
-    );
-  }
-
-  Widget dropDownHouseChoices(BuildContext context, String dropDownDescription, List<String> dropDownList, String? dropDownChoice, var iconImage) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          dropDownDescription,
-          style: const TextStyle(
-            fontSize: 14,
-            color: Color.fromRGBO(101, 101, 107, 1),
-          ),
-        ),
-        Container(
-          padding: const EdgeInsets.all(8),
-          margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
-          width: MediaQuery.of(context).size.width * 0.8,
-          height: 65,
-          decoration: BoxDecoration(
-            color: const Color.fromRGBO(235, 235, 235, 1),
-            borderRadius: BorderRadius.circular(14.0),
-          ),
-          child: DropdownButtonFormField<String>(
-            isDense: true,
-            decoration: dropDownDecoration(iconImage),
-            isExpanded: true,
-            hint: const Text(
-              "Choose",
-              style: TextStyle(
-                fontSize: 14,
-              ),
-            ),
-            value: dropDownChoice,
-            items: dropDownList
-              .map<DropdownMenuItem<String>>((String value) => DropdownMenuItem<String>(
-                value: value,
-                child: Text(
-                  value, 
-                  style: const TextStyle(fontSize: 14),
-                ),
-              )).toList(), 
-            onChanged: (String? newValue) {
-              setState(() {
-                if (dropDownDescription == "Furnished") {
-                  widget.furnishedController.text = newValue!;
-                } else if (dropDownDescription == "Total amount of rooms") {
-                  widget.numRoomController.text = newValue!;
-                } else if (dropDownDescription == "Available rooms") {
-                  widget.availableRoomController.text = newValue!;
-                }
-                dropDownChoice = newValue;
-              });
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
-  InputDecoration dropDownDecoration(iconImage) {
-    return InputDecoration(
-      enabledBorder: InputBorder.none,
-      focusedBorder: InputBorder.none,
-      prefixIcon: Align(
-        widthFactor: 1.0,
-        heightFactor: 1.0,
-        child: ImageIcon(
-          iconImage, 
-          size: 15, 
-          color: const Color.fromRGBO(101,101,107, 1),
-        ),
-      ),
-    );
-  }
-
-  GestureDetector uploadPictures(BuildContext context, String descriptionField, var uploadIcon) {
-    return GestureDetector(
-      onTap: () async {
-
-      },
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 14.0),
-        width: MediaQuery.of(context).size.width * 0.8,
-        decoration: BoxDecoration(
-          color: const Color.fromRGBO(245, 247, 251, 1),
-          borderRadius: BorderRadius.circular(14.0),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.only(left: 30, top: 30, bottom: 30, right: 30),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                flex: 5,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Upload",
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w300
-                      ),
-                    ),
-                    const SizedBox(height: 6,),
-                    Text(
-                      descriptionField,
-                      style: const TextStyle(
-                        color: Color.fromRGBO(51, 51, 51, 1),
-                        fontSize: 23,
-                        fontWeight: FontWeight.w600
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              const Spacer(),
-              uploadIcon,
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   InputDecoration contentFieldsDecoration(String hintText, var imageIcon) {
     return InputDecoration(
       filled: true,
@@ -534,56 +411,6 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
     );
   }
 
-  bool areDropDownControllersEmpty() {
-    if (widget.furnishedController.text.isNotEmpty && widget.numRoomController.text.isNotEmpty && widget.availableRoomController.text.isNotEmpty) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
-  Future<void> uploadFunction(List<XFile> houseImages) async {
-    setState(() {
-      isUploading = true;
-    });
-    for (int i = 0; i < houseImages.length; i++) {
-      var imageUrl = await uploadFile(houseImages[i]);
-      widget.houseProfileImages.imageURLS.add(imageUrl);
-    }
-  }
-
-  Future<String> uploadFile(XFile houseImage) async {
-    Reference reference = FirebaseStorage.instance.ref().child("house_images").child(auth.currentUser!.uid).child(houseImage.name);
-    UploadTask uploadTask = reference.putFile(File(houseImage.path));
-    await uploadTask.whenComplete(() {
-      setState(() {
-        uploadItem++;
-        if (uploadItem == selectedHouseImages.length) {
-          isUploading = false;
-          uploadItem = 0;
-        }    
-      });
-    });
-    var url = await reference.getDownloadURL();
-    return url;
-  }
-
-  Future selectHouseImages() async{
-    try {
-      final List<XFile>? houseImages = await ImagePicker().pickMultiImage(
-        imageQuality: 50,
-      );
-      if (houseImages != null) {
-        selectedHouseImages.addAll(houseImages);
-      }
-    } catch (error) {
-      debugPrint("ERROR: $error");
-    }
-    setState(() {
-      
-    });
-  }
-
   Future<dynamic> alertImageEmpty(BuildContext context) {
     return showDialog(
       context: context,
@@ -594,6 +421,18 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
         );
       }
     );
+  }
+
+  bool isMobileNumberValid(String phoneNumber) {
+    String regexPattern = r'^(?:[+0][1-9])?[0-9]{10,12}$';
+    var regExp = RegExp(regexPattern);
+
+    if (phoneNumber.isEmpty) {
+      return false;
+    } else if (regExp.hasMatch(phoneNumber)) {
+      return true;
+    }
+    return false;
   }
 
 }

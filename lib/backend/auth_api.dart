@@ -149,6 +149,7 @@ class AuthAPI {
 
     TextEditingController postalCodeController, 
     TextEditingController houseNumberController, 
+    TextEditingController apartNumberController,
     TextEditingController propertyTypeController, 
     TextEditingController constructionYearController, 
     TextEditingController livingSpaceController, 
@@ -170,6 +171,7 @@ class AuthAPI {
       .set({ 
         'postalCode': postalCodeController.text,
         'houseNumber': houseNumberController.text,
+        'apartmentNumber': apartNumberController.text,
         'propertyType': propertyTypeController.text,
         'constructionYear': constructionYearController.text,
         'livingSpace': livingSpaceController.text,

@@ -69,6 +69,8 @@ class _PropertyInformationSetupPageState extends State<PropertyInformationSetupP
                     validator: (value) {
                       if (value!.isEmpty) {
                         return "Please fill the year of construction";
+                      } else if (int.tryParse(value) == null) {
+                        return "Please enter only numbers";
                       } else {
                         return null;
                       }
@@ -82,10 +84,12 @@ class _PropertyInformationSetupPageState extends State<PropertyInformationSetupP
                     style: const TextStyle(color: Colors.grey),
                     cursorColor: Colors.grey,
                     textInputAction: TextInputAction.next,
-                    decoration: applyInputDecoration("Living Space"),
+                    decoration: applyInputDecoration("Living Space (m\u00B2)"),
                     validator: (value) {
                       if (value!.isEmpty) {
                         return "Please fill the size of living space";
+                      } else if (int.tryParse(value) == null) {
+                        return "Please enter only numbers";
                       } else {
                         return null;
                       }
@@ -99,10 +103,12 @@ class _PropertyInformationSetupPageState extends State<PropertyInformationSetupP
                     style: const TextStyle(color: Colors.grey),
                     cursorColor: Colors.grey,
                     textInputAction: TextInputAction.done,
-                    decoration: applyInputDecoration("Plot Area"),
+                    decoration: applyInputDecoration("Plot Area (m\u00B2)"),
                     validator: (value) {
                       if (value!.isEmpty) {
                         return "Please fill the plot area";
+                      } else if (int.tryParse(value) == null) {
+                        return "Please enter only numbers";
                       } else {
                         return null;
                       }
