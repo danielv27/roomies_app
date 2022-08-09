@@ -30,7 +30,7 @@ class HeaderHouseInformation extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(bottom: 15.0, top:  25.0),
               child: Text(
-                "Ceintuurbaan ${houseProfile.houseNumber}",
+                "${houseProfile.streetName} ${houseProfile.houseNumber}",
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w600
@@ -41,7 +41,7 @@ class HeaderHouseInformation extends StatelessWidget {
           Row(
             children: [
               Text(
-                "${houseProfile.postalCode}, Amsterdam",
+                "${houseProfile.postalCode}, ${houseProfile.cityName}",
                 style: const TextStyle(
                   color: Color.fromRGBO(128, 128, 128, 1),
                   fontSize: 16,

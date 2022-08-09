@@ -23,6 +23,9 @@ class ProperCompleteSetupPage extends StatefulWidget {
     required this.postalCodeController, 
     required this.houseNumberController, 
     required this.apartmentNumberController, 
+    required this.streetNameController,
+    required this.cityNameController,
+    required this.latLngController,
     required this.constructionYearController, 
     required this.livingSpaceController, 
     required this.plotAreaContoller, 
@@ -37,6 +40,9 @@ class ProperCompleteSetupPage extends StatefulWidget {
   final TextEditingController postalCodeController;
   final TextEditingController houseNumberController;
   final TextEditingController apartmentNumberController;
+  final TextEditingController streetNameController;
+  final TextEditingController cityNameController;
+  final TextEditingController latLngController;
   final TextEditingController propertyTypeController;
   final TextEditingController constructionYearController;
   final TextEditingController livingSpaceController;
@@ -312,6 +318,9 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
                       widget.postalCodeController,
                       widget.houseNumberController,
                       widget.apartmentNumberController,
+                      widget.streetNameController,
+                      widget.cityNameController,
+                      widget.latLngController,
                       widget.propertyTypeController,
                       widget.constructionYearController,
                       widget.livingSpaceController,

@@ -201,7 +201,7 @@ class HouseInformation extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start, 
         children: [
           Text(
-            "Ceintuurbaan ${houseProfile.houseNumber}",
+            "${houseProfile.streetName} ${houseProfile.houseNumber}",
             style: const TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.w600,
@@ -210,7 +210,7 @@ class HouseInformation extends StatelessWidget {
           ),
           const SizedBox(height: 5,),
           Text(
-            "${houseProfile.postalCode}, Amsterdam",
+            "${houseProfile.postalCode}, ${houseProfile.cityName}",
             style: const TextStyle(
               color: Colors.white,
               fontSize: 18,

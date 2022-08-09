@@ -17,7 +17,6 @@ class HousesAPI {
       .get()
       .then((houseDoc) async {
         List<HouseSignupProfileModel> housesSignupProfileModel = await getHousesProfile(houseDoc.id);
-        List<Location> locations = await locationFromAddress(housesSignupProfileModel[0].postalCode);
         currentHouseOwner = HouseOwner(
           id: houseDoc.id,
           email: houseDoc['email'],
@@ -25,7 +24,6 @@ class HousesAPI {
           lastName: houseDoc['lastName'],
           isHouseOwner: houseDoc['isHouseOwner'],
           houseSignupProfileModel: housesSignupProfileModel[0],
-          location: LatLng(locations[0].latitude, locations[0].longitude),
         );
       });
       return currentHouseOwner;
@@ -53,6 +51,9 @@ class HousesAPI {
               HouseSignupProfileModel houseSignupProfileModel = HouseSignupProfileModel(
                 postalCode: house['postalCode'],
                 houseNumber: house['houseNumber'],
+                streetName: house['streetName'],
+                cityName: house['cityName'],
+                latLng: house['latLng'],
                 constructionYear: house['constructionYear'], 
                 livingSpace: house['livingSpace'], 
                 plotArea: house['plotArea'], 
@@ -183,6 +184,9 @@ class HousesAPI {
           postalCode: house['postalCode'],
           houseNumber: house['houseNumber'],
           apartmentNumber: house['apartmentNumber'],
+          streetName: house['streetName'],
+          cityName: house['cityName'],
+          latLng: house['latLng'],
           constructionYear: house['constructionYear'], 
           livingSpace: house['livingSpace'], 
           plotArea: house['plotArea'], 
@@ -211,7 +215,6 @@ class HousesAPI {
       .doc(userID)
       .get()
       .then((houseOwner) async {
-          List<Location> locations = await locationFromAddress(houseSignupProfileModel.postalCode);
           houseOwnerHouse = HouseOwner(
             id: houseOwner.id,
             email: houseOwner['email'],
@@ -219,7 +222,6 @@ class HousesAPI {
             lastName: houseOwner['lastName'],
             isHouseOwner: houseOwner['isHouseOwner'],
             houseSignupProfileModel: houseSignupProfileModel,
-            location: LatLng(locations[0].latitude, locations[0].longitude),
           );
       });
     return houseOwnerHouse;

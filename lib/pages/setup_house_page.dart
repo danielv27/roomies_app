@@ -20,6 +20,9 @@ class _SetupHousePageState extends State<SetupHousePage> with SingleTickerProvid
   final postalCodeController = TextEditingController();
   final apartmentNumberController = TextEditingController();
   final houseNumberController = TextEditingController();
+  final streetNameController = TextEditingController();
+  final cityNameController = TextEditingController();
+  final latLngController = TextEditingController();
   final propertyTypeController = TextEditingController();
   final constructionYearController = TextEditingController();
   final livingSpaceController = TextEditingController();
@@ -90,6 +93,9 @@ class _SetupHousePageState extends State<SetupHousePage> with SingleTickerProvid
             postalCodeController: postalCodeController, 
             houseNumberController: houseNumberController, 
             apartmentNumberController: apartmentNumberController,
+            streetNameController: streetNameController,
+            cityNameController: cityNameController,
+            latLngController: latLngController,
             pageController: pageController,
           ),
           PropertyTypeSetupPage(
@@ -110,6 +116,9 @@ class _SetupHousePageState extends State<SetupHousePage> with SingleTickerProvid
             postalCodeController: postalCodeController, 
             houseNumberController: houseNumberController, 
             apartmentNumberController: apartmentNumberController,
+            streetNameController: streetNameController,
+            cityNameController: cityNameController,
+            latLngController: latLngController,
             propertyTypeController: propertyTypeController,
             constructionYearController: constructionYearController, 
             livingSpaceController: livingSpaceController, 
