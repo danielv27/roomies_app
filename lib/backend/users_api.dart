@@ -33,7 +33,7 @@ class UsersAPI {
       .then((userDoc) async {
         UserProfileImages? usersProfileImages = await getUsersImagesById(userDoc.id);
         UserSignupProfileModel? userSignupProfileModel = await getUserProfile(userDoc.id);
-        String? userlocation = await HelperWidget().convertLatLngToPlace(userSignupProfileModel.latLng);
+        String? userlocation = await HelperWidget().convertLatLngToPlace(userSignupProfileModel!.latLng);
 
         currentUser = UserModel(
           id: userDoc.id,
@@ -58,7 +58,7 @@ class UsersAPI {
       UserModel? newUser;
       UserProfileImages? usersProfileImages = await getUsersImagesById(userID);
       UserSignupProfileModel? userSignupProfileModel = await getUserProfile(userID);
-      String? userlocation = await HelperWidget().convertLatLngToPlace(userSignupProfileModel.latLng);
+      String? userlocation = await HelperWidget().convertLatLngToPlace(userSignupProfileModel!.latLng);
 
       await FirebaseFirestore.instance.collection("users")
       .doc(userID)
@@ -99,8 +99,8 @@ class UsersAPI {
               continue;
             }
             UserProfileImages? usersProfileImages = await getUsersImagesById(userDoc.id);
-            UserSignupProfileModel userSignupProfileModel = await getUserProfile(userDoc.id);
-            String? userlocation = await HelperWidget().convertLatLngToPlace(userSignupProfileModel.latLng);
+            UserSignupProfileModel? userSignupProfileModel = await getUserProfile(userDoc.id);
+            String? userlocation = await HelperWidget().convertLatLngToPlace(userSignupProfileModel!.latLng);
 
             UserModel newUser = UserModel(
               id: userDoc.id,
@@ -241,22 +241,22 @@ class UsersAPI {
     }
   }
 
-  Future<UserSignupProfileModel> getUserProfile(String? currentUserID) async{
-    late UserSignupProfileModel userSignupProfileModel;
-    await FirebaseFirestore.instance.collection('users/$currentUserID/personal_profile')
+  Future<UserSignupProfileModel?> getUserProfile(String? currentUserID) async{
+    UserSignupProfileModel? userSignupProfileModel;
+    await FirebaseFirestore.instance.collection('users').doc(currentUserID).collection('personal_profile')
       .get()
-      .then((querySnapshot) {
-        for (var doc in querySnapshot.docs) {
+      .then((userQuery) {
+        for (var user in userQuery.docs) {
           userSignupProfileModel = UserSignupProfileModel(
-            about: doc['about'],
-            work: doc['work'],
-            study: doc['study'], 
-            birthdate: doc['birthdate'], 
-            maxBudget: doc['maximumBudget'], 
-            minBudget: doc['minimumBudget'], 
-            roommate: doc['roommate'],
-            radius: doc['radius'],
-            latLng: doc['latLng'],
+            about: user['about'],
+            work: user['work'],
+            study: user['study'], 
+            birthdate: user['birthdate'], 
+            maxBudget: user['maximumBudget'], 
+            minBudget: user['minimumBudget'], 
+            roommate: user['roommate'],
+            radius: user['radius'],
+            latLng: user['latLng'],
           );
         }
       });
