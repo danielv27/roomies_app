@@ -11,10 +11,10 @@ abstract class Chat{
 }
 
 class PrivateChat extends Chat{
-  final String otherUserID;
+  final UserModel? otherUser;
 
   PrivateChat({
-    required this.otherUserID,
+    required this.otherUser,
     required lastMessage,
     required lastMessageTime
   }) : super(lastMessage: lastMessage, lastMessageTime: lastMessageTime);

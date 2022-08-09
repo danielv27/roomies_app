@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:roomies_app/backend/chat_api.dart';
 import 'package:roomies_app/backend/providers/current_house_provider.dart';
 import 'package:roomies_app/backend/providers/current_profile_provider.dart';
 import 'package:roomies_app/backend/providers/chat_provider.dart';
@@ -115,7 +114,7 @@ class _UserTypeSelectorState extends State<UserTypeSelector> {
               create: (context) => MatchesProvider() 
             ),
             ChangeNotifierProvider(
-              create: (context) => GroupChatProvider()
+              create: (context) => ChatProvider()
             ),
             ChangeNotifierProvider(
               create: (context) => HouseProfileProvider() 
@@ -124,7 +123,7 @@ class _UserTypeSelectorState extends State<UserTypeSelector> {
           builder: ((context, child) {
             context.read<CurrentUserProvider>().initialize();
             context.read<MatchesProvider>().initialize();
-            context.read<GroupChatProvider>().initialize();
+            context.read<ChatProvider>().initialize();
             context.read<UserProfileProvider>().loadUsers(10);
             context.read<HouseProfileProvider>().loadHouses(10);
             

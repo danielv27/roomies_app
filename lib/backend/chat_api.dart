@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:roomies_app/backend/users_api.dart';
 import 'package:roomies_app/models/chat_models.dart';
 import 'package:roomies_app/models/message.dart';
+import 'package:roomies_app/models/user_model.dart';
 
 class ChatAPI {
 
@@ -22,13 +24,19 @@ class ChatAPI {
 
   Future<List<PrivateChat>> getPrivateChats() async {
     String? currentUserID = FirebaseAuth.instance.currentUser?.uid;
+    final List<UserModel> matches = await UsersAPI().getMatches(currentUserID!);
     final chats = await FirebaseFirestore.instance.collection('users/$currentUserID/private_chats')
     .get()
-    .then((querySnapShot) => querySnapShot.docs.map((documentSnapShot) => PrivateChat(
-      lastMessage: documentSnapShot['last_message'],
-      lastMessageTime: documentSnapShot['last_message_timestamp'].toDate(),
-      otherUserID: documentSnapShot.id,
-    )).toList());
+    .then((querySnapShot) => querySnapShot.docs.map(
+      (documentSnapShot) {
+        UserModel? otherUser = matches.lastWhere((user) => user.id == documentSnapShot.id,orElse: () => matches[0]);
+        return PrivateChat(
+          lastMessage: documentSnapShot['last_message'],
+          lastMessageTime: documentSnapShot['last_message_timestamp'].toDate(),
+          otherUser: otherUser,
+        );
+      }
+    ).toList());
     return chats;
   }
 

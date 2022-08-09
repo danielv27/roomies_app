@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:roomies_app/backend/providers/chat_provider.dart';
 import 'package:roomies_app/backend/providers/current_profile_provider.dart';
 import 'package:roomies_app/backend/providers/matches_provider.dart';
+import 'package:roomies_app/models/chat_models.dart';
 import 'package:roomies_app/widgets/matches_page/avatar_with_gradient_border.dart';
 import 'package:roomies_app/widgets/matches_page/matches_body.dart';
 import '../../models/user_model.dart';
@@ -53,7 +55,7 @@ Widget searchBar(BuildContext context,List<UserModel>? users, UserModel? current
     dayTime = "afternoon";
   }
   UserModel? currentUser = context.read<CurrentUserProvider>().currentUser?.userModel;
-
+  List<Chat?> chats = context.watch<ChatProvider>().chats;
   return AppBar(
     centerTitle: false,
     backgroundColor: Colors.transparent,
@@ -197,7 +199,8 @@ class MatchesSearchDelegate extends SearchDelegate {
     }).toList();
     return GestureDetector( //this is for now might remove
       onTap:() => close(context, null),
-      child: chatTileList(results, []));
+      child: chatTileList([]));
+      //child: chatTileList(results));
   }
 
   @override
@@ -207,6 +210,7 @@ class MatchesSearchDelegate extends SearchDelegate {
       final input = query.toLowerCase();
       return fullName.contains(input);
     }).toList();
-    return chatTileList(suggestions ,[]);
+    return chatTileList([]);
+    //return chatTileList([suggestions]);
   }
 }
