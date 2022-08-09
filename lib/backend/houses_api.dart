@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:roomies_app/backend/users_api.dart';
 import 'package:roomies_app/models/house_profile_model.dart';
 import 'package:roomies_app/models/user_model.dart';
@@ -123,19 +121,17 @@ class HousesAPI {
       .get()
       .then((housesQuery) async {
         for (var house in housesQuery.docs) { 
-          List<dynamic>? houseProfileImages = await getHouseImages(house.data()['ImagesRef']);
+          final String houseRef = house.data()['houseRef'];
+          final String userID = house.data()['userID'];
 
-          HouseSignupProfileModel? houseSignupProfileModel = await getHouseSignupProfileModel(house.data()['houseRef'], houseProfileImages);
-
-          HouseOwner? houseOwnerHouse = await getHouseOwnerModel(house.data()['houseRef'], houseSignupProfileModel!);
-
-          String houseRef = house.data()['houseRef'];
-          final splittedHouseRef = houseRef.split('/');
+          List<dynamic>? houseProfileImages = await getHouseImages(houseRef, userID);
+          HouseSignupProfileModel? houseSignupProfileModel = await getHouseSignupProfileModel(houseRef, userID, houseProfileImages);
+          HouseOwner? houseOwnerHouse = await getHouseOwnerModel(houseRef, userID, houseSignupProfileModel!);
 
           HouseProfileModel houseProfileModel = HouseProfileModel(
             houseOwner: houseOwnerHouse!,
             imageURLS: houseProfileImages,
-            houseRef: splittedHouseRef.last
+            houseRef: houseRef,
           );
           housesProfileModel.add(houseProfileModel);
         }
@@ -143,20 +139,14 @@ class HousesAPI {
     return housesProfileModel;
   }
   
-  Future<List> getHouseImages(imagesRef) async {
-    final splitImagesRef = imagesRef.split('/');
-    String users = splitImagesRef[0];
-    String userID = splitImagesRef[1];
-    String housesProfile = splitImagesRef[2];
-    String docID = splitImagesRef[3];
-    String houseImages = splitImagesRef[4];
+  Future<List> getHouseImages(houseRef, userID) async {
 
     List<dynamic> houseProfileImages = [];
-    await FirebaseFirestore.instance.collection(users)
+    await FirebaseFirestore.instance.collection('users')
       .doc(userID)
-      .collection(housesProfile)
-      .doc(docID)
-      .collection(houseImages)
+      .collection('houses_profile')
+      .doc(houseRef)
+      .collection('house_images')
       .get()
       .then((houseImgaesQuery) {
         for (var images in houseImgaesQuery.docs) {
@@ -166,18 +156,12 @@ class HousesAPI {
     return houseProfileImages;
   }
   
-  Future<HouseSignupProfileModel?> getHouseSignupProfileModel(houseRef, houseProfileImages) async {
-    final splitHouseRef = houseRef.split('/');
-    String users = splitHouseRef[0];
-    String userID = splitHouseRef[1];
-    String housesProfile = splitHouseRef[2];
-    String houseID = splitHouseRef[3];
-
+  Future<HouseSignupProfileModel?> getHouseSignupProfileModel(houseRef, userID, houseProfileImages) async {
     HouseSignupProfileModel? houseSignupProfileModel;
-    await FirebaseFirestore.instance.collection(users)
+    await FirebaseFirestore.instance.collection('users')
       .doc(userID)
-      .collection(housesProfile)
-      .doc(houseID)
+      .collection('houses_profile')
+      .doc(houseRef)
       .get()
       .then((house) {
         houseSignupProfileModel = HouseSignupProfileModel(
@@ -205,13 +189,9 @@ class HousesAPI {
     return houseSignupProfileModel;
   }
   
-  Future<HouseOwner?> getHouseOwnerModel(houseRef, HouseSignupProfileModel houseSignupProfileModel) async {
-    final splitHouseRef = houseRef.split('/');
-    String users = splitHouseRef[0];
-    String userID = splitHouseRef[1];
-
+  Future<HouseOwner?> getHouseOwnerModel(houseRef, userID, HouseSignupProfileModel houseSignupProfileModel) async {
     HouseOwner? houseOwnerHouse;
-    await FirebaseFirestore.instance.collection(users)
+    await FirebaseFirestore.instance.collection('users')
       .doc(userID)
       .get()
       .then((houseOwner) async {
@@ -295,21 +275,19 @@ class HousesAPI {
     .get()
     .then((querySnapshot) async {
       for(var house in querySnapshot.docs) {
-        List<dynamic>? houseProfileImages = await getHouseImages(house.data()['ImagesRef']);
+          final String houseRef = house.data()['houseRef'];
+          final String userID = house.data()['userID'];
 
-        HouseSignupProfileModel? houseSignupProfileModel = await getHouseSignupProfileModel(house.data()['houseRef'], houseProfileImages);
+          List<dynamic>? houseProfileImages = await getHouseImages(houseRef, userID);
+          HouseSignupProfileModel? houseSignupProfileModel = await getHouseSignupProfileModel(houseRef, userID, houseProfileImages);
+          HouseOwner? houseOwnerHouse = await getHouseOwnerModel(houseRef, userID, houseSignupProfileModel!);
 
-        HouseOwner? houseOwnerHouse = await getHouseOwnerModel(house.data()['houseRef'], houseSignupProfileModel!);
-
-        String houseRef = house.data()['houseRef'];
-        final splittedHouseRef = houseRef.split('/');
-
-        HouseProfileModel houseProfileModel = HouseProfileModel(
-          houseOwner: houseOwnerHouse!,
-          imageURLS: houseProfileImages,
-          houseRef: splittedHouseRef.last,
-        );
-        housesProfileModel.add(houseProfileModel);
+          HouseProfileModel houseProfileModel = HouseProfileModel(
+            houseOwner: houseOwnerHouse!,
+            imageURLS: houseProfileImages,
+            houseRef: houseRef,
+          );
+          housesProfileModel.add(houseProfileModel);
       }
     });
     return housesProfileModel;

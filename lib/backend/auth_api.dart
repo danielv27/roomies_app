@@ -210,8 +210,7 @@ class AuthAPI {
       .doc(splittedStorageRed.last)
       .set({
         'userID': currentUser?.uid,
-        'houseRef': storageRef.path,
-        'ImagesRef': storageRef.collection("house_images").path
+        'houseRef': splittedStorageRed.last,
       });
   }
 
