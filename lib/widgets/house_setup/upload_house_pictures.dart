@@ -12,7 +12,7 @@ class UploadHousePictures extends StatefulWidget {
     required this.currentUserID,
   }) : super(key: key);
 
-  final HouseProfileImages houseProfileImages;
+  final HouseImages houseProfileImages;
   final String currentUserID;
 
   @override

@@ -39,7 +39,7 @@ class _SetupHousePageState extends State<SetupHousePage> with SingleTickerProvid
 
   final pageController = PageController();
 
-  HouseProfileImages houseProfileImages = HouseProfileImages(imageURLS: []);
+  HouseImages houseProfileImages = HouseImages(imageURLS: []);
   HouseMapFiles houseMapFiles = HouseMapFiles(mapURLS: []);
 
 

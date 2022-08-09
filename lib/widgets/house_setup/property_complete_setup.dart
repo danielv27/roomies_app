@@ -60,7 +60,7 @@ class ProperCompleteSetupPage extends StatefulWidget {
 
   final PageController pageController;
 
-  final HouseProfileImages houseProfileImages;
+  final HouseImages houseProfileImages;
   final HouseMapFiles houseMapFiles;
 
   @override
