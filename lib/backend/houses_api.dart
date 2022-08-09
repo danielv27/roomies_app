@@ -222,6 +222,7 @@ class HousesAPI {
             lastName: houseOwner['lastName'],
             isHouseOwner: houseOwner['isHouseOwner'],
             houseSignupProfileModel: houseSignupProfileModel,
+            location: houseSignupProfileModel.latLng,
           );
       });
     return houseOwnerHouse;
