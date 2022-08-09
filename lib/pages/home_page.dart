@@ -72,7 +72,7 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
     
     Provider.of<MatchesProvider>(context, listen: false).listenToMatches().listen((otherUser) {
       print('new match');
-      otherUser.setTimeStamp(DateTime.now());
+      // otherUser.setTimeStamp(DateTime.now());
       final UserModel? currentUser = context.read<CurrentUserProvider>().currentUser?.userModel;
       UsersAPI().addMatch(currentUser!.id, otherUser.id);
       ChatAPI().createPrivateChat(currentUser.id, otherUser.id);

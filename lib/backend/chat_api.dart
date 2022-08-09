@@ -7,7 +7,7 @@ import 'package:roomies_app/models/message.dart';
 class ChatAPI {
 
   Future createPrivateChat(String currentUserID, String otherUserID) async {
-    final ref = FirebaseFirestore.instance.collection('users/$currentUserID/private_chats').doc(otherUserID);
+    final ref = FirebaseFirestore.instance.doc('users/$currentUserID/private_chats/$otherUserID');
     try{
       await ref.set({
         'last_message': '',

@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:roomies_app/backend/chat_api.dart';
 import 'package:roomies_app/backend/providers/current_house_provider.dart';
 import 'package:roomies_app/backend/providers/current_profile_provider.dart';
-import 'package:roomies_app/backend/providers/group_chat_provider.dart';
+import 'package:roomies_app/backend/providers/chat_provider.dart';
 import 'package:roomies_app/backend/providers/house_profile_provider.dart';
 import 'package:roomies_app/backend/providers/matches_provider.dart';
 import 'package:roomies_app/backend/providers/setup_completion_provider.dart';
