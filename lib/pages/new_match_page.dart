@@ -26,7 +26,7 @@ class NewMatchPage extends StatelessWidget {
     return Scaffold(
       body: Container(
         constraints: const BoxConstraints.expand(),
-        decoration: BoxDecoration(gradient: redGradient()),
+        decoration: BoxDecoration(gradient: CustomGradient().redGradient()),
         child: Column(children: [
           const Spacer(flex: 2),
           Stack(
@@ -84,7 +84,7 @@ class NewMatchPage extends StatelessWidget {
             ),
             child: GradientText(
               'Start Chat',
-              gradient: redGradient(),
+              gradient: CustomGradient().redGradient(),
               style: const TextStyle(
                 fontSize: 16,
 

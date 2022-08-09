@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:roomies_app/models/user_model.dart';
 
 class NeighborhoodTile extends StatelessWidget {
   const NeighborhoodTile({
     Key? key,
+    required this.houseOwner,
+    house
   }) : super(key: key);
+
+  final HouseOwner houseOwner;
 
   @override
   Widget build(BuildContext context) {
+    final houseProfile =  houseOwner.houseSignupProfileModel;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -39,10 +46,10 @@ class NeighborhoodTile extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 14,),
-                  const Expanded(
+                  Expanded(
                     child: Text(
-                      "Zoek naar plaatsen, buurten etc.",
-                      style: TextStyle(
+                      "${houseProfile.streetName} ${houseProfile.houseNumber}, ${houseProfile.cityName}",
+                      style: const TextStyle(
                         color:Colors.black,
                         height: 1.5,
                         fontSize: 15,

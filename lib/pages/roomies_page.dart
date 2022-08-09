@@ -5,8 +5,8 @@ import 'package:google_fonts/google_fonts.dart'; //breaks ios add font manually
 import 'package:provider/provider.dart';
 import 'package:roomies_app/backend/providers/user_profile_provider.dart';
 import 'package:roomies_app/backend/users_api.dart';
+import 'package:roomies_app/widgets/gradients/gradient.dart';
 
-import '../widgets/gradients/gradient.dart';
 import '../widgets/roomies_page/swipable_cards.dart';
 
 class RoomiesPage extends StatelessWidget {
@@ -26,7 +26,7 @@ class RoomiesPage extends StatelessWidget {
         preferredSize: const Size.fromHeight(75),
         child: Container(
           decoration: BoxDecoration(
-            gradient: redGradient()
+            gradient: CustomGradient().redGradient(),
           ),
           child: AppBar(
             centerTitle: false,

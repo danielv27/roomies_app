@@ -176,6 +176,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
+  dropdown_button2:
+    dependency: "direct main"
+    description:
+      name: dropdown_button2
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.7.1"
   equatable:
     dependency: transitive
     description:
@@ -233,26 +240,26 @@ packages:
     source: hosted
     version: "4.0.0"
   firebase_core:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: firebase_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.19.2"
+    version: "1.20.0"
   firebase_core_platform_interface:
     dependency: transitive
     description:
       name: firebase_core_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.4.3"
+    version: "4.5.0"
   firebase_core_web:
     dependency: transitive
     description:
       name: firebase_core_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.7.0"
+    version: "1.7.1"
   firebase_storage:
     dependency: "direct main"
     description:
@@ -395,7 +402,7 @@ packages:
     source: hosted
     version: "2.0.1"
   google_api_headers:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: google_api_headers
       url: "https://pub.dartlang.org"
@@ -423,7 +430,7 @@ packages:
     source: hosted
     version: "2.2.1"
   google_maps_webservice:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: google_maps_webservice
       url: "https://pub.dartlang.org"

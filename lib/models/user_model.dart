@@ -52,7 +52,7 @@ class HouseOwner {
   final String lastName;
   final bool isHouseOwner;
   final HouseSignupProfileModel houseSignupProfileModel;
-  final LatLng? location;
+  final String? location;
 
   HouseOwner({
     required this.id,

@@ -24,6 +24,10 @@ class HouseProfileModel {
 class HouseSignupProfileModel {
   String postalCode;
   String houseNumber; 
+  String? apartmentNumber;
+  String streetName;
+  String cityName;
+  String latLng;
   String constructionYear; 
   String livingSpace;
   String plotArea;
@@ -41,6 +45,10 @@ class HouseSignupProfileModel {
   HouseSignupProfileModel({
     required this.postalCode, 
     required this.houseNumber, 
+    this.apartmentNumber,
+    required this.streetName,
+    required this.cityName,
+    required this.latLng,
     required this.constructionYear, 
     required this.livingSpace, 
     required this.plotArea, 

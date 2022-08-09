@@ -1,13 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:roomies_app/models/house_profile_images.dart';
-import 'package:roomies_app/widgets/house_setup/property_address_setup_widget.dart';
-import 'package:roomies_app/widgets/house_setup/property_information_setup_widget.dart';
-import 'package:roomies_app/widgets/house_setup/property_type_setup_widget.dart';
+import 'package:roomies_app/widgets/house_setup/property_address_setup.dart';
+import 'package:roomies_app/widgets/house_setup/property_information_setup.dart';
+import 'package:roomies_app/widgets/house_setup/property_type_setup.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-import '../widgets/house_setup/property_condition_setup_widget.dart';
-import '../widgets/house_setup/property_complete_setup_widget.dart';
+import '../widgets/house_setup/property_condition_setup.dart';
+import '../widgets/house_setup/property_complete_setup.dart';
 
 class SetupHousePage extends StatefulWidget {
   const SetupHousePage({Key? key}) : super(key: key);
@@ -20,6 +20,9 @@ class _SetupHousePageState extends State<SetupHousePage> with SingleTickerProvid
   final postalCodeController = TextEditingController();
   final apartmentNumberController = TextEditingController();
   final houseNumberController = TextEditingController();
+  final streetNameController = TextEditingController();
+  final cityNameController = TextEditingController();
+  final latLngController = TextEditingController();
   final propertyTypeController = TextEditingController();
   final constructionYearController = TextEditingController();
   final livingSpaceController = TextEditingController();
@@ -90,6 +93,9 @@ class _SetupHousePageState extends State<SetupHousePage> with SingleTickerProvid
             postalCodeController: postalCodeController, 
             houseNumberController: houseNumberController, 
             apartmentNumberController: apartmentNumberController,
+            streetNameController: streetNameController,
+            cityNameController: cityNameController,
+            latLngController: latLngController,
             pageController: pageController,
           ),
           PropertyTypeSetupPage(
@@ -110,6 +116,9 @@ class _SetupHousePageState extends State<SetupHousePage> with SingleTickerProvid
             postalCodeController: postalCodeController, 
             houseNumberController: houseNumberController, 
             apartmentNumberController: apartmentNumberController,
+            streetNameController: streetNameController,
+            cityNameController: cityNameController,
+            latLngController: latLngController,
             propertyTypeController: propertyTypeController,
             constructionYearController: constructionYearController, 
             livingSpaceController: livingSpaceController, 

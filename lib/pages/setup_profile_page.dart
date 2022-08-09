@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
-import 'package:roomies_app/widgets/profile_setup/profile_complete_setup_widget.dart';
-import 'package:roomies_app/widgets/profile_setup/profile_question_setup_widget.dart';
+import 'package:roomies_app/widgets/profile_setup/profile_complete_setup.dart';
+import 'package:roomies_app/widgets/profile_setup/profile_question_setup.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../models/user_profile_images.dart';

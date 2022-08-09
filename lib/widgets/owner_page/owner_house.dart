@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:roomies_app/backend/providers/current_house_provider.dart';
-
-import '../gradients/blue_gradient.dart';
+import 'package:roomies_app/widgets/gradients/gradient.dart';
 
 class ListedOwnerHouse extends StatefulWidget {
   const ListedOwnerHouse({
@@ -39,14 +38,15 @@ class _OwnerHouseState extends State<ListedOwnerHouse> {
               margin: const EdgeInsets.only(bottom: 15.0),
               child: Container(
                 margin: const EdgeInsets.only(bottom: 15.0),
-                height: 100,
+                height: 125,
                 decoration: BoxDecoration(
                   color: const Color.fromRGBO(238, 238, 238, 1),
                   borderRadius: BorderRadius.circular(14.0),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(20.0),
+                  padding: const EdgeInsets.only(bottom: 20.0, left: 20, top: 20),
                   child: Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Container(
                         padding: const EdgeInsets.all(18),
@@ -61,34 +61,43 @@ class _OwnerHouseState extends State<ListedOwnerHouse> {
                           width: 20,
                         ),
                       ),
-                      const SizedBox(
-                        width: 14,
-                      ),
-                      RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: "${data['postalCode']}, ${data['houseNumber']}\n",
-                              style: const TextStyle(
-                                height: 2.0,
-                                color:Colors.black,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700,
+                      const SizedBox(width: 15,),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                flex: 2,
+                                child: Text(
+                                  "${data['streetName']} ${data['houseNumber']}, ${data['cityName']}",
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 3,
+                                  softWrap: false,
+                                  style: const TextStyle(
+                                    height: 1.25,
+                                    color:Colors.black,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
                               ),
-                            ),
-                            TextSpan(
-                              text: "Matches", // TODO: Add number of matched houses
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700,
-                                foreground: Paint()..shader = blueGradient().createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 100.0))
+                              Text(
+                                "Matches",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                  foreground: Paint()..shader = CustomGradient().blueGradient().createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 100.0))
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                      const Spacer(),
-                      const Icon(Icons.arrow_forward_ios)
+                      const Icon(Icons.arrow_forward_ios),
                     ],
                   ),
                 ),

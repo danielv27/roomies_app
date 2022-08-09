@@ -104,7 +104,7 @@ class BottomBar extends StatelessWidget {
                 Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(100),
-                    gradient: redGradient()
+                    gradient: CustomGradient().redGradient()
                   ),
                   child: _BottomBarItemWidget(
                     index: index,

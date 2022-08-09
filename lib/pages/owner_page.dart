@@ -3,7 +3,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:roomies_app/backend/providers/current_house_provider.dart';
 import 'package:roomies_app/pages/setup_house_page.dart';
-import 'package:roomies_app/widgets/gradients/blue_gradient.dart';
+import 'package:roomies_app/widgets/gradients/gradient.dart';
 import 'package:roomies_app/widgets/owner_page/owner_house.dart';
 
 import '../widgets/owner_page/owner_bar.dart';
@@ -26,7 +26,7 @@ class _OwnerPageState extends State<OwnerPage> {
 
   @override
   Widget build(BuildContext context) {
-    final houseProvider = context.watch<CurrentHouseProvider>();
+    CurrentHouseProvider? houseProvider = context.watch<CurrentHouseProvider>();
 
     return (houseProvider.currentUser == null) 
     ? const Center(child: CircularProgressIndicator(color: Colors.red)) 
@@ -36,47 +36,49 @@ class _OwnerPageState extends State<OwnerPage> {
         child: Container(
           padding: const EdgeInsets.only(left: 15.0, right: 30, top: 5),
           decoration: BoxDecoration(
-            gradient: blueGradient()
+            gradient: CustomGradient().blueGradient()
           ),
           child: OwnerBar(houseProvider: houseProvider),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.only(left: 30.0, right: 30, top: 5),
-          height: MediaQuery.of(context).size.height * 0.72,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.only(top: 30),
-                  alignment: Alignment.centerLeft,
-                  child: const Text(
-                    "Your contact info",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w900,
-                      fontSize: 24,
+      body: (houseProvider.currentUser?.houseSignupProfileModel != null)
+        ? SingleChildScrollView(
+            child: Container(
+              padding: const EdgeInsets.only(left: 30.0, right: 30, top: 5),
+              height: MediaQuery.of(context).size.height * 0.72,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.only(top: 30),
+                      alignment: Alignment.centerLeft,
+                      child: const Text(
+                        "Your contact info",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w900,
+                          fontSize: 24,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                HouseOwnerContactInformation(houseProvider: houseProvider),
-                Container(
-                  padding: const EdgeInsets.only(bottom: 15),
-                  alignment: Alignment.centerLeft,
-                  child: const Text(
-                    "Houses",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w900,
-                      fontSize: 24,
+                    HouseOwnerContactInformation(houseProvider: houseProvider),
+                    Container(
+                      padding: const EdgeInsets.only(bottom: 15),
+                      alignment: Alignment.centerLeft,
+                      child: const Text(
+                        "Houses",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w900,
+                          fontSize: 24,
+                        ),
+                      ),
                     ),
-                  ),
+                    ListedOwnerHouse(houseProvider: houseProvider),
+                  ],
                 ),
-                ListedOwnerHouse(houseProvider: houseProvider),
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
+          )
+        : const Center(child: Text("No houses are listed"),),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Container(
         height: 50,
@@ -84,7 +86,7 @@ class _OwnerPageState extends State<OwnerPage> {
         margin: const EdgeInsets.only(bottom: 10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          gradient: blueGradient(),
+          gradient: CustomGradient().blueGradient(),
         ),
         child: FloatingActionButton(
           splashColor: Colors.white.withOpacity(0.25),

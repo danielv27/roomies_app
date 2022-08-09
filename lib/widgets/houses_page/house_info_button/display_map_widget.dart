@@ -22,14 +22,9 @@ class _DisplayNeighborhoodLocationState extends State<DisplayNeighborhoodLocatio
   Widget build(BuildContext context) {
     Set<Marker>? markerList = {};
 
-    late LatLng targetLocation;
-    if (widget.houseOwner.location == null) {
-      targetLocation = const LatLng(52.3676, 4.9041);
-    } else {
-      targetLocation = widget.houseOwner.location!;
-    }
+    final coordinates =  widget.houseOwner.location!.split(', ');
 
-    CameraPosition initialCameraPosition = CameraPosition(target: targetLocation, zoom: 13.0);
+    CameraPosition initialCameraPosition = CameraPosition(target: LatLng(double.parse(coordinates[0]), double.parse(coordinates[1])), zoom: 13.0);
     return ClipRRect(
       borderRadius: const BorderRadius.only(
         topLeft: Radius.circular(20),

@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:roomies_app/backend/auth_api.dart';
 import 'package:roomies_app/pages/setup_page.dart';
-import 'package:roomies_app/widgets/gradients/blue_gradient.dart';
-
-import '../widgets/gradients/gradient.dart';
+import 'package:roomies_app/widgets/auth_page/custom_input_decorations.dart';
+import 'package:roomies_app/widgets/gradients/gradient.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({Key? key}) : super(key: key);
@@ -14,7 +13,6 @@ class AuthPage extends StatefulWidget {
   AuthPageState createState() => AuthPageState();
 }
 
-// ignore: use_key_in_widget_constructors
 class AuthPageState extends State<AuthPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -42,7 +40,7 @@ class AuthPageState extends State<AuthPage> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        gradient: redGradient(),
+        gradient: CustomGradient().redGradient()
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -53,7 +51,7 @@ class AuthPageState extends State<AuthPage> {
             width: 100,
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.all(Radius.circular(20)),
-              gradient: redGradient(),
+              gradient: CustomGradient().redGradient(),
               boxShadow: [
                 BoxShadow(
                   color: Colors.transparent.withOpacity(0.2),
@@ -125,7 +123,7 @@ class AuthPageState extends State<AuthPage> {
               style: const TextStyle(color: Colors.grey),
               cursorColor: Colors.grey,
               textInputAction: TextInputAction.next,
-              decoration: emailInputDecoration(),
+              decoration: CustomDecorations().emailInputDecoration(),
               validator: (email) {
                 if (email!.isEmpty) {
                   return "Please fill Email";
@@ -169,7 +167,7 @@ class AuthPageState extends State<AuthPage> {
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                gradient: blueGradient()
+                gradient: CustomGradient().blueGradient()
               ),
               height: 50,
               margin: const EdgeInsets.only(bottom: 10),
@@ -242,7 +240,7 @@ class AuthPageState extends State<AuthPage> {
               style: const TextStyle(color: Colors.grey),
               cursorColor: Colors.grey,
               textInputAction: TextInputAction.next,
-              decoration: applyInputDecoration("First Name", Icons.person_rounded),
+              decoration: CustomDecorations().signupInputDecoration("First Name", Icons.person_rounded),
               validator: (firstName) {
                 if (firstName!.isEmpty) {
                   return "Please fill first name";
@@ -256,7 +254,7 @@ class AuthPageState extends State<AuthPage> {
               style: const TextStyle(color: Colors.grey),
               cursorColor: Colors.grey,
               textInputAction: TextInputAction.next,
-              decoration: applyInputDecoration("Last Name", Icons.person_rounded),
+              decoration: CustomDecorations().signupInputDecoration("First Name", Icons.person_rounded),
               validator: (lastName) {
                 if (lastName!.isEmpty) {
                   return "Please fill last name";
@@ -270,7 +268,7 @@ class AuthPageState extends State<AuthPage> {
               style: const TextStyle(color: Colors.grey),
               cursorColor: Colors.grey,
               textInputAction: TextInputAction.next,
-              decoration: emailInputDecoration(),
+              decoration: CustomDecorations().emailInputDecoration(),
               validator: (email) {
                 if (email!.isEmpty) {
                   return "Please fill email";
@@ -309,7 +307,7 @@ class AuthPageState extends State<AuthPage> {
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                gradient: blueGradient()
+                gradient: CustomGradient().blueGradient()
               ),
               height: 50,
               margin: const EdgeInsets.only(bottom: 10),
@@ -324,7 +322,6 @@ class AuthPageState extends State<AuthPage> {
                 onPressed: () async {
                   if (signupKey.currentState!.validate()) {
                     signUp();
-                    Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: const SetupPage()));
                   }
                 },
                 child: const Text(
@@ -360,7 +357,11 @@ class AuthPageState extends State<AuthPage> {
   }
 
   void signUp() async {
-    await AuthAPI().signUp(emailController, passwordController, firstNameController, lastNameController, errorMessage, context);
+    String error = await AuthAPI().signUp(emailController, passwordController, firstNameController, lastNameController, errorMessage, context);
+    if (error.isEmpty) {
+      if (!mounted) return;
+      Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: const SetupPage()));
+    }
   }
 
   GestureDetector rememberMeGestureDetector() {
@@ -377,7 +378,7 @@ class AuthPageState extends State<AuthPage> {
         width: 20.0,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
-          gradient: _isChecked ? blueGradient() : null,
+          gradient: _isChecked ? CustomGradient().blueGradient() : null,
           border: _isChecked ? null : Border.all(color: const Color.fromRGBO(101, 101, 107, 1), width: 1.5,),
         ),
         child: _isChecked ? const Icon(
@@ -386,32 +387,6 @@ class AuthPageState extends State<AuthPage> {
           color: Colors.white,
         ) : null,
       ),
-    );
-  }
-
-  InputDecoration emailInputDecoration() {
-    return InputDecoration(
-      filled: true,
-      fillColor: const Color.fromRGBO(245, 247, 251, 1),
-      border: OutlineInputBorder(
-        borderSide: const BorderSide(
-          width: 0,
-          style: BorderStyle.none,
-        ),
-        borderRadius: BorderRadius.circular(15),
-      ),
-      focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-      prefixIcon: const Align(
-        widthFactor: 1.0,
-        heightFactor: 1.0,
-        child: Image(
-          image: AssetImage('assets/icons/Email.png'),
-          height: 20,
-          width: 20,
-        ),
-      ),
-      labelText: "Email",
-      labelStyle: const TextStyle(color: Colors.grey),
     );
   }
 
@@ -447,31 +422,6 @@ class AuthPageState extends State<AuthPage> {
     );
   }
 
-  InputDecoration applyInputDecoration(String labelName, IconData icon) {
-    return InputDecoration(
-      filled: true,
-      fillColor: const Color.fromRGBO(245, 247, 251, 1),
-      border: OutlineInputBorder(
-        borderSide: const BorderSide(
-          width: 0,
-          style: BorderStyle.none,
-        ),
-        borderRadius: BorderRadius.circular(15),
-      ),
-      focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-      labelText: labelName,
-      labelStyle: const TextStyle(color: Colors.grey),
-      prefixIcon: const Align(
-        widthFactor: 1.0,
-        heightFactor: 1.0,
-        child: Image(
-          image: AssetImage('assets/icons/person.png'),
-          height: 15,
-          width: 15,
-        ),
-      ),
-    );
-  }
 
   void _togglePasswordView() {
     setState(() {

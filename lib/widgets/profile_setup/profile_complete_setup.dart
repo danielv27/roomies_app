@@ -7,10 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:roomies_app/backend/auth_api.dart';
+import 'package:roomies_app/widgets/gradients/gradient.dart';
 
 import '../../models/user_profile_images.dart';
 import '../../models/user_profile_model.dart';
-import '../gradients/blue_gradient.dart';
 
 class CompleteProfilePage extends StatefulWidget {
   const CompleteProfilePage({
@@ -120,7 +120,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                                 width: 30,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  gradient: blueGradient(),
+                                  gradient: CustomGradient().blueGradient(),
                                 ),
                                 child: FloatingActionButton(
                                   heroTag: "btn1_$index",
@@ -163,7 +163,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                                 width: 30,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  gradient: blueGradient(),
+                                  gradient: CustomGradient().blueGradient(),
                                 ),
                                 child: FloatingActionButton(
                                   heroTag: "btn2_$index",
@@ -322,7 +322,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              gradient: blueGradient()
+              gradient: CustomGradient().blueGradient(),
             ),
             height: 50,
             width: MediaQuery.of(context).size.width * 0.75,
@@ -352,7 +352,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                     );
                     if (!mounted) return;
                     Navigator.of(context).pop();
-                    Navigator.of(context).pop();
+                    Navigator.of(context).maybePop();
                   }
                   else {
                     await alertImageEmpty(context);

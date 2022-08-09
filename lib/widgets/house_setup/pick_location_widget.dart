@@ -11,11 +11,21 @@ class PickLocation extends StatefulWidget {
     Key? key,
     required this.startingLocation,
     required this.latLngController,
+    required this.postalCodeController,
+    required this.houseNumberController,
+    required this.streetNameController,
+    required this.cityNameController,
     required this.markerList,
   }) : super(key: key);
 
   final LatLng startingLocation;
+
   final TextEditingController latLngController;
+  final TextEditingController postalCodeController;
+  final TextEditingController houseNumberController;
+  final TextEditingController streetNameController;
+  final TextEditingController cityNameController;
+
   final Set<Marker>? markerList;
 
   @override
@@ -70,8 +80,6 @@ class _PickLocationState extends State<PickLocation> {
             onMapCreated: (GoogleMapController controller) {
               googleMapController = controller;
             },
-            onTap: addMarker,
-            onLongPress: addMarker,
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 75.0),
@@ -152,25 +160,20 @@ class _PickLocationState extends State<PickLocation> {
       position: LatLng(lat, lng), 
     ));
 
+    String? houseNumber =  detail.result.addressComponents[0].longName;
+    String? streetName = detail.result.addressComponents[1].longName;
+    String? cityName = detail.result.addressComponents[3].longName;
+    String? zipCode =  detail.result.addressComponents[7].longName.replaceAll(' ', '');
+
     setState(() {
       widget.latLngController.text = "$lat, $lng";
+      widget.houseNumberController.text = houseNumber;
+      widget.postalCodeController.text = zipCode;
+      widget.streetNameController.text = streetName;
+      widget.cityNameController.text = cityName;
     });
 
     googleMapController.animateCamera(CameraUpdate.newLatLngZoom(LatLng(lat, lng), 14.0));
-  }
-
-  void addMarker(LatLng argument) {
-    widget.markerList!.clear();
-    widget.markerList!.add(Marker(
-      markerId: const MarkerId("0"), 
-      position: LatLng(argument.latitude, argument.longitude), 
-    ));
-
-    setState(() {
-      widget.latLngController.text = "${argument.latitude}, ${argument.longitude}";
-    });
-
-    googleMapController.animateCamera(CameraUpdate.newLatLngZoom(LatLng(argument.latitude, argument.longitude), 14.0));
   }
 
   Future<dynamic> alertLocationNotPicked(BuildContext context) {
