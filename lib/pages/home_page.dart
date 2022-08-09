@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
+import 'package:roomies_app/backend/chat_api.dart';
 import 'package:roomies_app/backend/providers/current_profile_provider.dart';
 import 'package:roomies_app/backend/providers/matches_provider.dart';
 import 'package:roomies_app/backend/users_api.dart';
@@ -74,6 +75,7 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
       otherUser.setTimeStamp(DateTime.now());
       final UserModel? currentUser = context.read<CurrentUserProvider>().currentUser?.userModel;
       UsersAPI().addMatch(currentUser!.id, otherUser.id);
+      ChatAPI().createPrivateChat(currentUser.id, otherUser.id);
       Navigator.push(
         context,
         PageTransition(

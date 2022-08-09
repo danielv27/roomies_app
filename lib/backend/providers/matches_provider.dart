@@ -60,7 +60,7 @@ class MatchesProvider extends ChangeNotifier {
     return newUserModels;
   }
 
-  //probably not the way to do it but we do need to check wether the user matched with anyone in the background
+  //while loop should listen to a stream controller to avoid data leaks
   Stream<UserModel> listenToMatches() async* {
     final currentUser = FirebaseAuth.instance.currentUser?.uid;
     while(true){

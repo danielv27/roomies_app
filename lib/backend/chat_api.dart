@@ -1,10 +1,31 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:roomies_app/models/group_chat.dart';
+import 'package:roomies_app/models/chat_models.dart';
 import 'package:roomies_app/models/message.dart';
 
 class ChatAPI {
+
+  Future createPrivateChat(String currentUserID, String otherUserID) async {
+    final fromRef = FirebaseFirestore.instance.collection('users/$currentUserID/private_chats').doc(otherUserID);
+    final toRef = FirebaseFirestore.instance.collection('users/$otherUserID/private_chats').doc(currentUserID);
+    try{
+      final currentTime = DateTime.now();
+      await fromRef.set({
+        'last_message': '',
+        'last_message_timestamp': currentTime
+      });
+      await toRef.set({
+        'last_message': '',
+        'last_message_timestamp': currentTime
+      });
+    } catch (e) {
+      debugPrint("Error - $e");
+      return null;
+    }
+
+  }
+
 
   Future sendPrivateMessage(String message, String? fromID, String? toID) async {
     final fromRef = FirebaseFirestore.instance.collection('users/$fromID/private_chats').doc(toID);

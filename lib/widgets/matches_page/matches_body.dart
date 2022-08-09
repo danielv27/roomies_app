@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:roomies_app/backend/providers/matches_provider.dart';
 import 'package:roomies_app/widgets/matches_page/user_tile.dart';
-import '../../models/group_chat.dart';
+import '../../models/chat_models.dart';
 import '../../models/user_model.dart';
 
 class MatchesBodyWidget extends StatefulWidget {
