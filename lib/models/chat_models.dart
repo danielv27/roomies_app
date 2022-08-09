@@ -1,4 +1,3 @@
-import 'package:http/http.dart';
 import 'package:roomies_app/models/user_model.dart';
 
 abstract class Chat{
@@ -12,10 +11,10 @@ abstract class Chat{
 }
 
 class PrivateChat extends Chat{
-  final UserModel otherUser;
+  final String otherUserID;
 
   PrivateChat({
-    required this.otherUser,
+    required this.otherUserID,
     required lastMessage,
     required lastMessageTime
   }) : super(lastMessage: lastMessage, lastMessageTime: lastMessageTime);

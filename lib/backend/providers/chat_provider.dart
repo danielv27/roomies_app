@@ -3,24 +3,26 @@ import 'package:roomies_app/backend/chat_api.dart';
 import 'package:roomies_app/models/chat_models.dart';
 
 class GroupChatProvider extends ChangeNotifier {
-  List<Chat>? chats;
+  List<Chat> chats = [];
   List<GroupChat>? groupChats;
   List<PrivateChat>? privateChats;
 
   Future<void> initialize() async {
-    groupChats = await ChatAPI().getGroupChats().then(((groupChats) {
-      for(var groupChat in groupChats){
-        print('groupChat: ${groupChat.groupID}');
-        print('houseID: ${groupChat.houseID}');
-        print('Participants: ${groupChat.participants}');
-        print('lastMessage: ${groupChat.lastMessage}');
-        print('lastMessageTime: ${groupChat.lastMessageTime}');
-      }
-      return;
-    }));
-    
+    groupChats = await ChatAPI().getGroupChats();
+    privateChats = await ChatAPI().getPrivateChats();
+
+    if(groupChats != null) chats.addAll(groupChats!);
+    if(privateChats != null) chats.addAll(privateChats!);
+
+    sortByTimeStamp();
+    notifyListeners();
   }
-  Stream<List<GroupChat>> streamChanges(){
+
+  void sortByTimeStamp(){
+    chats.sort((a, b) => b.lastMessageTime.toString().compareTo(a.lastMessageTime.toString()));
+  }
+
+  Stream<List<Chat>> streamChanges(){
     return ChatAPI().streamGroupChatChanges();
   }
 }

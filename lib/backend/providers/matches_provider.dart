@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:roomies_app/backend/chat_api.dart';
@@ -61,14 +63,13 @@ class MatchesProvider extends ChangeNotifier {
   }
 
   //while loop should listen to a stream controller to avoid data leaks
-  Stream<UserModel> listenToMatches() async* {
+  Stream<UserModel> listenToMatches(StreamController? streamController) async* {
     final currentUser = FirebaseAuth.instance.currentUser?.uid;
-    while(true){
+    while(streamController != null && !streamController.isClosed){
       print('listening..');
       List<String> newUserIDs = [];
       currentUser != null? newUserIDs = await UsersAPI().getLikedEncountersIDs(currentUser):null;
       final List<UserModel> newUserModels = await loadMatches(newUserIDs);
-      notifyListeners();
       if(newUserModels.length != userModels.length){
         for(var user in newUserModels){
           if(!userModels.contains(user)){
@@ -76,8 +77,6 @@ class MatchesProvider extends ChangeNotifier {
           }
         }
         userModels = newUserModels;
-         // should in the future be replace to the currently added user
-        notifyListeners();
       }
       await Future.delayed(const Duration(seconds: 2));
     }

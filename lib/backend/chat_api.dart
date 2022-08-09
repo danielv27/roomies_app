@@ -20,6 +20,18 @@ class ChatAPI {
 
   }
 
+  Future<List<PrivateChat>> getPrivateChats() async {
+    String? currentUserID = FirebaseAuth.instance.currentUser?.uid;
+    final chats = await FirebaseFirestore.instance.collection('users/$currentUserID/private_chats')
+    .get()
+    .then((querySnapShot) => querySnapShot.docs.map((documentSnapShot) => PrivateChat(
+      lastMessage: documentSnapShot['last_message'],
+      lastMessageTime: documentSnapShot['last_message_timestamp'].toDate(),
+      otherUserID: documentSnapShot.id,
+    )).toList());
+    return chats;
+  }
+
 
   Future sendPrivateMessage(String message, String? fromID, String? toID) async {
     final fromRef = FirebaseFirestore.instance.collection('users/$fromID/private_chats').doc(toID);
