@@ -12,6 +12,7 @@ class MatchesProvider extends ChangeNotifier {
   Future<void> initialize() async {
     final currentUserID = FirebaseAuth.instance.currentUser?.uid;
     currentUserID != null? userModels = await UsersAPI().getMatches(currentUserID):null;
+    notifyListeners();
     for(var userModel in userModels){
       final DateTime? timeStamp = await ChatAPI().getLastPrivateMessageTimeStamp(currentUserID, userModel.id);
       final String message = await ChatAPI().getLastPrivateMessage(currentUserID, userModel.id);
