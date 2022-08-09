@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:roomies_app/models/house_profile_images.dart';
@@ -5,11 +8,11 @@ import 'package:roomies_app/models/house_profile_images.dart';
 class UploadBuildingMap extends StatefulWidget {
   UploadBuildingMap({
     Key? key,
-    required this.houseProfileImages,
+    required this.houseMapFiles,
     required this.currentUserID,
   }) : super(key: key);
 
-  final HouseProfileImages houseProfileImages;
+  final HouseMapFiles houseMapFiles;
   final String currentUserID;
 
   @override
@@ -17,7 +20,7 @@ class UploadBuildingMap extends StatefulWidget {
 }
 
 class _UploadBuildingMapState extends State<UploadBuildingMap> {
-  final List<XFile> selectedHouseImages = [];
+  final List<XFile> selectedHouseMaps = [];
   int uploadItem = 0;
   bool isUploading = false;
 
@@ -25,7 +28,8 @@ class _UploadBuildingMapState extends State<UploadBuildingMap> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-
+        await selectHouseMaps();
+        await uploadFunction(selectedHouseMaps);
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 14.0),
@@ -73,47 +77,47 @@ class _UploadBuildingMapState extends State<UploadBuildingMap> {
     );
   }
 
-  // Future selectHouseImages() async{
-  //   try {
-  //     final List<XFile>? houseImages = await ImagePicker().pickMultiImage(
-  //       imageQuality: 50,
-  //     );
-  //     if (houseImages != null) {
-  //       selectedHouseImages.addAll(houseImages);
-  //     }
-  //   } catch (error) {
-  //     debugPrint("ERROR: $error");
-  //   }
-  //   setState(() {
+  Future selectHouseMaps() async{
+    try {
+      final List<XFile>? houseMaps = await ImagePicker().pickMultiImage(
+        imageQuality: 50,
+      );
+      if (houseMaps != null) {
+        selectedHouseMaps.addAll(houseMaps);
+      }
+    } catch (error) {
+      debugPrint("ERROR: $error");
+    }
+    setState(() {
       
-  //   });
-  // }
+    });
+  }
 
-  // Future<void> uploadFunction(List<XFile> houseImages) async {
-  //   setState(() {
-  //     isUploading = true;
-  //   });
-  //   for (int i = 0; i < houseImages.length; i++) {
-  //     var imageUrl = await uploadFile(houseImages[i]);
-  //     widget.houseProfileImages.imageURLS.add(imageUrl);
-  //   }
-  // }
+  Future<void> uploadFunction(List<XFile> houseMaps) async {
+    setState(() {
+      isUploading = true;
+    });
+    for (int i = 0; i < houseMaps.length; i++) {
+      var fileUrl = await uploadFile(houseMaps[i]);
+      widget.houseMapFiles.mapURLS!.add(fileUrl);
+    }
+  }
 
-  // Future<String> uploadFile(XFile houseImage) async {
-  //   Reference reference = FirebaseStorage.instance.ref().child("house_images").child(widget.currentUserID).child(houseImage.name);
-  //   UploadTask uploadTask = reference.putFile(File(houseImage.path));
-  //   await uploadTask.whenComplete(() {
-  //     setState(() {
-  //       uploadItem++;
-  //       if (uploadItem == selectedHouseImages.length) {
-  //         isUploading = false;
-  //         uploadItem = 0;
-  //       }    
-  //     });
-  //   });
-  //   var url = await reference.getDownloadURL();
-  //   return url;
-  // }
+  Future<String> uploadFile(XFile houseMap) async {
+    Reference reference = FirebaseStorage.instance.ref().child("house_map").child(widget.currentUserID).child(houseMap.name);
+    UploadTask uploadTask = reference.putFile(File(houseMap.path));
+    await uploadTask.whenComplete(() {
+      setState(() {
+        uploadItem++;
+        if (uploadItem == selectedHouseMaps.length) {
+          isUploading = false;
+          uploadItem = 0;
+        }    
+      });
+    });
+    var url = await reference.getDownloadURL();
+    return url;
+  }
 
 
 }

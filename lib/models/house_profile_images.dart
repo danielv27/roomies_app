@@ -5,3 +5,11 @@ class HouseProfileImages {
     required this.imageURLS,
   });
 }
+
+class HouseMapFiles {
+  List<dynamic>? mapURLS;
+
+  HouseMapFiles({
+    this.mapURLS,
+  });
+}

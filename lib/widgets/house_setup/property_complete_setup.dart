@@ -35,6 +35,7 @@ class ProperCompleteSetupPage extends StatefulWidget {
     required this.numRoomController, 
     required this.availableRoomController,
     required this.houseProfileImages,
+    required this.houseMapFiles,
   }) : super(key: key);
 
   final TextEditingController postalCodeController;
@@ -60,6 +61,7 @@ class ProperCompleteSetupPage extends StatefulWidget {
   final PageController pageController;
 
   final HouseProfileImages houseProfileImages;
+  final HouseMapFiles houseMapFiles;
 
   @override
   State<ProperCompleteSetupPage> createState() => _ProperCompleteSetupPageState();
@@ -117,7 +119,7 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     UploadHousePictures(houseProfileImages: widget.houseProfileImages, currentUserID: auth.currentUser!.uid),
-                    UploadBuildingMap(houseProfileImages: widget.houseProfileImages, currentUserID: auth.currentUser!.uid),
+                    UploadBuildingMap(houseMapFiles: widget.houseMapFiles, currentUserID: auth.currentUser!.uid),
                     CustomHouseDecorations().textDescription("Description"),
                     Container(
                       margin: const EdgeInsets.only(top: 10.0, bottom: 10.0),
@@ -335,6 +337,7 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
                       widget.contactEmailControler,
                       widget.contactPhoneNumberControler,
                       widget.houseProfileImages.imageURLS,
+                      widget.houseMapFiles.mapURLS,
                     );
                     if (!mounted) return;
                     Navigator.of(context).pop();

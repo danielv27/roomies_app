@@ -168,6 +168,7 @@ class AuthAPI {
     TextEditingController contactPhoneNumberControler,
 
     List<dynamic> imageURLS,
+    List<dynamic>? mapURLS,
   ) async {
     var storageRef = FirebaseFirestore.instance.collection('users').doc(currentUser?.uid).collection('houses_profile').doc();
     await storageRef
@@ -204,6 +205,14 @@ class AuthAPI {
       .add({
         'urls': imageURLS,
       });
+
+    if (mapURLS!.isNotEmpty) {
+      await storageRef
+        .collection("house_map_files")
+        .add({
+          'urls': mapURLS,
+        });
+    }
 
     final splittedStorageRed = storageRef.path.split('/');
     await FirebaseFirestore.instance.collection('houses')

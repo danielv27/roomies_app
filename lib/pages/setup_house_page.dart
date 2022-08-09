@@ -40,6 +40,8 @@ class _SetupHousePageState extends State<SetupHousePage> with SingleTickerProvid
   final pageController = PageController();
 
   HouseProfileImages houseProfileImages = HouseProfileImages(imageURLS: []);
+  HouseMapFiles houseMapFiles = HouseMapFiles(mapURLS: []);
+
 
   bool isLastPage = false;
   int houseSetupPages = 5;
@@ -133,6 +135,7 @@ class _SetupHousePageState extends State<SetupHousePage> with SingleTickerProvid
             contactEmailControler: contactEmailControler,
             contactPhoneNumberControler: contactPhoneNumberControler,
             houseProfileImages: houseProfileImages,
+            houseMapFiles: houseMapFiles,
             pageController: pageController,
           ),
         ],
