@@ -127,8 +127,6 @@ class _UserTypeSelectorState extends State<UserTypeSelector> {
             context.read<UserProfileProvider>().loadUsers(10);
             context.read<HouseProfileProvider>().loadHouses(10);
             
-            
-            
             return const HomePage();
           }),
         );

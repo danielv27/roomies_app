@@ -36,15 +36,15 @@ class _ChatTileState extends State<ChatTile> {
   Widget build(BuildContext context) {
     
     //GroupChat? groupChat = widget.chat as GroupChat;
-    if(widget.chat is PrivateChat){
-      PrivateChat? privateChat = widget.chat as PrivateChat;
-      ChatAPI().streamPrivateChatUpdates(privateChat.otherUser).listen((event) {
-      context.read<ChatProvider>().updateChat(widget.index, event);
-      // this is a temporary solution the stream should be one scope higher
-    });
-    } else{
-      GroupChat? groupChat = widget.chat as GroupChat;
-    }
+    // if(widget.chat is PrivateChat){
+    //   PrivateChat? privateChat = widget.chat as PrivateChat;
+    //   ChatAPI().streamPrivateChatUpdates(privateChat.otherUser).listen((event) {
+    //   context.read<ChatProvider>().updateChat(widget.index, event);
+    //   // this is a temporary solution the stream should be one scope higher
+    // });
+    // } else{
+    //   GroupChat? groupChat = widget.chat as GroupChat;
+    // }
 
     
     String lastMessage = widget.chat.lastMessage;

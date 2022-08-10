@@ -99,15 +99,16 @@ class ChatAPI {
     }
   }
 
-  Stream<PrivateChat> streamPrivateChatUpdates(UserModel? otherUser){
+  Stream<List<PrivateChat>> streamPrivateChatChanges(List<UserModel> matches){
+
     final currentUserID = FirebaseAuth.instance.currentUser?.uid;
-    return FirebaseFirestore.instance.doc('users/$currentUserID/private_chats/${otherUser?.id}')
-    .snapshots()
-    .map((documentSnapShot) => PrivateChat(
+    return FirebaseFirestore.instance.collection('users/$currentUserID/private_chats')
+    .snapshots(includeMetadataChanges: true)
+    .map((querySnapShot) => querySnapShot.docs.map((documentSnapShot) => PrivateChat(
       lastMessage: documentSnapShot['last_message'],
       lastMessageTime: documentSnapShot['last_message_timestamp'].toDate(),
-      otherUser: otherUser
-    ));
+      otherUser: matches.firstWhere((user) => user.id == documentSnapShot.id, orElse: () => matches[0])
+    )).toList()..sort(((a, b) => b.lastMessageTime.compareTo(a.lastMessageTime))));
   }
 
   Stream<List<Message>?>? listenToPrivateChatMessages(String? currentUserID, String? otherUserID) {
