@@ -35,18 +35,6 @@ class _ChatTileState extends State<ChatTile> {
   @override
   Widget build(BuildContext context) {
     
-    //GroupChat? groupChat = widget.chat as GroupChat;
-    // if(widget.chat is PrivateChat){
-    //   PrivateChat? privateChat = widget.chat as PrivateChat;
-    //   ChatAPI().streamPrivateChatUpdates(privateChat.otherUser).listen((event) {
-    //   context.read<ChatProvider>().updateChat(widget.index, event);
-    //   // this is a temporary solution the stream should be one scope higher
-    // });
-    // } else{
-    //   GroupChat? groupChat = widget.chat as GroupChat;
-    // }
-
-    
     String lastMessage = widget.chat.lastMessage;
 
     if(lastMessage.length > 35){
@@ -92,6 +80,6 @@ class _ChatTileState extends State<ChatTile> {
         ),
       );
     }
-    return Container();
+    return Container(height: 10,color: Colors.blue,);
   }
 }
