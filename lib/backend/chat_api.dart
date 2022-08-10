@@ -103,12 +103,13 @@ class ChatAPI {
 
     final currentUserID = FirebaseAuth.instance.currentUser?.uid;
     return FirebaseFirestore.instance.collection('users/$currentUserID/private_chats')
+    .orderBy('last_message_timestamp',descending: true)
     .snapshots(includeMetadataChanges: true)
     .map((querySnapShot) => querySnapShot.docs.map((documentSnapShot) => PrivateChat(
       lastMessage: documentSnapShot['last_message'],
       lastMessageTime: documentSnapShot['last_message_timestamp'].toDate(),
       otherUser: matches.firstWhere((user) => user.id == documentSnapShot.id, orElse: () => matches[0])
-    )).toList()..sort(((a, b) => b.lastMessageTime.compareTo(a.lastMessageTime))));
+    )).toList());
   }
 
   Stream<List<Message>?>? listenToPrivateChatMessages(String? currentUserID, String? otherUserID) {

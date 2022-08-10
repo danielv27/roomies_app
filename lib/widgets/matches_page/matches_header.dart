@@ -136,7 +136,7 @@ Widget searchBar(BuildContext context,List<UserModel>? users, List<Chat> chats, 
 
 Widget circularUserList(BuildContext context, List<UserModel>? users){
   List<UserModel> usersSortedByName = [];
-  users != null? usersSortedByName = List.from(users):null;
+  users != null? usersSortedByName = users:null;
   usersSortedByName.sort((a, b) => a.firstName.toLowerCase().compareTo(b.firstName.toLowerCase()));
   return SizedBox(
     height: MediaQuery.of(context).size.height *0.13,
