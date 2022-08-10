@@ -19,7 +19,7 @@ class MatchesBodyWidget extends StatefulWidget {
 class _MatchesBodyWidgetState extends State<MatchesBodyWidget> {
   @override
   Widget build(BuildContext context){
-    final List<Chat> chats = context.read<ChatProvider>().chats;
+    final List<Chat> chats = context.watch<ChatProvider>().chats;
 
     return Expanded(
       child: Container(
@@ -42,7 +42,7 @@ Widget chatTileList(List<Chat> chats){
   return ListView.builder(
     padding: const EdgeInsets.only(top: 18,bottom: 105),
     itemCount: chats.length,
-    itemBuilder: (context,index) => ChatTile(chat: chats[index]),
+    itemBuilder: (context,index) => ChatTile(chat: chats[index], index: index),
     addAutomaticKeepAlives: false,
   );
 }

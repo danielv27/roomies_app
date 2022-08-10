@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:provider/provider.dart';
 import 'package:roomies_app/backend/chat_api.dart';
+import 'package:roomies_app/backend/providers/chat_provider.dart';
 import 'package:roomies_app/models/chat_models.dart';
 import 'package:roomies_app/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,10 +12,12 @@ import '../../pages/chat_page.dart';
 
 class ChatTile extends StatefulWidget {
   final Chat chat;
+  final int index;
   
   const ChatTile({
       Key? key,
       required this.chat,
+      required this.index
     }) : super(key: key);
 
   @override
@@ -22,27 +26,26 @@ class ChatTile extends StatefulWidget {
 
 class _ChatTileState extends State<ChatTile> {
 
-  // Stream<void> updateLastMessage() async* {
-  //   String? lastMessage = widget.user.lastMessage;
-  //   while(true){
-  //     lastMessage = await ChatAPI().getLastPrivateMessage(FirebaseAuth.instance.currentUser?.uid, widget.user.id);
-  //     if(lastMessage.isNotEmpty && lastMessage != widget.user.lastMessage){
-  //       DateTime? timeStamp = await ChatAPI().getLastPrivateMessageTimeStamp(FirebaseAuth.instance.currentUser?.uid, widget.user.id);
-  //       widget.user.setLastMessage(lastMessage);
-  //       widget.user.setTimeStamp(timeStamp);
-  //     }
-  //     await Future.delayed(const Duration(seconds: 2));
-  //   }
-  // } 
-
   @override
   void initState() {
     super.initState();
-    //updateLastMessage().listen((event){});
+
   }
 
   @override
   Widget build(BuildContext context) {
+    
+    //GroupChat? groupChat = widget.chat as GroupChat;
+    if(widget.chat is PrivateChat){
+      PrivateChat? privateChat = widget.chat as PrivateChat;
+      ChatAPI().streamPrivateChatUpdates(privateChat.otherUser).listen((event) {
+      context.read<ChatProvider>().updateChat(widget.index, event);
+      // this is a temporary solution the stream should be one scope higher
+    });
+    } else{
+      GroupChat? groupChat = widget.chat as GroupChat;
+    }
+
     
     String lastMessage = widget.chat.lastMessage;
 

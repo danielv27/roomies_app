@@ -22,8 +22,20 @@ class ChatProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateChat(int index, Chat chat){
+    chats[index].lastMessage = chat.lastMessage;
+    chats[index].lastMessageTime = chat.lastMessageTime;
+    sortByTimeStamp();
+    notifyListeners();
+  }
+
   void sortByTimeStamp(){
-    chats.sort((a, b) => b.lastMessageTime.toString().compareTo(a.lastMessageTime.toString()));
+    chats.sort((a, b) { 
+      if(a.lastMessageTime == b.lastMessageTime){
+        return 0;
+      }
+      return b.lastMessageTime.compareTo(a.lastMessageTime);});
+    notifyListeners();
   }
 
   Stream<List<Chat>> streamChanges(){

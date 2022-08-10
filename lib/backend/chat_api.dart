@@ -99,7 +99,18 @@ class ChatAPI {
     }
   }
 
-  Stream<List<Message>?>? listenToPrivateChat(String? currentUserID, String? otherUserID) {
+  Stream<PrivateChat> streamPrivateChatUpdates(UserModel? otherUser){
+    final currentUserID = FirebaseAuth.instance.currentUser?.uid;
+    return FirebaseFirestore.instance.doc('users/$currentUserID/private_chats/${otherUser?.id}')
+    .snapshots()
+    .map((documentSnapShot) => PrivateChat(
+      lastMessage: documentSnapShot['last_message'],
+      lastMessageTime: documentSnapShot['last_message_timestamp'].toDate(),
+      otherUser: otherUser
+    ));
+  }
+
+  Stream<List<Message>?>? listenToPrivateChatMessages(String? currentUserID, String? otherUserID) {
     try {
       return FirebaseFirestore.instance.collection('users/$currentUserID/private_chats/$otherUserID/messages')
       .snapshots()
