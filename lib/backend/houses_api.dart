@@ -79,25 +79,20 @@ class HousesAPI {
     return housesStream;
   }
 
-
   Future<List<HouseProfileModel>?> getNewHouseProfileModels(int limit) async {
     List<HouseProfileModel>? houses = await getNewHouses(limit);
     List<HouseProfileModel>? houseProfileModels = [];
     try{  
       for (var house in houses!) {
-        late List<dynamic> userProfileImages = [];
         late HouseProfileModel houseProfileModel;
         await FirebaseFirestore.instance.collection('users/${house.houseOwner.id}/houses_profile')
           .doc(house.houseRef)
-          .collection('house_images')
           .get()
-          .then((querySnapshot) {
-            for (var doc in querySnapshot.docs) {
-              userProfileImages = doc.data()['urls'];
-            }
+          .then((querySnapshot) async {
+            List<dynamic>? houseProfileImages = await getHouseImages(house.houseRef, house.houseOwner.id);
             houseProfileModel = HouseProfileModel(
               houseOwner: house.houseOwner,
-              imageURLS: userProfileImages,
+              imageURLS: houseProfileImages,
               houseRef: house.houseRef,
             );
           });

@@ -176,30 +176,6 @@ class UsersAPI {
     }
   }
 
-  Future<UserProfileModel?> getUserProfileByID(String uid) async {
-    try {
-      UserModel? userModel = await getUserModelByID(uid);  
-      UserProfileModel? userProfileModel;
-      late List<dynamic> userProfileImages = [];
-
-      await FirebaseFirestore.instance.collection('users/${userModel?.id}/profile_images')
-        .get()
-        .then((querySnapshot) {
-          for (var doc in querySnapshot.docs) {
-            userProfileImages = doc.data()['urls'];
-          }
-          userProfileModel = UserProfileModel(
-            userModel: userModel!,
-            imageURLS: userProfileImages,
-          );
-        });
-      return userProfileModel;
-    } catch (e) {
-      debugPrint("Error - $e");
-      return null;
-    }
-  }
-
   Future<UserProfileImages?> getUsersImagesById(String? currentUserID) async{
     try{ 
       late UserProfileImages userProfileImagesModel;
@@ -219,25 +195,6 @@ class UsersAPI {
     } catch (e) {
       debugPrint("Error - $e");
       return null;
-    }
-  }
-
-  Future<String> getUsersFirstImage(String? currentUserID) async{
-    try{ 
-      late String userProfileFirstImage = "";
-      await FirebaseFirestore.instance.collection('users/$currentUserID/profile_images')
-        .limit(1)
-        .get()
-        .then((querySnapshot) {
-          userProfileFirstImage = querySnapshot.docs[0]['urls'][0];
-          for (var doc in querySnapshot.docs) {
-            userProfileFirstImage = doc['urls'][0];
-          }
-        });
-      return userProfileFirstImage;
-    } catch (e) {
-      debugPrint("Error - $e");
-      return "http://www.classicaloasis.com/wp-content/uploads/2014/03/profile-square.jpg";
     }
   }
 
