@@ -123,7 +123,6 @@ class _UserTypeSelectorState extends State<UserTypeSelector> {
           builder: ((context, child) {
             context.read<CurrentUserProvider>().initialize();
             context.read<MatchesProvider>().initialize();
-            context.read<ChatProvider>().initialize();
             context.read<UserProfileProvider>().loadUsers(10);
             context.read<HouseProfileProvider>().loadHouses(10);
             

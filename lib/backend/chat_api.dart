@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:roomies_app/backend/users_api.dart';
 import 'package:roomies_app/models/chat_models.dart';
+import 'package:roomies_app/models/house_profile_model.dart';
 import 'package:roomies_app/models/message.dart';
 import 'package:roomies_app/models/user_model.dart';
 
@@ -29,8 +30,9 @@ class ChatAPI {
     .get()
     .then((querySnapShot) => querySnapShot.docs.map(
       (documentSnapShot) {
-        UserModel? otherUser = matches.lastWhere((user) => user.id == documentSnapShot.id,orElse: () => matches[0]);
+        UserModel? otherUser = matches.firstWhere((user) => user.id == documentSnapShot.id,orElse: () => matches[0]);
         return PrivateChat(
+          id: documentSnapShot.id,
           lastMessage: documentSnapShot['last_message'],
           lastMessageTime: documentSnapShot['last_message_timestamp'].toDate(),
           otherUser: otherUser,
@@ -106,6 +108,7 @@ class ChatAPI {
     .orderBy('last_message_timestamp',descending: true)
     .snapshots(includeMetadataChanges: true)
     .map((querySnapShot) => querySnapShot.docs.map((documentSnapShot) => PrivateChat(
+      id: documentSnapShot.id,
       lastMessage: documentSnapShot['last_message'],
       lastMessageTime: documentSnapShot['last_message_timestamp'].toDate(),
       otherUser: matches.firstWhere((user) => user.id == documentSnapShot.id, orElse: () => matches[0])
@@ -185,32 +188,34 @@ class ChatAPI {
   }
 
   // this funtcion was tested it extracts the chats correctly for a given user corrently logged in
-  Future<List<GroupChat>> getGroupChats() async {
-    String? currentUserID = FirebaseAuth.instance.currentUser?.uid;
-    return FirebaseFirestore.instance.collection('group_chats')
-    .where('participants', arrayContains: currentUserID)
-    .get()
-    .then((querySnapShot) => querySnapShot.docs.map((groupChatDoc) => GroupChat(
+  // Future<List<GroupChat>> getGroupChats() async {
+  //   String? currentUserID = FirebaseAuth.instance.currentUser?.uid;
+  //   return FirebaseFirestore.instance.collection('group_chats')
+  //   .where('participants', arrayContains: currentUserID)
+  //   .get()
+  //   .then((querySnapShot) => querySnapShot.docs.map((groupChatDoc) => GroupChat(
+  //     id: groupChatDoc.id,
+  //     groupID: groupChatDoc.id,
+  //     groupImage: likedHouses.firstWhere((house) => house.houseRef == groupChatDoc['house_id']).imageURLS[0],
+  //     participants: groupChatDoc['participants'],
+  //     lastMessageTime: groupChatDoc['last_message_timestamp'].toDate(),
+  //     lastMessage: groupChatDoc['last_message'],
+  //   )).toList());
+  // }
+
+  Stream<List<GroupChat>> streamGroupChatChanges(List<HouseProfileModel> likedHouses) {
+  String? currentUserID = FirebaseAuth.instance.currentUser?.uid;
+  return FirebaseFirestore.instance.collection('group_chats')
+  .where('participants', arrayContains: currentUserID)
+  .snapshots(includeMetadataChanges: true)
+  .map((querySnapShot) => querySnapShot.docs.map((groupChatDoc) => GroupChat(
+    id: groupChatDoc.id,
     groupID: groupChatDoc.id,
-    houseID: groupChatDoc['house_id'],
+    groupImage: likedHouses.firstWhere((house) => house.houseRef == groupChatDoc['house_id']).imageURLS[0],
     participants: groupChatDoc['participants'],
     lastMessageTime: groupChatDoc['last_message_timestamp'].toDate(),
     lastMessage: groupChatDoc['last_message'],
     )).toList());
   }
-
-  Stream<List<GroupChat>> streamGroupChatChanges() {
-  String? currentUserID = FirebaseAuth.instance.currentUser?.uid;
-  return FirebaseFirestore.instance.collection('group_chats')
-  .where('participants', arrayContains: currentUserID)
-  .snapshots()
-  .map((querySnapShot) => querySnapShot.docs.map((groupChatDoc) => GroupChat(
-    groupID: groupChatDoc.id,
-    houseID: groupChatDoc['house_id'],
-    participants: groupChatDoc['participants'],
-    lastMessageTime: groupChatDoc['last_message_timestamp'],
-    lastMessage: groupChatDoc['last_message'],
-    )).toList());
-}
 
 }

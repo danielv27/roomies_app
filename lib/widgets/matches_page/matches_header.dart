@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:roomies_app/backend/chat_api.dart';
 import 'package:roomies_app/backend/providers/chat_provider.dart';
 import 'package:roomies_app/backend/providers/current_profile_provider.dart';
 import 'package:roomies_app/backend/providers/matches_provider.dart';
@@ -36,9 +35,9 @@ class _MatchesHeaderWidgetState extends State<MatchesHeaderWidget> {
       padding: const EdgeInsets.only(top:32),
       child: Column(
         children: [
-          searchBar(context, widget.matchesProvider.userModels, widget.chatProvider.chats, widget.currentUser),
+          searchBar(context, widget.matchesProvider.matches, widget.chatProvider.chats, widget.currentUser),
           SizedBox(height: MediaQuery.of(context).size.height*0.02),
-          circularUserList(context, widget.matchesProvider.userModels),
+          circularUserList(context, widget.matchesProvider.matches),
         ],
       ),
     );
@@ -197,7 +196,6 @@ class ChatsSearchDelegate extends SearchDelegate {
   @override
   Widget buildResults(BuildContext context) {
     
-    Stream<List<Chat>> chatStream = ChatAPI().streamPrivateChatChanges(matches);
     List<Chat> results = chats.where((chat){
       String fullName = '';
       final input = query.toLowerCase();
@@ -209,13 +207,11 @@ class ChatsSearchDelegate extends SearchDelegate {
     }).toList();
     return GestureDetector( //this is for now might remove
       onTap:() => close(context, null),
-      child: chatTileList(results, chatStream));
-      //child: chatTileList(results));
+      child: ChatTileList(chats: results));
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    Stream<List<Chat>> chatStream = ChatAPI().streamPrivateChatChanges(matches);
     List<Chat> suggestions = chats.where((chat){
       String fullName = '';
       final input = query.toLowerCase();
@@ -225,7 +221,6 @@ class ChatsSearchDelegate extends SearchDelegate {
       }
       return fullName.contains(input);
     }).toList();
-    return chatTileList(suggestions, chatStream);
-    //return chatTileList([suggestions]);
+    return ChatTileList(chats: suggestions);
   }
 }

@@ -80,6 +80,47 @@ class _ChatTileState extends State<ChatTile> {
         ),
       );
     }
-    return Container(height: 10,color: Colors.blue,);
+    final chat = widget.chat as GroupChat;
+      return Padding(
+        padding: const EdgeInsets.only(left:18.0,bottom: 23),
+        child: GestureDetector(
+          onTap: () {
+          //   Navigator.push(
+          //     context,
+          //     PageTransition(type: PageTransitionType.rightToLeft,
+          //       child: PrivateChatPage(
+          //         otherUser: chat.otherUser!,
+          //       )
+          //     )
+          //   );
+          },
+          child: Row(
+            children: [
+              CircleAvatar(
+                backgroundColor: Colors.red[700],
+                radius: 28,
+                backgroundImage: NetworkImage(chat.groupImage),
+              ),
+              SizedBox(width: MediaQuery.of(context).size.width * 0.04),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children:[
+                  Text(
+                    'house',
+                    //"${chat.otherUser!.firstName} ${chat.otherUser!.lastName}",
+                    textAlign: TextAlign.left,
+                  ),
+                  Text(lastMessage),
+                ],
+              ),
+              const Spacer(),
+              Container(
+                margin: const EdgeInsets.only(right: 20),
+                color: Colors.green, width: 5, height: 5,
+              ),
+            ],
+          ),
+        ),
+      );
   }
 }
