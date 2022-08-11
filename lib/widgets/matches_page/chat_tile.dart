@@ -5,7 +5,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:roomies_app/models/chat_models.dart';
 import 'package:roomies_app/widgets/matches_page/avatar_with_online_indicator.dart';
 
-import '../../pages/chat_page.dart';
+import '../../pages/private_chat_page.dart';
 
 class ChatTile extends StatefulWidget {
   final Chat chat;

@@ -11,7 +11,7 @@ import 'package:roomies_app/backend/providers/matches_provider.dart';
 import 'package:roomies_app/backend/users_api.dart';
 import 'package:roomies_app/widgets/bottom_bar.dart';
 import '../models/user_model.dart';
-import 'chat_page.dart';
+import 'private_chat_page.dart';
 import 'new_match_page.dart';
 import 'roomies_page.dart';
 import 'houses_page.dart';

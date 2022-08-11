@@ -158,14 +158,19 @@ class ChatAPI {
 
   Future createGroupChat(String houseID,List<String> participants, String creatorID) async {
     try{
-      if(participants.length > 1){
-        print('creating');
+      if(participants.length > 2){
         await FirebaseFirestore.instance.collection('group_chats').add({
-              'house_id': houseID,
+            'house_id': houseID,
             'participants': participants,
             'made_by': creatorID,
-            'last_message': "__NEW_GROUP_CHAT__",
+            'last_message': '',
             'last_message_timestamp': DateTime.now()
+        }).then((groupChat){
+          groupChat.collection('messages').add({
+            'message': '__HOUSE_INFO_MESSAGE_BUBBLE__',
+            'timeStamp': DateTime.now(),
+            'senderID': FirebaseAuth.instance.currentUser?.uid,
+          });         
         });
         
       }
