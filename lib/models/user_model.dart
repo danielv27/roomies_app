@@ -12,8 +12,6 @@ class UserModel {
   final bool isHouseOwner;
   final UserSignupProfileModel userSignupProfileModel;
   final CachedNetworkImageProvider firstImageProvider;
-  DateTime? timeStamp;
-  String? lastMessage;
   final String location;
 
   UserModel({
@@ -23,8 +21,6 @@ class UserModel {
     required this.lastName,
     required this.isHouseOwner,
     required this.userSignupProfileModel,
-    this.timeStamp,
-    this.lastMessage,
     required this.location,
     required this.firstImageProvider,
   });
@@ -35,13 +31,6 @@ class UserModel {
   @override
   int get hashCode => hashValues(id, email);
 
-  void setLastMessage(String? message){
-    lastMessage = message;
-  }
-
-  void setTimeStamp(DateTime? timeStamp){
-    this.timeStamp = timeStamp;
-  }
 }
 
 class HouseOwner {

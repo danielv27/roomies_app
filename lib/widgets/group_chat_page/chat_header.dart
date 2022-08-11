@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:roomies_app/models/user_model.dart';
-import 'package:roomies_app/widgets/chat_page/online_indicator.dart';
+import 'package:roomies_app/widgets/private_chat_page/online_indicator.dart';
 import 'package:roomies_app/widgets/gradients/gradient.dart';
 
 class ChatHeader extends StatelessWidget {

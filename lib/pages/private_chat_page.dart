@@ -2,10 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:roomies_app/backend/chat_api.dart';
 import 'package:roomies_app/models/user_model.dart';
-import 'package:roomies_app/widgets/chat_page/chat_header.dart';
-import 'package:roomies_app/widgets/chat_page/message_bubble_widget.dart';
+import 'package:roomies_app/widgets/private_chat_page/chat_header.dart';
+import 'package:roomies_app/widgets/private_chat_page/message_bubble_widget.dart';
 import '../models/message.dart';
-import '../widgets/chat_page/new_message_widget.dart';
+import '../widgets/private_chat_page/input_field.dart';
 
 class PrivateChatPage extends StatefulWidget {
   final UserModel otherUser;
@@ -21,20 +21,18 @@ class PrivateChatPage extends StatefulWidget {
 
 class _PrivateChatPageState extends State<PrivateChatPage> {
   List<Message> messages = [];
-  late final GlobalKey<AnimatedListState> _key = GlobalKey();
+  final GlobalKey<AnimatedListState> _key = GlobalKey();
   
+
   @override
   void initState(){
     super.initState();
-    
   }
   
   void _addMessage(Message message){
     messages.insert(0, message);
     if(_key.currentState != null){
       _key.currentState?.insertItem(0, duration: const Duration(milliseconds: 130));
-      widget.otherUser.setLastMessage(message.message);
-      widget.otherUser.setTimeStamp(message.timeStamp);
     }
   }
 
@@ -44,7 +42,7 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
       resizeToAvoidBottomInset: true ,
       body: Column(
         children: [
-          ChatHeader(
+          PrivateChatHeader(
             otherUser: widget.otherUser,
           ),
           Expanded(
@@ -89,7 +87,7 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
               } 
             ),
           ),
-          NewMessageWidget(
+          PrivateChatInputField(
             otherUser: widget.otherUser, 
             onMessageSent: (message) => _addMessage(Message(message: message, otherUserID: widget.otherUser.id, sentByCurrent: true, timeStamp: DateTime.now()))
           ),

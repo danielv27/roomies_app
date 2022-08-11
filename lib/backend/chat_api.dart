@@ -201,7 +201,7 @@ class ChatAPI {
     id: groupChatDoc.id,
     groupID: groupChatDoc.id,
     groupImage: likedHouses.firstWhere((house) => house.houseRef == groupChatDoc['house_id']).imageURLS[0],
-    participants: groupChatDoc['participants'],
+    participantsIDs: groupChatDoc['participants'],
     lastMessageTime: groupChatDoc['last_message_timestamp'].toDate(),
     lastMessage: groupChatDoc['last_message'],
     )).toList());
