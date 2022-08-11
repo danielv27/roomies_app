@@ -45,6 +45,7 @@ class _MatchesBodyWidgetState extends State<MatchesBodyWidget> {
           stream: CombineLatestStream.list([privateChatStream, groupChatStream]),
           builder: (context, snapshot) {
             if(snapshot.hasData){
+              final chatProvider = context.read<ChatProvider>();
               final List<Chat> chats = [];
               final privateChats = snapshot.data?[0] as List<PrivateChat>;
               final groupChats = snapshot.data?[1] as List<GroupChat>;
@@ -53,11 +54,12 @@ class _MatchesBodyWidgetState extends State<MatchesBodyWidget> {
               chats.addAll(groupChats.where((groupChat) => chats.every((chat) => chat.id != groupChat.id)));
 
               chats.sort(((a, b) => b.lastMessageTime.compareTo(a.lastMessageTime)));
-              return ChatTileList(chats: chats);
+              
+              chatProvider.setChats(chats); // gives error in terminal since notify listeners is called too early.
+              
+              return chatTileList(chats);
             }
             return const Center(child: CircularProgressIndicator(color: Colors.red));
-            //chats.sort(((a, b) => b.lastMessageTime.compareTo(a.lastMessageTime)));
-            //return const Center(child: CircularProgressIndicator());
           }
         )
       )
@@ -65,35 +67,15 @@ class _MatchesBodyWidgetState extends State<MatchesBodyWidget> {
   }
 }
 
-class ChatTileList extends StatefulWidget {
-  final List<Chat> chats;
-  const ChatTileList({
-    Key? key,
-    required this.chats
-    }) : super(key: key);
 
-  @override
-  State<ChatTileList> createState() => _ChatTileListState();
-}
 
-class _ChatTileListState extends State<ChatTileList> {
-  @override
-  Widget build(BuildContext context) {
+
+Widget chatTileList(List<Chat> chats){
     return ListView.builder(
-      padding: const EdgeInsets.only(top: 18,bottom: 105),
-      itemCount: widget.chats.length,
-      itemBuilder: (context,index) => ChatTile(chat: widget.chats[index], index: index),   
-    );
-  }
-}
-
-
-// Widget chatTileList(List<Chat> chats){
-//     return ListView.builder(
-//     padding: const EdgeInsets.only(top: 18,bottom: 105),
-//     itemCount: chats.length,
-//     itemBuilder: (context,index) => ChatTile(chat: chats[index], index: index),
+    padding: const EdgeInsets.only(top: 18,bottom: 105),
+    itemCount: chats.length,
+    itemBuilder: (context,index) => ChatTile(chat: chats[index], index: index),
     
-//   );
+  );
 
-// }
+}

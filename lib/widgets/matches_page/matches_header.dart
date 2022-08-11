@@ -14,13 +14,11 @@ import 'package:provider/provider.dart';
 class MatchesHeaderWidget extends StatefulWidget {
   final UserModel? currentUser;
   final MatchesProvider matchesProvider;
-  final ChatProvider chatProvider;
 
   const MatchesHeaderWidget({
       Key? key,
       required this.currentUser,
       required this.matchesProvider,
-      required this.chatProvider
     }) : super(key: key);
 
   @override
@@ -35,7 +33,7 @@ class _MatchesHeaderWidgetState extends State<MatchesHeaderWidget> {
       padding: const EdgeInsets.only(top:32),
       child: Column(
         children: [
-          searchBar(context, widget.matchesProvider.matches, widget.chatProvider.chats, widget.currentUser),
+          searchBar(context, widget.matchesProvider.matches, widget.currentUser),
           SizedBox(height: MediaQuery.of(context).size.height*0.02),
           circularUserList(context, widget.matchesProvider.matches),
         ],
@@ -44,7 +42,7 @@ class _MatchesHeaderWidgetState extends State<MatchesHeaderWidget> {
   }
 }
 
-Widget searchBar(BuildContext context,List<UserModel>? users, List<Chat> chats, UserModel? currentUser){
+Widget searchBar(BuildContext context,List<UserModel>? users, UserModel? currentUser){
   DateTime now = DateTime.now();
   String dayTime = "morning";
   if(now.hour >= 21){
@@ -57,6 +55,7 @@ Widget searchBar(BuildContext context,List<UserModel>? users, List<Chat> chats, 
     dayTime = "afternoon";
   }
   UserModel? currentUser = context.read<CurrentUserProvider>().currentUser?.userModel;
+
   return AppBar(
     centerTitle: false,
     backgroundColor: Colors.transparent,
@@ -65,6 +64,7 @@ Widget searchBar(BuildContext context,List<UserModel>? users, List<Chat> chats, 
       GestureDetector(
         onTap: () { 
           print('search pressed');
+          final chats = context.read<ChatProvider>().chats;
           showSearch(
             context: context,
             delegate: ChatsSearchDelegate(chats, users),
@@ -207,7 +207,7 @@ class ChatsSearchDelegate extends SearchDelegate {
     }).toList();
     return GestureDetector( //this is for now might remove
       onTap:() => close(context, null),
-      child: ChatTileList(chats: results));
+      child: chatTileList(results));
   }
 
   @override
@@ -221,6 +221,6 @@ class ChatsSearchDelegate extends SearchDelegate {
       }
       return fullName.contains(input);
     }).toList();
-    return ChatTileList(chats: suggestions);
+    return chatTileList(suggestions);
   }
 }

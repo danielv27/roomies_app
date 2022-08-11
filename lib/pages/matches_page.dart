@@ -28,7 +28,6 @@ class _MatchesPageState extends State<MatchesPage> {
   Widget build(BuildContext context) {
     final UserModel? currentUser = context.read<CurrentUserProvider>().currentUser?.userModel;
     final MatchesProvider matchesProvider = context.watch<MatchesProvider>();
-    final ChatProvider chatProvider = context.watch<ChatProvider>();
 
 
     return Scaffold(
@@ -48,7 +47,7 @@ class _MatchesPageState extends State<MatchesPage> {
           ),
           child: Column(
             children: [
-              MatchesHeaderWidget(currentUser: currentUser, matchesProvider: matchesProvider, chatProvider: chatProvider),
+              MatchesHeaderWidget(currentUser: currentUser, matchesProvider: matchesProvider),
               MatchesBodyWidget(matchesProvider: matchesProvider)
             ],
           ),          
