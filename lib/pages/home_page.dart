@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
+import 'package:roomies_app/backend/chat_api.dart';
 import 'package:roomies_app/backend/providers/current_profile_provider.dart';
 import 'package:roomies_app/backend/providers/matches_provider.dart';
 import 'package:roomies_app/backend/users_api.dart';
@@ -30,11 +31,13 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
   int _previousPage = 0;
   int _currentPage = 0;
   late StreamSubscription subscription;
+  StreamController? matchesStreamController;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    matchesStreamController = StreamController.broadcast();
   }
 
   
@@ -43,6 +46,8 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
   void dispose() {
     super.dispose();
     WidgetsBinding.instance.removeObserver(this);
+    matchesStreamController?.close();
+    matchesStreamController = null;
   }
 
   @override
@@ -62,18 +67,18 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     
-
     final pages = [
       RoomiesPage(),
       const MatchesPage(),
       HousesPage()
     ];
     
-    Provider.of<MatchesProvider>(context, listen: false).listenToMatches().listen((otherUser) {
+    Provider.of<MatchesProvider>(context, listen: false).listenToMatches(matchesStreamController).listen((otherUser) {
       print('new match');
-      otherUser.setTimeStamp(DateTime.now());
+      // otherUser.setTimeStamp(DateTime.now());
       final UserModel? currentUser = context.read<CurrentUserProvider>().currentUser?.userModel;
       UsersAPI().addMatch(currentUser!.id, otherUser.id);
+      ChatAPI().createPrivateChat(currentUser.id, otherUser.id);
       Navigator.push(
         context,
         PageTransition(

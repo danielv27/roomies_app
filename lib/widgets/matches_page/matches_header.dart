@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:roomies_app/backend/providers/chat_provider.dart';
 import 'package:roomies_app/backend/providers/current_profile_provider.dart';
 import 'package:roomies_app/backend/providers/matches_provider.dart';
+import 'package:roomies_app/models/chat_models.dart';
 import 'package:roomies_app/widgets/matches_page/avatar_with_gradient_border.dart';
 import 'package:roomies_app/widgets/matches_page/matches_body.dart';
 import '../../models/user_model.dart';
@@ -10,13 +12,13 @@ import 'package:provider/provider.dart';
 
 
 class MatchesHeaderWidget extends StatefulWidget {
-  final MatchesProvider provider;
   final UserModel? currentUser;
+  final MatchesProvider matchesProvider;
 
   const MatchesHeaderWidget({
       Key? key,
-      required this.provider,
       required this.currentUser,
+      required this.matchesProvider,
     }) : super(key: key);
 
   @override
@@ -31,9 +33,9 @@ class _MatchesHeaderWidgetState extends State<MatchesHeaderWidget> {
       padding: const EdgeInsets.only(top:32),
       child: Column(
         children: [
-          searchBar(context, widget.provider.userModels, widget.currentUser),
+          searchBar(context, widget.matchesProvider.matches, widget.currentUser),
           SizedBox(height: MediaQuery.of(context).size.height*0.02),
-          circularUserList(context, widget.provider.userModels),
+          circularUserList(context, widget.matchesProvider.matches),
         ],
       ),
     );
@@ -62,9 +64,10 @@ Widget searchBar(BuildContext context,List<UserModel>? users, UserModel? current
       GestureDetector(
         onTap: () { 
           print('search pressed');
+          final chats = context.read<ChatProvider>().chats;
           showSearch(
             context: context,
-            delegate: MatchesSearchDelegate(users),
+            delegate: ChatsSearchDelegate(chats, users),
           );
         },
         child: CircleAvatar(
@@ -132,7 +135,7 @@ Widget searchBar(BuildContext context,List<UserModel>? users, UserModel? current
 
 Widget circularUserList(BuildContext context, List<UserModel>? users){
   List<UserModel> usersSortedByName = [];
-  users != null? usersSortedByName = List.from(users):null;
+  users != null? usersSortedByName = users:null;
   usersSortedByName.sort((a, b) => a.firstName.toLowerCase().compareTo(b.firstName.toLowerCase()));
   return SizedBox(
     height: MediaQuery.of(context).size.height *0.13,
@@ -160,10 +163,12 @@ Widget circularUserList(BuildContext context, List<UserModel>? users){
   );
 }
 
-class MatchesSearchDelegate extends SearchDelegate {
-  late final List<UserModel> users;
-  MatchesSearchDelegate(usersList){
-    users = usersList;
+class ChatsSearchDelegate extends SearchDelegate {
+  late final List<Chat> chats;
+  late final List<UserModel> matches;
+  ChatsSearchDelegate(chatList, matchList){
+    chats = chatList;
+    matches = matchList;
   }
   
   @override
@@ -190,23 +195,32 @@ class MatchesSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    List<UserModel> results = users.where((user){
-      final fullName = "${user.firstName.toLowerCase()} ${user.lastName.toLowerCase()}";
+    
+    List<Chat> results = chats.where((chat){
+      String fullName = '';
       final input = query.toLowerCase();
+      if(chat is PrivateChat){
+        PrivateChat currentChat = chat;
+        fullName = "${currentChat.otherUser?.firstName.toLowerCase()} ${currentChat.otherUser?.lastName.toLowerCase()}";
+      }
       return fullName.contains(input);
     }).toList();
     return GestureDetector( //this is for now might remove
       onTap:() => close(context, null),
-      child: chatTileList(results, []));
+      child: chatTileList(results));
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    List<UserModel> suggestions = users.where((user){
-      final fullName = "${user.firstName.toLowerCase()} ${user.lastName.toLowerCase()}";
+    List<Chat> suggestions = chats.where((chat){
+      String fullName = '';
       final input = query.toLowerCase();
+      if(chat is PrivateChat){
+        PrivateChat currentChat = chat;
+        fullName = "${currentChat.otherUser?.firstName.toLowerCase()} ${currentChat.otherUser?.lastName.toLowerCase()}";
+      }
       return fullName.contains(input);
     }).toList();
-    return chatTileList(suggestions ,[]);
+    return chatTileList(suggestions);
   }
 }

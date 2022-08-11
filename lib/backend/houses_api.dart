@@ -217,7 +217,7 @@ class HousesAPI {
     });
   }
 
-  Future<void> addUserEncounter(String houseOwnerID, String? houseID, String currentUserID) async {
+  Future<void> addUserHouseEncounter(String houseOwnerID, String? houseID, String currentUserID) async {
     await FirebaseFirestore.instance.collection('users')
     .doc(houseOwnerID)
     .collection('houses_profile')

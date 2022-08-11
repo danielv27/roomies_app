@@ -78,7 +78,7 @@ class SwipableCardsState extends State<SwipableCards> {
             if(direction == SwipeDirection.right){
               print('liked ${houseProfileModels[index].houseOwner.firstName} ${houseProfileModels[index].houseOwner.lastName}');
               await HousesAPI().addHouseEncounter(true, currentUserID!, houseProfileModels[index].houseRef);
-              await HousesAPI().addUserEncounter(houseProfileModels[index].houseOwner.id, houseProfileModels[index].houseRef, currentUserID);
+              await HousesAPI().addUserHouseEncounter(houseProfileModels[index].houseOwner.id, houseProfileModels[index].houseRef, currentUserID);
             }
             if(direction == SwipeDirection.left){
               print('diskliked ${houseProfileModels[index].houseOwner.firstName} ${houseProfileModels[index].houseOwner.lastName}');

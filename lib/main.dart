@@ -5,9 +5,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:roomies_app/backend/chat_api.dart';
 import 'package:roomies_app/backend/providers/current_house_provider.dart';
 import 'package:roomies_app/backend/providers/current_profile_provider.dart';
+import 'package:roomies_app/backend/providers/chat_provider.dart';
 import 'package:roomies_app/backend/providers/house_profile_provider.dart';
 import 'package:roomies_app/backend/providers/matches_provider.dart';
 import 'package:roomies_app/backend/providers/setup_completion_provider.dart';
@@ -114,15 +114,18 @@ class _UserTypeSelectorState extends State<UserTypeSelector> {
               create: (context) => MatchesProvider() 
             ),
             ChangeNotifierProvider(
+              create: (context) => ChatProvider()
+            ),
+            ChangeNotifierProvider(
               create: (context) => HouseProfileProvider() 
             ),
           ],
           builder: ((context, child) {
-            Provider.of<CurrentUserProvider>(context, listen: false).initialize();
-            Provider.of<MatchesProvider>(context, listen: false).initialize();
-            Provider.of<UserProfileProvider>(context, listen: false).loadUsers(10);
-            Provider.of<HouseProfileProvider>(context, listen: false).loadHouses(10);
-            ChatAPI().getGroupChats();
+            context.read<CurrentUserProvider>().initialize();
+            context.read<MatchesProvider>().initialize();
+            context.read<UserProfileProvider>().loadUsers(10);
+            context.read<HouseProfileProvider>().loadHouses(10);
+            
             return const HomePage();
           }),
         );
