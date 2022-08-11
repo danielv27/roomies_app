@@ -8,12 +8,12 @@ class CurrentHouseProvider extends ChangeNotifier {
   Stream<QuerySnapshot<Object?>>? houses;
 
   Future<void> initialize() async {
-    currentUser = await HousesAPI().getCurrentHouseModel();
+    currentUser = await HousesAPI().getCurrentHouseOwner();
     notifyListeners();
   }
 
   Future<void> getHouseOwnerHouses() async {
-    houses = await HousesAPI().getUserHouses();
+    houses = await HousesAPI().getOwnerHouses();
     notifyListeners();
   }
 }

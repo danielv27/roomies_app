@@ -7,14 +7,14 @@ import 'package:roomies_app/models/user_model.dart';
 
 class HousesAPI {
 
-  Future<HouseOwner?> getCurrentHouseModel() async {
+  Future<HouseOwner?> getCurrentHouseOwner() async {
     try {
       HouseOwner? currentHouseOwner;
       await FirebaseFirestore.instance.collection("users")
       .doc(FirebaseAuth.instance.currentUser?.uid)
       .get()
       .then((houseDoc) async {
-        List<HouseSignupProfileModel> housesSignupProfileModel = await getHousesProfile(houseDoc.id);
+        List<HouseSignupProfileModel> housesSignupProfileModel = await getOwnerHousesProfile(houseDoc.id);
         currentHouseOwner = HouseOwner(
           id: houseDoc.id,
           email: houseDoc['email'],
@@ -31,7 +31,7 @@ class HousesAPI {
     }
   }
 
-  Future<List<HouseSignupProfileModel>> getHousesProfile(String? currentUserID) async{
+  Future<List<HouseSignupProfileModel>> getOwnerHousesProfile(String? currentUserID) async{
     List<HouseSignupProfileModel> housesSignupProfileModel = [];
     await FirebaseFirestore.instance.collection('users')
       .doc(currentUserID)
@@ -73,16 +73,16 @@ class HousesAPI {
     return housesSignupProfileModel;
   }
 
-  Future<Stream<QuerySnapshot<Object?>>> getUserHouses() async {
+  Future<Stream<QuerySnapshot<Object?>>> getOwnerHouses() async {
     String? currentUserID = FirebaseAuth.instance.currentUser?.uid;
     final Stream<QuerySnapshot> housesStream = FirebaseFirestore.instance.collection('users/$currentUserID/houses_profile').snapshots();
     return housesStream;
   }
 
-  Future<List<HouseProfileModel>?> getNewHousesModels(int limit) async {
-    List<HouseProfileModel>? houses = await getHouses(limit);
-    List<HouseProfileModel>? houseProfileModels = [];
 
+  Future<List<HouseProfileModel>?> getNewHouseProfileModels(int limit) async {
+    List<HouseProfileModel>? houses = await getNewHouses(limit);
+    List<HouseProfileModel>? houseProfileModels = [];
     try{  
       for (var house in houses!) {
         late List<dynamic> userProfileImages = [];
@@ -110,17 +110,20 @@ class HousesAPI {
     }
   }
 
-  Future<List<HouseProfileModel>?> getHouses(int limit) async {
+  Future<List<HouseProfileModel>?> getNewHouses(int limit) async {
     List<HouseProfileModel> housesProfileModel = [];
     List<String>? likedHouses = await getLikedHousesIDs(FirebaseAuth.instance.currentUser!.uid);
-    likedHouses!.add(FirebaseAuth.instance.currentUser!.uid);
 
     await FirebaseFirestore.instance.collection('houses')
       .limit(limit)
-      .where(FieldPath.documentId, whereNotIn: likedHouses)
+      .where(FieldPath.documentId, isNotEqualTo: FirebaseAuth.instance.currentUser?.uid)
       .get()
       .then((housesQuery) async {
         for (var house in housesQuery.docs) { 
+          if(likedHouses!.contains(house.id)){
+            continue;
+          }
+
           final String houseRef = house.data()['houseRef'];
           final String userID = house.data()['userID'];
 
@@ -230,7 +233,7 @@ class HousesAPI {
     });
   }
 
-  Future<List<UserModel>> getUserEncounters(String houseOwnerID, String? houseID) async {
+  Future<List<UserModel>> getUserHouseEncounters(String houseOwnerID, String? houseID) async {
     List<String> matchesIDs = [];
     List<UserModel> housemMatches = [];
 
@@ -271,10 +274,10 @@ class HousesAPI {
 
     List<String>? likedHouses = await getLikedHousesIDs(currentUser);
     await FirebaseFirestore.instance.collection('houses')
-    .where(FieldPath.documentId, whereIn: likedHouses)
     .get()
     .then((querySnapshot) async {
       for(var house in querySnapshot.docs) {
+        if(likedHouses!.contains(house.id)){
           final String houseRef = house.data()['houseRef'];
           final String userID = house.data()['userID'];
 
@@ -288,6 +291,7 @@ class HousesAPI {
             houseRef: houseRef,
           );
           housesProfileModel.add(houseProfileModel);
+        }
       }
     });
     return housesProfileModel;

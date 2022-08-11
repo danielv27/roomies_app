@@ -57,7 +57,7 @@ class SwipableCardsState extends State<SwipableCards> {
     int currentHouseIndex = widget.houseProvider.pagesSwiped;
 
     if(houseProfileModels != null && (currentHouseIndex >= houseProfileModels.length || houseProfileModels.isEmpty)){
-      return const Center(child:Text('No More Users To Swipe'));
+      return const Center(child:Text('No More Houses To Swipe'));
     }
     return houseProfileModels == null ?
     const Center(child: CircularProgressIndicator(color: Colors.red)):

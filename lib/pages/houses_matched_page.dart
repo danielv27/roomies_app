@@ -67,7 +67,7 @@ class _UsersHousesMatchedState extends State<UsersHousesMatched> {
           FutureBuilder(
             future: Future.wait([
                 UsersAPI().getMatches(FirebaseAuth.instance.currentUser!.uid),
-                HousesAPI().getUserEncounters(widget.house.houseOwner.id, widget.house.houseRef),
+                HousesAPI().getUserHouseEncounters(widget.house.houseOwner.id, widget.house.houseRef),
             ]),
             builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
               if (snapshot.hasError) {
