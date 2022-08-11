@@ -102,9 +102,9 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
               );
             },
             keepSwiping: () {
-              // setState(() {
-              //   _currentPage = 0;
-              // });
+              setState(() {
+                _currentPage = 0;
+              });
               Navigator.pop(context);
             },
           ),

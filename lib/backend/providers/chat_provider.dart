@@ -6,6 +6,5 @@ class ChatProvider extends ChangeNotifier {
 
   void setChats(List<Chat> chats){
     this.chats = chats;
-    notifyListeners();
   }
 }
