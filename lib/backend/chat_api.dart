@@ -101,7 +101,7 @@ class ChatAPI {
     }
   }
 
-  Stream<List<PrivateChat>> streamPrivateChatChanges(List<UserModel> matches){
+  Stream<List<PrivateChat>?> streamPrivateChatChanges(List<UserModel> matches){
 
     final currentUserID = FirebaseAuth.instance.currentUser?.uid;
     return FirebaseFirestore.instance.collection('users/$currentUserID/private_chats')
@@ -187,23 +187,7 @@ class ChatAPI {
     });
   }
 
-  // this funtcion was tested it extracts the chats correctly for a given user corrently logged in
-  // Future<List<GroupChat>> getGroupChats() async {
-  //   String? currentUserID = FirebaseAuth.instance.currentUser?.uid;
-  //   return FirebaseFirestore.instance.collection('group_chats')
-  //   .where('participants', arrayContains: currentUserID)
-  //   .get()
-  //   .then((querySnapShot) => querySnapShot.docs.map((groupChatDoc) => GroupChat(
-  //     id: groupChatDoc.id,
-  //     groupID: groupChatDoc.id,
-  //     groupImage: likedHouses.firstWhere((house) => house.houseRef == groupChatDoc['house_id']).imageURLS[0],
-  //     participants: groupChatDoc['participants'],
-  //     lastMessageTime: groupChatDoc['last_message_timestamp'].toDate(),
-  //     lastMessage: groupChatDoc['last_message'],
-  //   )).toList());
-  // }
-
-  Stream<List<GroupChat>> streamGroupChatChanges(List<HouseProfileModel> likedHouses) {
+  Stream<List<GroupChat>?> streamGroupChatChanges(List<HouseProfileModel> likedHouses) {
   String? currentUserID = FirebaseAuth.instance.currentUser?.uid;
   return FirebaseFirestore.instance.collection('group_chats')
   .where('participants', arrayContains: currentUserID)

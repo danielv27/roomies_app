@@ -36,25 +36,32 @@ class _MatchesBodyWidgetState extends State<MatchesBodyWidget> {
           ),
         ),
   
-        child: StreamBuilder<List<List<Chat>>>(
+        child: StreamBuilder<List<List<Chat>?>>(
           stream: CombineLatestStream.list([privateChatStream, groupChatStream]),
           builder: (context, snapshot) {
             if(snapshot.hasData){
               final chatProvider = context.read<ChatProvider>();
               final List<Chat> chats = [];
-              final privateChats = snapshot.data?[0] as List<PrivateChat>;
-              final groupChats = snapshot.data?[1] as List<GroupChat>;
-
-              chats.addAll(privateChats.where((privateChat) => chats.every((chat) => chat.id != privateChat.id)));
-              chats.addAll(groupChats.where((groupChat) => chats.every((chat) => chat.id != groupChat.id)));
-
-              chats.sort(((a, b) => b.lastMessageTime.compareTo(a.lastMessageTime)));
-              
-              chatProvider.setChats(chats); // gives error in terminal since notify listeners is called too early.
-              
-              return chatTileList(chats);
+              if(snapshot.data?[0] != null){
+                final privateChats = snapshot.data?[0] as List<PrivateChat>;
+                 chats.addAll(privateChats.where((privateChat) => chats.every((chat) => chat.id != privateChat.id)));
+              }
+              if(snapshot.data?[1] != null){
+                final groupChats = snapshot.data?[1] as List<GroupChat>;
+                chats.addAll(groupChats.where((groupChat) => chats.every((chat) => chat.id != groupChat.id)));
+              }
+              if(chats.isNotEmpty){
+                chats.sort(((a, b) => b.lastMessageTime.compareTo(a.lastMessageTime)));
+                chatProvider.setChats(chats); // gives error in terminal since notify listeners is called too early.
+                return chatTileList(chats);
+              }
             }
-            return const Center(child: CircularProgressIndicator(color: Colors.red));
+            else if((snapshot.connectionState == ConnectionState.active || snapshot.connectionState == ConnectionState.waiting)){
+              print(snapshot.connectionState);
+              return const Center(child: CircularProgressIndicator(color: Colors.red));  
+            }
+            print(snapshot.connectionState);
+            return const Center(child: Text('No Chats to Display'));
           }
         )
       )
