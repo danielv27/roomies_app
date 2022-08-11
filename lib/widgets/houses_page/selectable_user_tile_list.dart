@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:roomies_app/backend/chat_api.dart';
 import 'package:roomies_app/backend/users_api.dart';
 import 'package:roomies_app/models/user_model.dart';
 import 'package:roomies_app/widgets/gradients/gradient.dart';

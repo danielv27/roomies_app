@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:roomies_app/widgets/houses_page/house_info_button/display_activity_tile.dart';
-import 'package:roomies_app/widgets/houses_page/house_info_button/select_media_tile.dart';
 
 class HouseActivityTiles extends StatelessWidget {
   const HouseActivityTiles({

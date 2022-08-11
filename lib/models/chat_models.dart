@@ -1,4 +1,3 @@
-import 'package:roomies_app/models/house_profile_model.dart';
 import 'package:roomies_app/models/user_model.dart';
 
 abstract class Chat{

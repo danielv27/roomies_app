@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:roomies_app/backend/chat_api.dart';
@@ -21,9 +19,6 @@ class MatchesBodyWidget extends StatefulWidget {
 }
 
 class _MatchesBodyWidgetState extends State<MatchesBodyWidget> {
-  
-
-
   @override
   Widget build(BuildContext context){
     final matches = context.watch<MatchesProvider>().matches;
@@ -68,14 +63,10 @@ class _MatchesBodyWidgetState extends State<MatchesBodyWidget> {
 }
 
 
-
-
 Widget chatTileList(List<Chat> chats){
     return ListView.builder(
-    padding: const EdgeInsets.only(top: 18,bottom: 105),
-    itemCount: chats.length,
-    itemBuilder: (context,index) => ChatTile(chat: chats[index], index: index),
-    
+      padding: const EdgeInsets.only(top: 18,bottom: 105),
+      itemCount: chats.length,
+      itemBuilder: (context,index) => ChatTile(chat: chats[index], index: index),
   );
-
 }

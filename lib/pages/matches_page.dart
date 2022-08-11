@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:roomies_app/backend/providers/chat_provider.dart';
 import 'package:roomies_app/backend/providers/current_profile_provider.dart';
 import 'package:roomies_app/backend/providers/matches_provider.dart';
 import 'package:roomies_app/models/user_model.dart';

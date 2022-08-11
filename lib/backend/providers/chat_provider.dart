@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:roomies_app/backend/chat_api.dart';
 import 'package:roomies_app/models/chat_models.dart';
 
 class ChatProvider extends ChangeNotifier {
