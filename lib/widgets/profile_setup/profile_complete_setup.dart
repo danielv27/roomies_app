@@ -100,6 +100,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                   ),
                   GridView.builder(
                     shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
                     itemCount: selectedProfileImages.length + 1,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 3,
