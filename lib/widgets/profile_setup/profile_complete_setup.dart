@@ -142,9 +142,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                       : GridTile(
                         child: Stack(
                           children: [
-                            (isUploading || isRemoving) 
-                            ? const Center(child: CircularProgressIndicator())
-                            : Container(
+                            Container(
                               height: MediaQuery.of(context).size.height,
                               margin: const EdgeInsets.only(bottom: 10, right: 10),
                               child: ClipRRect(
@@ -334,7 +332,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
               ),
               onPressed: () async {
                 if (formKey2.currentState!.validate()) {
-                  if (widget.userProfileImages.imageURLS.isNotEmpty) {
+                  if (selectedProfileImages.isNotEmpty) {
                     await uploadFunction(selectedProfileImages);
                     await uploadImageUrls();
                     await AuthAPI().createPersonalProfile(
