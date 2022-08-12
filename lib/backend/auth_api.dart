@@ -70,9 +70,9 @@ class AuthAPI {
         await FirebaseFirestore.instance.collection('users')
           .doc(currentUser.user!.uid)
           .set({
-            'firstName': firstNameController.text,
-            'lastName': lastNameController.text,
-            'email': emailController.text,
+            'firstName': firstNameController.text.trim()[0].toUpperCase() + firstNameController.text.trim().substring(1).toLowerCase(),
+            'lastName': lastNameController.text.trim()[0].toUpperCase()+ lastNameController.text.trim().substring(1).toLowerCase() ,
+            'email': emailController.text.trim(),
           });
       });
     } on FirebaseAuthException catch (err) {

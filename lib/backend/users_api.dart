@@ -6,7 +6,6 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:roomies_app/models/user_model.dart';
 import 'package:roomies_app/models/user_profile_images.dart';
 import 'package:roomies_app/models/user_profile_model.dart';
-import 'package:roomies_app/widgets/helper_functions.dart';
 
 class UsersAPI {
 
