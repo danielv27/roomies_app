@@ -122,10 +122,14 @@ class _PropertyAddressSetupPageState extends State<PropertyAddressSetupPage> {
               ),
               onPressed: () { 
                 if (formKey1.currentState!.validate()) {
-                  widget.pageController.nextPage(
-                    duration: const Duration(milliseconds: 500), 
-                    curve: Curves.easeInOut,
-                  );
+                  if (widget.latLngController.text.isNotEmpty) {
+                    widget.pageController.nextPage(
+                      duration: const Duration(milliseconds: 500), 
+                      curve: Curves.easeInOut,
+                    );
+                  } else {
+                    showAlertLocationDialog(context);  
+                  }
                 }
               },
               child: const Text(
@@ -138,5 +142,29 @@ class _PropertyAddressSetupPageState extends State<PropertyAddressSetupPage> {
       ),
     );
   }
+
+  showAlertLocationDialog(BuildContext context) {  
+    Widget okButton = ElevatedButton(  
+      child: const Text("OK"),  
+      onPressed: () {  
+        Navigator.of(context).pop();  
+      },  
+    );  
+    
+    AlertDialog alert = AlertDialog(  
+      title: const Text("Location Alert"),  
+      content: const Text("Please pick a location"),  
+      actions: [  
+        okButton,  
+      ],  
+    );
+    
+    showDialog(  
+      context: context,  
+      builder: (BuildContext context) {  
+        return alert;  
+      },  
+    );  
+  }  
 
 }
