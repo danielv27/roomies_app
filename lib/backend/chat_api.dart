@@ -9,7 +9,7 @@ import 'package:roomies_app/models/user_model.dart';
 
 class ChatAPI {
 
-  Future createPrivateChat(String currentUserID, String otherUserID) async {
+  Future createPrivateChat(String? currentUserID, String otherUserID) async {
     final ref = FirebaseFirestore.instance.doc('users/$currentUserID/private_chats/$otherUserID');
     try{
       await ref.set({

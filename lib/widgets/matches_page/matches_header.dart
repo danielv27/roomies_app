@@ -100,7 +100,7 @@ Widget searchBar(BuildContext context,List<UserModel>? users, UserModel? current
           CircleAvatar(
             backgroundColor: Colors.red[700],
             radius: 28,
-            backgroundImage: currentUser!.firstImageProvider,
+            backgroundImage: currentUser?.firstImageProvider,
           ),
         ),
       ),
@@ -122,7 +122,7 @@ Widget searchBar(BuildContext context,List<UserModel>? users, UserModel? current
         Align(
           alignment: Alignment.topLeft,
           child: Text(
-            "${currentUser.firstName} ${currentUser.lastName}",
+            "${currentUser?.firstName} ${currentUser?.lastName}",
             style: const TextStyle(
               color: Colors.white
             ),

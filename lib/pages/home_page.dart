@@ -37,7 +37,7 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    matchesStreamController = StreamController.broadcast();
+    //matchesStreamController = StreamController.broadcast();
   }
 
   
@@ -75,10 +75,9 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
     
     Provider.of<MatchesProvider>(context, listen: false).listenToMatches(matchesStreamController).listen((otherUser) {
       print('new match');
-      // otherUser.setTimeStamp(DateTime.now());
       final UserModel? currentUser = context.read<CurrentUserProvider>().currentUser?.userModel;
-      UsersAPI().addMatch(currentUser!.id, otherUser.id);
-      ChatAPI().createPrivateChat(currentUser.id, otherUser.id);
+      UsersAPI().addMatch(currentUser?.id, otherUser.id);
+      ChatAPI().createPrivateChat(currentUser?.id, otherUser.id);
       Navigator.push(
         context,
         PageTransition(

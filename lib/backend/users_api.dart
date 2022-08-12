@@ -229,7 +229,7 @@ class UsersAPI {
     });
   }
 
-    Future<void> addMatch(String currentUserID, String otherUserID) async {
+    Future<void> addMatch(String? currentUserID, String? otherUserID) async {
     await FirebaseFirestore.instance.collection('users/$currentUserID/matches')
     .doc(otherUserID)
     .set({ 
