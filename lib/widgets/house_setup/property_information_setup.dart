@@ -8,12 +8,22 @@ class PropertyInformationSetupPage extends StatefulWidget {
     required this.constructionYearController,
     required this.livingSpaceController,
     required this.plotAreaContoller, 
+    required this.postalCodeController,
+    required this.houseNumberController,
+    required this.streetNameController,
+    required this.apartmentNumberController, 
+    required this.cityNameController,
     required this.pageController,
   }) : super(key: key);
 
   final TextEditingController constructionYearController;
   final TextEditingController livingSpaceController;
   final TextEditingController plotAreaContoller;
+  final TextEditingController postalCodeController;
+  final TextEditingController houseNumberController;
+  final TextEditingController streetNameController;
+  final TextEditingController apartmentNumberController;
+  final TextEditingController cityNameController;
 
   final PageController pageController;
 
@@ -26,6 +36,11 @@ class _PropertyInformationSetupPageState extends State<PropertyInformationSetupP
 
   @override
   Widget build(BuildContext context) {
+    String streetName = widget.streetNameController.text;
+    String houseNumber = widget.houseNumberController.text;
+    String postalCode = widget.postalCodeController.text;
+    String cityName = widget.cityNameController.text;
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Padding(
@@ -38,9 +53,9 @@ class _PropertyInformationSetupPageState extends State<PropertyInformationSetupP
                 Container(
                   padding: const EdgeInsets.only(left: 30.0, right: 30, top: 5),
                   alignment: Alignment.centerLeft,
-                  child: const Text(
-                    "Cannenburgh 1, 1018 LG Amsterdam",
-                    style: TextStyle(
+                  child: Text(
+                    "$streetName $houseNumber, $postalCode $cityName",
+                    style: const TextStyle(
                       fontWeight: FontWeight.w600,
                       color: Colors.grey,
                     ),

@@ -82,6 +82,11 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
 
   @override
   Widget build(BuildContext context) {
+    String streetName = widget.streetNameController.text;
+    String houseNumber = widget.houseNumberController.text;
+    String postalCode = widget.postalCodeController.text;
+    String cityName = widget.cityNameController.text;
+
     return isUploading
     ? const Center(child: CircularProgressIndicator())
     : Scaffold(
@@ -96,7 +101,7 @@ class _ProperCompleteSetupPageState extends State<ProperCompleteSetupPage> {
                   padding: const EdgeInsets.only(left: 30.0, right: 30, top: 5),
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "${widget.postalCodeController.text}, ${widget.apartmentNumberController.text}",
+                    "$streetName $houseNumber, $postalCode $cityName",
                     style: const TextStyle(
                       fontWeight: FontWeight.w600,
                       color: Colors.grey,

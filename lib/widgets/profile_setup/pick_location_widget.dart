@@ -154,13 +154,25 @@ class _PickLocationState extends State<PickLocation> {
       position: LatLng(lat, lng), 
     ));
 
-    String? streetName = detail.result.addressComponents[1].longName;
-    String? cityName = detail.result.addressComponents[3].longName;
+    String? streetName;
+    String? cityName;
+
+    final locationDetails = detail.result.addressComponents;
+    for (var locationType in locationDetails) {
+      switch (locationType.toJson()['types'][0].toString()) {
+        case "route":
+          streetName = locationType.toJson()['long_name'];
+          break;
+        case "administrative_area_level_2":
+          cityName = locationType.toJson()['long_name'];
+          break;
+      }
+    }
 
     setState(() {
       widget.latLngController.text = "$lat, $lng";
-      widget.cityNameController.text = cityName;
-      widget.streetNameController.text = streetName;
+      widget.cityNameController.text = cityName!;
+      widget.streetNameController.text = streetName!;
     });
 
     googleMapController.animateCamera(CameraUpdate.newLatLngZoom(LatLng(lat, lng), 14.0));

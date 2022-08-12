@@ -160,17 +160,36 @@ class _PickLocationState extends State<PickLocation> {
       position: LatLng(lat, lng), 
     ));
 
-    String? houseNumber =  detail.result.addressComponents[0].longName;
-    String? streetName = detail.result.addressComponents[1].longName;
-    String? cityName = detail.result.addressComponents[3].longName;
-    String? zipCode =  detail.result.addressComponents[7].longName.replaceAll(' ', '');
+    String? houseNumber;
+    String? streetName;
+    String? cityName;
+    String? zipCode;
+    final locationDetails = detail.result.addressComponents;
+    for (var locationType in locationDetails) {
+      switch (locationType.toJson()['types'][0].toString()) {
+        case "street_number":
+          houseNumber = locationType.toJson()['long_name'];
+          break;
+        case "postal_code":
+          zipCode = locationType.toJson()['long_name'];
+          break;
+        case "route":
+          streetName = locationType.toJson()['long_name'];
+          break;
+        case "administrative_area_level_2":
+          cityName = locationType.toJson()['long_name'];
+          break;
+      }
+    }
+
+    zipCode = zipCode!.replaceAll(' ', '');
 
     setState(() {
       widget.latLngController.text = "$lat, $lng";
-      widget.houseNumberController.text = houseNumber;
-      widget.postalCodeController.text = zipCode;
-      widget.streetNameController.text = streetName;
-      widget.cityNameController.text = cityName;
+      widget.houseNumberController.text = houseNumber!;
+      widget.postalCodeController.text = zipCode!;
+      widget.streetNameController.text = streetName!;
+      widget.cityNameController.text = cityName!;
     });
 
     googleMapController.animateCamera(CameraUpdate.newLatLngZoom(LatLng(lat, lng), 14.0));

@@ -6,11 +6,22 @@ class PropertyTypeSetupPage extends StatefulWidget {
     Key? key,
     required this.pageController,
     required this.propertyTypeController,
+    required this.postalCodeController,
+    required this.houseNumberController,
+    required this.streetNameController,
+    required this.apartmentNumberController, 
+    required this.cityNameController,
   }) : super(key: key);
 
   String? propertyTypeChosen;
 
   final TextEditingController propertyTypeController;
+  final TextEditingController postalCodeController;
+  final TextEditingController houseNumberController;
+  final TextEditingController streetNameController;
+  final TextEditingController apartmentNumberController;
+  final TextEditingController cityNameController;
+
   final PageController pageController;
 
   @override
@@ -30,6 +41,11 @@ class _PropertyTypeSetupPageState extends State<PropertyTypeSetupPage> {
   
   @override
   Widget build(BuildContext context) {
+    String streetName = widget.streetNameController.text;
+    String houseNumber = widget.houseNumberController.text;
+    String postalCode = widget.postalCodeController.text;
+    String cityName = widget.cityNameController.text;
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.only(bottom: 80),
@@ -39,9 +55,9 @@ class _PropertyTypeSetupPageState extends State<PropertyTypeSetupPage> {
               Container(
                 padding: const EdgeInsets.only(left: 30.0, right: 30, top: 5),
                 alignment: Alignment.centerLeft,
-                child: const Text(
-                  "Cannenburgh 1, 1018 LG Amsterdam", // TODO: take information from the controllers and display it here
-                  style: TextStyle(
+                child: Text(
+                  "$streetName $houseNumber, $postalCode $cityName",
+                  style: const TextStyle(
                     fontWeight: FontWeight.w600,
                     color: Colors.grey,
                   ),
