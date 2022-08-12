@@ -36,70 +36,64 @@ class _OwnerHouseState extends State<ListedOwnerHouse> {
             Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
             return Container(
               margin: const EdgeInsets.only(bottom: 15.0),
-              child: Container(
-                margin: const EdgeInsets.only(bottom: 15.0),
-                height: 125,
-                decoration: BoxDecoration(
-                  color: const Color.fromRGBO(238, 238, 238, 1),
-                  borderRadius: BorderRadius.circular(14.0),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 20.0, left: 20, top: 20),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(18),
-                        height: 68,
-                        width: 68,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(14.0),
-                          color: Colors.white,
-                        ),
-                        child: Image.asset("assets/icons/Grey-house-selected.png",
-                          height: 20,
-                          width: 20,
+              decoration: BoxDecoration(
+                color: const Color.fromRGBO(238, 238, 238, 1),
+                borderRadius: BorderRadius.circular(14.0),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 20.0, left: 20, top: 20),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(18),
+                      height: 68,
+                      width: 68,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(14.0),
+                        color: Colors.white,
+                      ),
+                      child: Image.asset("assets/icons/Grey-house-selected.png",
+                        height: 20,
+                        width: 20,
+                      ),
+                    ),
+                    const SizedBox(width: 15,),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Text(
+                              "${data['streetName']} ${data['houseNumber']}, ${data['cityName']}",
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 4,
+                              softWrap: false,
+                              style: const TextStyle(
+                                height: 1.25,
+                                color:Colors.black,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            Text(
+                              "Matches",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                                foreground: Paint()..shader = CustomGradient().blueGradient().createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 100.0))
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      const SizedBox(width: 15,),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                flex: 2,
-                                child: Text(
-                                  "${data['streetName']} ${data['houseNumber']}, ${data['cityName']}",
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 3,
-                                  softWrap: false,
-                                  style: const TextStyle(
-                                    height: 1.25,
-                                    color:Colors.black,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                ),
-                              ),
-                              Text(
-                                "Matches",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700,
-                                  foreground: Paint()..shader = CustomGradient().blueGradient().createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 100.0))
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const Icon(Icons.arrow_forward_ios),
-                    ],
-                  ),
+                    ),
+                    const Icon(Icons.arrow_forward_ios),
+                  ],
                 ),
               ),
             );
