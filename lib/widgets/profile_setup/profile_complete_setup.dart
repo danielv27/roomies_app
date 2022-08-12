@@ -25,12 +25,16 @@ class CompleteProfilePage extends StatefulWidget {
     required this.minBudgetController, 
     required this.maxBudgetController, 
     required this.latLngController,
+    required this.cityNameController,
+    required this.streetNameController,
     required this.userPersonalProfileModel,
   }) : super(key: key);
 
   final TextEditingController minBudgetController;
   final TextEditingController maxBudgetController;
   final TextEditingController latLngController;
+  final TextEditingController streetNameController;
+  final TextEditingController cityNameController;
   final UserSignupProfileModel userPersonalProfileModel;
   final TextEditingController aboutMeController;
   final TextEditingController workController;
@@ -339,6 +343,8 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                       auth.currentUser,
                       widget.userPersonalProfileModel.radius,
                       widget.latLngController,
+                      widget.streetNameController,
+                      widget.cityNameController,
                       widget.minBudgetController,
                       widget.maxBudgetController,
                       widget.aboutMeController,

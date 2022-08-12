@@ -33,7 +33,6 @@ class UsersAPI {
       .then((userDoc) async {
         UserProfileImages? usersProfileImages = await getUsersImagesById(userDoc.id);
         UserSignupProfileModel? userSignupProfileModel = await getUserProfile(userDoc.id);
-        String? userlocation = await HelperWidget().convertLatLngToPlace(userSignupProfileModel!.latLng);
 
         currentUser = UserModel(
           id: userDoc.id,
@@ -41,9 +40,8 @@ class UsersAPI {
           firstName: userDoc['firstName'],
           lastName: userDoc['lastName'],
           isHouseOwner: userDoc['isHouseOwner'],
-          userSignupProfileModel: userSignupProfileModel,
+          userSignupProfileModel: userSignupProfileModel!,
           firstImageProvider: setCachedNetworkImageProvider(usersProfileImages!.imageURLS[0]),
-          location: userlocation,
         );
       });
       return currentUser;
@@ -72,7 +70,6 @@ class UsersAPI {
           isHouseOwner: userDoc['isHouseOwner'],
           userSignupProfileModel: userSignupProfileModel,
           firstImageProvider: setCachedNetworkImageProvider(usersProfileImages!.imageURLS[0]),
-          location: userlocation,
         );
       });
       return newUser;
@@ -100,7 +97,6 @@ class UsersAPI {
             }
             UserProfileImages? usersProfileImages = await getUsersImagesById(userDoc.id);
             UserSignupProfileModel? userSignupProfileModel = await getUserProfile(userDoc.id);
-            String? userlocation = await HelperWidget().convertLatLngToPlace(userSignupProfileModel!.latLng);
 
             UserModel newUser = UserModel(
               id: userDoc.id,
@@ -108,9 +104,8 @@ class UsersAPI {
               firstName: userDoc['firstName'],
               lastName: userDoc['lastName'],
               isHouseOwner: userDoc['isHouseOwner'],
-              userSignupProfileModel: userSignupProfileModel,
+              userSignupProfileModel: userSignupProfileModel!,
               firstImageProvider: setCachedNetworkImageProvider(usersProfileImages!.imageURLS[0]),
-              location: userlocation,
             );
             userList.add(newUser);
           }
@@ -214,6 +209,8 @@ class UsersAPI {
             roommate: user['roommate'],
             radius: user['radius'],
             latLng: user['latLng'],
+            cityName: user['cityName'],
+            streetName: user['streetName'],
           );
         }
       });

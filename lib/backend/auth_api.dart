@@ -115,6 +115,8 @@ class AuthAPI {
     User ?currentUser, 
     String radius,
     TextEditingController latLng,
+    TextEditingController streetName,
+    TextEditingController cityName,
     TextEditingController minBudget, 
     TextEditingController maxBudget, 
     TextEditingController about, 
@@ -129,6 +131,8 @@ class AuthAPI {
       .add({ 
         'radius': radius,
         'latLng': latLng.text,
+        'streetName': streetName.text,
+        'cityName': cityName.text,
         'minimumBudget': minBudget.text,
         'maximumBudget': maxBudget.text,
         'about': about.text,

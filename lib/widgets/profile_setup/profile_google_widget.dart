@@ -8,9 +8,13 @@ class GoogleApiContainer extends StatefulWidget {
   const GoogleApiContainer({
     Key? key,
     required this.latLngController,
+    required this.cityNameController,
+    required this.streetNameController,
   }) : super(key: key);
 
   final TextEditingController latLngController;
+  final TextEditingController streetNameController;
+  final TextEditingController cityNameController;
 
   @override
   State<GoogleApiContainer> createState() => _GoogleApiContainerState();
@@ -85,7 +89,13 @@ class _GoogleApiContainerState extends State<GoogleApiContainer> {
       context,
       MaterialPageRoute(
         builder: (context) {
-          return PickLocation(startingLocation: startingLocation, latLngController: widget.latLngController, markerList: markerList);
+          return PickLocation(
+            startingLocation: startingLocation, 
+            latLngController: widget.latLngController, 
+            markerList: markerList,
+            streetNameController: widget.streetNameController, 
+            cityNameController: widget.cityNameController,
+          );
         }
       ),
     );

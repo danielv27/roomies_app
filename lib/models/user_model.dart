@@ -12,7 +12,6 @@ class UserModel {
   final bool isHouseOwner;
   final UserSignupProfileModel userSignupProfileModel;
   final CachedNetworkImageProvider firstImageProvider;
-  final String location;
 
   UserModel({
     required this.id,
@@ -21,7 +20,6 @@ class UserModel {
     required this.lastName,
     required this.isHouseOwner,
     required this.userSignupProfileModel,
-    required this.location,
     required this.firstImageProvider,
   });
 

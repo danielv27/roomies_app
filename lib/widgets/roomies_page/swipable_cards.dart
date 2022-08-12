@@ -218,7 +218,7 @@ class UserInformation extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 8.0, right: 8),
                   child: Text(
-                    user.location,
+                    "${user.userSignupProfileModel.cityName}, ${user.userSignupProfileModel.streetName}",
                     overflow: TextOverflow.ellipsis,
                     maxLines: 3,
                     softWrap: false,

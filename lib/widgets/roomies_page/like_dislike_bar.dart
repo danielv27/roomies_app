@@ -189,11 +189,11 @@ class _LikeDislikeBarState extends State<LikeDislikeBar> {
           Row(
             children: [
               Image.asset("assets/icons/Location.png", width: 20, height: 20,),
-              const Padding(
-                padding: EdgeInsets.only(left: 8.0),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
                 child: Text(
-                  "Amsterdam, De Pijp",
-                  style: TextStyle(
+                  "${userProfileModel.userModel.userSignupProfileModel.cityName}, ${userProfileModel.userModel.userSignupProfileModel.streetName}",
+                  style: const TextStyle(
                     color: Color.fromRGBO(128, 128, 128, 1),
                     fontSize: 16,
                   ),

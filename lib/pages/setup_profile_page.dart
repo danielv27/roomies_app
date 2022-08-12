@@ -19,7 +19,8 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
   final minBudgetController = TextEditingController();
   final maxBudgetController = TextEditingController();
   final latLngController = TextEditingController();
-
+  final streetNameController =  TextEditingController();
+  final cityNameController = TextEditingController();
   final aboutMeController = TextEditingController();
   final workController = TextEditingController();
   final studyController = TextEditingController();
@@ -28,7 +29,7 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
 
   final pageController = PageController();
   
-  UserSignupProfileModel userPersonalProfileModel = UserSignupProfileModel(about: '', birthdate: '', maxBudget: '', minBudget: '', roommate: '', study: '', work: '', latLng: '');
+  UserSignupProfileModel userPersonalProfileModel = UserSignupProfileModel(about: '', birthdate: '', maxBudget: '', minBudget: '', roommate: '', study: '', work: '', latLng: '', cityName: '', streetName: '');
   UserProfileImages userProfileImages = UserProfileImages(imageURLS: []);
 
   bool isLastPage = false;
@@ -82,12 +83,16 @@ class _SetupProfilePageState extends State<SetupProfilePage> with SingleTickerPr
             maxBudgetController: maxBudgetController,
             latLngController: latLngController,
             userPersonalProfileModel: userPersonalProfileModel,
-            pageController: pageController,
+            pageController: pageController, 
+            cityNameController: cityNameController, 
+            streetNameController: streetNameController,
           ),
           CompleteProfilePage(
             minBudgetController: minBudgetController, 
             maxBudgetController: maxBudgetController,
             latLngController: latLngController,
+            cityNameController: cityNameController, 
+            streetNameController: streetNameController,
             userPersonalProfileModel: userPersonalProfileModel,
             aboutMeController: aboutMeController, 
             workController: workController, 
