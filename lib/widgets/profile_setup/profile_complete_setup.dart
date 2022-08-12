@@ -130,7 +130,6 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                                       isUploading = true;
                                     });
                                     await selectProfileImage();
-                                    uploadFile(selectedProfileImages[index]);
                                   },
                                   backgroundColor: Colors.transparent,
                                   child: const Icon(Icons.add),
@@ -172,7 +171,6 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                                     setState(() {
                                       isRemoving = true;
                                     });
-                                    await removeFile(selectedProfileImages[index]);
                                     removeProfileImage(index);
                                   },
                                   backgroundColor: Colors.transparent,
@@ -337,6 +335,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
               onPressed: () async {
                 if (formKey2.currentState!.validate()) {
                   if (widget.userProfileImages.imageURLS.isNotEmpty) {
+                    await uploadFunction(selectedProfileImages);
                     await uploadImageUrls();
                     await AuthAPI().createPersonalProfile(
                       auth.currentUser,
@@ -438,6 +437,16 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
 
     return url;
   }
+
+  Future<void> uploadFunction(List<XFile> profileImages) async {
+    setState(() {
+      isUploading = true;
+    });
+    for (int i = 0; i < profileImages.length; i++) {
+      var imageUrl = await uploadFile(profileImages[i]);
+      widget.userProfileImages.imageURLS.add(imageUrl);
+    }
+  }  
 
   Future<void> selectProfileImage() async {
     try {
