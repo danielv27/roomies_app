@@ -54,7 +54,6 @@ dependencies:
   page_transition: ^2.0.9
   flutter_chat_bubble: ^2.0.0
   bottom_sheet: ^3.1.1
-  geocoding: ^2.0.4
   google_maps_flutter: ^2.1.10
   flutter_google_places: ^0.3.0
   permission_handler: ^10.0.0

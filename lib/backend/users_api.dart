@@ -56,7 +56,6 @@ class UsersAPI {
       UserModel? newUser;
       UserProfileImages? usersProfileImages = await getUsersImagesById(userID);
       UserSignupProfileModel? userSignupProfileModel = await getUserProfile(userID);
-      String? userlocation = await HelperWidget().convertLatLngToPlace(userSignupProfileModel!.latLng);
 
       await FirebaseFirestore.instance.collection("users")
       .doc(userID)
@@ -68,7 +67,7 @@ class UsersAPI {
           firstName: userDoc['firstName'],
           lastName: userDoc['lastName'],
           isHouseOwner: userDoc['isHouseOwner'],
-          userSignupProfileModel: userSignupProfileModel,
+          userSignupProfileModel: userSignupProfileModel!,
           firstImageProvider: setCachedNetworkImageProvider(usersProfileImages!.imageURLS[0]),
         );
       });

@@ -1,5 +1,3 @@
-import 'package:geocoding/geocoding.dart';
-
 class HelperWidget {
 
   int calculateAge(String birthDate) {
@@ -23,15 +21,4 @@ class HelperWidget {
     }
     return age;
   }
-
-  Future<String> convertLatLngToPlace(String latLng) async {
-    final splittedCoord = latLng.split(', ');
-
-    List<Placemark> placemarks = await placemarkFromCoordinates(double.parse(splittedCoord[0]), double.parse(splittedCoord[1]));
-    String placeName = "${placemarks.first.administrativeArea}, ${placemarks.first.street}";
-
-    return placeName;
-  }
-
-
 }
