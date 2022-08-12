@@ -37,7 +37,7 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    //matchesStreamController = StreamController.broadcast();
+    matchesStreamController = StreamController.broadcast();
   }
 
   
