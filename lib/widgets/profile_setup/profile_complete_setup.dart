@@ -431,7 +431,6 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
     });
 
     var url = await reference.getDownloadURL();
-    widget.userProfileImages.imageURLS.add(url);
 
     return url;
   }
@@ -475,7 +474,6 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
   removeProfileImage(int index) {
     setState(() {
       selectedProfileImages.removeAt(index);
-      widget.userProfileImages.imageURLS.removeAt(index);
     });
   }
   
