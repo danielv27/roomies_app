@@ -74,8 +74,6 @@ class _PickLocationState extends State<PickLocation> {
             onMapCreated: (GoogleMapController controller) {
               googleMapController = controller;
             },
-            onTap: addMarker,
-            onLongPress: addMarker,
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 75.0),
@@ -166,20 +164,6 @@ class _PickLocationState extends State<PickLocation> {
     });
 
     googleMapController.animateCamera(CameraUpdate.newLatLngZoom(LatLng(lat, lng), 14.0));
-  }
-
-  void addMarker(LatLng argument) {
-    widget.markerList!.clear();
-    widget.markerList!.add(Marker(
-      markerId: const MarkerId("0"), 
-      position: LatLng(argument.latitude, argument.longitude), 
-    ));
-
-    setState(() {
-      widget.latLngController.text = "${argument.latitude}, ${argument.longitude}";
-    });
-
-    googleMapController.animateCamera(CameraUpdate.newLatLngZoom(LatLng(argument.latitude, argument.longitude), 14.0));
   }
 
   Future<dynamic> alertLocationNotPicked(BuildContext context) {
