@@ -42,7 +42,7 @@ class ChatHeader extends StatelessWidget {
             children:  [
               Text("${otherUser.firstName} ${otherUser.lastName}"),
               const SizedBox(height: 3),
-              OnlineIndicator(userID: otherUser.id)
+              PrivateChatOnlineIndicator(userID: otherUser.id)
             ],
           ),
           actions: [

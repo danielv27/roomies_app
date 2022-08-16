@@ -1,11 +1,12 @@
-// import 'package:firebase_auth/firebase_auth.dart';
 // import 'package:flutter/material.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
+
 // import 'package:roomies_app/backend/chat_api.dart';
-// import 'package:roomies_app/backend/users_api.dart';
 // import 'package:roomies_app/models/chat_models.dart';
-// import 'package:roomies_app/models/user_model.dart';
+
+// import 'package:roomies_app/widgets/chat_page/message_bubble_widget.dart';
 // import '../models/message.dart';
-// import '../widgets/private_chat_page/input_field.dart';
+// import '../widgets/chat_page/input_field.dart';
 
 // class PrivateChatPage extends StatefulWidget {
 //   final GroupChat chat;
@@ -13,35 +14,25 @@
 //   const PrivateChatPage({
 //       Key? key,
 //       required this.chat,
-//     }) : super(key: key);
+//     }) : super(key: key);  
 
 //   @override
 //   State<PrivateChatPage> createState() => _PrivateChatPageState();
 // }
 
 // class _PrivateChatPageState extends State<PrivateChatPage> {
- 
-//   final GlobalKey<AnimatedListState> _key = GlobalKey();
 //   List<Message> messages = [];
-//   List<UserModel?> participants = [];
-
-//   void initialize() async {
-//     if(participants.isEmpty){
-//       for(var participantID in widget.chat.participantsIDs){
-//         final participant = await UsersAPI().getUserModelByID(participantID);
-//         participants.add(participant);
-//       }
-//     }
-//   }
+//   final GlobalKey<AnimatedListState> _key = GlobalKey();
+  
 
 //   @override
 //   void initState(){
 //     super.initState();
-//     initialize();
 //   }
   
-//   void _addMessage(Message message){
+//   void _addMessage(Message message) async {
 //     messages.insert(0, message);
+//     await ChatAPI().sendGroupMessage(widget.chat.groupID, FirebaseAuth.instance.currentUser!.uid, message.message);
 //     if(_key.currentState != null){
 //       _key.currentState?.insertItem(0, duration: const Duration(milliseconds: 130));
 //     }
@@ -49,13 +40,12 @@
 
 //   @override
 //   Widget build(BuildContext context) {
-    
 //     return Scaffold(
-//       resizeToAvoidBottomInset: true ,
+//       resizeToAvoidBottomInset: true,
 //       body: Column(
 //         children: [
-//           // GroupChatHeader(
-//           //   groupChat: widget.chat,
+//           // PrivateChatHeader(
+//           //   otherUser: widget.otherUser,
 //           // ),
 //           Expanded(
 //             child: FutureBuilder(
@@ -87,7 +77,7 @@
 //                       itemBuilder: (context,index, animation) {
 //                         return SizeTransition(
 //                           sizeFactor: animation,
-//                           child: MessageBubbleWidget(message: messages[index]));
+//                           child: MessageBubbleWidget(message: messages[index],isGroupChat: false));
 //                       }
 //                     );
 //                   }
@@ -99,8 +89,7 @@
 //               } 
 //             ),
 //           ),
-//           PrivateChatInputField(
-//             otherUser: widget.otherUser, 
+//           PrivateChatInputField( 
 //             onMessageSent: (message) => _addMessage(Message(message: message, otherUserID: widget.otherUser.id, sentByCurrent: true, timeStamp: DateTime.now()))
 //           ),
 //         ],

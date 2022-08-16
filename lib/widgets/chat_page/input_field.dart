@@ -1,46 +1,40 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:roomies_app/backend/chat_api.dart';
 import 'package:roomies_app/models/user_model.dart';
   
-  class NewMessageWidget extends StatefulWidget {
-    final UserModel otherUser;
-    final Function(String) onMessageSent;
+  class PrivateChatInputField extends StatefulWidget {
     
-    const NewMessageWidget({
+    final Function(String) onMessageSent ;
+    
+    const PrivateChatInputField({
       Key? key,
-      required this.otherUser,
       required this.onMessageSent
       }) : super(key: key);
 
     @override
-    NewMessageWidgetState createState() => NewMessageWidgetState();
+    PrivateChatInputFieldState createState() => PrivateChatInputFieldState();
 
   }
 
-  class NewMessageWidgetState extends State<NewMessageWidget> {
+  class PrivateChatInputFieldState extends State<PrivateChatInputField> {
+    
     final controller = TextEditingController();
     String message = ''; 
 
-    void sendMessage() async {
-      await ChatAPI().sendPrivateMessage(message, FirebaseAuth.instance.currentUser?.uid, widget.otherUser.id);
-      setState(() {
-        widget.onMessageSent(message); 
+    Future<void> sendMessage() async {
+      widget.onMessageSent(message);
+      setState(() {  
+        message = '';
+        controller.clear();
       });
-      message = '';
-      controller.clear();
+      
     }
    
     @override
     Widget build(BuildContext context) {
-
       return Container(
-        
         decoration: BoxDecoration(
           color: Colors.white,
-          
           borderRadius: const BorderRadius.all(Radius.circular(120)),
-          
           boxShadow: [
             BoxShadow(
               color: Colors.grey.withOpacity(0.2),
@@ -78,7 +72,7 @@ import 'package:roomies_app/models/user_model.dart';
               )
             ),
             GestureDetector(
-              onTap:() =>  message.trim().isNotEmpty ? {sendMessage()} : null, //if doesnt work change to onMessageSent() 
+              onTap:() async =>  message.trim().isNotEmpty ? {await sendMessage()} : null, //if doesnt work change to onMessageSent() 
               child: Container(
                 height: 50,
                 width: 50,

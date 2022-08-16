@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_bubble/bubble_type.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
 import 'package:flutter_chat_bubble/clippers/chat_bubble_clipper_5.dart';
-
 import '../../models/message.dart';
 
 class MessageBubbleWidget extends StatelessWidget {
   final Message message;
+  final bool isGroupChat;
+  
   const MessageBubbleWidget({
     Key? key,
-    required this.message
+    required this.message,
+    required this.isGroupChat
     }) : super(key: key);
 
 

@@ -20,27 +20,51 @@ class ChatAPI {
       debugPrint("Error - $e");
       return null;
     }
-
   }
 
-  Future<List<PrivateChat>> getPrivateChats() async {
-    String? currentUserID = FirebaseAuth.instance.currentUser?.uid;
-    final List<UserModel> matches = await UsersAPI().getMatches(currentUserID!);
-    final chats = await FirebaseFirestore.instance.collection('users/$currentUserID/private_chats')
-    .get()
-    .then((querySnapShot) => querySnapShot.docs.map(
-      (documentSnapShot) {
-        UserModel? otherUser = matches.firstWhere((user) => user.id == documentSnapShot.id,orElse: () => matches[0]);
-        return PrivateChat(
-          id: documentSnapShot.id,
-          lastMessage: documentSnapShot['last_message'],
-          lastMessageTime: documentSnapShot['last_message_timestamp'].toDate(),
-          otherUser: otherUser,
-        );
+  Future createGroupChat(String houseID,List<String> participants, String creatorID) async {
+    try{
+      if(participants.length > 2){
+        await FirebaseFirestore.instance.collection('group_chats').add({
+            'house_id': houseID,
+            'participants': participants,
+            'made_by': creatorID,
+            'last_message': '',
+            'last_message_timestamp': DateTime.now()
+        }).then((groupChat){
+          groupChat.collection('messages').add({
+            'message': '__HOUSE_INFO_MESSAGE_BUBBLE__',
+            'timeStamp': DateTime.now(),
+            'senderID': FirebaseAuth.instance.currentUser?.uid,
+          });         
+        });
+        
       }
-    ).toList());
-    return chats;
+    } catch (e) {
+      debugPrint("Error - $e");
+      return null;
+    }
   }
+
+  // Future<List<PrivateChat>> getPrivateChats() async {
+  //   String? currentUserID = FirebaseAuth.instance.currentUser?.uid;
+  //   final List<UserModel> matches = await UsersAPI().getMatches(currentUserID!);
+  //   final chats = await FirebaseFirestore.instance.collection('users/$currentUserID/private_chats')
+  //   .get()
+  //   .then((querySnapShot) => querySnapShot.docs.map(
+  //     (documentSnapShot) {
+  //       UserModel? otherUser = matches.firstWhere((user) => user.id == documentSnapShot.id,orElse: () => matches[0]);
+  //       return PrivateChat(
+  //         id: documentSnapShot.id,
+  //         lastMessage: documentSnapShot['last_message'],
+  //         lastMessageTime: documentSnapShot['last_message_timestamp'].toDate(),
+  //         otherUser: otherUser,
+  //       );
+  //     }
+  //   ).toList());
+  //   return chats;
+  // }
+
 
 
   Future sendPrivateMessage(String message, String? fromID, String? toID) async {
@@ -69,8 +93,6 @@ class ChatAPI {
         'last_message': message,
         'last_message_timestamp': currentTime
       });
-
-      print('message sent to firebase\n');
     } catch (e) {
       debugPrint("Error - $e");
       return null;
@@ -101,19 +123,7 @@ class ChatAPI {
     }
   }
 
-  Stream<List<PrivateChat>?> streamPrivateChatChanges(List<UserModel> matches){
 
-    final currentUserID = FirebaseAuth.instance.currentUser?.uid;
-    return FirebaseFirestore.instance.collection('users/$currentUserID/private_chats')
-    .orderBy('last_message_timestamp',descending: true)
-    .snapshots(includeMetadataChanges: true)
-    .map((querySnapShot) => querySnapShot.docs.map((documentSnapShot) => PrivateChat(
-      id: documentSnapShot.id,
-      lastMessage: documentSnapShot['last_message'],
-      lastMessageTime: documentSnapShot['last_message_timestamp'].toDate(),
-      otherUser: matches.firstWhere((user) => user.id == documentSnapShot.id, orElse: () => matches[0])
-    )).toList());
-  }
 
   Stream<List<Message>?>? listenToPrivateChatMessages(String? currentUserID, String? otherUserID) {
     try {
@@ -131,18 +141,6 @@ class ChatAPI {
     return null;
   }
 
-  Future<String> getLastPrivateMessage(String? currentUserID, String? otherUserID) async {
-    String lastMessage = '';
-    await FirebaseFirestore.instance.doc('users/$currentUserID/private_chats/$otherUserID')
-    .get()
-    .then((documentSnapShot) {
-      if(documentSnapShot.exists && documentSnapShot.data()!.containsKey('last_message')){
-        lastMessage = documentSnapShot['last_message'];
-      }
-    });
-    return lastMessage;
-    
-  }
 
   Future<DateTime?> getLastPrivateMessageTimeStamp(String? currentUserID, String? otherUserID) async {
     DateTime? timeStamp;
@@ -156,29 +154,7 @@ class ChatAPI {
     return timeStamp;
   }
 
-  Future createGroupChat(String houseID,List<String> participants, String creatorID) async {
-    try{
-      if(participants.length > 2){
-        await FirebaseFirestore.instance.collection('group_chats').add({
-            'house_id': houseID,
-            'participants': participants,
-            'made_by': creatorID,
-            'last_message': '',
-            'last_message_timestamp': DateTime.now()
-        }).then((groupChat){
-          groupChat.collection('messages').add({
-            'message': '__HOUSE_INFO_MESSAGE_BUBBLE__',
-            'timeStamp': DateTime.now(),
-            'senderID': FirebaseAuth.instance.currentUser?.uid,
-          });         
-        });
-        
-      }
-    } catch (e) {
-      debugPrint("Error - $e");
-      return null;
-    }
-  }
+
 
   Future sendGroupMessage(String groupChatID, String senderID, String message) async {
     await FirebaseFirestore.instance.collection('group_chats/$groupChatID/messages').add({
@@ -190,6 +166,19 @@ class ChatAPI {
       'last_message': DateTime.now(),
       'last_message_timestamp': message
     });
+  }
+
+  Stream<List<PrivateChat>?> streamPrivateChatChanges(List<UserModel> matches){
+    final currentUserID = FirebaseAuth.instance.currentUser?.uid;
+    return FirebaseFirestore.instance.collection('users/$currentUserID/private_chats')
+    .orderBy('last_message_timestamp',descending: true)
+    .snapshots(includeMetadataChanges: true)
+    .map((querySnapShot) => querySnapShot.docs.map((documentSnapShot) => PrivateChat(
+      id: documentSnapShot.id,
+      lastMessage: documentSnapShot['last_message'],
+      lastMessageTime: documentSnapShot['last_message_timestamp'].toDate(),
+      otherUser: matches.firstWhere((user) => user.id == documentSnapShot.id, orElse: () => matches[0])
+    )).toList());
   }
 
   Stream<List<GroupChat>?> streamGroupChatChanges(List<HouseProfileModel> likedHouses) {
