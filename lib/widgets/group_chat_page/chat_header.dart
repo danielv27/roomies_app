@@ -3,10 +3,10 @@ import 'package:roomies_app/models/user_model.dart';
 import 'package:roomies_app/widgets/private_chat_page/online_indicator.dart';
 import 'package:roomies_app/widgets/gradients/gradient.dart';
 
-class ChatHeader extends StatelessWidget {
+class GroupChatHeader extends StatelessWidget {
   final UserModel otherUser;
   
-  const ChatHeader({
+  const GroupChatHeader({
     Key? key,
     required this.otherUser,
     }) : super(key: key);
@@ -42,7 +42,7 @@ class ChatHeader extends StatelessWidget {
             children:  [
               Text("${otherUser.firstName} ${otherUser.lastName}"),
               const SizedBox(height: 3),
-              OnlineIndicator(userID: otherUser.id)
+              PrivateChatOnlineIndicator(userID: otherUser.id)
             ],
           ),
           actions: [

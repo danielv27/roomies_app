@@ -3,22 +3,22 @@ import 'package:flutter/material.dart';
 import 'package:roomies_app/backend/chat_api.dart';
 import 'package:roomies_app/models/user_model.dart';
   
-  class NewMessageWidget extends StatefulWidget {
+  class GroupChatInputField extends StatefulWidget {
     final UserModel otherUser;
     final Function(String) onMessageSent;
     
-    const NewMessageWidget({
+    const GroupChatInputField({
       Key? key,
       required this.otherUser,
       required this.onMessageSent
       }) : super(key: key);
 
     @override
-    NewMessageWidgetState createState() => NewMessageWidgetState();
+    GroupChatInputFieldState createState() => GroupChatInputFieldState();
 
   }
 
-  class NewMessageWidgetState extends State<NewMessageWidget> {
+  class GroupChatInputFieldState extends State<GroupChatInputField> {
     final controller = TextEditingController();
     String message = ''; 
 

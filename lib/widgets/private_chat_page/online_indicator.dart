@@ -3,18 +3,18 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:roomies_app/backend/users_api.dart';
 
-class OnlineIndicator extends StatefulWidget {
+class PrivateChatOnlineIndicator extends StatefulWidget {
   final String userID;
-  const OnlineIndicator({
+  const PrivateChatOnlineIndicator({
     Key? key,
     required this.userID
     }) : super(key: key);
 
   @override
-  State<OnlineIndicator> createState() => OnlineIndicatorState();
+  State<PrivateChatOnlineIndicator> createState() => PrivateChatOnlineIndicatorState();
 }
 
-class OnlineIndicatorState extends State<OnlineIndicator> {
+class PrivateChatOnlineIndicatorState extends State<PrivateChatOnlineIndicator> {
 
 
 

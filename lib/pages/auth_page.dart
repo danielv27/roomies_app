@@ -254,7 +254,7 @@ class AuthPageState extends State<AuthPage> {
               style: const TextStyle(color: Colors.grey),
               cursorColor: Colors.grey,
               textInputAction: TextInputAction.next,
-              decoration: CustomDecorations().signupInputDecoration("First Name", Icons.person_rounded),
+              decoration: CustomDecorations().signupInputDecoration("Last Name", Icons.person_rounded),
               validator: (lastName) {
                 if (lastName!.isEmpty) {
                   return "Please fill last name";

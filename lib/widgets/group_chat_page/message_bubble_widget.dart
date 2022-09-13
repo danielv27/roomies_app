@@ -5,11 +5,11 @@ import 'package:flutter_chat_bubble/clippers/chat_bubble_clipper_5.dart';
 
 import '../../models/message.dart';
 
-class MessageBubbleWidget extends StatelessWidget {
+class GroupMessageBubbleWidget extends StatelessWidget {
   final Message message;
-  const MessageBubbleWidget({
+  const GroupMessageBubbleWidget({
     Key? key,
-    required this.message
+    required this.message,
     }) : super(key: key);
 
 

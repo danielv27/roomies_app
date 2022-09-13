@@ -207,4 +207,36 @@ class ChatAPI {
     )).toList());
   }
 
+  Future<List<Message>?>? getGroupMessages(String chatID){
+    try{
+      return FirebaseFirestore.instance.collection('group_chats/$chatID/messages')
+      .get()
+      .then((querySnapShot) => querySnapShot.docs.map((messageDoc) => Message(
+        message: messageDoc['message'], 
+        otherUserID: messageDoc['senderID'], 
+        sentByCurrent: false, 
+        timeStamp: messageDoc['timeStamp'].toDate()
+      )).toList());
+    } catch (e) {
+      debugPrint("Error - $e");
+    }
+    return null;
+
+  }
+    Stream<List<Message>?>? listenToGroupChatMessages(String chatID){
+    try{
+      return FirebaseFirestore.instance.collection('group_chats/$chatID/messages')
+      .snapshots()
+      .map((querySnapShot) => querySnapShot.docs.map((messageDoc) => Message(
+        message: messageDoc['message'], 
+        otherUserID: messageDoc['senderID'], 
+        sentByCurrent: false, 
+        timeStamp: messageDoc['timeStamp'].toDate()
+      )).toList());
+    } catch (e) {
+      debugPrint("Error - $e");
+    }
+    return null;
+  }
+
 }

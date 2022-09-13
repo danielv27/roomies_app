@@ -60,8 +60,6 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
                         List<Message>? newMessages = event;
                         if(newMessages != null && newMessages.length > messages.length){
                           newMessages.sort((a, b) => b.timeStamp.toString().compareTo(a.timeStamp.toString()));
-
-                          // need to add case of handling multiple messages sent quickly using newMessages.length - messages.length
                           newMessages[0].sentByCurrent ? null : _addMessage(newMessages[0]);
                         }
                       },
@@ -75,7 +73,7 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
                       itemBuilder: (context,index, animation) {
                         return SizeTransition(
                           sizeFactor: animation,
-                          child: MessageBubbleWidget(message: messages[index]));
+                          child: PrivateMessageBubbleWidget(message: messages[index]));
                       }
                     );
                   }
