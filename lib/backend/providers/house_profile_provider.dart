@@ -13,7 +13,6 @@ class HouseProfileProvider extends ChangeNotifier {
 
   Future<void> incrementIndex() async {
     pagesSwiped++;
-    print('pagesSwiped: $pagesSwiped');
     await loadHouses(20);
   }
 

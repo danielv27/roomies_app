@@ -83,7 +83,6 @@ class _LikeDislikeBarState extends State<LikeDislikeBar> {
                   child: InkWell(
                     splashColor: Colors.red[50],
                     onTap: () {
-                      print("Like Button pressed");
                       widget.swipeController.next(swipeDirection: SwipeDirection.right);
                     },
                     child: Column(

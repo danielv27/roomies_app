@@ -74,7 +74,6 @@ class ChangePageState extends State<HomePage> with WidgetsBindingObserver {
     ];
     
     Provider.of<MatchesProvider>(context, listen: false).listenToMatches(matchesStreamController).listen((otherUser) {
-      print('new match');
       final UserModel? currentUser = context.read<CurrentUserProvider>().currentUser?.userModel;
       UsersAPI().addMatch(currentUser?.id, otherUser.id);
       ChatAPI().createPrivateChat(currentUser?.id, otherUser.id);

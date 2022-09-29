@@ -13,9 +13,9 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class SwipableCards extends StatefulWidget {
   final UserProfileProvider userProvider;
-  late bool buttonInfoPressed;
+  final bool buttonInfoPressed;
   
-  SwipableCards({
+  const SwipableCards({
     Key? key,
     required this.userProvider,
     required this.buttonInfoPressed,
@@ -75,13 +75,10 @@ class SwipableCardsState extends State<SwipableCards> {
           },
           controller: swipeController,
           onSwipeCompleted: (index, direction) async {
-            print('userListLength = ${userProfileModels.length}');
             if(direction == SwipeDirection.right){
-              print('liked ${userProfileModels[index].userModel.firstName} ${userProfileModels[index].userModel.lastName}');
               await UsersAPI().addEncounter(true, currentUserID!, userProfileModels[index].userModel.id);
             }
             if(direction == SwipeDirection.left){
-              print('diskliked ${userProfileModels[index].userModel.firstName} ${userProfileModels[index].userModel.lastName}');
               await UsersAPI().addEncounter(false, currentUserID!, userProfileModels[index].userModel.id);
             }
             if (!mounted) return;
@@ -134,12 +131,10 @@ class SwipableCardsState extends State<SwipableCards> {
 
                         if(index < currenUserImages.length - 1 && xPos > deviceWidth * 0.65){
                             imgController.nextPage(duration: const Duration(milliseconds: 200),curve: Curves.easeInOut);
-                            print("current image index: ${index + 1}");
                         }
 
                         if(index >= 1 && xPos < deviceWidth * 0.35){
                             imgController.previousPage(duration: const Duration(milliseconds: 200),curve: Curves.easeInOut);
-                            print("current image index: ${index - 1}");
                         }
                       },                        
                     ); 

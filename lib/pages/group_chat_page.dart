@@ -29,7 +29,7 @@ class _GroupChatPageState extends State<GroupChatPage> {
   List<Message> messages = [];
   List<UserModel?> participants = [];
 
-  void initialize() async {
+  Future initialize() async {
     if(participants.isEmpty){
       for(var participantID in widget.chat.participantsIDs){
         final participant = await UsersAPI().getUserModelByID(participantID);
@@ -39,9 +39,10 @@ class _GroupChatPageState extends State<GroupChatPage> {
   }
 
   @override
-  void initState(){
-    super.initState();
+  void initState() {
     initialize();
+    super.initState();
+    
   }
   
   void _addMessage(Message message){
@@ -53,74 +54,71 @@ class _GroupChatPageState extends State<GroupChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    
-    return Scaffold(
-      resizeToAvoidBottomInset: true ,
-      body: Column(
-        children: [
-          GroupChatHeader(
-            chat: widget.chat,
-          ),
-          Expanded(
-            child: FutureBuilder(
-              future: ChatAPI().getGroupMessages(widget.chat.groupID),
-              builder:(context, snapshot) {
-                if(snapshot.connectionState == ConnectionState.done){
-                  if(snapshot.hasData){
-                    messages = snapshot.data as List<Message>;
-                    messages.sort((a, b) => b.timeStamp.toString().compareTo(a.timeStamp.toString()));
-                    ChatAPI().listenToGroupChatMessages(widget.chat.groupID)
-                    ?.listen(
-                      (event) {
-                        List<Message>? newMessages = event;
-                        if(newMessages != null && newMessages.length > messages.length){
-                          newMessages.sort((a, b) => b.timeStamp.toString().compareTo(a.timeStamp.toString()));
-                          newMessages[0].otherUserID == FirebaseAuth.instance.currentUser?.uid ? null : _addMessage(newMessages[0]);
-                        }
-                      },
-                    );
-                    return AnimatedList(
-                      key: _key,
-                      padding: const EdgeInsets.only(bottom: 10),
-                      initialItemCount: messages.length,
-                      shrinkWrap: true,
-                      reverse: true,
-                      itemBuilder: (context,index, animation) {
-                        // somehow need to axtact this name earlies as it doesnt laod fast enough
-                        String senderName = '';
-                        for (var participant in participants) {
-                          if(participant!.id == messages[index].otherUserID){
-                            senderName = "${participant.firstName} ${participant.lastName}";
-                          }
-                        }
-                        return SizeTransition(
-                          sizeFactor: animation,
-                          child: GroupMessageBubbleWidget(message: messages[index], groupImageURL: widget.chat.groupImage, senderName: senderName),
-                        );
-                      }
-                    );
-                  }
-                }
-                if (snapshot.hasError) {
-                return const Text("Something went wrong");
-                }
-                return const Center(child: CircularProgressIndicator(color: Colors.red));
-              } 
+    return FutureBuilder(
+      future: initialize(),
+      builder:(context, snapshot) => snapshot.connectionState == ConnectionState.done ? Scaffold(
+        resizeToAvoidBottomInset: true ,
+        body: Column(
+          children: [
+            GroupChatHeader(
+              chat: widget.chat,
             ),
-          ),
-          GroupChatInputField(
-            groupChat: widget.chat, 
-            onMessageSent: (message) => _addMessage(
-              Message(
-                message: message,
-                otherUserID: FirebaseAuth.instance.currentUser!.uid,
-                sentByCurrent: true,
-                timeStamp: DateTime.now()
+            Expanded(
+              child: FutureBuilder(
+                future: ChatAPI().getGroupMessages(widget.chat.groupID),
+                builder:(context, snapshot) {
+                  if(snapshot.connectionState == ConnectionState.done){
+                    if(snapshot.hasData){
+                      messages = snapshot.data as List<Message>;
+                      messages.sort((a, b) => b.timeStamp.toString().compareTo(a.timeStamp.toString()));
+                      ChatAPI().listenToGroupChatMessages(widget.chat.groupID)
+                      ?.listen(
+                        (event) {
+                          List<Message>? newMessages = event;
+                          if(newMessages != null && newMessages.length > messages.length){
+                            newMessages.sort((a, b) => b.timeStamp.toString().compareTo(a.timeStamp.toString()));
+                            newMessages[0].otherUserID == FirebaseAuth.instance.currentUser?.uid ? null : _addMessage(newMessages[0]);
+                          }
+                        },
+                      );
+                      return AnimatedList(
+                        key: _key,
+                        padding: const EdgeInsets.only(bottom: 10),
+                        initialItemCount: messages.length,
+                        shrinkWrap: true,
+                        reverse: true,
+                        itemBuilder: (context,index, animation) {
+                          // somehow need to axtact this name earlies as it doesnt laod fast enough
+    
+                          return SizeTransition(
+                            sizeFactor: animation,
+                            child: GroupMessageBubbleWidget(message: messages[index], groupImageURL: widget.chat.groupImage, participants: participants),
+                          );
+                        }
+                      );
+                    }
+                  }
+                  if (snapshot.hasError) {
+                  return const Text("Something went wrong");
+                  }
+                  return const Center(child: CircularProgressIndicator(color: Colors.red));
+                } 
+              ),
+            ),
+            GroupChatInputField(
+              groupChat: widget.chat, 
+              onMessageSent: (message) => _addMessage(
+                Message(
+                  message: message,
+                  otherUserID: FirebaseAuth.instance.currentUser!.uid,
+                  sentByCurrent: true,
+                  timeStamp: DateTime.now()
+                )
               )
-            )
-          ),
-        ],
-      ),
+            ),
+          ],
+        ),
+      ): const Scaffold(body: Center(child: CircularProgressIndicator(),))
     );
   }
 }

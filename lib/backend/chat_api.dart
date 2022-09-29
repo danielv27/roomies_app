@@ -70,7 +70,6 @@ class ChatAPI {
         'last_message_timestamp': currentTime
       });
 
-      print('message sent to firebase\n');
     } catch (e) {
       debugPrint("Error - $e");
       return null;

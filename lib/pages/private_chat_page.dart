@@ -56,7 +56,6 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
                     ChatAPI().listenToPrivateChatMessages(FirebaseAuth.instance.currentUser?.uid, widget.otherUser.id)
                     ?.listen(
                       (event) {
-                        print('listening');
                         List<Message>? newMessages = event;
                         if(newMessages != null && newMessages.length > messages.length){
                           newMessages.sort((a, b) => b.timeStamp.toString().compareTo(a.timeStamp.toString()));

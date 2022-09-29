@@ -63,7 +63,6 @@ Widget searchBar(BuildContext context,List<UserModel>? users, UserModel? current
     actions: [
       GestureDetector(
         onTap: () { 
-          print('search pressed');
           final chats = context.read<ChatProvider>().chats;
           showSearch(
             context: context,
@@ -147,7 +146,6 @@ Widget circularUserList(BuildContext context, List<UserModel>? users){
           padding: const EdgeInsets.only(top: 11,left: 15,right: 4),
           child: GestureDetector(
             onTap: () {
-              print('chat with user $index'); 
               Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: PrivateChatPage(otherUser: usersSortedByName[index],)));
             },
             child: Column(
