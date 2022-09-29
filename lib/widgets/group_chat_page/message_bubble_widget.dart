@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_bubble/bubble_type.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
@@ -15,7 +17,7 @@ class GroupMessageBubbleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return message.sentByCurrent ? 
+    return message.otherUserID == FirebaseAuth.instance.currentUser?.uid ? 
     getSenderView(ChatBubbleClipper5(type: BubbleType.sendBubble), context) : 
     getReceiverView(ChatBubbleClipper5(type: BubbleType.receiverBubble), context);
   }

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:roomies_app/models/chat_models.dart';
+import 'package:roomies_app/pages/group_chat_page.dart';
+// import 'package:roomies_app/pages/group_chat_page.dart';
 import 'package:roomies_app/widgets/matches_page/avatar_with_online_indicator.dart';
 
 import '../../pages/private_chat_page.dart';
@@ -82,14 +84,14 @@ class _ChatTileState extends State<ChatTile> {
       padding: const EdgeInsets.only(left:18.0,bottom: 23),
       child: GestureDetector(
         onTap: () {
-        //   Navigator.push(
-        //     context,
-        //     PageTransition(type: PageTransitionType.rightToLeft,
-        //       child: PrivateChatPage(
-        //         otherUser: chat.otherUser!,
-        //       )
-        //     )
-        //   );
+          Navigator.push(
+            context,
+            PageTransition(type: PageTransitionType.rightToLeft,
+              child: GroupChatPage(
+                chat: chat,
+              )
+            )
+          );
         },
         child: Row(
           children: [
@@ -102,7 +104,7 @@ class _ChatTileState extends State<ChatTile> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children:[
-                Text(
+                const Text(
                   'house',
                   //"${chat.otherUser!.firstName} ${chat.otherUser!.lastName}",
                   textAlign: TextAlign.left,

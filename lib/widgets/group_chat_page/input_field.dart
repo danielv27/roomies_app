@@ -1,15 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:roomies_app/backend/chat_api.dart';
+import 'package:roomies_app/models/chat_models.dart';
 import 'package:roomies_app/models/user_model.dart';
   
   class GroupChatInputField extends StatefulWidget {
-    final UserModel otherUser;
+    final GroupChat groupChat;
     final Function(String) onMessageSent;
     
     const GroupChatInputField({
       Key? key,
-      required this.otherUser,
+      required this.groupChat,
       required this.onMessageSent
       }) : super(key: key);
 
@@ -23,7 +24,7 @@ import 'package:roomies_app/models/user_model.dart';
     String message = ''; 
 
     void sendMessage() async {
-      await ChatAPI().sendPrivateMessage(message, FirebaseAuth.instance.currentUser?.uid, widget.otherUser.id);
+      await ChatAPI().sendGroupMessage(widget.groupChat.groupID, FirebaseAuth.instance.currentUser!.uid, message);
       setState(() {
         widget.onMessageSent(message); 
       });

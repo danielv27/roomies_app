@@ -1,27 +1,29 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:roomies_app/backend/chat_api.dart';
 import 'package:roomies_app/backend/users_api.dart';
 import 'package:roomies_app/models/chat_models.dart';
 import 'package:roomies_app/models/user_model.dart';
+import 'package:roomies_app/widgets/group_chat_page/chat_header.dart';
 import 'package:roomies_app/widgets/group_chat_page/input_field.dart';
 import 'package:roomies_app/widgets/group_chat_page/message_bubble_widget.dart';
 import '../models/message.dart';
 import '../widgets/private_chat_page/input_field.dart';
 
-class PrivateChatPage extends StatefulWidget {
+class GroupChatPage extends StatefulWidget {
   final GroupChat chat;
   
-  const PrivateChatPage({
+  const GroupChatPage({
       Key? key,
       required this.chat,
     }) : super(key: key);
 
   @override
-  State<PrivateChatPage> createState() => _PrivateChatPageState();
+  State<GroupChatPage> createState() => _GroupChatPageState();
 }
 
-class _PrivateChatPageState extends State<PrivateChatPage> {
+class _GroupChatPageState extends State<GroupChatPage> {
  
   final GlobalKey<AnimatedListState> _key = GlobalKey();
   List<Message> messages = [];
@@ -56,9 +58,9 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
       resizeToAvoidBottomInset: true ,
       body: Column(
         children: [
-          // GroupChatHeader(
-          //   groupChat: widget.chat,
-          // ),
+          GroupChatHeader(
+            chat: widget.chat,
+          ),
           Expanded(
             child: FutureBuilder(
               future: ChatAPI().getGroupMessages(widget.chat.groupID),
@@ -73,7 +75,7 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
                         List<Message>? newMessages = event;
                         if(newMessages != null && newMessages.length > messages.length){
                           newMessages.sort((a, b) => b.timeStamp.toString().compareTo(a.timeStamp.toString()));
-                          newMessages[0].sentByCurrent ? null : _addMessage(newMessages[0]);
+                          newMessages[0].otherUserID == FirebaseAuth.instance.currentUser?.uid ? null : _addMessage(newMessages[0]);
                         }
                       },
                     );
@@ -99,8 +101,15 @@ class _PrivateChatPageState extends State<PrivateChatPage> {
             ),
           ),
           GroupChatInputField(
-            otherUser: widget.otherUser, 
-            onMessageSent: (message) => _addMessage(Message(message: message, otherUserID: widget.otherUser.id, sentByCurrent: true, timeStamp: DateTime.now()))
+            groupChat: widget.chat, 
+            onMessageSent: (message) => _addMessage(
+              Message(
+                message: message,
+                otherUserID: FirebaseAuth.instance.currentUser!.uid,
+                sentByCurrent: true,
+                timeStamp: DateTime.now()
+              )
+            )
           ),
         ],
       ),

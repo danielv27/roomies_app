@@ -182,14 +182,14 @@ class ChatAPI {
 
   Future sendGroupMessage(String groupChatID, String senderID, String message) async {
     await FirebaseFirestore.instance.collection('group_chats/$groupChatID/messages').add({
-      'meesage': message,
+      'message': message,
       'senderID': senderID,
       'timeStamp': DateTime.now(),
     });
     await FirebaseFirestore.instance.doc('group_chats/$groupChatID').set({
-      'last_message': DateTime.now(),
-      'last_message_timestamp': message
-    });
+      'last_message': message,
+      'last_message_timestamp': DateTime.now()
+    }, SetOptions(merge: true));
   }
 
   Stream<List<GroupChat>?> streamGroupChatChanges(List<HouseProfileModel> likedHouses) {
@@ -212,12 +212,13 @@ class ChatAPI {
       return FirebaseFirestore.instance.collection('group_chats/$chatID/messages')
       .get()
       .then((querySnapShot) => querySnapShot.docs.map((messageDoc) => Message(
-        message: messageDoc['message'], 
-        otherUserID: messageDoc['senderID'], 
-        sentByCurrent: false, 
-        timeStamp: messageDoc['timeStamp'].toDate()
+        message: messageDoc.data()['message'].toString(), 
+        otherUserID: messageDoc.data()['senderID'].toString(), 
+        sentByCurrent: messageDoc.data()['senderID'] == FirebaseAuth.instance.currentUser?.uid, 
+        timeStamp: messageDoc.data()['timeStamp'].toDate()
       )).toList());
     } catch (e) {
+      print(e);
       debugPrint("Error - $e");
     }
     return null;
@@ -228,10 +229,10 @@ class ChatAPI {
       return FirebaseFirestore.instance.collection('group_chats/$chatID/messages')
       .snapshots()
       .map((querySnapShot) => querySnapShot.docs.map((messageDoc) => Message(
-        message: messageDoc['message'], 
-        otherUserID: messageDoc['senderID'], 
+        message: messageDoc.data()['message'].toString(), 
+        otherUserID: messageDoc.data()['senderID'].toString(), 
         sentByCurrent: false, 
-        timeStamp: messageDoc['timeStamp'].toDate()
+        timeStamp: messageDoc.data()['timeStamp'].toDate()
       )).toList());
     } catch (e) {
       debugPrint("Error - $e");

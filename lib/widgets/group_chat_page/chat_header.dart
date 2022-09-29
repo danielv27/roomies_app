@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:roomies_app/models/chat_models.dart';
 import 'package:roomies_app/models/user_model.dart';
 import 'package:roomies_app/widgets/private_chat_page/online_indicator.dart';
 import 'package:roomies_app/widgets/gradients/gradient.dart';
 
 class GroupChatHeader extends StatelessWidget {
-  final UserModel otherUser;
+  final GroupChat chat;
   
   const GroupChatHeader({
     Key? key,
-    required this.otherUser,
+    required this.chat,
     }) : super(key: key);
 
   @override
@@ -40,15 +41,14 @@ class GroupChatHeader extends StatelessWidget {
           centerTitle: true,
           title: Column(
             children:  [
-              Text("${otherUser.firstName} ${otherUser.lastName}"),
+              Text(chat.groupID),
               const SizedBox(height: 3),
-              PrivateChatOnlineIndicator(userID: otherUser.id)
             ],
           ),
           actions: [
             CircleAvatar(
               backgroundColor: Colors.red,
-              backgroundImage: otherUser.firstImageProvider,
+              backgroundImage: NetworkImage(chat.groupImage),
               radius: 26,
             ),
           ],
