@@ -88,11 +88,15 @@ class _GroupChatPageState extends State<GroupChatPage> {
                         shrinkWrap: true,
                         reverse: true,
                         itemBuilder: (context,index, animation) {
-                          // somehow need to axtact this name earlies as it doesnt laod fast enough
-    
+                          String senderName = "";
+                          for(var participant in participants){
+                            if(participant?.id == messages[index].otherUserID){
+                              senderName = "${participant?.firstName} ${participant?.lastName}";
+                            }
+                          }
                           return SizeTransition(
                             sizeFactor: animation,
-                            child: GroupMessageBubbleWidget(message: messages[index], groupImageURL: widget.chat.groupImage, participants: participants),
+                            child: GroupMessageBubbleWidget(message: messages[index], groupImageURL: widget.chat.groupImage, senderName: senderName),
                           );
                         }
                       );
