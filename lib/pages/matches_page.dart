@@ -27,8 +27,7 @@ class _MatchesPageState extends State<MatchesPage> {
   Widget build(BuildContext context) {
     final UserModel? currentUser = context.read<CurrentUserProvider>().currentUser?.userModel;
     final MatchesProvider matchesProvider = context.watch<MatchesProvider>();
-
-
+    
     return Scaffold(
       body: Container(
           decoration: const BoxDecoration(

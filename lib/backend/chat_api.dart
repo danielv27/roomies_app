@@ -198,8 +198,8 @@ class ChatAPI {
   .snapshots(includeMetadataChanges: true)
   .map((querySnapShot) => querySnapShot.docs.map((groupChatDoc) => GroupChat(
     id: groupChatDoc.id,
-    groupID: groupChatDoc.id,
-    groupImage: likedHouses.firstWhere((house) => house.houseRef == groupChatDoc['house_id']).imageURLS[0],
+    groupImage: likedHouses.firstWhere((house) => house.houseID == groupChatDoc['house_id']).imageURLS[0],
+    houseID: groupChatDoc['house_id'],
     participantsIDs: groupChatDoc['participants'],
     lastMessageTime: groupChatDoc['last_message_timestamp'].toDate(),
     lastMessage: groupChatDoc['last_message'],

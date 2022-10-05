@@ -21,17 +21,14 @@ class MatchesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Stream<List<UserModel>> checkForChanges() async* {
-  //   List<UserModel> initialUserModels = List.from(userModels);
-  //   while(true){
-  //     await Future.delayed(const Duration(seconds: 3));
-  //     if(userModels.isNotEmpty && userModels[0] != initialUserModels[0]){
-  //       yield userModels;
-  //       initialUserModels = userModels;
-  //     }
-  //   }
-  // }
-
+  Future<HouseProfileModel?> getHouseProfileModelByID(houseID) async {
+    for(var house in likedHouses){
+      if(houseID == house.houseID){
+        return house;
+      }
+    }
+    return null;
+  }
 
 
   Future<List<UserModel>> loadMatches(List<String> newUserIDs) async {

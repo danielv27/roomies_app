@@ -24,15 +24,15 @@ class PrivateChat extends Chat{
 }
 
 class GroupChat extends Chat{
-  final String groupID;
   final String groupImage;
   final List<dynamic> participantsIDs;
+  final String houseID;
   
   GroupChat({
     required id,
-    required this.groupID,
     required this.groupImage,
     required this.participantsIDs,
+    required this.houseID,
     required lastMessage,
     required lastMessageTime,
 

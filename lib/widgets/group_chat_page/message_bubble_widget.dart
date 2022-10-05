@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -135,7 +137,7 @@ class GroupMessageBubbleWidget extends StatelessWidget {
             child: Column(
               children: [
                 const Padding(
-                  padding: const EdgeInsets.only(bottom: 12,top: 6,left: 8),
+                  padding: EdgeInsets.only(bottom: 12,top: 6,left: 8),
                   child: Text(
                     '', // here we'll put the info of the house later on
                     textAlign: TextAlign.right,
@@ -180,16 +182,6 @@ class GroupMessageBubbleWidget extends StatelessWidget {
           child: IntrinsicWidth(
             child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 8,bottom: 12,top: 6),
-                  child: Text(
-                    message.message,
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 17
-                    ),
-                  ),
-                ),
                 Align(
                   alignment: Alignment.bottomRight,
                   child: Text(

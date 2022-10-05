@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:roomies_app/models/chat_models.dart';
-import 'package:roomies_app/models/user_model.dart';
-import 'package:roomies_app/widgets/private_chat_page/online_indicator.dart';
+import 'package:roomies_app/models/house_profile_model.dart';
 import 'package:roomies_app/widgets/gradients/gradient.dart';
 
 class GroupChatHeader extends StatelessWidget {
   final GroupChat chat;
+  final HouseSignupProfileModel houseSignUpProfileModel;
   
   const GroupChatHeader({
     Key? key,
     required this.chat,
+    required this.houseSignUpProfileModel
     }) : super(key: key);
 
   @override
@@ -41,7 +42,7 @@ class GroupChatHeader extends StatelessWidget {
           centerTitle: true,
           title: Column(
             children:  [
-              Text(chat.groupID),
+              Text("${houseSignUpProfileModel.streetName}\n${houseSignUpProfileModel.houseNumber}", style: const TextStyle(fontSize: 18),textAlign: TextAlign.center,),
               const SizedBox(height: 3),
             ],
           ),

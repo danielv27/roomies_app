@@ -15,15 +15,22 @@ class UsersHousesMatched extends StatefulWidget {
   const UsersHousesMatched({
     Key? key,
     required this.house,
+    required this.onGroupChatCreated
   }) : super(key: key);
 
   final HouseProfileModel house;
+  final VoidCallback onGroupChatCreated;
 
   @override
   State<UsersHousesMatched> createState() => _UsersHousesMatchedState();
 }
 
 class _UsersHousesMatchedState extends State<UsersHousesMatched> {
+
+
+
+
+
   @override
   Widget build(BuildContext context) {
 
@@ -67,7 +74,7 @@ class _UsersHousesMatchedState extends State<UsersHousesMatched> {
           FutureBuilder(
             future: Future.wait([
                 UsersAPI().getMatches(FirebaseAuth.instance.currentUser!.uid),
-                HousesAPI().getUserHouseEncounters(widget.house.houseOwner.id, widget.house.houseRef),
+                HousesAPI().getUserHouseEncounters(widget.house.houseOwner.id, widget.house.houseID),
             ]),
             builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
               if (snapshot.hasError) {
@@ -89,9 +96,13 @@ class _UsersHousesMatchedState extends State<UsersHousesMatched> {
               return SelectableUserTileList(
                 users: matched,
                 onPressed: ((selectedUserIDs) async {
-                  await ChatAPI().createGroupChat(widget.house.houseRef, selectedUserIDs, selectedUserIDs[0]);
+                  if(selectedUserIDs.length > 2){
+                    Navigator.pop(context);
+                    widget.onGroupChatCreated!();
+                    await ChatAPI().createGroupChat(widget.house.houseID, selectedUserIDs, selectedUserIDs[0]);
+                  }
                 }),
-                );
+              );
             }
           ),
         ],

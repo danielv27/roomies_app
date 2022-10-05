@@ -23,10 +23,7 @@ class HousesLiked extends StatefulWidget {
 class _HousesLikedState extends State<HousesLiked> {
   List<HouseProfileModel>? houses;
 
-  @override
-  void initState() {
-    super.initState();
-  }
+
 
   @override
   Widget build(BuildContext context) {

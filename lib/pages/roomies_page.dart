@@ -68,8 +68,7 @@ class RoomiesPage extends StatelessWidget {
                         await Future.delayed(const Duration(milliseconds: 150));
                         FirebaseAuth.instance.signOut();
                       },
-                      child: Icon(Icons.logout, color: Colors.white, size: 20,)
-                      //Image.asset('assets/icons/nextroom_icon_white.png', width: 28),
+                      child: const Icon(Icons.logout, color: Colors.white, size: 20,)
                     ),
                   ),
                 ),

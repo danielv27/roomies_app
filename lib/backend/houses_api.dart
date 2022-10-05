@@ -86,14 +86,14 @@ class HousesAPI {
       for (var house in houses!) {
         late HouseProfileModel houseProfileModel;
         await FirebaseFirestore.instance.collection('users/${house.houseOwner.id}/houses_profile')
-          .doc(house.houseRef)
+          .doc(house.houseID)
           .get()
           .then((querySnapshot) async {
-            List<dynamic>? houseProfileImages = await getHouseImages(house.houseRef, house.houseOwner.id);
+            List<dynamic>? houseProfileImages = await getHouseImages(house.houseID, house.houseOwner.id);
             houseProfileModel = HouseProfileModel(
               houseOwner: house.houseOwner,
               imageURLS: houseProfileImages,
-              houseRef: house.houseRef,
+              houseID: house.houseID,
             );
           });
         houseProfileModels.add(houseProfileModel);
@@ -129,7 +129,7 @@ class HousesAPI {
           HouseProfileModel houseProfileModel = HouseProfileModel(
             houseOwner: houseOwnerHouse!,
             imageURLS: houseProfileImages,
-            houseRef: houseRef,
+            houseID: houseRef,
           );
           housesProfileModel.add(houseProfileModel);
         }
@@ -154,12 +154,12 @@ class HousesAPI {
     return houseProfileImages;
   }
   
-  Future<HouseSignupProfileModel?> getHouseSignupProfileModel(houseRef, userID, houseProfileImages) async {
+  Future<HouseSignupProfileModel?> getHouseSignupProfileModel(houseID, ownerID, houseProfileImages) async {
     HouseSignupProfileModel? houseSignupProfileModel;
     await FirebaseFirestore.instance.collection('users')
-      .doc(userID)
+      .doc(ownerID)
       .collection('houses_profile')
-      .doc(houseRef)
+      .doc(houseID)
       .get()
       .then((house) {
         houseSignupProfileModel = HouseSignupProfileModel(
@@ -283,7 +283,7 @@ class HousesAPI {
           HouseProfileModel houseProfileModel = HouseProfileModel(
             houseOwner: houseOwnerHouse!,
             imageURLS: houseProfileImages,
-            houseRef: houseRef,
+            houseID: houseRef,
           );
           housesProfileModel.add(houseProfileModel);
         }

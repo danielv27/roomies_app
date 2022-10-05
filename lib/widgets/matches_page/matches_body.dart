@@ -57,10 +57,8 @@ class _MatchesBodyWidgetState extends State<MatchesBodyWidget> {
               }
             }
             else if((snapshot.connectionState == ConnectionState.active || snapshot.connectionState == ConnectionState.waiting)){
-              print(snapshot.connectionState);
               return const Center(child: CircularProgressIndicator(color: Colors.red));  
             }
-            print(snapshot.connectionState);
             return const Center(child: Text('No Chats to Display'));
           }
         )
@@ -74,6 +72,6 @@ Widget chatTileList(List<Chat> chats){
     return ListView.builder(
       padding: const EdgeInsets.only(top: 18,bottom: 105),
       itemCount: chats.length,
-      itemBuilder: (context,index) => ChatTile(chat: chats[index], index: index),
+      itemBuilder: (context,index) => ChatTile(chat: chats[index]),
   );
 }

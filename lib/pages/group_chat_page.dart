@@ -1,22 +1,25 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:roomies_app/backend/chat_api.dart';
 import 'package:roomies_app/backend/users_api.dart';
 import 'package:roomies_app/models/chat_models.dart';
+import 'package:roomies_app/models/house_profile_model.dart';
 import 'package:roomies_app/models/user_model.dart';
 import 'package:roomies_app/widgets/group_chat_page/chat_header.dart';
 import 'package:roomies_app/widgets/group_chat_page/input_field.dart';
 import 'package:roomies_app/widgets/group_chat_page/message_bubble_widget.dart';
 import '../models/message.dart';
-import '../widgets/private_chat_page/input_field.dart';
 
 class GroupChatPage extends StatefulWidget {
   final GroupChat chat;
+  final HouseProfileModel houseModel;
+  final HouseSignupProfileModel houseSignUpProfileModel;
   
   const GroupChatPage({
       Key? key,
       required this.chat,
+      required this.houseModel,
+      required this.houseSignUpProfileModel
     }) : super(key: key);
 
   @override
@@ -26,10 +29,12 @@ class GroupChatPage extends StatefulWidget {
 class _GroupChatPageState extends State<GroupChatPage> {
  
   final GlobalKey<AnimatedListState> _key = GlobalKey();
+  String address = 'House';
   List<Message> messages = [];
   List<UserModel?> participants = [];
 
   Future initialize() async {
+    
     if(participants.isEmpty){
       for(var participantID in widget.chat.participantsIDs){
         final participant = await UsersAPI().getUserModelByID(participantID);
@@ -62,16 +67,17 @@ class _GroupChatPageState extends State<GroupChatPage> {
           children: [
             GroupChatHeader(
               chat: widget.chat,
+              houseSignUpProfileModel: widget.houseSignUpProfileModel,
             ),
             Expanded(
               child: FutureBuilder(
-                future: ChatAPI().getGroupMessages(widget.chat.groupID),
+                future: ChatAPI().getGroupMessages(widget.chat.id),
                 builder:(context, snapshot) {
                   if(snapshot.connectionState == ConnectionState.done){
                     if(snapshot.hasData){
                       messages = snapshot.data as List<Message>;
                       messages.sort((a, b) => b.timeStamp.toString().compareTo(a.timeStamp.toString()));
-                      ChatAPI().listenToGroupChatMessages(widget.chat.groupID)
+                      ChatAPI().listenToGroupChatMessages(widget.chat.id)
                       ?.listen(
                         (event) {
                           List<Message>? newMessages = event;

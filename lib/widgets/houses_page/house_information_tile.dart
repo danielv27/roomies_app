@@ -19,9 +19,36 @@ class HouseInformationTile extends StatelessWidget {
   final int index;
   final bool infoButtonEnabled;
 
+  showAlertDialog(BuildContext context) {
+
+    // set up the button
+    Widget okButton = TextButton(
+      child: const Text("OK"),
+      onPressed: () => Navigator.pop(context),
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: const Text("Group Chat Created"),
+      content: const Text("You can now navigate to the matches page to see your newly created Group Chat."),
+      actions: [
+        okButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  } 
+
   @override
   Widget build(BuildContext context) {
     var houseProfile = house.houseOwner.houseSignupProfileModel;
+    VoidCallback? onGroupChatCreated() => showAlertDialog(context);
     return Stack(
       alignment: Alignment.topLeft,
       children: [
@@ -60,7 +87,7 @@ class HouseInformationTile extends StatelessWidget {
                     context,
                     PageTransition(
                       type: PageTransitionType.fade,
-                      child: UsersHousesMatched(house: house),
+                      child: UsersHousesMatched(house: house, onGroupChatCreated: onGroupChatCreated,),
                       inheritTheme: true,
                       ctx: context,
                     ),

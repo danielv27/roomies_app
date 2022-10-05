@@ -19,7 +19,6 @@ class SelectableUserTileList extends StatelessWidget {
     
     List<String> selectedUsersIDs = [];
     
-
     final currentUser = await UsersAPI().getCurrentUserModel();
     if(currentUser != null) selectedUsersIDs.add(currentUser.id);
 
@@ -33,7 +32,6 @@ class SelectableUserTileList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String? currentUserID;
     List<bool> selectedUsersByIndex = List.generate(users.length, (index) => false);
     return Expanded(
       child: SingleChildScrollView(
