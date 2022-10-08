@@ -33,7 +33,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   var radiusWidth = 40;
   var radiusExpandedWidth = 65;
-
   List radiusDistnace = [1, 2, 3, 4, 5, 10];
 
   final TextEditingController minBudgetController = TextEditingController();
@@ -50,8 +49,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   late final UserProfileImages userProfileImages;
 
-  
-  
+  final List<XFile> selectedProfileImages = [];
   bool isUploading = false;
   bool isRemoving = false;
 
@@ -74,8 +72,6 @@ class _ProfilePageState extends State<ProfilePage> {
     studyController.text = widget.currentUser.userSignupProfileModel.study;
     roomMateController.text = widget.currentUser.userSignupProfileModel.roommate;
     birthDateController.text = widget.currentUser.userSignupProfileModel.birthdate;
-
-    selectedProfileImages = widget.currentUserImages;
 
     return  Scaffold(
       appBar: AppBar(
