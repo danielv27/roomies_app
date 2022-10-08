@@ -4,6 +4,7 @@ import 'package:roomies_app/backend/providers/chat_provider.dart';
 import 'package:roomies_app/backend/providers/current_profile_provider.dart';
 import 'package:roomies_app/backend/providers/matches_provider.dart';
 import 'package:roomies_app/models/chat_models.dart';
+import 'package:roomies_app/pages/profile_page.dart';
 import 'package:roomies_app/widgets/matches_page/avatar_with_gradient_border.dart';
 import 'package:roomies_app/widgets/matches_page/matches_body.dart';
 import '../../models/user_model.dart';
@@ -77,6 +78,10 @@ Widget searchBar(BuildContext context,List<UserModel>? users, UserModel? current
       ),
       GestureDetector(
         onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ProfilePage(currentUser: currentUser!)),
+          );
           print('profile pressed');
         },
         child: Container(
