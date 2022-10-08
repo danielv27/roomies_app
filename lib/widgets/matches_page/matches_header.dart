@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:roomies_app/backend/providers/chat_provider.dart';
 import 'package:roomies_app/backend/providers/current_profile_provider.dart';
 import 'package:roomies_app/backend/providers/matches_provider.dart';
 import 'package:roomies_app/models/chat_models.dart';
+import 'package:roomies_app/models/user_profile_model.dart';
 import 'package:roomies_app/pages/profile_page.dart';
 import 'package:roomies_app/widgets/matches_page/avatar_with_gradient_border.dart';
 import 'package:roomies_app/widgets/matches_page/matches_body.dart';
@@ -55,7 +57,9 @@ Widget searchBar(BuildContext context,List<UserModel>? users, UserModel? current
   else if(now.hour >= 12){
     dayTime = "afternoon";
   }
-  UserModel? currentUser = context.read<CurrentUserProvider>().currentUser?.userModel;
+  UserModel currentUser = context.read<CurrentUserProvider>().currentUser!.userModel;
+  List<XFile> currentUserImages = context.read<CurrentUserProvider>().userImages;
+
 
   return AppBar(
     centerTitle: false,
@@ -67,7 +71,7 @@ Widget searchBar(BuildContext context,List<UserModel>? users, UserModel? current
           final chats = context.read<ChatProvider>().chats;
           showSearch(
             context: context,
-            delegate: ChatsSearchDelegate(chats, users),
+            delegate: ChatsSearchDelegate(chats),
           );
         },
         child: CircleAvatar(
@@ -80,7 +84,7 @@ Widget searchBar(BuildContext context,List<UserModel>? users, UserModel? current
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => ProfilePage(currentUser: currentUser!)),
+            MaterialPageRoute(builder: (context) => ProfilePage(currentUser: currentUser, currentUserImages: currentUserImages)),
           );
           print('profile pressed');
         },
@@ -169,9 +173,8 @@ Widget circularUserList(BuildContext context, List<UserModel>? users){
 class ChatsSearchDelegate extends SearchDelegate {
   late final List<Chat> chats;
   late final List<UserModel> matches;
-  ChatsSearchDelegate(chatList, matchList){
+  ChatsSearchDelegate(chatList){
     chats = chatList;
-    matches = matchList;
   }
   
   @override
@@ -205,6 +208,7 @@ class ChatsSearchDelegate extends SearchDelegate {
       if(chat is PrivateChat){
         PrivateChat currentChat = chat;
         fullName = "${currentChat.otherUser?.firstName.toLowerCase()} ${currentChat.otherUser?.lastName.toLowerCase()}";
+        
       }
       return fullName.contains(input);
     }).toList();

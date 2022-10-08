@@ -15,10 +15,13 @@ import 'package:intl/intl.dart';
 class ProfilePage extends StatefulWidget {
   const ProfilePage({
     Key? key, 
-    required this.currentUser
+    required this.currentUser,
+    required this.currentUserImages
+
   }) : super(key: key);
 
   final UserModel currentUser;
+  final List<XFile> currentUserImages;
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -47,7 +50,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   late final UserProfileImages userProfileImages;
 
-  final List<XFile> selectedProfileImages = [];
+  
+  
   bool isUploading = false;
   bool isRemoving = false;
 
@@ -56,6 +60,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+
+    late List<XFile> selectedProfileImages = widget.currentUserImages;
+
     minBudgetController.text = widget.currentUser.userSignupProfileModel.minBudget;
     maxBudgetController.text = widget.currentUser.userSignupProfileModel.maxBudget;
     latLngController.text = widget.currentUser.userSignupProfileModel.latLng;
@@ -67,6 +74,8 @@ class _ProfilePageState extends State<ProfilePage> {
     studyController.text = widget.currentUser.userSignupProfileModel.study;
     roomMateController.text = widget.currentUser.userSignupProfileModel.roommate;
     birthDateController.text = widget.currentUser.userSignupProfileModel.birthdate;
+
+    selectedProfileImages = widget.currentUserImages;
 
     return  Scaffold(
       appBar: AppBar(
@@ -145,7 +154,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     setState(() {
                                       isUploading = true;
                                     });
-                                    await selectProfileImage();
+                                    await selectProfileImage(selectedProfileImages);
                                   },
                                   backgroundColor: Colors.transparent,
                                   child: const Icon(Icons.add),
@@ -163,8 +172,8 @@ class _ProfilePageState extends State<ProfilePage> {
                               margin: const EdgeInsets.only(bottom: 10, right: 10),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(20),
-                                child: Image.file(
-                                  File(selectedProfileImages[index].path), 
+                                child: Image.network(
+                                  (selectedProfileImages[index].path), 
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -185,7 +194,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     setState(() {
                                       isRemoving = true;
                                     });
-                                    removeProfileImage(index);
+                                    removeProfileImage(index, selectedProfileImages);
                                   },
                                   backgroundColor: Colors.transparent,
                                   child: const Icon(Icons.remove),
@@ -412,12 +421,12 @@ class _ProfilePageState extends State<ProfilePage> {
                   } else {
                     showAlertLocationDialog(context);  
                   }
-                  if (selectedProfileImages.isNotEmpty) {
-                    print("images not empty");
-                  }
-                  else {
-                    alertImageEmpty(context);
-                  }
+                  // if (selectedProfileImages.isNotEmpty) {
+                  //   print("images not empty");
+                  // }
+                  // else {
+                  //   alertImageEmpty(context);
+                  // }
                 }
               },
               child: const Text(
@@ -629,7 +638,7 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }  
 
-  Future<void> selectProfileImage() async {
+  Future<void> selectProfileImage(List<XFile> selectedProfileImages) async {
     try {
       final XFile? profileImage = await ImagePicker().pickImage(
         source: ImageSource.gallery,
@@ -655,7 +664,7 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
-  removeProfileImage(int index) {
+  removeProfileImage(int index, List<XFile> selectedProfileImages) {
     setState(() {
       selectedProfileImages.removeAt(index);
     });
