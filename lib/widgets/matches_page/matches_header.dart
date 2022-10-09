@@ -57,9 +57,8 @@ Widget searchBar(BuildContext context,List<UserModel>? users, UserProfileModel? 
   else if(now.hour >= 12){
     dayTime = "afternoon";
   }
-  UserProfileModel currentUser = context.read<CurrentUserProvider>().currentUser!;
-  List<String> currentUserImages = context.read<CurrentUserProvider>().userImages;
 
+  UserProfileModel currentUser = context.read<CurrentUserProvider>().currentUser!;
 
   return AppBar(
     centerTitle: false,
@@ -84,7 +83,7 @@ Widget searchBar(BuildContext context,List<UserModel>? users, UserProfileModel? 
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => ProfilePage(currentUser: currentUser, currentUserImages: currentUserImages)),
+            MaterialPageRoute(builder: (context) => ProfilePage(currentUser: currentUser)),
           );
           print('profile pressed');
         },

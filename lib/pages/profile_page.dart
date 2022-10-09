@@ -15,12 +15,9 @@ class ProfilePage extends StatefulWidget {
   const ProfilePage({
     Key? key, 
     required this.currentUser,
-    required this.currentUserImages
-
   }) : super(key: key);
 
   final UserProfileModel currentUser;
-  final List<String> currentUserImages;
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -65,8 +62,6 @@ class _ProfilePageState extends State<ProfilePage> {
     studyController.text = widget.currentUser.userModel.userSignupProfileModel.study;
     roomMateController.text = widget.currentUser.userModel.userSignupProfileModel.roommate;
     birthDateController.text = widget.currentUser.userModel.userSignupProfileModel.birthdate;
-
-    late List<dynamic> selectedProfileImages = widget.currentUser.imageURLS;
 
     return  Scaffold(
       appBar: AppBar(
