@@ -52,17 +52,18 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    minBudgetController.text = widget.currentUser.userModel.userSignupProfileModel.minBudget;
-    maxBudgetController.text = widget.currentUser.userModel.userSignupProfileModel.maxBudget;
-    latLngController.text = widget.currentUser.userModel.userSignupProfileModel.latLng;
-    streetNameController.text = widget.currentUser.userModel.userSignupProfileModel.streetName;
-    cityNameController.text = widget.currentUser.userModel.userSignupProfileModel.cityName;
+    var userSignupProfile = widget.currentUser.userModel.userSignupProfileModel;
 
-    aboutMeController.text = widget.currentUser.userModel.userSignupProfileModel.about;
-    workController.text = widget.currentUser.userModel.userSignupProfileModel.work;
-    studyController.text = widget.currentUser.userModel.userSignupProfileModel.study;
-    roomMateController.text = widget.currentUser.userModel.userSignupProfileModel.roommate;
-    birthDateController.text = widget.currentUser.userModel.userSignupProfileModel.birthdate;
+    aboutMeController.text = userSignupProfile.about;
+    workController.text = userSignupProfile.work;
+    studyController.text = userSignupProfile.study;
+    roomMateController.text = userSignupProfile.roommate;
+    birthDateController.text = userSignupProfile.birthdate;
+    minBudgetController.text = userSignupProfile.minBudget;
+    maxBudgetController.text = userSignupProfile.maxBudget;
+    latLngController.text = userSignupProfile.latLng;
+    streetNameController.text = userSignupProfile.streetName;
+    cityNameController.text = userSignupProfile.cityName;
 
     return  Scaffold(
       appBar: AppBar(
@@ -76,7 +77,7 @@ class _ProfilePageState extends State<ProfilePage> {
               if (widget.currentUser.imageURLS.isNotEmpty) {
                 await AuthAPI().updatePersonalProfile(
                   auth.currentUser,
-                  widget.currentUser.userModel.userSignupProfileModel.radius,
+                  userSignupProfile.radius,
                   latLngController,
                   streetNameController,
                   cityNameController,
@@ -229,7 +230,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     style: const TextStyle(color: Colors.grey),
                     cursorColor: Colors.grey,
                     decoration: applyInputDecoration(""),
-                    onChanged: (value) => setState(() => aboutMeController.text = value),
+                    onChanged: (value) => setState(() => userSignupProfile.about = value),
                     validator: (value) {
                       if (value!.isEmpty) {
                         return "Please enter a description";
@@ -250,7 +251,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     style: const TextStyle(color: Colors.grey),
                     cursorColor: Colors.grey,
                     decoration: applyInputDecoration(""),
-                    onChanged: (value) => setState(() => workController.text = value),
+                    onChanged: (value) => setState(() => userSignupProfile.work = value),
                     validator: (value) {
                       if (value!.isEmpty) {
                         return "Please enter a description";
@@ -271,7 +272,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     style: const TextStyle(color: Colors.grey),
                     cursorColor: Colors.grey,
                     decoration: applyInputDecoration(""),
-                    onChanged: (value) => setState(() => studyController.text = value),
+                    onChanged: (value) => setState(() => userSignupProfile.study = value),
                     validator: (value) {
                       if (value!.isEmpty) {
                         return "Please enter a description";
@@ -292,7 +293,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     style: const TextStyle(color: Colors.grey),
                     cursorColor: Colors.grey,
                     decoration: applyInputDecoration(""),
-                    onChanged: (value) => setState(() => roomMateController.text = value),
+                    onChanged: (value) => setState(() => userSignupProfile.roommate = value),
                     validator: (value) {
                       if (value!.isEmpty) {
                         return "Please enter a description";
@@ -310,7 +311,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     cursorColor: Colors.grey,
                     textInputAction: TextInputAction.next,
                     decoration: applyInputDecoration(""),
-                    onChanged: (value) => setState(() => birthDateController.text = value),
+                    onChanged: (value) => setState(() => userSignupProfile.birthdate = value),
                     validator: (value) {
                       if (value!.isEmpty) {
                         return "Please enter your date of birth";
@@ -361,7 +362,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     cursorColor: Colors.grey,
                     textInputAction: TextInputAction.next,
                     decoration: inputDecoCoin("0"),
-                    onChanged: (value) => setState(() => minBudgetController.text = value),
+                    onChanged: (value) => setState(() => userSignupProfile.minBudget = value),
                     validator: (value) {
                       if (value!.isEmpty) {
                         return "Please enter your minimum budget";
@@ -385,7 +386,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     cursorColor: Colors.grey,
                     textInputAction: TextInputAction.next,
                     decoration: inputDecoCoin("0"),
-                    onChanged: (value) => setState(() => maxBudgetController.text = value),
+                    onChanged: (value) => setState(() => userSignupProfile.maxBudget = value),
                     validator: (value) {
                       final minimumBudget = minBudgetController.text;
                       if (value!.isEmpty) {
