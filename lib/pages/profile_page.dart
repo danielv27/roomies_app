@@ -32,17 +32,16 @@ class _ProfilePageState extends State<ProfilePage> {
   var radiusExpandedWidth = 65;
   List radiusDistnace = [1, 2, 3, 4, 5, 10];
 
-  final TextEditingController minBudgetController = TextEditingController();
-  final TextEditingController maxBudgetController = TextEditingController();
-  final TextEditingController latLngController = TextEditingController();
-  final TextEditingController streetNameController = TextEditingController();
-  final TextEditingController cityNameController = TextEditingController();
-
-  final TextEditingController aboutMeController = TextEditingController();
-  final TextEditingController workController = TextEditingController();
-  final TextEditingController studyController = TextEditingController();
-  final TextEditingController roomMateController = TextEditingController();
-  final TextEditingController birthDateController = TextEditingController();
+  late TextEditingController minBudgetController;
+  late TextEditingController maxBudgetController;
+  late TextEditingController latLngController;
+  late TextEditingController streetNameController;
+  late TextEditingController cityNameController;
+  late TextEditingController aboutMeController;
+  late TextEditingController workController;
+  late TextEditingController studyController;
+  late TextEditingController roomMateController;
+  late TextEditingController birthDateController;
 
   bool isUploading = false;
   bool isRemoving = false;
@@ -51,19 +50,25 @@ class _ProfilePageState extends State<ProfilePage> {
   final FirebaseAuth auth = FirebaseAuth.instance;
 
   @override
+  void initState() {
+    var userSignupProfile = widget.currentUser.userModel.userSignupProfileModel;
+    aboutMeController = TextEditingController(text: userSignupProfile.about);
+    workController = TextEditingController(text: userSignupProfile.work);
+    studyController = TextEditingController(text: userSignupProfile.study);
+    roomMateController = TextEditingController(text: userSignupProfile.roommate);
+    birthDateController = TextEditingController(text: userSignupProfile.birthdate);
+    minBudgetController = TextEditingController(text: userSignupProfile.minBudget);
+    maxBudgetController = TextEditingController(text: userSignupProfile.maxBudget);
+    latLngController = TextEditingController(text: userSignupProfile.latLng);
+    streetNameController = TextEditingController(text: userSignupProfile.streetName);
+    cityNameController = TextEditingController(text: userSignupProfile.cityName);
+
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var userSignupProfile = widget.currentUser.userModel.userSignupProfileModel;
-
-    aboutMeController.text = userSignupProfile.about;
-    workController.text = userSignupProfile.work;
-    studyController.text = userSignupProfile.study;
-    roomMateController.text = userSignupProfile.roommate;
-    birthDateController.text = userSignupProfile.birthdate;
-    minBudgetController.text = userSignupProfile.minBudget;
-    maxBudgetController.text = userSignupProfile.maxBudget;
-    latLngController.text = userSignupProfile.latLng;
-    streetNameController.text = userSignupProfile.streetName;
-    cityNameController.text = userSignupProfile.cityName;
 
     return  Scaffold(
       appBar: AppBar(
