@@ -185,7 +185,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     setState(() {
                                       isRemoving = true;
                                     });
-                                    removeProfileImage(index, widget.currentUserImages);
+                                    removeProfileImage(index, widget.currentUser.imageURLS);
                                   },
                                   backgroundColor: Colors.transparent,
                                   child: const Icon(Icons.remove),
