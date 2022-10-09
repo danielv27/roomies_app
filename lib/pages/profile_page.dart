@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:roomies_app/models/user_profile_model.dart';
 
+import '../backend/auth_api.dart';
 import '../widgets/gradients/gradient.dart';
 import '../widgets/profile_setup/profile_google_widget.dart';
 import 'package:intl/intl.dart';
@@ -68,8 +69,32 @@ class _ProfilePageState extends State<ProfilePage> {
         elevation: 0,
         centerTitle: true,
         backgroundColor: Colors.transparent,
-        leading: const BackButton(
+        leading: BackButton(
           color: Colors.black,
+          onPressed: () async {
+            if (formKey1.currentState!.validate()) {
+              if (widget.currentUser.imageURLS.isNotEmpty) {
+                await AuthAPI().updatePersonalProfile(
+                  auth.currentUser,
+                  widget.currentUser.userModel.userSignupProfileModel.radius,
+                  latLngController,
+                  streetNameController,
+                  cityNameController,
+                  minBudgetController,
+                  maxBudgetController,
+                  aboutMeController,
+                  workController,
+                  studyController,
+                  roomMateController,
+                  birthDateController,
+                );
+                if (!mounted) return;
+                Navigator.of(context).pop();
+              } else {
+                showAlertImageDialog(context);  
+              }
+            }
+          },
         ),
       ),
       body: Padding(
@@ -204,6 +229,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     style: const TextStyle(color: Colors.grey),
                     cursorColor: Colors.grey,
                     decoration: applyInputDecoration(""),
+                    onChanged: (value) => setState(() => aboutMeController.text = value),
                     validator: (value) {
                       if (value!.isEmpty) {
                         return "Please enter a description";
@@ -224,6 +250,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     style: const TextStyle(color: Colors.grey),
                     cursorColor: Colors.grey,
                     decoration: applyInputDecoration(""),
+                    onChanged: (value) => setState(() => workController.text = value),
                     validator: (value) {
                       if (value!.isEmpty) {
                         return "Please enter a description";
@@ -244,6 +271,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     style: const TextStyle(color: Colors.grey),
                     cursorColor: Colors.grey,
                     decoration: applyInputDecoration(""),
+                    onChanged: (value) => setState(() => studyController.text = value),
                     validator: (value) {
                       if (value!.isEmpty) {
                         return "Please enter a description";
@@ -264,6 +292,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     style: const TextStyle(color: Colors.grey),
                     cursorColor: Colors.grey,
                     decoration: applyInputDecoration(""),
+                    onChanged: (value) => setState(() => roomMateController.text = value),
                     validator: (value) {
                       if (value!.isEmpty) {
                         return "Please enter a description";
@@ -281,6 +310,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     cursorColor: Colors.grey,
                     textInputAction: TextInputAction.next,
                     decoration: applyInputDecoration(""),
+                    onChanged: (value) => setState(() => birthDateController.text = value),
                     validator: (value) {
                       if (value!.isEmpty) {
                         return "Please enter your date of birth";
@@ -331,6 +361,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     cursorColor: Colors.grey,
                     textInputAction: TextInputAction.next,
                     decoration: inputDecoCoin("0"),
+                    onChanged: (value) => setState(() => minBudgetController.text = value),
                     validator: (value) {
                       if (value!.isEmpty) {
                         return "Please enter your minimum budget";
@@ -354,6 +385,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     cursorColor: Colors.grey,
                     textInputAction: TextInputAction.next,
                     decoration: inputDecoCoin("0"),
+                    onChanged: (value) => setState(() => maxBudgetController.text = value),
                     validator: (value) {
                       final minimumBudget = minBudgetController.text;
                       if (value!.isEmpty) {
@@ -373,55 +405,6 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
         ),
-      ),
-      bottomSheet: bottomSheet(context),
-    );
-  }
-
-  Widget bottomSheet(BuildContext context) {
-    return SizedBox(
-      height: 80,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              gradient: CustomGradient().blueGradient(),
-            ),
-            height: 50,
-            width: MediaQuery.of(context).size.width * 0.75,
-            margin: const EdgeInsets.only(bottom: 10),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                elevation: 5,
-                primary: Colors.transparent,
-                shadowColor: Colors.transparent,
-                onSurface: Colors.transparent,
-              ),
-              onPressed: () { 
-                if (formKey1.currentState!.validate()) {
-                  if (latLngController.text.isNotEmpty) {
-                    print("lat lng not empty");
-                  } else {
-                    showAlertLocationDialog(context);  
-                  }
-                  // if (selectedProfileImages.isNotEmpty) {
-                  //   print("images not empty");
-                  // }
-                  // else {
-                  //   alertImageEmpty(context);
-                  // }
-                }
-              },
-              child: const Text(
-                "Update",
-                style: TextStyle(fontSize: 20, color:Colors.white)
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -565,7 +548,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  showAlertLocationDialog(BuildContext context) {  
+  showAlertImageDialog(BuildContext context) {  
     Widget okButton = ElevatedButton(  
       child: const Text("OK"),  
       onPressed: () {  
@@ -574,8 +557,8 @@ class _ProfilePageState extends State<ProfilePage> {
     );  
     
     AlertDialog alert = AlertDialog(  
-      title: const Text("Location Alert"),  
-      content: const Text("Please pick a location"),  
+      title: const Text("Upload Images"),  
+      content: const Text("Please Upload at least 1 profile image"),  
       actions: [  
         okButton,  
       ],  
@@ -587,18 +570,6 @@ class _ProfilePageState extends State<ProfilePage> {
         return alert;  
       },  
     );  
-  }  
-
-  Future<dynamic> alertImageEmpty(BuildContext context) {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context){
-        return const AlertDialog(
-          title: Text("Upload Images"),
-          content: Text("Please Upload at least 1 profile image"),
-        );
-      }
-    );
   }
 
   Future<String> uploadFile(XFile image) async {

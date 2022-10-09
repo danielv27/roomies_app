@@ -128,7 +128,8 @@ class AuthAPI {
     await FirebaseFirestore.instance.collection('users')
       .doc(currentUser?.uid)
       .collection('personal_profile')
-      .add({ 
+      .doc(currentUser?.uid)
+      .set({ 
         'radius': radius,
         'latLng': latLng.text,
         'streetName': streetName.text,
@@ -145,6 +146,39 @@ class AuthAPI {
       .doc(currentUser?.uid)
       .update({ 
         'isHouseOwner': false,
+      });
+  }
+
+  Future updatePersonalProfile(
+    User ?currentUser, 
+    String radius,
+    TextEditingController latLng,
+    TextEditingController streetName,
+    TextEditingController cityName,
+    TextEditingController minBudget, 
+    TextEditingController maxBudget, 
+    TextEditingController about, 
+    TextEditingController work, 
+    TextEditingController study, 
+    TextEditingController roommate, 
+    TextEditingController birthdate,
+  ) async {
+    await FirebaseFirestore.instance.collection('users')
+      .doc(currentUser?.uid)
+      .collection('personal_profile')
+      .doc(currentUser?.uid)
+      .update({ 
+        'radius': radius,
+        'latLng': latLng.text,
+        'streetName': streetName.text,
+        'cityName': cityName.text,
+        'minimumBudget': minBudget.text,
+        'maximumBudget': maxBudget.text,
+        'about': about.text,
+        'work': work.text,
+        'study': study.text,
+        'roommate': roommate.text,
+        'birthdate': birthdate.text,
       });
   }
 
