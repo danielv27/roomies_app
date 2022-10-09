@@ -15,7 +15,7 @@ import 'package:provider/provider.dart';
 
 
 class MatchesHeaderWidget extends StatefulWidget {
-  final UserModel? currentUser;
+  final UserProfileModel? currentUser;
   final MatchesProvider matchesProvider;
 
   const MatchesHeaderWidget({
@@ -45,7 +45,7 @@ class _MatchesHeaderWidgetState extends State<MatchesHeaderWidget> {
   }
 }
 
-Widget searchBar(BuildContext context,List<UserModel>? users, UserModel? currentUser){
+Widget searchBar(BuildContext context,List<UserModel>? users, UserProfileModel? currentUser){
   DateTime now = DateTime.now();
   String dayTime = "morning";
   if(now.hour >= 21){
@@ -57,8 +57,8 @@ Widget searchBar(BuildContext context,List<UserModel>? users, UserModel? current
   else if(now.hour >= 12){
     dayTime = "afternoon";
   }
-  UserModel currentUser = context.read<CurrentUserProvider>().currentUser!.userModel;
-  List<dynamic> currentUserImages = context.read<CurrentUserProvider>().userImages;
+  UserProfileModel currentUser = context.read<CurrentUserProvider>().currentUser!;
+  List<String> currentUserImages = context.read<CurrentUserProvider>().userImages;
 
 
   return AppBar(
@@ -108,7 +108,7 @@ Widget searchBar(BuildContext context,List<UserModel>? users, UserModel? current
           CircleAvatar(
             backgroundColor: Colors.red[700],
             radius: 28,
-            backgroundImage: currentUser?.firstImageProvider,
+            backgroundImage: currentUser.userModel.firstImageProvider,
           ),
         ),
       ),
@@ -130,7 +130,7 @@ Widget searchBar(BuildContext context,List<UserModel>? users, UserModel? current
         Align(
           alignment: Alignment.topLeft,
           child: Text(
-            "${currentUser?.firstName} ${currentUser?.lastName}",
+            "${currentUser.userModel.firstName} ${currentUser.userModel.lastName}",
             style: const TextStyle(
               color: Colors.white
             ),

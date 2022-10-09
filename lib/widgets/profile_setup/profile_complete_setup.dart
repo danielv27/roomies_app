@@ -489,7 +489,8 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
       await FirebaseFirestore.instance.collection('users')
         .doc(auth.currentUser?.uid)
         .collection("profile_images")
-        .add({
+        .doc(auth.currentUser?.uid)
+        .set({
           'urls': widget.userProfileImages.imageURLS,
         });
     } catch (e) {

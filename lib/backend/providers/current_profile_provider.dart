@@ -4,7 +4,7 @@ import 'package:roomies_app/models/user_profile_model.dart';
 
 class CurrentUserProvider extends ChangeNotifier {
   UserProfileModel? currentUser;
-  List<dynamic> userImages = [];
+  List<String> userImages = [];
   
   Future<void> initialize() async {
     currentUser = await UsersAPI().getCurrentUserProfile();

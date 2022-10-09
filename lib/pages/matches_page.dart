@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:roomies_app/backend/providers/current_profile_provider.dart';
 import 'package:roomies_app/backend/providers/matches_provider.dart';
 import 'package:roomies_app/models/user_model.dart';
+import 'package:roomies_app/models/user_profile_model.dart';
 import '../widgets/matches_page/matches_body.dart';
 import '../widgets/matches_page/matches_header.dart';
 
@@ -25,7 +26,7 @@ class _MatchesPageState extends State<MatchesPage> {
 
   @override
   Widget build(BuildContext context) {
-    final UserModel? currentUser = context.read<CurrentUserProvider>().currentUser?.userModel;
+    final UserProfileModel? currentUser = context.read<CurrentUserProvider>().currentUser;
     final MatchesProvider matchesProvider = context.watch<MatchesProvider>();
     
     return Scaffold(

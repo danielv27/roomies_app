@@ -5,9 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:roomies_app/models/user_model.dart';
+import 'package:roomies_app/models/user_profile_model.dart';
 
-import '../models/user_profile_images.dart';
 import '../widgets/gradients/gradient.dart';
 import '../widgets/profile_setup/profile_google_widget.dart';
 import 'package:intl/intl.dart';
@@ -20,8 +19,8 @@ class ProfilePage extends StatefulWidget {
 
   }) : super(key: key);
 
-  final UserModel currentUser;
-  final List<dynamic> currentUserImages;
+  final UserProfileModel currentUser;
+  final List<String> currentUserImages;
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -47,9 +46,6 @@ class _ProfilePageState extends State<ProfilePage> {
   final TextEditingController roomMateController = TextEditingController();
   final TextEditingController birthDateController = TextEditingController();
 
-  late final UserProfileImages userProfileImages;
-
-  final List<XFile> selectedProfileImages = [];
   bool isUploading = false;
   bool isRemoving = false;
 
@@ -58,20 +54,19 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    minBudgetController.text = widget.currentUser.userModel.userSignupProfileModel.minBudget;
+    maxBudgetController.text = widget.currentUser.userModel.userSignupProfileModel.maxBudget;
+    latLngController.text = widget.currentUser.userModel.userSignupProfileModel.latLng;
+    streetNameController.text = widget.currentUser.userModel.userSignupProfileModel.streetName;
+    cityNameController.text = widget.currentUser.userModel.userSignupProfileModel.cityName;
 
-    late List<dynamic> selectedProfileImages = widget.currentUserImages;
+    aboutMeController.text = widget.currentUser.userModel.userSignupProfileModel.about;
+    workController.text = widget.currentUser.userModel.userSignupProfileModel.work;
+    studyController.text = widget.currentUser.userModel.userSignupProfileModel.study;
+    roomMateController.text = widget.currentUser.userModel.userSignupProfileModel.roommate;
+    birthDateController.text = widget.currentUser.userModel.userSignupProfileModel.birthdate;
 
-    minBudgetController.text = widget.currentUser.userSignupProfileModel.minBudget;
-    maxBudgetController.text = widget.currentUser.userSignupProfileModel.maxBudget;
-    latLngController.text = widget.currentUser.userSignupProfileModel.latLng;
-    streetNameController.text = widget.currentUser.userSignupProfileModel.streetName;
-    cityNameController.text = widget.currentUser.userSignupProfileModel.cityName;
-
-    aboutMeController.text = widget.currentUser.userSignupProfileModel.about;
-    workController.text = widget.currentUser.userSignupProfileModel.work;
-    studyController.text = widget.currentUser.userSignupProfileModel.study;
-    roomMateController.text = widget.currentUser.userSignupProfileModel.roommate;
-    birthDateController.text = widget.currentUser.userSignupProfileModel.birthdate;
+    late List<dynamic> selectedProfileImages = widget.currentUser.imageURLS;
 
     return  Scaffold(
       appBar: AppBar(
@@ -117,13 +112,13 @@ class _ProfilePageState extends State<ProfilePage> {
                   GridView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    itemCount: selectedProfileImages.length + 1,
+                    itemCount: widget.currentUser.imageURLS.length + 1,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 3,
                       childAspectRatio: (MediaQuery.of(context).size.width) / (MediaQuery.of(context).size.height / 1.3),
                     ), 
                     itemBuilder: (context, index) {
-                      return index == selectedProfileImages.length 
+                      return index == widget.currentUser.imageURLS.length 
                       ? GridTile(
                         child: Stack(
                           children: [
@@ -150,7 +145,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     setState(() {
                                       isUploading = true;
                                     });
-                                    await selectProfileImage(selectedProfileImages);
+                                    await addProfileImage(widget.currentUser.imageURLS);
                                   },
                                   backgroundColor: Colors.transparent,
                                   child: const Icon(Icons.add),
@@ -169,7 +164,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(20),
                                 child: Image.network(
-                                  (selectedProfileImages[index]), 
+                                  (widget.currentUser.imageURLS[index]), 
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -190,7 +185,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     setState(() {
                                       isRemoving = true;
                                     });
-                                    removeProfileImage(index, selectedProfileImages);
+                                    removeProfileImage(index, widget.currentUserImages);
                                   },
                                   backgroundColor: Colors.transparent,
                                   child: const Icon(Icons.remove),
@@ -459,7 +454,7 @@ class _ProfilePageState extends State<ProfilePage> {
       decoration: BoxDecoration(
         border: Border.all(color: const Color.fromRGBO(0, 0, 0, 0.2)),
         borderRadius: BorderRadius.circular(14.0),
-        color: (widget.currentUser.userSignupProfileModel.radius != radius)
+        color: (widget.currentUser.userModel.userSignupProfileModel.radius != radius)
             ? const Color.fromRGBO(245, 247, 251, 1)
             : const Color.fromRGBO(190, 212, 255, 1),
       ),
@@ -469,7 +464,7 @@ class _ProfilePageState extends State<ProfilePage> {
             duration: const Duration(milliseconds: 500),
             curve: Curves.fastOutSlowIn,
             child: SizedBox(
-              width: (widget.currentUser.userSignupProfileModel.radius != radius) ? radiusWidth.toDouble() : radiusExpandedWidth.toDouble(),
+              width: (widget.currentUser.userModel.userSignupProfileModel.radius != radius) ? radiusWidth.toDouble() : radiusExpandedWidth.toDouble(),
               height: 40,
               child: GestureDetector(
                 behavior: HitTestBehavior.translucent,
@@ -479,7 +474,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       leadingDistribution: TextLeadingDistribution.even,
-                      foreground: (widget.currentUser.userSignupProfileModel.radius != radius)
+                      foreground: (widget.currentUser.userModel.userSignupProfileModel.radius != radius)
                           ? (Paint()..color = const Color.fromRGBO(101, 101, 107, 1))
                           : (Paint()..shader = CustomGradient().blueGradient().createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 100.0))),
                     ),
@@ -487,7 +482,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 onTap: () {
                   setState(() {
-                    widget.currentUser.userSignupProfileModel.radius = radius;
+                    widget.currentUser.userModel.userSignupProfileModel.radius = radius;
                   });
                 },
               ),
@@ -620,28 +615,33 @@ class _ProfilePageState extends State<ProfilePage> {
     });
 
     var url = await reference.getDownloadURL();
-
     return url;
   }
 
-  Future<void> uploadFunction(List<XFile> profileImages) async {
-    setState(() {
-      isUploading = true;
-    });
-    for (int i = 0; i < profileImages.length; i++) {
-      var imageUrl = await uploadFile(profileImages[i]);
-      userProfileImages.imageURLS.add(imageUrl);
+  Future<void> uploadImage(String imageUrl) async {
+    try { 
+      await FirebaseFirestore.instance.collection('users')
+        .doc(auth.currentUser?.uid)
+        .collection("profile_images")
+        .doc(auth.currentUser?.uid)
+        .update({
+          'urls': FieldValue.arrayUnion([imageUrl]),
+        });
+    } catch (e) {
+      debugPrint("Error - $e");
     }
-  }  
+  }
 
-  Future<void> selectProfileImage(List<dynamic> selectedProfileImages) async {
+  Future<void> addProfileImage(List<dynamic> imageURLS) async {
     try {
       final XFile? profileImage = await ImagePicker().pickImage(
         source: ImageSource.gallery,
         imageQuality: 30,
       );
       if (profileImage != null) {
-        selectedProfileImages.add(profileImage);
+        String imageUrl = await uploadFile(profileImage);
+        await uploadImage(imageUrl);
+        imageURLS.add(imageUrl);
       }
     } catch (error) {
       debugPrint("ERROR: $error");
@@ -660,23 +660,25 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
-  removeProfileImage(int index, List<dynamic> selectedProfileImages) {
-    setState(() {
-      selectedProfileImages.removeAt(index);
-    });
-  }
-  
-  Future<void> uploadImageUrls() async {
+  Future<void> removeUploadedImage(String imageUrl) async {
     try { 
       await FirebaseFirestore.instance.collection('users')
         .doc(auth.currentUser?.uid)
         .collection("profile_images")
-        .add({
-          'urls': userProfileImages.imageURLS,
+        .doc(auth.currentUser?.uid)
+        .update({
+          'urls': FieldValue.arrayRemove([imageUrl]),
         });
     } catch (e) {
       debugPrint("Error - $e");
     }
+  }
+
+  removeProfileImage(int index, List<dynamic> imageUrls) {
+    setState(() {
+      removeUploadedImage(imageUrls[index]);
+      imageUrls.removeAt(index);
+    });
   }
 
 }
