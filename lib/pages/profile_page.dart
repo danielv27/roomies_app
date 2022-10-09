@@ -651,9 +651,9 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
-  Future removeFile(XFile image) async {
-    Reference reference = storageRef.ref().child("profile_images").child(auth.currentUser!.uid.toString()).child(image.name);
-    await reference.delete().whenComplete(() {
+  Future removeFile(String image) async {
+    Reference ref = FirebaseStorage.instance.refFromURL(image);
+    await ref.storage.refFromURL(image).delete().whenComplete(() {
       setState(() {
         isRemoving = false;
       });
@@ -676,6 +676,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   removeProfileImage(int index, List<dynamic> imageUrls) {
     setState(() {
+      removeFile(imageUrls[index]);
       removeUploadedImage(imageUrls[index]);
       imageUrls.removeAt(index);
     });
