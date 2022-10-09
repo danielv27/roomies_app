@@ -58,7 +58,7 @@ Widget searchBar(BuildContext context,List<UserModel>? users, UserModel? current
     dayTime = "afternoon";
   }
   UserModel currentUser = context.read<CurrentUserProvider>().currentUser!.userModel;
-  List<XFile> currentUserImages = context.read<CurrentUserProvider>().userImages;
+  List<dynamic> currentUserImages = context.read<CurrentUserProvider>().userImages;
 
 
   return AppBar(

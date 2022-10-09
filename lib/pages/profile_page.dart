@@ -21,7 +21,7 @@ class ProfilePage extends StatefulWidget {
   }) : super(key: key);
 
   final UserModel currentUser;
-  final List<XFile> currentUserImages;
+  final List<dynamic> currentUserImages;
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -59,7 +59,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
 
-    late List<XFile> selectedProfileImages = widget.currentUserImages;
+    late List<dynamic> selectedProfileImages = widget.currentUserImages;
 
     minBudgetController.text = widget.currentUser.userSignupProfileModel.minBudget;
     maxBudgetController.text = widget.currentUser.userSignupProfileModel.maxBudget;
@@ -169,7 +169,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(20),
                                 child: Image.network(
-                                  (selectedProfileImages[index].path), 
+                                  (selectedProfileImages[index]), 
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -634,7 +634,7 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }  
 
-  Future<void> selectProfileImage(List<XFile> selectedProfileImages) async {
+  Future<void> selectProfileImage(List<dynamic> selectedProfileImages) async {
     try {
       final XFile? profileImage = await ImagePicker().pickImage(
         source: ImageSource.gallery,
@@ -660,7 +660,7 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
-  removeProfileImage(int index, List<XFile> selectedProfileImages) {
+  removeProfileImage(int index, List<dynamic> selectedProfileImages) {
     setState(() {
       selectedProfileImages.removeAt(index);
     });
