@@ -84,9 +84,11 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 
 flutter_icons:
-  image_path: "assets/images/app-icon-ios.png"
   android: true
   ios: true
+  image_path: "assets/images/app-icon-ios.png"
+  adaptive_icon_foreground: "assets/images/foreground-image.png"
+  adaptive_icon_background: '#ffffff'
   
 # The following section is specific to Flutter.
 flutter:
