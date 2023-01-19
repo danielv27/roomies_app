@@ -27,6 +27,7 @@ class UserModel {
   bool operator ==(other) => other is UserModel && id == other.id;
   
   @override
+  // ignore: deprecated_member_use
   int get hashCode => hashValues(id, email);
 
 }

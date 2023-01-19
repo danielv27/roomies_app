@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:492551448329:android:55cee98d42419e4b65d5d8",
+        "mobilesdk_app_id": "1:492551448329:android:135c9cfd7f695e5f65d5d8",
         "android_client_info": {
-          "package_name": "com.dvstudios.roomies_app"
+          "package_name": "com.Capisoft.NextRoom"
         }
       },
       "oauth_client": [
